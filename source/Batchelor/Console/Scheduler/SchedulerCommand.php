@@ -50,6 +50,7 @@ class SchedulerCommand extends Command
                 $this->addOption("pending", "P", InputOption::VALUE_NONE, "List pending jobs");
                 $this->addOption("running", "R", InputOption::VALUE_NONE, "List running jobs");
                 $this->addOption("finished", "F", InputOption::VALUE_NONE, "List finished jobs");
+                $this->addOption("all", "A", InputOption::VALUE_NONE, "List all jobs (pending, running and finished)");
 
                 $this->addOption("add", "a", InputOption::VALUE_REQUIRED, "Add job to scheduler");
                 $this->addOption("remove", "r", InputOption::VALUE_REQUIRED, "Delete job to scheduler");
@@ -94,6 +95,12 @@ class SchedulerCommand extends Command
                 $output->writeln(sprintf("\t   Index: %s", $summary->index));
                 $output->writeln(sprintf("\t Pending: %s", $summary->pending));
                 $output->writeln(sprintf("\t Running: %s", $summary->running));
+
+                if ($input->getOption("all")) {
+                        $input->setOption("pending", true);
+                        $input->setOption("running", true);
+                        $input->setOption("finished", true);
+                }
 
                 if ($input->getOption("pending") || $output->isVerbose()) {
                         $this->listQueue($output, $scheduler->getPending());
@@ -145,7 +152,7 @@ class SchedulerCommand extends Command
         {
                 $scheduler = new Scheduler();
                 $scheduler->removeJob(new JobIdentity($data, ""));
-                
+
                 $output->writeln("Removed job $data");
         }
 
