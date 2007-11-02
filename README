@@ -1,0 +1,22 @@
+Place the content of this directory outside the webroot (usually 
+/var/lib/http/htdocs). Read the notes inside conf/apache.conf. Make sure 
+the directory cache is writable by the user the apache server is running as.
+
+*) The only directory writable by the webserver should be the cache directory.
+*) Only source directory should be direct accessable from the web.
+
+All job gets spooled under cache like this:
+
+retrotector
+    +-- cache
+          +-- uniqueid           
+          |    +-- yyyy-mm-dd
+          |    |      +-- jobid1
+          |    |      +-- jobid2
+         ...  ...    ...
+          |    |      +-- jobN
+
+By suing the date in the path to the jobX diretory, its easy to write a
+script that wipes out directories after a predefined number of days.
+
+Anders Lövgren, 2007-11-02
