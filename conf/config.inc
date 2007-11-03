@@ -1,6 +1,13 @@
 <?php
 
 // 
+// The batch cammand to run. The %s gets substituted with the batch
+// job command, including its arguments.
+// 
+define ("BATCH_COMMAND", "echo \"%s\" | batch");
+
+// 
+// 
 // The minimum file size accepted (in bytes).
 // 
 define ("MIN_FILE_SIZE", 10000);

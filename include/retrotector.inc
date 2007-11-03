@@ -28,7 +28,7 @@ function run_process($cmd, $dir)
     // 
     // Run the command as a batch job.
     //
-    $process = proc_open(sprintf("echo \"%s\" | batch", $cmd), $fds, $pipes, null, $env);
+    $process = proc_open(sprintf(BATCH_COMMAND, $cmd), $fds, $pipes, null, $env);
     if(is_resource($process)) {
 	// 
 	// Read stdot and stderr.
