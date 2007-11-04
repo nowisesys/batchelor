@@ -109,9 +109,9 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     }
     
     // 
-    // Create a unique filename for uploaded sequence data.
+    // Create path to sequence data file.
     // 
-    $seqfile = tempnam($resdir, "seq");
+    $seqfile = sprintf("%s/sequence", $resdir);
 
     // 
     // Process request parameters.
