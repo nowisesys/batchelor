@@ -143,7 +143,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     // batch jobb för processning. Sökvägen till skriptet måste vara
     // absolut.
     // 
-    $script = dirname(__FILE__) . "/script.sh";
+    $script = realpath(dirname(__FILE__) . "/../include/script.sh");
     $command = sprintf("%s %s %s", $script, $resdir, $seqfile);
     $job = run_process($command, $resdir);
 }
