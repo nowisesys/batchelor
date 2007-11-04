@@ -37,11 +37,12 @@ function show_form($error = null)
     print "</form>\n";
     
     // 
-    // Should we show the error message?
+    // Should we show an error message?
     //
     if(isset($error)) {
 	printf("<hr><b>Error:</b> %s\n", $error);
     }
+    
     print "</body></html>\n";
 }
 
@@ -146,6 +147,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     $script = realpath(dirname(__FILE__) . "/../include/script.sh");
     $command = sprintf("%s %s %s", $script, $resdir, $seqfile);
     $job = run_process($command, $resdir);
+    
+    // 
+    // Save jobid to file in result dir.
+    // 
+    if(!file_put_contents(sprintf("%s/jobid", $resdir), $job['jobid'])) {
+	error_exit("Failed save jobid");
+    }							   
 }
 
 // 
