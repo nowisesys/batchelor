@@ -180,6 +180,7 @@ function get_jobs($hostid)
 					// ignore
 					break;
 				     case "jobid":
+				     case "queued":
 				     case "started":
 				     case "finished":
 					$job[$file] = trim(file_get_contents($file));

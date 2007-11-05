@@ -19,8 +19,8 @@ function show_jobs_table(&$jobs)
 	$label = sprintf("(%s)", $job['state']);
 	switch($job['state']) {
 	 case "pending":
-	    $title = sprintf("started %s, \nwaiting in queue", 
-			     format_timestamp($job['started'])); 
+	    $title = sprintf("queued %s, \nwaiting in queue", 
+			     format_timestamp($job['queued'])); 
 	    break;
 	 case "running":
 	    $title = sprintf("started %s, \nstill running", 
@@ -46,7 +46,12 @@ function show_jobs_table(&$jobs)
 	// 
 	// Started column:
 	// 
-	printf("<tr align=\"center\"><td>%s</td>", format_timestamp($job['started']));
+	if($job['state'] == "pending") {
+	    print "<tr align=\"center\"><td align=\"center\">---</td>";
+	}
+	else {
+	    printf("<tr align=\"center\"><td>%s</td>", format_timestamp($job['started']));
+	}
 	
 	// 
 	// Job column
@@ -246,10 +251,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     $job = run_process($command, $jobdir);
     
     // 
-    // Save jobid to file in result dir.
+    // Save jobid and queued time to file in result dir.
     // 
     if(!file_put_contents(sprintf("%s/jobid", $jobdir), $job['jobid'])) {
 	error_exit("Failed save jobid");
+    }
+    if(!file_put_contents(sprintf("%s/queued", $jobdir), time())) {
+	error_exit("Failed save job enqueue time");
     }
     
     // 
