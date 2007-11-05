@@ -75,4 +75,15 @@ define ("SHOW_JOB_DELETE_LINK", true);
 // 
 define ("TIMESTAMP_FORMAT", "%Y-%m-%d %H:%M:%S");
 
+// 
+// If PHP >= 5.2 and the PECL zip extension (http://pecl.php.net) is loaded,
+// then we use it for creating zip-archives for download. If missing, then
+// this command is used as fallback. 7-zip is licensed under GPL/BSD license
+// and is free to use.
+// 
+// The first '%s' is zip-file to create, the second '%s' is the name of the
+// directory to archive.
+// 
+define ("ZIP_FILE_COMMAND", "7z a %s %s -tzip");
+
 ?>
