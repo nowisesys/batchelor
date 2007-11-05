@@ -16,12 +16,13 @@ resdir="$3"
 # Save start timestamp:
 date -u +"%s" > $jobdir/started
 
-# Put the command to run between the ( ... ):
-( 
-  sleep 30
-  cd $resdir
-  cp ../* . 
-  ) 1> $jobdir/stdout 2> $jobdir/stderr
+# Put the command to run here with stdout and stderr redirected.
+# The command must be in PATH or being an absolute path.
+$(dirname $0)/simula $seqfile $resdir 1> $jobdir/stdout 2> $jobdir/stderr
+exitcode="$?"
 
 # Save finished timestamp:
 date -u +"%s" > $jobdir/finished
+
+# Return exit code to shell.
+exit $exitcode
