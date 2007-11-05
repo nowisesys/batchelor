@@ -1,22 +1,49 @@
-Place the content of this directory outside the webroot (usually 
-/var/lib/http/htdocs). Read the notes inside conf/apache.conf. Make sure 
-the directory cache is writable by the user the apache server is running as.
+** GENERAL:
 
-*) The only directory writable by the webserver should be the cache directory.
-*) Only source directory should be direct accessable from the web.
+   Place the content of this directory outside the webroot (usually 
+   /var/lib/http/htdocs). Read the notes inside conf/apache.conf. Make sure 
+   the directory cache is writable by the user the apache server is running as.
 
-All job gets spooled under cache like this:
+   *) The only directory writable by the webserver should be the cache directory.
+   *) Only source directory should be direct accessable from the web.
 
-retrotector
-    +-- cache
-          +-- uniqueid           
-          |    +-- yyyy-mm-dd
-          |    |      +-- jobid1
-          |    |      +-- jobid2
-         ...  ...    ...
-          |    |      +-- jobN
+   Example:
+   
+   /var/lib/http/
+             +-- apps/                      // Webapps like retrotector goes here
+	     |     +-- retrotector/
+	     |             +-- cache/       // Can be moved, see conf/config.inc 
+	     |             +-- conf/
+	     |             +-- include/  
+	     |             +-- source/      // Aliased in Apache conf, see conf/apache.conf
+	     +-- cgi-bin/
+	     +-- htdocs/                    // The standard webroot, plain HTML
+	     +-- error/                     // Apache internal
+	     +-- icons/                     // Apache internal
+	     
+** THE CACHE DIRECTORY:
 
-By suing the date in the path to the jobX diretory, its easy to write a
-script that wipes out directories after a predefined number of days.
+   All job gets spooled under cache like this:
 
-Anders Lövgren, 2007-11-02
+   retrotector/
+        +-- cache/
+              +-- hostid1/                   // Unique host ID
+              |      +-- timestamp1/         // The job directory
+       	      |      |      +-- xxx          // Any output files (stdout, jobid, a.s.o.)
+              |      |      +-- yyy
+             ...    ...    ...
+              |      |      +-- zzz
+	      |      +-- timestampN/
+	      |      |      +-- xxx
+	     ...    ...    ...
+              +-- hostidN/
+              |      +-- timestamp1/
+       	      |      |      +-- xxx
+              |      |      +-- yyy
+             ...    ...    ...
+
+   The cache directory must be rwx for the user the web server is running as.
+
+
+Anders Lövgren, 
+2007-11-02
