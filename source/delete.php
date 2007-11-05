@@ -36,20 +36,22 @@ if(!isset($jobid) || !isset($resdir)) {
 // 
 function delete_directory($path)
 {
-    $top = $path;
-    
-    $handle = opendir($path);
-    if($handle) {
-	while(false !== ($file = readdir($handle))) {
-	    if($file != "." && $file != "..") {
-		$path = sprintf("%s/%s", $top, $file);
-		if(is_file($path)) {
-		    unlink($path);
+    if(file_exists($path)) {
+	$top = $path;
+	
+	$handle = opendir($path);
+	if($handle) {
+	    while(false !== ($file = readdir($handle))) {
+		if($file != "." && $file != "..") {
+		    $path = sprintf("%s/%s", $top, $file);
+		    if(is_file($path)) {
+			unlink($path);
+		    }
 		}
 	    }
+	    closedir($handle);
+	    rmdir($top);
 	}
-	closedir($handle);
-	rmdir($top);
     }
 }
 
@@ -75,7 +77,8 @@ if(file_exists($resdir)) {
 	// 
 	$handle = popen(sprintf(BATCH_REMOVE, $jobid), "r");
 	pclose($handle);
-	
+
+	delete_directory(sprintf("%s/result", $resdir));
 	delete_directory($resdir);
     }
 }
