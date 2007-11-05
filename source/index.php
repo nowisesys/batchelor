@@ -12,6 +12,63 @@
 include "../conf/config.inc";
 include "../include/retrotector.inc";
 
+function show_jobs_table(&$jobs)
+{
+    print "<hr><table><tr><th>Job</th><th>Status</th><th>Links</th></tr>\n";
+    foreach($jobs as $job) {	    
+	switch($job['state']) {
+	 case "pending":
+	    $label = sprintf("%s (queued)", format_timestamp($job['started']));
+	    $title = sprintf("started %s, \nwaiting in queue", 
+			     format_timestamp($job['started'])); 
+	    break;
+	 case "running":
+	    $label = sprintf("%s (running)", format_timestamp($job['started']));
+	    $title = sprintf("started %s, \nstill running", 
+			     format_timestamp($job['started']));
+	    break;
+	 case "finished":
+	    $label = sprintf("%s (finished)", format_timestamp($job['started']));
+	    $title = sprintf("started %s, \nfinished %s", 
+			     format_timestamp($job['started']), 
+			     format_timestamp($job['finished']));
+	    break;
+	 case "error":
+	    $label = sprintf("%s (error)", format_timestamp($job['started']));
+	    $title = sprintf("started %s, \nfinished with errors %s", 
+			     format_timestamp($job['started']), 
+			     format_timestamp($job['stderr']));
+	    break;
+	 case "crashed":
+	    $label = sprintf("%s (crashed)", format_timestamp($job['started']));
+	    $title = sprintf("started %s, \njob has crashed (not running)", 
+			     format_timestamp($job['started']));
+	    break;
+	}
+	// 
+	// Job column
+	// 
+	printf("<tr><td><a href=\"details.php?jobid=%d\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
+	       $job['jobid'], $title, $job['jobid']);
+	// 
+	// Status column
+	// 
+	printf("<td>%s</td>", $label);
+	
+	// 
+	// Links column
+	$links = array();
+	if(SHOW_JOB_DELETE_LINK) {
+	    array_push($links, sprintf("<a href=\"delete.php?jobid=%d\">delete</a>", $job['jobid']));
+	}
+	if($job['state'] == "finished") {
+	    array_push($links, sprintf("<a href=\"download.php?jobid=%d\">download</a>", $jobid['jobid']));
+	}
+	printf("<td>%s</td></tr>\n", implode(", ", $links));
+    }
+    print "</table>\n";
+}
+
 function show_form($error = null)
 {
     // 
@@ -53,9 +110,7 @@ function show_form($error = null)
     // Show jobs.
     //
     if(count($jobs)) {
-	print "<pre>\n";
-	print_r($jobs);
-	print "</pre>\n";
+	show_jobs_table($jobs);
     }
     
     print "</body></html>\n";

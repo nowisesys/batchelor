@@ -1,6 +1,13 @@
 <?php
 
 // 
+// Make sure timezone is UTC to prevent troubles with daylight saving time.
+// 
+if(ini_get("date.timezone") != "UTC") {
+    ini_set("date.timezone", "UTC");
+}
+
+// 
 // The batch cammand to run. The %s gets substituted with the batch
 // job command, including its arguments.
 // 
@@ -46,5 +53,17 @@ define ("CACHE_PERMISSION", 0750);
 // Useful for debbuging and for generating statistics.
 // 
 define ("SAVE_HOSTID_MAPPING", true);
+
+// 
+// Show delete job link.
+// 
+define ("SHOW_JOB_DELETE_LINK", true);
+
+// 
+// Format of UNIX timestamps, see manual page for date() function. 
+// Localized output is enabled by setlocale() and using "%c" as
+// format string.
+// 
+define ("TIMESTAMP_FORMAT", "%Y-%m-%d %H:%M:%S");
 
 ?>

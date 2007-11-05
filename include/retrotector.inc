@@ -278,4 +278,12 @@ function get_queued_jobs()
     return $jobs;
 }
 
+// 
+// Returns formatted UNIX timestamp as string.
+// 
+function format_timestamp($stamp)
+{
+    return strftime(TIMESTAMP_FORMAT, $stamp);
+}
+
 ?>
