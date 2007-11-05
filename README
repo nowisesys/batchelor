@@ -1,0 +1,13 @@
+Retrotector is a web interface written in PHP that enables potentional long
+running jobs to be uploaded to the server and runned under the batch queue
+commonly found on UNIX systems. 
+
+The interface also provides a rudimentary interface where the current state 
+of each jobb can be polled, as well as links for removing queued or finished 
+jobs.
+
+No effort has been put in creating a good looking UI, as its probably going
+to be changed to fit with the overall site design by its users.
+
+Anders Lövgren,
+2007-11-05
