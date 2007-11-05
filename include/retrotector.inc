@@ -222,6 +222,7 @@ function get_jobs($hostid)
     // Now classify all jobs as either running, finished, error or crashed.
     // 
     $queued = get_queued_jobs();
+    $result = array();
     foreach($jobs as $job) {
 	if(isset($job['finished'])) {
 	    if(isset($job['stderr'])) {
@@ -239,9 +240,10 @@ function get_jobs($hostid)
 		$job['state'] = $queued[$job['jobid']];
 	    }
 	}
+	array_push($result, $job);
     }
     
-    return $jobs;
+    return $result;
 }
 
 // 
