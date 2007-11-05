@@ -18,7 +18,7 @@ function show_form($error = null)
     // Get array of all running and finished jobs for peer identified
     // by the hostid superglobal variable.
     // 
-    $jobs = get_jobs($_GLOBALS['hostid']);
+    $jobs = get_jobs($GLOBALS['hostid']);
 
     print "<html><head><title>Submit data for processing</title></head>\n";
     print "<body><h3>Submit data for processing</h3><hr>\n";
@@ -81,21 +81,21 @@ function error_exit($str)
 // and finished jobs.
 // 
 if(isset($_COOKIE['hostid'])) {
-    $_GLOBALS['hostid'] = $_COOKIE['hostid'];
+    $GLOBALS['hostid'] = $_COOKIE['hostid'];
 }
 else {
-    $_GLOBALS['hostid'] = md5($_SERVER['REMOTE_ADDR']);
+    $GLOBALS['hostid'] = md5($_SERVER['REMOTE_ADDR']);
     if(USE_SESSION_COOKIES) {
 	// 
 	// Set a session cookie.
 	// 
-	setcookie("hostid", $_GLOBALS['hostid']);
+	setcookie("hostid", $GLOBALS['hostid']);
     }
     else {
 	// 
 	// Set a persistent cookie.
 	// 
-	setcookie("hostid", $_GLOBALS['hostid'], time() + COOKIE_LIFE_TIME);
+	setcookie("hostid", $GLOBALS['hostid'], time() + COOKIE_LIFE_TIME);
     }
 }
 
@@ -103,7 +103,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     // 
     // Create output and job spool directories.
     // 
-    $resdir = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $_GLOBALS["hostid"]);
+    $resdir = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $GLOBALS["hostid"]);
     if(!file_exists($resdir)) {
 	if(!mkdir($resdir, CACHE_PERMISSION, true)) {
 	    error_exit("Failed create output directory");
@@ -120,7 +120,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     //
     if(SAVE_HOSTID_MAPPING) {
 	$mapdir = sprintf("%s/map", CACHE_DIRECTORY);
-	save_hostid_mapping($mapdir, $_GLOBALS['hostid'], $_SERVER['REMOTE_ADDR']);
+	save_hostid_mapping($mapdir, $GLOBALS['hostid'], $_SERVER['REMOTE_ADDR']);
     }
     
     // 
