@@ -223,7 +223,8 @@ function get_jobs($hostid)
     // 
     $queued = get_queued_jobs();
     $result = array();
-    foreach($jobs as $job) {
+    
+    foreach($jobs as $key => $job) {
 	if(isset($job['finished'])) {
 	    if(isset($job['stderr'])) {
 		$job['state'] = "error";
@@ -240,7 +241,7 @@ function get_jobs($hostid)
 		$job['state'] = $queued[$job['jobid']];
 	    }
 	}
-	array_push($result, $job);
+	$result[$key] = $job;
     }
     
     return $result;

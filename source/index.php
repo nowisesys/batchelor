@@ -15,7 +15,7 @@ include "../include/retrotector.inc";
 function show_jobs_table(&$jobs)
 {
     print "<hr><table><tr><th>Job</th><th>Status</th><th>Links</th></tr>\n";
-    foreach($jobs as $job) {	    
+    foreach($jobs as $resdir => $job) {	    
 	switch($job['state']) {
 	 case "pending":
 	    $label = sprintf("%s (queued)", format_timestamp($job['started']));
@@ -45,11 +45,13 @@ function show_jobs_table(&$jobs)
 			     format_timestamp($job['started']));
 	    break;
 	}
+	
 	// 
 	// Job column
 	// 
-	printf("<tr><td><a href=\"details.php?jobid=%d\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
-	       $job['jobid'], $title, $job['jobid']);
+	printf("<tr><td><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
+	       $job['jobid'], $resdir, $title, $job['jobid']);
+	
 	// 
 	// Status column
 	// 
@@ -59,10 +61,10 @@ function show_jobs_table(&$jobs)
 	// Links column
 	$links = array();
 	if(SHOW_JOB_DELETE_LINK) {
-	    array_push($links, sprintf("<a href=\"delete.php?jobid=%d\">delete</a>", $job['jobid']));
+	    array_push($links, sprintf("<a href=\"delete.php?jobid=%d&result=%s\">delete</a>", $job['jobid'], $resdir));
 	}
 	if($job['state'] == "finished") {
-	    array_push($links, sprintf("<a href=\"download.php?jobid=%d\">download</a>", $jobid['jobid']));
+	    array_push($links, sprintf("<a href=\"download.php?jobid=%d&result=%s\">download</a>", $job['jobid'], $resdir));
 	}
 	printf("<td>%s</td></tr>\n", implode(", ", $links));
     }
