@@ -14,42 +14,44 @@ include "../include/retrotector.inc";
 
 function show_jobs_table(&$jobs)
 {
-    print "<hr><table><tr><th>Job</th><th>Status</th><th>Links</th></tr>\n";
+    print "<hr><table width=\"50%\"><tr><th>Started</th><th>Job</th><th>Status</th><th>Links</th></tr>\n";
     foreach($jobs as $resdir => $job) {	    
+	$label = sprintf("(%s)", $job['state']);
 	switch($job['state']) {
 	 case "pending":
-	    $label = sprintf("%s (queued)", format_timestamp($job['started']));
 	    $title = sprintf("started %s, \nwaiting in queue", 
 			     format_timestamp($job['started'])); 
 	    break;
 	 case "running":
-	    $label = sprintf("%s (running)", format_timestamp($job['started']));
 	    $title = sprintf("started %s, \nstill running", 
 			     format_timestamp($job['started']));
 	    break;
 	 case "finished":
-	    $label = sprintf("%s (finished)", format_timestamp($job['started']));
 	    $title = sprintf("started %s, \nfinished %s", 
 			     format_timestamp($job['started']), 
 			     format_timestamp($job['finished']));
 	    break;
 	 case "error":
-	    $label = sprintf("%s (error)", format_timestamp($job['started']));
 	    $title = sprintf("started %s, \nfinished with errors %s", 
 			     format_timestamp($job['started']), 
 			     format_timestamp($job['stderr']));
 	    break;
 	 case "crashed":
-	    $label = sprintf("%s (crashed)", format_timestamp($job['started']));
+	    // $label = sprintf("%s (crashed)", format_timestamp($job['started']));
 	    $title = sprintf("started %s, \njob has crashed (not running)", 
 			     format_timestamp($job['started']));
 	    break;
 	}
 	
 	// 
+	// Started column:
+	// 
+	printf("<tr align=\"center\"><td>%s</td>", format_timestamp($job['started']));
+	
+	// 
 	// Job column
 	// 
-	printf("<tr><td><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
+	printf("<td><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
 	       $job['jobid'], $resdir, $title, $job['jobid']);
 	
 	// 
@@ -60,7 +62,7 @@ function show_jobs_table(&$jobs)
 	// 
 	// Links column
 	$links = array();
-	if(SHOW_JOB_DELETE_LINK) {
+	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
 	    array_push($links, sprintf("<a href=\"delete.php?jobid=%d&result=%s\">delete</a>", $job['jobid'], $resdir));
 	}
 	if($job['state'] == "finished") {
