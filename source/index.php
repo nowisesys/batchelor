@@ -230,10 +230,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
 		error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", MIN_FILE_SIZE));
 	    }
 	    if(!rename($_FILES['file']['tmp_name'], $seqfile)) {
+		unlink($_FILES['file']['tmp_name']);
+		rmdir($jobdir);
 		error_exit("Failed move uploaded sequence file");
 	    }
 	}
 	else {
+	    rmdir($jobdir);
 	    error_exit("No uploaded file");
 	}
     }
