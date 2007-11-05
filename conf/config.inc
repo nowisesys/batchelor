@@ -7,6 +7,12 @@
 define ("BATCH_COMMAND", "echo \"%s\" | batch");
 
 // 
+// List all batch jobs. Jobs in queue 'b' is pending batch jobs and 
+// jobs in queue '=' is currently running jobs.
+// 
+define ("BATCH_LISTING", "at -l");
+
+// 
 // 
 // The minimum file size accepted (in bytes).
 // 

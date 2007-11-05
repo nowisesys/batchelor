@@ -14,9 +14,15 @@ include "../include/retrotector.inc";
 
 function show_form($error = null)
 {
+    // 
+    // Get array of all running and finished jobs for peer identified
+    // by the hostid superglobal variable.
+    // 
+    $jobs = get_jobs($_GLOBALS['hostid']);
+
     print "<html><head><title>Submit data for processing</title></head>\n";
     print "<body><h3>Submit data for processing</h3><hr>\n";
-    
+
     // 
     // The form for uploading a file.
     // 
@@ -41,6 +47,15 @@ function show_form($error = null)
     //
     if(isset($error)) {
 	printf("<hr><b>Error:</b> %s\n", $error);
+    }
+
+    // 
+    // Show jobs.
+    //
+    if(count($jobs)) {
+	print "<pre>\n";
+	print_r($jobs);
+	print "</pre>\n";
     }
     
     print "</body></html>\n";
@@ -88,7 +103,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     // 
     // Create output and job spool directories.
     // 
-    $resdir = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $_GLOBALS["hostid"], date("Y-m-d"));
+    $resdir = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $_GLOBALS["hostid"]);
     if(!file_exists($resdir)) {
 	if(!mkdir($resdir, CACHE_PERMISSION, true)) {
 	    error_exit("Failed create output directory");
@@ -153,7 +168,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     // 
     if(!file_put_contents(sprintf("%s/jobid", $resdir), $job['jobid'])) {
 	error_exit("Failed save jobid");
-    }							   
+    }
+    
+    // 
+    // Redirect the browser to an empty index.php to prevent page
+    // update to submit the same sequence twice or more.
+    // 
+    header("Location: index.php");    
 }
 
 // 

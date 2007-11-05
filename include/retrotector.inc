@@ -137,5 +137,129 @@ function save_hostid_mapping($mapdir, $hostid, $peer)
 	error_exit("Failed save hostid => peer address map");
     }
 }
-  
+
+// 
+// Get jobs for peer associated by the hostid variable.
+// 
+// The job can be in one of the following states:
+// 1. Running  - no finished timestamp and jobid is in queue.
+// 2. Finished - finished timestamp exists.
+// 3. Crashed  - no finished timestamp and jobid is missing in queue.
+// 4. Error    - finished with non-empty error output.
+// 
+function get_jobs($hostid)
+{
+    // 
+    // The result array.
+    // 
+    $jobs = array();
+
+    // 
+    // Save current working directory.
+    // 
+    $cwd = getcwd();
+
+    // 
+    // Loop thru all subdirectories.
+    // 
+    $root = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $hostid);
+    if(chdir($root)) {
+	if($dirs = opendir(".")) {
+	    while(false !== ($dir = readdir($dirs))) {
+		if($dir != "." && $dir != "..") {
+		    if(chdir($dir)) {
+			if($files = opendir(".")) {
+			    $job = array();
+			    while(false !== ($file = readdir($files))) {
+				if($file != "." && $file != "..") {
+				    // 
+				    // Process all files inside $root/$dir
+				    //
+				    switch($file) {
+				     case "sequence":
+					// ignore
+					break;
+				     case "jobid":
+				     case "started":
+				     case "finished":
+					$job[$file] = file_get_contents($file);
+					break;
+				     case "stdout":
+				     case "stderr":
+					if(filesize($file)) {
+					    $job[$file] = $dir;   // save timestamp if filesize > 0 bytes
+					}
+					break;
+				    }
+				}
+			    }
+			}
+		    }
+		    // 
+		    // Push job onto jobs array and pop directory.
+		    // 
+		    $jobs[$dir] = $job;
+		    chdir("..");
+		}
+	    }
+	}
+	chdir($cwd);
+    }
+
+    // 
+    // Now classify all jobs as either running, finished, error or crashed.
+    // 
+    $queued = get_queued_jobs();
+    foreach($jobs as $job) {
+	if(isset($job['finished'])) {
+	    if(isset($job['stderr'])) {
+		$job['state'] = "error";
+	    }
+	    else {
+		$job['state'] = "finished";
+	    }
+	}
+	else {
+	    if(!isset($queued[$job['jobid']])) {
+		$job['state'] = "crashed";
+	    }
+	    else {
+		$job['state'] = $queued[$job['jobid']];
+	    }
+	}
+    }
+}
+
+// 
+// Return array of all pending and running jobs. The result
+// array is using jobid as key and state as value.
+// 
+function get_queued_jobs()
+{
+    // 
+    // The result array.
+    // 
+    $jobs = array();
+    
+    if($handle = popen(BATCH_LISTING, "r")) {
+	while($str = fgets($handle)) {
+	    // 
+	    // Split batch jobs output. 
+	    // Exempel: 
+	    // '25      2007-11-05 02:54 b apache'   // pending
+	    // '24      2007-11-05 02:54 = apache'   // running
+	    $match = array();
+	    if(preg_match("/(\d+)\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\s+([0-9]{2}:[0-9]{2})\s+([b=]{1})\s+(.*)/", $str, $match)) {
+		$jobs[$match[1]] = ($match[4] == "=") ? "running" : "pending";
+	    }
+	    else {
+		error_exit("Failed parse batch queue output.");
+	    }
+	}
+	pclose($handle);
+    }
+    
+    return $jobs;
+}
+
 ?>
