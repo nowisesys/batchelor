@@ -15,7 +15,7 @@ include "../include/retrotector.inc";
 function show_jobs_table(&$jobs)
 {
     print "<hr><table width=\"50%\"><tr><th>Started</th><th>Job</th><th>Status</th><th>Links</th></tr>\n";
-    foreach($jobs as $resdir => $job) {	    
+    foreach($jobs as $jobdir => $job) {	    
 	$label = sprintf("(%s)", $job['state']);
 	switch($job['state']) {
 	 case "pending":
@@ -52,7 +52,7 @@ function show_jobs_table(&$jobs)
 	// Job column
 	// 
 	printf("<td><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
-	       $job['jobid'], $resdir, $title, $job['jobid']);
+	       $job['jobid'], $jobdir, $title, $job['jobid']);
 	
 	// 
 	// Status column
@@ -63,10 +63,10 @@ function show_jobs_table(&$jobs)
 	// Links column
 	$links = array();
 	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
-	    array_push($links, sprintf("<a href=\"delete.php?jobid=%d&result=%s\">delete</a>", $job['jobid'], $resdir));
+	    array_push($links, sprintf("<a href=\"delete.php?jobid=%d&result=%s\">delete</a>", $job['jobid'], $jobdir));
 	}
 	if($job['state'] == "finished") {
-	    array_push($links, sprintf("<a href=\"download.php?jobid=%d&result=%s\">download</a>", $job['jobid'], $resdir));
+	    array_push($links, sprintf("<a href=\"download.php?jobid=%d&result=%s\">download</a>", $job['jobid'], $jobdir));
 	}
 	printf("<td>%s</td></tr>\n", implode(", ", $links));
     }
@@ -177,15 +177,15 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     // 
     // Create output and job spool directories.
     // 
-    $resdir = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $GLOBALS["hostid"]);
-    if(!file_exists($resdir)) {
-	if(!mkdir($resdir, CACHE_PERMISSION, true)) {
+    $jobdir = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $GLOBALS["hostid"]);
+    if(!file_exists($jobdir)) {
+	if(!mkdir($jobdir, CACHE_PERMISSION, true)) {
 	    error_exit("Failed create output directory");
 	}
     }
     
-    $resdir = sprintf("%s/%d", $resdir, time());
-    if(!mkdir($resdir, CACHE_PERMISSION, true)) {
+    $jobdir = sprintf("%s/%d", $jobdir, time());
+    if(!mkdir($jobdir, CACHE_PERMISSION, true)) {
 	error_exit("Failed create output directory");
     }
     
@@ -200,7 +200,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     // 
     // Create path to sequence data file.
     // 
-    $seqfile = sprintf("%s/sequence", $resdir);
+    $seqfile = sprintf("%s/sequence", $jobdir);
 
     // 
     // Process request parameters.
@@ -221,7 +221,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
 	if(is_uploaded_file($_FILES['file']['tmp_name'])) {
 	    if(MIN_FILE_SIZE != 0 && filesize($_FILES['file']['tmp_name']) < MIN_FILE_SIZE) {
 		unlink($_FILES['file']['tmp_name']);
-		rmdir($resdir);
+		rmdir($jobdir);
 		error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", MIN_FILE_SIZE));
 	    }
 	    if(!rename($_FILES['file']['tmp_name'], $seqfile)) {
@@ -234,18 +234,21 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     }
     
     // 
-    // Filen uppladdad eller skapad. Nu är det bara att starta ett
-    // batch jobb för processning. Sökvägen till skriptet måste vara
-    // absolut.
+    // File uploaded or created. Now we just has to start the batch
+    // job. The wrapper script path must be absolute. Create
     // 
+    $resdir = sprintf("%s/result", $jobdir);
+    if(!mkdir($resdir, CACHE_PERMISSION, true)) {
+	error_exit("Failed create result directory");
+    }
     $script = realpath(dirname(__FILE__) . "/../include/script.sh");
-    $command = sprintf("%s %s %s", $script, $resdir, $seqfile);
-    $job = run_process($command, $resdir);
+    $command = sprintf("%s %s %s %s", $script, $jobdir, $seqfile, $resdir);
+    $job = run_process($command, $jobdir);
     
     // 
     // Save jobid to file in result dir.
     // 
-    if(!file_put_contents(sprintf("%s/jobid", $resdir), $job['jobid'])) {
+    if(!file_put_contents(sprintf("%s/jobid", $jobdir), $job['jobid'])) {
 	error_exit("Failed save jobid");
     }
     
