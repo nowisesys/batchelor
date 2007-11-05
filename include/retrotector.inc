@@ -182,18 +182,24 @@ function get_jobs($hostid)
 				     case "jobid":
 				     case "started":
 				     case "finished":
-					$job[$file] = file_get_contents($file);
+					$job[$file] = trim(file_get_contents($file));
 					break;
 				     case "stdout":
 				     case "stderr":
 					if(filesize($file)) {
-					    $job[$file] = $dir;   // save timestamp if filesize > 0 bytes
+					    $job[$file] = filemtime($file);   // save timestamp if filesize > 0 bytes
 					}
 					break;
 				    }
 				}
 			    }
 			}
+			else {
+			    error_log(sprintf("Failed open result directory '%s/%s'", $root, $dir));
+			}
+		    }
+		    else {
+			error_log(sprintf("Failed change to result directory '%s/%s'", $root, $dir));
 		    }
 		    // 
 		    // Push job onto jobs array and pop directory.
@@ -203,9 +209,15 @@ function get_jobs($hostid)
 		}
 	    }
 	}
+	else {
+	    error_log(sprintf("Failed open cache directory '%s'", $root));
+	}
 	chdir($cwd);
     }
-
+    else {
+	error_log(sprintf("Failed change path to cache directory '%s'", $root));
+    }
+    
     // 
     // Now classify all jobs as either running, finished, error or crashed.
     // 
@@ -228,6 +240,8 @@ function get_jobs($hostid)
 	    }
 	}
     }
+    
+    return $jobs;
 }
 
 // 
