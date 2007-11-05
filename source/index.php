@@ -81,7 +81,21 @@ function show_form($error = null)
     // 
     $jobs = get_jobs($GLOBALS['hostid']);
 
-    print "<html><head><title>Submit data for processing</title></head>\n";
+    print "<html><head>\n";
+    print "<title>Submit data for processing</title>\n";
+    if(PAGE_REFRESH_RATE > 0) {
+	// 
+	// Only output meta refresh tag if we got pending 
+	// or running jobs.
+	// 
+	foreach($jobs as $job) {
+	    if($job['state'] == "pending" || $job['state'] == "running") {
+		printf("<meta http-equiv=\"refresh\" content=\"%d\" />", PAGE_REFRESH_RATE);
+		break;
+	    }
+	}
+    }
+    print "</head>\n";
     print "<body><h3>Submit data for processing</h3><hr>\n";
 
     // 
@@ -116,6 +130,7 @@ function show_form($error = null)
     if(count($jobs)) {
 	show_jobs_table($jobs);
     }
+    printf("<hr>Last updated: %s\n", format_timestamp(time()));
     
     print "</body></html>\n";
 }

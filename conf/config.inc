@@ -34,9 +34,11 @@ define ("MIN_FILE_SIZE", 5000);
 
 // 
 // The number of seconds between reload of the page waiting for
-// running jobs to finish (in seconds).
+// running jobs to finish (in seconds). Set to 0 to disable automatic
+// page refresh. Note that some browsers don't handle meta refresh
+// correct, see http://en.wikipedia.org/wiki/Meta_refresh.
 // 
-define ("PAGE_REFRESH_RATE", 30);
+define ("PAGE_REFRESH_RATE", 15);
 
 // 
 // Use session cookies or persistent cookies?
