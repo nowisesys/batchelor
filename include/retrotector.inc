@@ -160,9 +160,20 @@ function get_jobs($hostid)
     $cwd = getcwd();
 
     // 
-    // Loop thru all subdirectories.
+    // Build path to directory containing all job directories for this hostid.
     // 
     $root = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $hostid);
+    
+    // 
+    // Prevent error when updating job list without any submitted job.
+    // 
+    if(!file_exists($root)) {
+	return $jobs;
+    }
+    
+    // 
+    // Loop thru all subdirectories.
+    // 
     if(chdir($root)) {
 	if($dirs = opendir(".")) {
 	    while(false !== ($dir = readdir($dirs))) {
