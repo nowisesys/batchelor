@@ -204,6 +204,11 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
 	// system file, i.e. /etc/passwd
 	// 
 	if(is_uploaded_file($_FILES['file']['tmp_name'])) {
+	    if(MIN_FILE_SIZE != 0 && filesize($_FILES['file']['tmp_name']) < MIN_FILE_SIZE) {
+		unlink($_FILES['file']['tmp_name']);
+		rmdir($resdir);
+		error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", MIN_FILE_SIZE));
+	    }
 	    if(!rename($_FILES['file']['tmp_name'], $seqfile)) {
 		error_exit("Failed move uploaded sequence file");
 	    }

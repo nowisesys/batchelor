@@ -27,9 +27,10 @@ define ("BATCH_REMOVE", "atrm %d");
 
 // 
 // 
-// The minimum file size accepted (in bytes).
+// The minimum file size accepted (in bytes). Set to 0 to disable
+// minimum file size check.
 // 
-define ("MIN_FILE_SIZE", 10000);
+define ("MIN_FILE_SIZE", 5000);
 
 // 
 // The number of seconds between reload of the page waiting for
