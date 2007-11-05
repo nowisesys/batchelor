@@ -20,6 +20,12 @@ define ("BATCH_COMMAND", "echo \"%s\" | batch");
 define ("BATCH_LISTING", "at -l");
 
 // 
+// Remove a pending job from the batch queue. The %d gets expanded to
+// the job ID to remove from queue.
+// 
+define ("BATCH_REMOVE", "atrm %d");
+
+// 
 // 
 // The minimum file size accepted (in bytes).
 // 
