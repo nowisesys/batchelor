@@ -39,10 +39,10 @@
 
 enum { STATUS_SUCCESS, STATUS_ERROR, STATUS_CRASH, STATUS_LAST };
 
-static int simulate_success(const char *seq, const char *res);
-static int simulate_error(const char *seq, const char *res);
-static int simulate_crash(const char *seq, const char *res);
-static void dump_options(const char *seq, const char *res, int status, int duration, int endtime, int busy);
+static int simulate_success(const char *indata, const char *resdir);
+static int simulate_error(const char *indata, const char *resdir);
+static int simulate_crash(const char *indata, const char *resdir);
+static void dump_options(const char *indata, const char *resdir, int status, int duration, int endtime, int busy);
 static int write_file(const char *path, const char *msg);
 
 int main(int argc, char **argv)
@@ -54,8 +54,8 @@ int main(int argc, char **argv)
 	int code = EXIT_FAILED;
 	int childs;
 	
-	const char *seq = argv[1];
-	const char *res = argv[2];
+	const char *indata = argv[1];
+	const char *resdir = argv[2];
 	
 	srand(time(NULL));
 	
@@ -65,9 +65,9 @@ int main(int argc, char **argv)
 	endtime = time(NULL) + duration;
 	busy = rand() % 2;
 	
-	dump_options(seq, res, status, duration, endtime, busy);
+	dump_options(indata, resdir, status, duration, endtime, busy);
 	
-	if(chdir(res) == 0) {
+	if(chdir(resdir) == 0) {
 		if(busy) {
 			while(1) {
 				if(time(NULL) > endtime) {
@@ -81,34 +81,34 @@ int main(int argc, char **argv)
 		
 		switch(status) {
 		case STATUS_SUCCESS:
-			code = simulate_success(seq, res);
+			code = simulate_success(indata, resdir);
 			break;
 		case STATUS_ERROR:
-			code = simulate_error(seq, res);
+			code = simulate_error(indata, resdir);
 			break;
 		case STATUS_CRASH:
-			code = simulate_crash(seq, res);
+			code = simulate_crash(indata, resdir);
 			break;
 		}
 	}
 	else {
-		fprintf(stderr, "Failed change diretory to %s\n", res);
+		fprintf(stderr, "Failed change diretory to %s\n", resdir);
 	}
 	
 	exit(code);
 }
 
-int simulate_success(const char *seq, const char *res)
+int simulate_success(const char *indata, const char *resdir)
 {
 	char path[PATH_MAX];
 	
-	sprintf(path, "%s/file1", res);
+	sprintf(path, "%s/file1", resdir);
 	write_file(path, "Some text..., ");
 
-	sprintf(path, "%s/file2", res);
+	sprintf(path, "%s/file2", resdir);
 	write_file(path, "some more text..., ");
 
-	sprintf(path, "%s/file3", res);
+	sprintf(path, "%s/file3", resdir);
 	write_file(path, "the end!");
 	
 	printf("This message should be captured as stdout\n");
@@ -116,24 +116,24 @@ int simulate_success(const char *seq, const char *res)
 	return EXIT_SUCESS;
 }
 
-int simulate_error(const char *seq, const char *res)
+int simulate_error(const char *indata, const char *resdir)
 {
 	fprintf(stderr, "This message should be captured as stderr\n");
 	fprintf(stderr, "Exiting with status %d\n", EXIT_FAILED);
 	return EXIT_FAILED;
 }
 
-int simulate_crash(const char *seq, const char *res)
+int simulate_crash(const char *indata, const char *resdir)
 {
 	kill(getppid(), SIGTERM);
 	return EXIT_CRASH;
 }
 
-void dump_options(const char *seq, const char *res, int status, int duration, int endtime, int busy)
+void dump_options(const char *indata, const char *resdir, int status, int duration, int endtime, int busy)
 {
 	printf("-------------------------------------------------------------------\n");
-	printf("Using sequence file %s\n", seq);
-	printf("Using result directory %s\n", res);
+	printf("Using indata file %s\n", indata);
+	printf("Using result directory %s\n", resdir);
 	printf("Options:  status=%d, duration=%d, endtime=%d, busy=%d\n", status, duration, endtime, busy);
 	printf("Defaults: runtime length=(%d/%d) (min/max)\n", MIN_RUN_LENGTH, MAX_RUN_LENGTH);
 	printf("-------------------------------------------------------------------\n");

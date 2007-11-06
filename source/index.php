@@ -15,9 +15,9 @@
 // -------------------------------------------------------------------------------
 
 // 
-// A simple script for starting a sequence processing job. If the request parameter
-// file or seq is set, then we process the indata. The form for submitting jobs is
-// always visible (we could redirect the browser to another page if we like.
+// A simple script for starting a batch job. If the request parameter file or data
+// is set, then we save it and process the indata. The form for submitting jobs and
+// the queue view is always visible.
 // 
 
 // 
@@ -144,11 +144,11 @@ function show_form($error = null)
     print "</form>\n";
     
     // 
-    // The form for submitting a sequence.
+    // The form for submitting a data.
     // 
     print "<form action=\"index.php\" method=\"GET\">\n";
-    print "   Process sequence: <textarea name=\"seq\" cols=\"50\" rows=\"5\"></textarea>\n";
-    print "   <input type=\"submit\" value=\"Send Sequence\" />\n";
+    print "   Process data: <textarea name=\"data\" cols=\"50\" rows=\"5\"></textarea>\n";
+    print "   <input type=\"submit\" value=\"Send Data\" />\n";
     print "</form>\n";
     
     // 
@@ -207,7 +207,7 @@ else {
     }
 }
 
-if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
+if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // 
     // Create output and job spool directories.
     // 
@@ -232,19 +232,19 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     }
     
     // 
-    // Create path to sequence data file.
+    // Create path to indata file.
     // 
-    $seqfile = sprintf("%s/sequence", $jobdir);
+    $indata = sprintf("%s/indata", $jobdir);
 
     // 
     // Process request parameters.
     // 
-    if(isset($_REQUEST['seq'])) {
+    if(isset($_REQUEST['data'])) {
 	// 
-	// Save the sequence to file.
+	// Save the data to file.
 	// 
-	if(!file_put_contents($seqfile, $_REQUEST['seq'])) {
-	    error_exit("Failed save sequence data to file");
+	if(!file_put_contents($indata, $_REQUEST['data'])) {
+	    error_exit("Failed save data to file");
 	}
     }
     else {
@@ -258,10 +258,10 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
 		rmdir($jobdir);
 		error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", MIN_FILE_SIZE));
 	    }
-	    if(!rename($_FILES['file']['tmp_name'], $seqfile)) {
+	    if(!rename($_FILES['file']['tmp_name'], $indata)) {
 		unlink($_FILES['file']['tmp_name']);
 		rmdir($jobdir);
-		error_exit("Failed move uploaded sequence file");
+		error_exit("Failed move uploaded file");
 	    }
 	}
 	else {
@@ -279,7 +279,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
 	error_exit("Failed create result directory");
     }
     $script = realpath(dirname(__FILE__) . "/../include/script.sh");
-    $command = sprintf("%s %s %s %s", $script, $jobdir, $seqfile, $resdir);
+    $command = sprintf("%s %s %s %s", $script, $jobdir, $indata, $resdir);
     $job = run_process($command, $jobdir);
     
     // 
@@ -294,7 +294,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['seq'])) {
     
     // 
     // Redirect the browser to an empty index.php to prevent page
-    // update to submit the same sequence twice or more.
+    // update to submit the same data or file twice or more.
     // 
     header("Location: index.php");    
 }

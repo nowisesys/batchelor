@@ -201,7 +201,7 @@ function get_jobs($hostid)
 				    // Process all files inside $root/$dir
 				    //
 				    switch($file) {
-				     case "sequence":
+				     case "indata":
 					// ignore
 					break;
 				     case "jobid":

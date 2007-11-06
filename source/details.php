@@ -29,7 +29,7 @@ include "../include/common.inc";
 // 
 $jobid  = $_REQUEST['jobid'];    // Job ID.
 $jobdir = $_REQUEST['result'];   // Job directory.
-$jobseq = $_REQUEST['seq'];      // Show sequence.
+$indata = $_REQUEST['data'];     // Show indata.
 
 // 
 // Get hostid from cookie.
@@ -78,11 +78,11 @@ function print_footer()
 // 
 // Display job details.
 // 
-if(isset($jobseq)) {
-    print_header(sprintf("Sequence for Job ID %d", $jobid));
-    printf("<h3>Sequence for Job ID %d</h3><hr>\n", $jobid);
+if(isset($indata)) {
+    print_header(sprintf("Data for Job ID %d", $jobid));
+    printf("<h3>Data for Job ID %d</h3><hr>\n", $jobid);
     print "<p><pre>\n";
-    readfile(sprintf("%s/sequence", $jobdir));
+    readfile(sprintf("%s/indata", $jobdir));
     print "</pre></p>\n";
 }
 else {
@@ -108,7 +108,7 @@ else {
 	printf("<p><b>Error:</b><br><pre>%s</pre></p>\n", file_get_contents("stderr"));
     }
 	
-    printf("<p><a href=\"details.php?jobid=%d&result=%s&seq=1\" target=\"_blank\">View sequence...</a></p>", 
+    printf("<p><a href=\"details.php?jobid=%d&result=%s&data=1\" target=\"_blank\">View indata...</a></p>", 
 	   $_REQUEST['jobid'], $_REQUEST['result']);
     chdir($cwd);
 }

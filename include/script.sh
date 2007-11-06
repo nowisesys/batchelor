@@ -4,13 +4,13 @@
 # The script receives three arguments:
 # 
 # $1 : The directory where job meta data should be saved.
-# $2 : The sequence file to process.
+# $2 : The indata file to process.
 # $3 : The result directory where output files should go.
 #
 # We save a timestamp when we start and when we are finished.
 
 jobdir="$1"
-seqfile="$2"
+indata="$2"
 resdir="$3"
 
 # Save start timestamp:
@@ -18,7 +18,7 @@ date -u +"%s" > $jobdir/started
 
 # Put the command to run here with stdout and stderr redirected.
 # The command must be in PATH or being an absolute path.
-$(dirname $0)/simula $seqfile $resdir 1> $jobdir/stdout 2> $jobdir/stderr
+$(dirname $0)/simula $indata $resdir 1> $jobdir/stdout 2> $jobdir/stderr
 exitcode="$?"
 
 # Save finished timestamp:
