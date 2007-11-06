@@ -165,7 +165,8 @@ function show_form($error = null)
 	show_jobs_table($jobs);
     }
     printf("<hr>Last updated: %s\n", format_timestamp(time()));
-    
+    printf("<br>Contact: %s\n", CONTACT_STRING);
+      
     print "</body></html>\n";
 }
 
@@ -296,13 +297,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 		    // 
 		    // Value: 6; Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3. 
 		    // 
-		    error_exit(sprintf("Missing a temporary folder, contact %s", CONTACT_ADDRESS));
+		    error_exit(sprintf("Missing a temporary folder, contact %s", CONTACT_STRING));
 		    break;
 		 case UPLOAD_ERR_CANT_WRITE:
 		    // 
 		    // Value: 7; Failed to write file to disk. Introduced in PHP 5.1.0. 
 		    //
-		    error_exit(sprintf("Failed to write file to disk, contact %s", CONTACT_ADDRESS));
+		    error_exit(sprintf("Failed to write file to disk, contact %s", CONTACT_STRING));
 		    break;
 		 case UPLOAD_ERR_EXTENSION:
 		    // 
@@ -320,7 +321,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     
     // 
     // File uploaded or created. Now we just has to start the batch
-    // job. The wrapper script path must be absolute. Create
+    // job. The path to the wrapper script path must be absolute.
     // 
     $resdir = sprintf("%s/result", $jobdir);
     if(!mkdir($resdir, CACHE_PERMISSION, true)) {

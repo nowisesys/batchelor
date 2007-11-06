@@ -24,6 +24,16 @@ if(!ini_get("date.timezone")) {
 }
 
 // 
+// The contact address for problems running batchelor. This address is used
+// in some error messages and is also printed in page footer. You should set
+// it to a real address!
+//
+define ("CONTACT_NAME", "System Manager");
+define ("CONTACT_ADDRESS", "batchelor@localhost");
+define ("CONTACT_STRING", sprintf("<a href=\"mailto:%s\">%s", 
+				  CONTACT_ADDRESS, CONTACT_NAME));
+
+// 
 // The batch cammand to run. The %s gets substituted with the batch
 // job command, including its arguments.
 // 
@@ -43,10 +53,11 @@ define ("BATCH_REMOVE", "atrm %d");
 
 // 
 // 
-// The minimum file size accepted (in bytes). Set to 0 to disable
+// The minimum/maximum file size accepted (in bytes). Set to 0 to disable
 // minimum file size check.
 // 
 define ("MIN_FILE_SIZE", 5000);
+define ("MAX_FILE_SIZE", ini_get("upload_max_filesize"));
 
 // 
 // The number of seconds between reload of the page waiting for
