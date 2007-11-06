@@ -10,8 +10,8 @@
    Example:
    
    /var/lib/http/
-             +-- apps/                      // Webapps like retrotector goes here
-	     |     +-- retrotector/
+             +-- apps/                      // Webapps like batchelor goes here
+	     |     +-- batchelor/
 	     |             +-- cache/       // Can be moved, see conf/config.inc 
 	     |             +-- conf/
 	     |             +-- include/  
@@ -43,7 +43,7 @@
 
    All job gets spooled under cache like this:
 
-   retrotector/
+   batchelor/
         +-- cache/
               +-- hostid1/                   // Unique host ID
               |      +-- timestamp1/         // The job directory

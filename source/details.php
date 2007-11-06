@@ -22,7 +22,7 @@
 // Get configuration.
 // 
 include "../conf/config.inc";
-include "../include/retrotector.inc";
+include "../include/common.inc";
 
 // 
 // Get request parameters.

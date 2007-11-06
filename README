@@ -1,13 +1,21 @@
-Retrotector is a web interface written in PHP that enables potentional long
-running jobs to be uploaded to the server and runned under the batch queue
-commonly found on UNIX systems. 
+Batchelor is a web interface written in PHP that provides user to run
+potentional long time jobs under the batch job queue commonly found on
+UNIX/Linux systems. The rudimentary interface allows the input data to the
+batch job to be given in a text field or uploaded as an file.
 
-The interface also provides a rudimentary interface where the current state 
-of each jobb can be polled, as well as links for removing queued or finished 
-jobs.
+Once the input data is uploaded, it queues a batch job running the wrapper
+script (include/script.sh), passing input data and result directory as
+script arguments. The stderr and stdout is captured to files and can be
+reviewed thru the web interface.
 
-No effort has been put in creating a good looking UI, as its probably going
-to be changed to fit with the overall site design by its users.
+All jobs (pending, running and finished) are keept under the cache directory
+in a filesystem "database". Each peer has its private namespace (a job
+directory) under cache. Batchelor uses cookies to associate the peer with
+its job directory. 
+
+No effort has been put in creating a good looking UI, as I expect the users
+of this piece of code to modify the show_form() function to produce HTML
+output that conforms with their sites "look-and-feel".
 
 Anders Lövgren,
 2007-11-05

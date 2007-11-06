@@ -24,7 +24,7 @@
 // Include configuration and libs.
 // 
 include "../conf/config.inc";
-include "../include/retrotector.inc";
+include "../include/common.inc";
 
 function show_jobs_table(&$jobs)
 {
