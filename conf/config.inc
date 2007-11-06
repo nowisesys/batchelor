@@ -30,7 +30,7 @@ if(!ini_get("date.timezone")) {
 //
 define ("CONTACT_NAME", "System Manager");
 define ("CONTACT_ADDRESS", "batchelor@localhost");
-define ("CONTACT_STRING", sprintf("<a href=\"mailto:%s\">%s", 
+define ("CONTACT_STRING", sprintf("<a href=\"mailto:%s\">%s</a>", 
 				  CONTACT_ADDRESS, CONTACT_NAME));
 
 // 
