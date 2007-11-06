@@ -14,6 +14,16 @@ include "../include/retrotector.inc";
 
 function show_jobs_table(&$jobs)
 {
+    // 
+    // Font colors:
+    // 
+    $color = array( "pending"  => "#000066",
+		    "running"  => "#0000bb",
+		    "finished" => "#006600",
+		    "error"    => "#990000",
+		    "crashed"  => "#666666" );
+      
+    print "<br><h3>Job queue:</h3>\n";
     print "<hr><table width=\"50%\"><tr><th>Started</th><th>Job</th><th>Status</th><th>Links</th></tr>\n";
     foreach($jobs as $jobdir => $job) {	    
 	$label = sprintf("(%s)", $job['state']);
@@ -62,7 +72,12 @@ function show_jobs_table(&$jobs)
 	// 
 	// Status column
 	// 
-	printf("<td>%s</td>", $label);
+	if($job['state'] == "running") {
+	    printf("<td>==&gt; <font color=\"%s\">%s</font> &lt;==</td>", $color[$job['state']], $label);
+	}
+	else {
+	    printf("<td><font color=\"%s\">%s</font></td>", $color[$job['state']], $label);
+	}
 	
 	// 
 	// Links column
