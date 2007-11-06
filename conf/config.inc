@@ -1,10 +1,12 @@
 <?php
 
 // 
-// Make sure timezone is UTC to prevent troubles with daylight saving time.
+// The timezone can either be set system wide (in php.ini) or application
+// local (here in config.inc). Setting the timezone is recommended as it
+// affects how date() and strftime() formats timestamps (UNIX timestamp).
 // 
-if(ini_get("date.timezone") != "UTC") {
-    ini_set("date.timezone", "UTC");
+if(!ini_get("date.timezone")) {
+    // ini_set("date.timezone", "CET");
 }
 
 // 
