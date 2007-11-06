@@ -14,6 +14,10 @@
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
 
+// 
+// Show details about a job.
+// 
+
 //
 // Get configuration.
 // 
