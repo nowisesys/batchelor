@@ -20,7 +20,21 @@
 	     +-- htdocs/                    // The standard webroot, plain HTML
 	     +-- error/                     // Apache internal
 	     +-- icons/                     // Apache internal
-	     
+
+
+** REQUIREMENTS:
+
+   The code has been tested to work with:
+   
+   *) PHP 5.2.4 (PHP 4.4.x is being phased out, see http://www.php.net/)
+   *) Apache 2.2.6 (http://httpd.apache.org/)
+   *) The UNIX at daemon 3.1.8 (ftp://jurix.jura.uni-sb.de/pub/jurix/source/chroot/appl/at/)
+   
+   The PECL zip extension (bundled with PHP >= 5.2.x) is recommended. The
+   code is also prepared to use an external zip command, like 7-zip. 7-zip is
+   GPL/BSD licensed and can be downloaded from http://p7zip.sourceforge.net/.
+   
+
 ** THE CACHE DIRECTORY:
 
    All job gets spooled under cache like this:
@@ -43,6 +57,21 @@
              ...    ...    ...
 
    The cache directory must be rwx for the user the web server is running as.
+
+
+** CONFIGURE THE SOURCE:
+
+   Open conf/config.inc and edit its content. Then continue with editing the
+   wrapper script include/script.sh, just replace the 'simula ...' line with
+   the command.
+   
+   
+** TESTING THE JOB QUEUE:
+
+   A small C-source program (include/simula.c) exist for testing the job
+   queue. Compile it with i.e. 'gcc -Wall -O2 simula.c -o simula' it you
+   want to test the job queue (its the default command runned from inside
+   include/script.sh).
 
 
 Anders Lövgren, 
