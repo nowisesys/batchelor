@@ -136,8 +136,10 @@ function show_form($error = null)
     // The form for uploading a file.
     // 
     print "<form enctype=\"multipart/form-data\" action=\"index.php\" method=\"POST\">\n";
-    print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
-    printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", MAX_FILE_SIZE);
+    if(UPLOAD_MAX_FILESIZE > 0) {
+	print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
+	printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", UPLOAD_MAX_FILESIZE);
+    }
     print "   <!-- Name of input element determines name in \$_FILES array -->\n";
     print "   Process file: <input name=\"file\" type=\"file\" />\n";
     print "   <input type=\"submit\" value=\"Send File\" />\n";
@@ -254,10 +256,10 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	// system file, i.e. /etc/passwd
 	// 
 	if(is_uploaded_file($_FILES['file']['tmp_name'])) {
-	    if(MIN_FILE_SIZE != 0 && filesize($_FILES['file']['tmp_name']) < MIN_FILE_SIZE) {
+	    if(UPLOAD_MIN_FILESIZE != 0 && filesize($_FILES['file']['tmp_name']) < UPLOAD_MIN_FILESIZE) {
 		unlink($_FILES['file']['tmp_name']);
 		rmdir($jobdir);
-		error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", MIN_FILE_SIZE));
+		error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", UPLOAD_MIN_FILESIZE));
 	    }
 	    if(!rename($_FILES['file']['tmp_name'], $indata)) {
 		unlink($_FILES['file']['tmp_name']);

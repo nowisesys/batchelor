@@ -53,11 +53,12 @@ define ("BATCH_REMOVE", "atrm %d");
 
 // 
 // 
-// The minimum/maximum file size accepted (in bytes). Set to 0 to disable
-// minimum file size check.
+// The minimum/maximum file size accepted (in bytes). Set to 0 to 
+// disable minimum/maximum file size check. The maximum is affected
+// by PHP's upload_max_filesize.
 // 
-define ("MIN_FILE_SIZE", 5000);
-define ("MAX_FILE_SIZE", ini_get("upload_max_filesize"));
+define ("UPLOAD_MIN_FILESIZE", 5000);
+define ("UPLOAD_MAX_FILESIZE", 0);
 
 // 
 // The number of seconds between reload of the page waiting for
