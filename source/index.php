@@ -137,7 +137,7 @@ function show_form($error = null)
     // 
     print "<form enctype=\"multipart/form-data\" action=\"index.php\" method=\"POST\">\n";
     print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
-    print "   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"30000\" />\n";
+    printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", MAX_FILE_SIZE);
     print "   <!-- Name of input element determines name in \$_FILES array -->\n";
     print "   Process file: <input name=\"file\" type=\"file\" />\n";
     print "   <input type=\"submit\" value=\"Send File\" />\n";
@@ -266,7 +266,55 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	}
 	else {
 	    rmdir($jobdir);
-	    error_exit("No uploaded file");
+	    if(isset($_FILES['file']['error'])) {
+		switch($_FILES['file']['error']) {
+		 case UPLOAD_ERR_INI_SIZE:
+		    // 
+		    // Value: 1; The uploaded file exceeds the upload_max_filesize directive in php.ini. 
+		    //
+		    error_exit("The uploaded file exceeds PHP's maximum allowed filesize");
+		    break;
+		 case UPLOAD_ERR_FORM_SIZE:
+		    // 
+		    // Value: 2; The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. 
+		    //
+		    error_exit("The uploaded file exceeds forms maximum allowed filesize");
+		    break;
+		 case UPLOAD_ERR_PARTIAL:
+		    //
+		    // Value: 3; The uploaded file was only partially uploaded. 
+		    //
+		    error_exit("The uploaded file was only partially uploaded");
+		    break;
+		 case UPLOAD_ERR_NO_FILE:
+		    //
+		    // Value: 4; No file was uploaded. 
+		    // 
+		    error_exit("No file was uploaded");
+		    break;
+		 case UPLOAD_ERR_NO_TMP_DIR:
+		    // 
+		    // Value: 6; Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3. 
+		    // 
+		    error_exit(sprintf("Missing a temporary folder, contact %s", CONTACT_ADDRESS));
+		    break;
+		 case UPLOAD_ERR_CANT_WRITE:
+		    // 
+		    // Value: 7; Failed to write file to disk. Introduced in PHP 5.1.0. 
+		    //
+		    error_exit(sprintf("Failed to write file to disk, contact %s", CONTACT_ADDRESS));
+		    break;
+		 case UPLOAD_ERR_EXTENSION:
+		    // 
+		    // Value: 8; File upload stopped by extension. Introduced in PHP 5.2.0.
+		    //
+		    error_exit("File upload stopped by extension");
+		    break;
+		}
+	    }
+	    else {
+		error_exit("No uploaded file");
+	    }
 	}
     }
     
