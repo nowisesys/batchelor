@@ -47,6 +47,7 @@ if(realpath(dirname(__FILE__)) != getcwd()) {
 }
 
 include "../conf/config.inc";
+include "../include/common.inc";
 include "../include/check.inc";
 
 // 

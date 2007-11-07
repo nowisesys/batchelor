@@ -48,6 +48,19 @@ function failed($str)
 }
 
 // 
+// Print warning message.
+// 
+function warning($str)
+{
+    if(WPRINTF_MODE == "www") {
+	print "<font color=\"blue\">$str</font><br>";
+    }
+    else {
+	print "$str (!)\n";
+    }
+}
+
+// 
 // Generic output.
 // 
 function output($str, $emphase = false)
@@ -292,6 +305,64 @@ function check_cache_permission(&$failed)
     }
 }
 
+// 
+// Check PHP settings, some of them is more like an recommendation.
+// 
+function check_php_settings(&$failed)
+{
+    print_section_header("Checking PHP settings");
+    
+    output("Checking if timezone is set: ");
+    if(ini_get("date.timezone")) {
+	success(sprintf("yes (%s)", ini_get("date.timezone")));
+    }
+    else {
+	warning("no, consider define your timezone either system wide (in php.ini) or application local (in config.inc)");
+    }
+    
+    output("Checking if contact address is set: ");
+    if(CONTACT_ADDRESS != "batchelor@localhost") {
+	success(sprintf("yes, %s", CONTACT_ADDRESS));
+    }
+    else {
+	warning(sprintf("no, using %s defined in config.inc", CONTACT_ADDRESS));
+    }
+    
+    output("Checking maximum filesize for uploaded files: ");
+    $max_filesize = ini_get("upload_max_filesize") * 1024 * 1024;
+    if(UPLOAD_MAX_FILESIZE <= $max_filesize) {
+	if(UPLOAD_MAX_FILESIZE > 0) {
+	    success(sprintf("%s (from UPLOAD_MAX_FILESIZE in config.inc)", bytes_to_string(UPLOAD_MAX_FILESIZE)));
+	}
+	else {
+	    success(sprintf("%s (from upload_max_filesize in php.ini)", bytes_to_string($max_filesize)));
+	}
+    }
+    else {
+	warning(sprintf("the UPLOAD_MAX_FILESIZE (%s) is larger that upload_max_filesize (%s) defined in php.ini",
+			bytes_to_string(UPLOAD_MAX_FILESIZE), bytes_to_string($max_filesize)));
+    }
+    
+    output("Checking if meta refresh page is used: ");
+    if(PAGE_REFRESH_RATE == 0) {
+	success("no");
+    }
+    else {
+	warning(sprintf("yes (%d sec). Using meta refresh may cause problem with file uploads.", 
+			PAGE_REFRESH_RATE));
+    }
+    
+    output("Checking if session cookies is enabled: ");
+    if(USE_SESSION_COOKIES) {
+	warning("yes (cookie is removed when browser is closed)");
+    }
+    else {
+	success("no (using persistent cookies)");
+	output("Checking persistent cookies lifetime: ");	
+	success(seconds_to_string(COOKIE_LIFE_TIME));
+    }
+}
+
 //
 // Run all tests.
 // 
@@ -305,11 +376,14 @@ function run_all_tests()
     check_cache_permission($failed);
     check_builtin_functions($failed);
     check_predefined_variables($failed);
-    // check_internal_functions($failed);
+    check_php_settings($failed);
     
+    print_section_header("Summary");
     if($failed) {
-	print_section_header("Summary");
 	output("One or more test failed, check your PHP installation.\n");
+    }
+    else {
+	output("Your PHP installation seems to be OK.\n");
     }
 }
 
