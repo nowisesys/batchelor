@@ -115,9 +115,11 @@ function check_php_version($failed)
     else {
 	if(isset($rel)) {
 	    failed(sprintf("%d.%d.%d (release=%s), this version is ancient", $maj, $min, $rev, $rel));
+	    $failed = true;
 	}
 	else {
 	    failed(sprintf("%d.%d.%d, this version is ancient", $maj, $min, $rev));
+	    $failed = true;
 	}
 	failed("Some required functions will probably be missing or not working as expected. Running an old version of PHP may also expose you to sequrity holes.");
 	if(WPRINTF_MODE == "www") {
@@ -221,6 +223,7 @@ function check_predefined_variables(&$failed)
     }
     else {
 	failed("no");
+	$failed = true;
     }
 
     output("Checking if \$_FILES is defined: ");
@@ -229,6 +232,7 @@ function check_predefined_variables(&$failed)
     }
     else {
 	failed("no");
+	$failed = true;
     }
 
     output("Checking if \$_REQUEST is defined: ");
@@ -237,6 +241,7 @@ function check_predefined_variables(&$failed)
     }
     else {
 	failed("no");
+	$failed = true;
     }
 
     output("Checking if \$_COOKIE is defined: ");
@@ -245,6 +250,7 @@ function check_predefined_variables(&$failed)
     }
     else {
 	failed("no");
+	$failed = true;
     }
 }
 
@@ -289,6 +295,7 @@ function check_cache_permission(&$failed)
 	    }
 	    else {
 		failed("no");
+		$failed = true;
 	    }
 
 	    output("Checking if cache directory is writable: ");
@@ -297,10 +304,12 @@ function check_cache_permission(&$failed)
 	    }
 	    else {
 		failed("no");
-	    }
+		$failed = true;
+	    }	    
 	}
 	else {
 	    failed(sprintf("%s exists, but is not a directory", CACHE_DIRECTORY));
+	    $failed = true;
 	}
     }
 }
