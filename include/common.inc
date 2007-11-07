@@ -313,4 +313,79 @@ function format_timestamp($stamp)
     return strftime(TIMESTAMP_FORMAT, $stamp);
 }
 
+// 
+// Get humanized string (like "3 weeks") from second value.
+//
+function seconds_to_string($original)
+{
+    // 
+    // Save original value to avoid error propagation.
+    // 
+    $current = $original;
+    
+    $timestr = "$current sec";
+    $divide  = 60;
+    $current = floor($original / $divide);
+    if($current >= 2) {
+	$timestr = "$current min";
+	$divide *= 60;
+	$current = floor($original / $divide);
+	if($current >= 2) {
+	    $timestr = "$current hours";
+	    $divide *= 24;
+	    $current = floor($original / $divide);
+	    if($current >= 4) {
+		$timestr = "$current days";
+		$divide *= 7;
+		$current = floor($original / $divide);
+		if($current >= 4) {
+		    $timestr = "$current weeks";
+		    $divide *= 4;
+		    $current = floor($original / $divide);
+		    if($current > 3) {
+			$timestr = "$current months";
+			$divide *= 12;
+			$current = floor($original / $divide);
+			if($current >= 3) {
+			    $timestr = "$current years";
+			}
+		    }
+		}
+	    }
+	}
+    }		
+    
+    return $timestr;
+}
+
+// 
+// Get humanized string (like "5 MB") from bytes value.
+// 
+function bytes_to_string($original)
+{
+    // 
+    // Save original value to avoid error propagation.
+    // 
+    $current = $original;
+    
+    $bytestr = "$current bytes";
+    $divide  = 1024;
+    $current = floor($original / $divide);
+    if($current >= 2) {
+	$bytestr = "$current kB";
+	$divide *= 1024;
+	$current = floor($original / $divide);
+	if($current >= 2) {
+	    $bytestr = "$current MB";
+	    $divide *= 1024;
+	    $current = floor($original / $divide);
+	    if($current >= 2) {
+		$bytestr = "$current GB";
+	    }
+	}
+    }
+    
+    return $bytestr;
+}
+
 ?>
