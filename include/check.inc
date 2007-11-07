@@ -132,6 +132,39 @@ function check_php_version($failed)
 }
 
 // 
+// Check the web server.
+// 
+function check_web_server(&$failed)
+{    
+    // 
+    // Skip test if running under CLI.
+    // 
+    if(WPRINTF_MODE == "cli") {
+	return;
+    }
+
+    print_section_header("Checking web server");
+
+    output("Checking web server type: ");
+    if(isset($_SERVER['SERVER_SIGNATURE'])) {
+	success(strip_tags($_SERVER['SERVER_SIGNATURE']));
+    }
+    else {
+	if(isset($_SERVER['SERVER_SOFTWARE'])) {
+	    success($_SERVER['SERVER_SOFTWARE']);
+	}
+	else {
+	    warning("undefined");
+	}
+    }
+    
+    output("Checking web server user: ");
+    $user = posix_getpwuid(posix_getuid());
+    $real = posix_getpwuid(posix_geteuid());
+    success(sprintf("real=%s, effective=%s", $real['name'], $user['name']));
+}
+
+// 
 // Check if command is in path. This will only work if script is run 
 // in a POSIX environment as Unix/Linux or Cygwin on Windows.
 //
@@ -305,7 +338,7 @@ function check_cache_permission(&$failed)
 	    else {
 		failed("no");
 		$failed = true;
-	    }	    
+	    }
 	}
 	else {
 	    failed(sprintf("%s exists, but is not a directory", CACHE_DIRECTORY));
@@ -380,6 +413,7 @@ function run_all_tests()
     $failed = false;
 
     check_php_version($failed);
+    check_web_server($failed);
     check_external_commands($failed);
     check_loaded_extensions($failed);
     check_cache_permission($failed);
