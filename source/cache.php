@@ -229,6 +229,13 @@ function main(&$argv, $argc)
     // 
     parse_options($argv, $argc, $options);
     $options = (object)$options;
+    
+    // 
+    // Dump options:
+    //
+    if($options->debug) {
+	var_dump($options);
+    }
 }
 
 // 
