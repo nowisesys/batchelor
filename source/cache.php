@@ -236,6 +236,24 @@ function main(&$argv, $argc)
     if($options->debug) {
 	var_dump($options);
     }
+
+    // 
+    // Process options.
+    // 
+    if(isset($options->find)) {
+	// 
+	// Lookup hostid from ip-address or hostname
+	// 
+	$mapfile = sprintf("%s/map/inaddr/%s", CACHE_DIRECTORY, $options->find);
+	if(file_exists($mapfile)) {
+	    $hostid = trim(file_get_contents($mapfile));
+	    printf("%s: %s\n", $options->find, $hostid);
+	}
+	else {
+	    die(sprintf("failed find hostid for '%s' (maybe its using ipv6?)\n", 
+			$options->find));
+	}
+    }
 }
 
 // 
