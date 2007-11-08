@@ -228,6 +228,7 @@ function main(&$argv, $argc)
     // Fill $options with command line options.
     // 
     parse_options($argv, $argc, $options);
+    $options = (object)$options;
 }
 
 // 
