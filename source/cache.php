@@ -105,24 +105,10 @@ function check_arg($key, $val, $required)
 }
 
 // 
-// The main function.
-//
-function main(&$argv, $argc)
+// Parse command line options.
+// 
+function parse_options(&$argv, $argc, &$options)
 {
-    $prog = basename(array_shift($argv));
-    $vers = trim(file_get_contents("../VERSION"));
-    
-    // 
-    // Setup defaults in options array:
-    // 
-    $options = array( "cleanup" => false,
-		      "list" => false,
-		      "find" => null,
-		      "debug" => false, 
-		      "verbose" => 0,
-		      "prog"  => $prog, 
-		      "version" => $vers );
-    
     // 
     // Get command line options.
     // 
@@ -158,10 +144,17 @@ function main(&$argv, $argc)
 	 case "-a":
 	 case "--age":             // Filter on timespec. The timespec string is a number and
 	    check_arg($key, $val, true);
-	    if(!preg_match("/^\d+[smhDWMY]$/", $val)) {
+	    $match = array();
+	    if(!preg_match("/^(\d+)([smhDWMY])$/", $val, $match)) {
 		die(sprintf("wrong format for argument to option '%s', see --help\n", $key));
 	    }
-	    $options['age'] = $val;
+	    // 
+	    // Calculate the timestamp used when comparing modification times.
+	    // 
+	    $map = array( "s" => "second", "m" => "minute", "h" => "hour",
+			  "D" => "day", "W" => "week", "M" => "month", "Y" => "year" );
+	    $timespec = sprintf("-%s %s", $match[1], $map[$match[2]]);
+	    $options['age'] = strtotime($timespec);
 	    break;
 	 case "-d":
 	 case "--debug":           // Enable debug.
@@ -191,6 +184,32 @@ function main(&$argv, $argc)
 	    die(sprintf("unknown option '%s', see --help\n", $key));
 	}
     }	      
+}
+
+// 
+// The main function.
+//
+function main(&$argv, $argc)
+{
+    $prog = basename(array_shift($argv));
+    $vers = trim(file_get_contents("../VERSION"));
+    
+    // 
+    // Setup defaults in options array:
+    // 
+    $options = array( "cleanup" => false,
+		      "list" => false,
+		      "find" => null,
+		      "hostid" => null,
+		      "ipaddr" => null,
+		      "age" => 0,
+		      "now" => time(),
+		      "debug" => false, 
+		      "dry-run" => false,
+		      "verbose" => 0,
+		      "prog"  => $prog, 
+		      "version" => $vers );
+    parse_options($argv, $argc, $options);
 }
 
 // 
