@@ -129,6 +129,13 @@ function parse_options(&$argv, $argc, &$options)
 	 case "-f":
 	 case "--find=ipaddr":     // Lookup hostid from ip-address or hostname.
 	    check_arg($key, $val, true);
+	    $ipaddr = val;
+	    if(!is_numeric($val[0])) {
+		$ipaddr = gethostbyname($val);
+		if($ipaddr == $val) {
+		    die(sprintf("failed resolve hostname %s\n", $val));
+		}
+	    }
 	    $options['find'] = $val;
 	    break;
 	 case "-x":
@@ -139,6 +146,13 @@ function parse_options(&$argv, $argc, &$options)
 	 case "-i":
 	 case "--ipaddr":          // Filter on ip-address or hostname.
 	    check_arg($key, $val, true);
+	    $ipaddr = val;
+	    if(!is_numeric($val[0])) {
+		$ipaddr = gethostbyname($val);
+		if($ipaddr == $val) {
+		    die(sprintf("failed resolve hostname %s\n", $val));
+		}
+	    }
 	    $options['ipaddr'] = $val;	
 	    break;
 	 case "-a":
@@ -209,6 +223,10 @@ function main(&$argv, $argc)
 		      "verbose" => 0,
 		      "prog"  => $prog, 
 		      "version" => $vers );
+    
+    // 
+    // Fill $options with command line options.
+    // 
     parse_options($argv, $argc, $options);
 }
 
