@@ -219,6 +219,89 @@ function cache_get_hostid($options)
 }
 
 // 
+// Find jobs matching filter options.
+// 
+function cache_find_jobs($hostid, $options)
+{
+    $dirname = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $hostid);
+    result = array();
+
+    $handle = opendir($dirname);
+    if($handle) {
+	$result = array();
+	while(false !== ($dir = readdir($handle))) {
+	    if($dir != "." && $dir != "..") {
+		if(isset($opions->age)) {
+		    // 
+		    // Only append directories older than age filter.
+		    // 
+		    if(intval($dir) > $options->age) {
+			if($options->debug) {
+			    printf("debug: directory %s/%s is newer than %d (skipped)\n", 
+				   $hostid, $dir, $options->age);
+			}
+			continue;
+		    }
+		}
+		array_push($result, $dir);
+	    }
+	}
+	closedir($handle);
+	return $result;
+    }
+    else {
+	die(sprintf("failed open directory %s\n", $dirname));
+    }
+}
+
+// 
+// Find all job directories matching filter preferences.
+// 
+function cache_find_job_dirs($options)
+{
+    if(isset($options->ipaddr)) {
+	$options->hostid = cache_get_hostid($options->ipaddr);
+	if($options->debug) {
+	    printf("debug: resolved ip-address %s to hostid %s\n", 
+		   $options->ipaddr, 
+		   $options->hostid);
+	}
+    }
+    
+    // 
+    // Begin find directories in job cache.
+    // 
+    if(isset($options->hostid)) {
+	// 
+	// Only consider this single hostid.
+	//
+	$result = array();
+	$result[$options->hostid] = cache_find_jobs($options->hostid, $options);
+	return $result;
+    }
+    else {
+	// 
+	// Process multiple hostid's.
+	// 
+	$jobsdir = sprintf("%s/jobs", CACHE_DIRECTORY);
+	$handle = opendir($jobsdir);
+	if($handle) {
+	    $result = array();
+	    while(false !== ($dir = readdir($handle))) {
+		if($dir != "." && $dir != "..") {
+		    $result[$dir] = cache_find_jobs($dir, $options);
+		}
+	    }
+	    closedir($handle);
+	    return $result;
+	}
+	else {
+	    die(sprintf("failed open directory %s\n", $jobsdir));
+	}
+    }
+}
+
+// 
 // The main function.
 //
 function main(&$argv, $argc)
@@ -268,6 +351,20 @@ function main(&$argv, $argc)
     if(isset($options->find)) {
 	$hostid = cache_get_hostid($options);
 	printf("%s: %s\n", $options->find, $hostid);
+    }
+
+    if($options->list) {
+	// 
+	// Get all job directories matching filter preferences.
+	// 
+	$dirs = cache_find_job_dirs($options);
+    }
+
+    if($options->clean) {
+	// 
+	// Get all job directories matching filter preferences.
+	// 
+	$dirs = cache_find_job_dirs($options);
     }
 }
 
