@@ -357,6 +357,36 @@ function cache_get_job_size($path, &$data)
 }
 
 // 
+// Recursive delete a job directory.
+// 
+function cache_delete_directory($path, $options)
+{  
+    if($options->debug) {
+	printf(sprintf("debug: deleting in directory %s\n", $path));
+    }
+    
+    $handle = opendir($path);
+    if($handle) {
+	while(false !== ($file = readdir($handle))) {
+	    if($file != "." && $file != "..") {
+		if(is_dir($file)) {
+		    cache_delete_directory(sprintf("%s/%s", $path, $file));
+		    return;
+		}
+		else {
+		    if(!$options->dry-run) {
+			if(!unlink($file)) {
+			    printf(sprintf("%s:%d: error: failed unlink file %s\n", basename(__FILE__), __LINE__, $file));
+			}
+		    }
+		}
+	    }
+	}
+	closedir($handle);
+    }
+}
+
+// 
 // The main function.
 //
 function main(&$argv, $argc)
@@ -450,7 +480,24 @@ function main(&$argv, $argc)
 	// 
 	// Get all job directories matching filter preferences.
 	// 
-	$dirs = cache_find_job_dirs($options);
+	$dirs = cache_find_job_dirs($options);	
+	foreach($dirs as $hostid => $jobdirs) { 
+	    foreach($jobdirs as $jobdir) {
+		$path = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
+		if($options->debug || $options->dry-run) {
+		    printf("debug: about to delete directory %s\n", $path);
+		}
+		if($options->dry-run) {
+		    printf("dry-run: skip delete directory %s\n", $path);
+		}
+		else {
+		    if($options->debug || $options->verbose) {
+			printf("%sdeleting directory %s\n", ($options->debug ? "debug: " : ""), $path);
+		    }
+		    cache_delete_directory($path);
+		}
+	    }
+	}
     }
 }
 
