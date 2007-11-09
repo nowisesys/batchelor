@@ -201,6 +201,24 @@ function parse_options(&$argv, $argc, &$options)
 }
 
 // 
+// Lookup hostid from ip-address or hostname
+// 
+function cache_get_hostid($options)
+{
+    $mapfile = sprintf("%s/map/inaddr/%s", CACHE_DIRECTORY, $options->find);
+    if($options->debug) {
+	printf("debug: looking for hostid in file %s\n", $mapfile);
+    }
+    if(file_exists($mapfile)) {
+	return trim(file_get_contents($mapfile));
+    }
+    else {
+	die(sprintf("failed find hostid for '%s' (maybe its using ipv6?)\n", 
+		    $options->find));
+    }
+}
+
+// 
 // The main function.
 //
 function main(&$argv, $argc)
@@ -236,23 +254,13 @@ function main(&$argv, $argc)
     if($options->debug) {
 	var_dump($options);
     }
-
+    
     // 
     // Process options.
     // 
     if(isset($options->find)) {
-	// 
-	// Lookup hostid from ip-address or hostname
-	// 
-	$mapfile = sprintf("%s/map/inaddr/%s", CACHE_DIRECTORY, $options->find);
-	if(file_exists($mapfile)) {
-	    $hostid = trim(file_get_contents($mapfile));
-	    printf("%s: %s\n", $options->find, $hostid);
-	}
-	else {
-	    die(sprintf("failed find hostid for '%s' (maybe its using ipv6?)\n", 
-			$options->find));
-	}
+	$hostid = cache_get_hostid($options);
+	printf("%s: %s\n", $options->find, $hostid);
     }
 }
 
