@@ -103,12 +103,12 @@ function check_arg($key, $val, $required)
 {
     if($required) {
 	if(!isset($val)) {
-	    die(sprintf("option '%s' requires an argument\n", $key));
+	    die(sprintf("%s: option '%s' requires an argument\n", basename(__FILE__), $key));
 	}
     }
     else {
 	if(isset($val)) {
-	    die(sprintf("option '%s' do not take an argument\n", $key));
+	    die(sprintf("%s: option '%s' do not take an argument\n", basename(__FILE__), $key));
 	}	
     }
 }
@@ -152,7 +152,7 @@ function parse_options(&$argv, $argc, &$options)
 	    if(!is_numeric($val[0])) {
 		$ipaddr = gethostbyname($val);
 		if($ipaddr == $val) {
-		    die(sprintf("failed resolve hostname %s\n", $val));
+		    die(sprintf("%s: failed resolve hostname %s\n", basename(__FILE__), $val));
 		}
 	    }
 	    $options['ipaddr'] = $val;	
@@ -162,7 +162,7 @@ function parse_options(&$argv, $argc, &$options)
 	    check_arg($key, $val, true);
 	    $match = array();
 	    if(!preg_match("/^(\d+)([smhDWMY])$/", $val, $match)) {
-		die(sprintf("wrong format for argument to option '%s', see --help\n", $key));
+		die(sprintf("%s: wrong format for argument to option '%s', see --help\n", basename(__FILE__), $key));
 	    }
 	    // 
 	    // Calculate the timestamp used when comparing modification times.
@@ -201,7 +201,7 @@ function parse_options(&$argv, $argc, &$options)
 	    cache_version($options['prog'], $options['version']);
 	    exit(0);	      
 	 default:
-	    die(sprintf("unknown option '%s', see --help\n", $key));
+	    die(sprintf("%s: unknown option '%s', see --help\n", basename(__FILE__), $key));
 	}
     }	      
 }
@@ -219,7 +219,7 @@ function cache_get_hostid($ipaddr, $options)
 	return trim(file_get_contents($mapfile));
     }
     else {
-	die(sprintf("failed find hostid for '%s' (maybe its using ipv6?)\n", $ipaddr));
+	die(sprintf("%s: failed find hostid for '%s' (maybe its using ipv6?)\n", basename(__FILE__), $ipaddr));
     }
 }
 
@@ -236,7 +236,7 @@ function cache_get_ipaddr($hostid, $options)
 	return trim(file_get_contents($mapfile));
     }
     else {
-	die(sprintf("failed find ip-address for '%s'\n", $hostid));
+	die(sprintf("%s: failed find ip-address for '%s'\n", basename(__FILE__), $hostid));
     }
 }
 
@@ -248,7 +248,7 @@ function cache_find_jobs($hostid, $options)
     $dirname = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $hostid);
 
     if($options->debug) {
-	printf("processing job dirctories of hostid %s\n", $hostid);
+	printf("debug: processing job dirctories of hostid %s\n", $hostid);
     }
     
     $handle = opendir($dirname);
@@ -278,7 +278,7 @@ function cache_find_jobs($hostid, $options)
 	return $result;
     }
     else {
-	die(sprintf("failed open directory %s\n", $dirname));
+	die(sprintf("%s: failed open directory %s\n", basename(__FILE__), $dirname));
     }
 }
 
@@ -324,7 +324,7 @@ function cache_find_job_dirs($options)
 	    return $result;
 	}
 	else {
-	    die(sprintf("failed open directory %s\n", $jobsdir));
+	    die(sprintf("%s: failed open directory %s\n", basename(__FILE__), $jobsdir));
 	}
     }
 }
@@ -398,7 +398,7 @@ function main(&$argv, $argc)
     // Perform sanity check on options.
     // 
     if(isset($options->hostid) && isset($options->ipaddr)) {
-	die("option '--hostid' should not be used together with option '--ipaddr'\n");
+	die(sprintf("%s: option '--hostid' should not be used together with option '--ipaddr'\n", basename(__FILE__)));
     }
 
     // 
