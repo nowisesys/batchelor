@@ -53,11 +53,14 @@ Options:
                           be used: 
                           s = second, m = minute, h = hour, 
                           D = day, W = week, M = month, Y = year
-                           
-  Standard options:  
-    -d,--debug:           Enable debug.
+
+  Miscellanous options:
     --dry-run:            Just print what should have be done, but do not perform 
                           any modifications. Useful together with --cleanup
+    -m,--machine:         Generate output for parsing by other program or scripts.
+      
+  Standard options:  
+    -d,--debug:           Enable debug.
     -v,--verbose:         Be more verbose.
     -h,--help:            This help.
     -V,--version:         Show version info.
@@ -170,14 +173,18 @@ function parse_options(&$argv, $argc, &$options)
 	    $timespec = sprintf("-%s %s", $match[1], $map[$match[2]]);
 	    $options['age'] = strtotime($timespec);
 	    break;
+	 case "--dry-run":         // Just print what should have be done.
+	    check_arg($key, $val, false);
+	    $options['dry-run'] = true;
+	    break;
+	 case "-m":
+	 case "--machine":         // Generate output for parsing by other program or scripts.
+	    $options['machine'] = true;
+	    break;
 	 case "-d":
 	 case "--debug":           // Enable debug.
 	    check_arg($key, $val, false);
 	    $options['debug'] = true;
-	    break;
-	 case "--dry-run":         // Just print what should have be done.
-	    check_arg($key, $val, false);
-	    $options['dry-run'] = true;
 	    break;
 	 case "-v":
 	 case "--verbose":         // Be more verbose.
@@ -325,8 +332,9 @@ function main(&$argv, $argc)
 		      "ipaddr" => null,
 		      "age" => 0,
 		      "now" => time(),
-		      "debug" => false, 
 		      "dry-run" => false,
+		      "machine" => false,
+		      "debug" => false, 
 		      "verbose" => 0,
 		      "prog"  => $prog, 
 		      "version" => $vers );
@@ -364,6 +372,19 @@ function main(&$argv, $argc)
 	// Get all job directories matching filter preferences.
 	// 
 	$dirs = cache_find_job_dirs($options);
+	foreach($dirs as $hostid => $jobdirs) { 
+	    if($options->machine) {
+		foreach($jobdirs as $jobdir) {
+		    printf("%s/jobs/%s/%s\n", CACHE_DIRECTORY, $hostid, $jobdir);
+		}
+	    }
+	    else {
+		printf("%s (hostid)\n", $hostid);
+		foreach($jobdirs as $jobdir) {
+		    printf("  %s (jobdir)\n", $jobdir);
+		}
+	    }
+	}
     }
 
     if($options->clean) {
