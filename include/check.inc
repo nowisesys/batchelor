@@ -231,7 +231,9 @@ function check_builtin_functions(&$failed)
 		       "fwrite", "fgets", "fread", "readfile", "getcwd", "chdir", "trim", 
 		       "extension_loaded", "version_compare", "proc_open", "is_resource", 
 		       "stream_get_contents", "fclose", "proc_close", "preg_match",
-		       "strtotime", "filemtime", "error_log", "rename");
+		       "strtotime", "filemtime", "error_log", "rename", "array_shift",
+		       "array_unshift", "basename", "posix_getpwuid", "posix_getuid",
+		       "posix_geteuid");
     sort($functions);
     
     foreach($functions as $func) {
@@ -288,13 +290,14 @@ function check_predefined_variables(&$failed)
 }
 
 // 
-// Check required extensions.
+// Check required extensions. The list are created from list of
+// all used functions (using php --rf $func).
 // 
 function check_loaded_extensions(&$failed)
 {
     print_section_header("Checking loaded extensions");
     
-    foreach(array("zip") as $extension) {
+    foreach(array("zip", "posix", "pcre", "date", "standard") as $extension) {
 	output("Checking if extension $extension is loaded: ");
 	if(extension_loaded($extension)) {
 	    success("yes");
