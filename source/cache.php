@@ -374,7 +374,10 @@ function cache_delete_directory($path, $options)
 		    return;
 		}
 		else {
-		    if(!$options->dry-run) {
+		    if($options->dry-run) {
+			printf(sprintf("dry-run: whould have deleted file %s\n", $file));
+		    }
+		    else {
 			if(!unlink($file)) {
 			    printf(sprintf("%s:%d: error: failed unlink file %s\n", basename(__FILE__), __LINE__, $file));
 			}
@@ -488,7 +491,7 @@ function main(&$argv, $argc)
 		    printf("debug: about to delete directory %s\n", $path);
 		}
 		if($options->dry-run) {
-		    printf("dry-run: skip delete directory %s\n", $path);
+		    printf("dry-run: skipping delete of directory %s\n", $path);
 		}
 		else {
 		    if($options->debug || $options->verbose) {
