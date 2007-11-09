@@ -99,16 +99,16 @@ function cache_version($prog, $vers)
 // 
 // Check $val argument for option $key.
 // 
-function check_arg($key, $val, $required)
+function check_arg($key, $val, $required, $prog)
 {
     if($required) {
 	if(!isset($val)) {
-	    die(sprintf("%s: option '%s' requires an argument\n", basename(__FILE__), $key));
+	    die(sprintf("%s: option '%s' requires an argument\n", $prog, $key));
 	}
     }
     else {
 	if(isset($val)) {
-	    die(sprintf("%s: option '%s' do not take an argument\n", basename(__FILE__), $key));
+	    die(sprintf("%s: option '%s' do not take an argument\n", $prog, $key));
 	}	
     }
 }
@@ -127,42 +127,42 @@ function parse_options(&$argv, $argc, &$options)
     	switch($key) {
 	 case "-c":
 	 case "--cleanup":         // Delete job directories.
-	    check_arg($key, $val, false);
+	    check_arg($key, $val, false, $options->prog);
 	    $options['cleanup'] = true;
 	    break;	    
 	 case "-l":
 	 case "--list":            // List job directories.
-	    check_arg($key, $val, false);
+	    check_arg($key, $val, false, $options->prog);
 	    $options['list'] = true;
 	    break;
 	 case "-f":
 	 case "--find":            // Perform hostid or ip-address/hostname lookup.
-	    check_arg($key, $val, false);
+	    check_arg($key, $val, false, $options->prog);
 	    $options['find'] = true;
 	    break;
 	 case "-x":
 	 case "--hostid":          // Filter on hostid.
-	    check_arg($key, $val, true);
+	    check_arg($key, $val, true, $options->prog);
 	    $options['hostid'] = $val;
 	    break;
 	 case "-i":
 	 case "--ipaddr":          // Filter on ip-address or hostname.
-	    check_arg($key, $val, true);
+	    check_arg($key, $val, true, $options->prog);
 	    $ipaddr = val;
 	    if(!is_numeric($val[0])) {
 		$ipaddr = gethostbyname($val);
 		if($ipaddr == $val) {
-		    die(sprintf("%s: failed resolve hostname %s\n", basename(__FILE__), $val));
+		    die(sprintf("%s: failed resolve hostname %s\n", $options->prog, $val));
 		}
 	    }
 	    $options['ipaddr'] = $val;	
 	    break;
 	 case "-a":
 	 case "--age":             // Filter on timespec. The timespec string is a number and
-	    check_arg($key, $val, true);
+	    check_arg($key, $val, true, $options->prog);
 	    $match = array();
 	    if(!preg_match("/^(\d+)([smhDWMY])$/", $val, $match)) {
-		die(sprintf("%s: wrong format for argument to option '%s', see --help\n", basename(__FILE__), $key));
+		die(sprintf("%s: wrong format for argument to option '%s', see --help\n", $options->prog, $key));
 	    }
 	    // 
 	    // Calculate the timestamp used when comparing modification times.
@@ -173,35 +173,36 @@ function parse_options(&$argv, $argc, &$options)
 	    $options['age'] = strtotime($timespec);
 	    break;
 	 case "--dry-run":         // Just print what should have be done.
-	    check_arg($key, $val, false);
+	    check_arg($key, $val, false, $options->prog);
 	    $options['dry_run'] = true;
 	    break;
 	 case "-m":
 	 case "--machine":         // Generate output for parsing by other program or scripts.
+	    check_arg($key, $val, false, $options->prog);
 	    $options['machine'] = true;
 	    break;
 	 case "-d":
 	 case "--debug":           // Enable debug.
-	    check_arg($key, $val, false);
+	    check_arg($key, $val, false, $options->prog);
 	    $options['debug'] = true;
 	    break;
 	 case "-v":
 	 case "--verbose":         // Be more verbose.
-	    check_arg($key, $val, false);
+	    check_arg($key, $val, false, $options->prog);
 	    $options['verbose']++;
 	    break;
 	 case "-h":
 	 case "--help":            // Show help.
-	    check_arg($key, $val, false);
+	    check_arg($key, $val, false, $options->prog);
 	    cache_usage($options['prog']);
 	    exit(0);
 	 case "-V":
 	 case "--version":         // Show version info.
-	    check_arg($key, $val, false);
+	    check_arg($key, $val, false, $options->prog);
 	    cache_version($options['prog'], $options['version']);
 	    exit(0);	      
 	 default:
-	    die(sprintf("%s: unknown option '%s', see --help\n", basename(__FILE__), $key));
+	    die(sprintf("%s: unknown option '%s', see --help\n", $options->prog, $key));
 	}
     }	      
 }
@@ -219,7 +220,7 @@ function cache_get_hostid($ipaddr, $options)
 	return trim(file_get_contents($mapfile));
     }
     else {
-	die(sprintf("%s: failed find hostid for '%s' (maybe its using ipv6?)\n", basename(__FILE__), $ipaddr));
+	die(sprintf("%s: failed find hostid for '%s' (maybe its using ipv6?)\n", $options->prog, $ipaddr));
     }
 }
 
@@ -236,7 +237,7 @@ function cache_get_ipaddr($hostid, $options)
 	return trim(file_get_contents($mapfile));
     }
     else {
-	die(sprintf("%s: failed find ip-address for '%s'\n", basename(__FILE__), $hostid));
+	die(sprintf("%s: failed find ip-address for '%s'\n", $options->prog, $hostid));
     }
 }
 
@@ -278,7 +279,7 @@ function cache_find_jobs($hostid, $options)
 	return $result;
     }
     else {
-	die(sprintf("%s: failed open directory %s\n", basename(__FILE__), $dirname));
+	die(sprintf("%s: failed open directory %s\n", $options->prog, $dirname));
     }
 }
 
@@ -324,7 +325,7 @@ function cache_find_job_dirs($options)
 	    return $result;
 	}
 	else {
-	    die(sprintf("%s: failed open directory %s\n", basename(__FILE__), $jobsdir));
+	    die(sprintf("%s: failed open directory %s\n", $options->prog, $jobsdir));
 	}
     }
 }
@@ -373,7 +374,7 @@ function cache_delete_directory($path, $options)
 		if(is_dir($curr)) {
 		    $result = cache_delete_directory($curr, $options);
 		    if(!rmdir($curr)) {
-			printf("%s: failed remove directory %s\n", basename(__FILE__), $file);
+			printf("%s: failed remove directory %s\n", $options->prog, $file);
 			return false;
 		    }
 		    return $result;
@@ -387,7 +388,7 @@ function cache_delete_directory($path, $options)
 			    printf("debug: deleting file %s\n", $file);
 			}
 			if(!unlink($curr)) {
-			    printf(sprintf("%s: failed unlink file %s\n", basename(__FILE__), $file));
+			    printf(sprintf("%s: failed unlink file %s\n", $options->prog, $file));
 			    return false;
 			}
 		    }
@@ -401,7 +402,7 @@ function cache_delete_directory($path, $options)
 	printf("debug: deleting directory %s\n", basename($path));
     }
     if(!rmdir($path)) {
-	printf(sprintf("%s: failed remove directory %s\n", basename(__FILE__), basename($path)));
+	printf(sprintf("%s: failed remove directory %s\n", $options->prog, basename($path)));
 	return false;
     }
     if($options->verbose) {
@@ -424,7 +425,7 @@ function main(&$argv, $argc)
     // 
     $options = array( "cleanup" => false,
 		      "list" => false,
-		      "find" => null,
+		      "find" => false,
 		      "hostid" => null,
 		      "ipaddr" => null,
 		      "age" => 0,
@@ -453,7 +454,7 @@ function main(&$argv, $argc)
     // Perform sanity check on options.
     // 
     if(isset($options->hostid) && isset($options->ipaddr)) {
-	die(sprintf("%s: option '--hostid' should not be used together with option '--ipaddr'\n", basename(__FILE__)));
+	die(sprintf("%s: option '--hostid' should not be used together with option '--ipaddr'\n", $options->prog));
     }
 
     // 
