@@ -43,7 +43,7 @@ Options:
   Actions:
     -c,--cleanup:         Delete job directories.
     -l,--list:            List job directories.
-    -f,--find=ipaddr:     Lookup hostid from ip-address or hostname.
+    -f,--find:            Used with -x or -i for lookups.
       
   Filters:
     -x,--hostid=str:      Filter on hostid.
@@ -69,9 +69,15 @@ Example:
     * Delete all job directories older than seven days:
     bash$> $prog -c -a 7d
       
+    * Get hostid for host host.domain.com:
+    bash$> $prog -f -i host.domain.com
+
+    * Reverse lookup from hostid 837ec5754f503cfaaee0929fd48974e7:
+    bash$> $prog -f -x 837ec5754f503cfaaee0929fd48974e7
+      
     * List all jobs created from host host.domain.com:
     bash$> $prog -l -i host.domain.com
-      
+    
     * Delete all jobs older than three month created from ip-address 192.168.10.56
     bash$> $prog -c -a 12W -i 192.168.10.56
       
@@ -130,16 +136,9 @@ function parse_options(&$argv, $argc, &$options)
 	    $options['list'] = true;
 	    break;
 	 case "-f":
-	 case "--find=ipaddr":     // Lookup hostid from ip-address or hostname.
-	    check_arg($key, $val, true);
-	    $ipaddr = val;
-	    if(!is_numeric($val[0])) {
-		$ipaddr = gethostbyname($val);
-		if($ipaddr == $val) {
-		    die(sprintf("failed resolve hostname %s\n", $val));
-		}
-	    }
-	    $options['find'] = $val;
+	 case "--find":            // Perform hostid or ip-address/hostname lookup.
+	    check_arg($key, $val, false);
+	    $options['find'] = true;
 	    break;
 	 case "-x":
 	 case "--hostid":          // Filter on hostid.
@@ -208,11 +207,11 @@ function parse_options(&$argv, $argc, &$options)
 }
 
 // 
-// Lookup hostid from ip-address or hostname
+// Lookup hostid from ip-address or hostname.
 // 
-function cache_get_hostid($options)
+function cache_get_hostid($ipaddr, $options)
 {
-    $mapfile = sprintf("%s/map/inaddr/%s", CACHE_DIRECTORY, $options->find);
+    $mapfile = sprintf("%s/map/inaddr/%s", CACHE_DIRECTORY, $ipaddr);
     if($options->debug) {
 	printf("debug: looking for hostid in file %s\n", $mapfile);
     }
@@ -220,8 +219,24 @@ function cache_get_hostid($options)
 	return trim(file_get_contents($mapfile));
     }
     else {
-	die(sprintf("failed find hostid for '%s' (maybe its using ipv6?)\n", 
-		    $options->find));
+	die(sprintf("failed find hostid for '%s' (maybe its using ipv6?)\n", $ipaddr));
+    }
+}
+
+// 
+// Lookup ip-address from hostid.
+// 
+function cache_get_ipaddr($hostid, $options)
+{
+    $mapfile = sprintf("%s/map/hostid/%s", CACHE_DIRECTORY, $hostid);
+    if($options->debug) {
+	printf("debug: looking for ip-address in file %s\n", $mapfile);
+    }
+    if(file_exists($mapfile)) {
+	return trim(file_get_contents($mapfile));
+    }
+    else {
+	die(sprintf("failed find ip-address for '%s'\n", $hostid));
     }
 }
 
@@ -273,7 +288,7 @@ function cache_find_jobs($hostid, $options)
 function cache_find_job_dirs($options)
 {
     if(isset($options->ipaddr)) {
-	$options->hostid = cache_get_hostid($options->ipaddr);
+	$options->hostid = cache_get_hostid($options->ipaddr, $options);
 	if($options->debug) {
 	    printf("debug: resolved ip-address %s to hostid %s\n", 
 		   $options->ipaddr, 
@@ -390,8 +405,14 @@ function main(&$argv, $argc)
     // Process options.
     // 
     if(isset($options->find)) {
-	$hostid = cache_get_hostid($options);
-	printf("%s: %s\n", $options->find, $hostid);
+	if(isset($options->ipaddr)) {
+	    $options->hostid = cache_get_hostid($options->ipaddr, $options);
+	    printf("%s: %s\n", $options->ipaddr, $options->hostid);
+	}
+	if(isset($options->hostid)) {
+	    $options->ipaddr = cache_get_ipaddr($options->hostid, $options);
+	    printf("%s: %s\n", $options->hostid, $options->ipaddr);
+	}	    
     }
 
     if($options->list) {
@@ -425,7 +446,7 @@ function main(&$argv, $argc)
 	}
     }
 
-    if($options->clean) {
+    if($options->cleanup) {
 	// 
 	// Get all job directories matching filter preferences.
 	// 
