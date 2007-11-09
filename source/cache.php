@@ -315,6 +315,33 @@ function cache_find_job_dirs($options)
 }
 
 // 
+// Return size of job directory including contained files.
+//
+function cache_get_job_size($path, &$data)
+{
+    if(file_exists($path)) {
+	$handle = opendir($path);
+	if($handle) {
+	    while(false !== ($file = readdir($handle))) {
+		if($file != "." && $file != "..") {
+		    if(is_dir($file)) {
+			$data['size'] += cache_get_job_size(sprintf("%s/%s", $path, $file));
+			return;
+		    }
+		    else {
+			$data['files']++;
+			$data['size'] += filesize(sprintf("%s/%s", $path, $file));
+		    }
+		}
+	    }
+	    closedir($handle);
+	}	
+    }
+    
+    $data['size'] += filesize($path);
+}
+
+// 
 // The main function.
 //
 function main(&$argv, $argc)
@@ -381,7 +408,18 @@ function main(&$argv, $argc)
 	    else {
 		printf("%s (hostid)\n", $hostid);
 		foreach($jobdirs as $jobdir) {
-		    printf("  %s (jobdir)\n", $jobdir);
+		    if($options->verbose) {
+			$path = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
+			$data = array();
+			cache_get_job_size($path, $data);
+			printf("  %s (size = %d, files = %d, created = %s, modified = %s) (jobdir)\n", $jobdir,
+			       $data['size'], $data['files'], 
+			       strftime(TIMESTAMP_FORMAT, $jobdir),
+			       strftime(TIMESTAMP_FORMAT, filemtime($path)));
+		    }
+		    else {
+			printf("  %s (jobdir)\n", $jobdir);
+		    }
 		}
 	    }
 	}
