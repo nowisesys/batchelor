@@ -174,7 +174,7 @@ function parse_options(&$argv, $argc, &$options)
 	    break;
 	 case "--dry-run":         // Just print what should have be done.
 	    check_arg($key, $val, false);
-	    $options['dry-run'] = true;
+	    $options['dry_run'] = true;
 	    break;
 	 case "-m":
 	 case "--machine":         // Generate output for parsing by other program or scripts.
@@ -362,24 +362,33 @@ function cache_get_job_size($path, &$data)
 function cache_delete_directory($path, $options)
 {  
     if($options->debug) {
-	printf(sprintf("debug: deleting in directory %s\n", $path));
+	printf(sprintf("debug: deleting in directory %s\n", basename($path)));
     }
     
     $handle = opendir($path);
     if($handle) {
 	while(false !== ($file = readdir($handle))) {
 	    if($file != "." && $file != "..") {
-		if(is_dir($file)) {
-		    cache_delete_directory(sprintf("%s/%s", $path, $file));
-		    return;
+		$curr = sprintf("%s/%s", $path, $file);
+		if(is_dir($curr)) {
+		    $result = cache_delete_directory($curr, $options);
+		    if(!rmdir($curr)) {
+			printf("%s: failed remove directory %s\n", basename(__FILE__), $file);
+			return false;
+		    }
+		    return $result;
 		}
 		else {
-		    if($options->dry-run) {
-			printf(sprintf("dry-run: whould have deleted file %s\n", $file));
+		    if($options->dry_run) {
+			printf(sprintf("debug: whould have deleted file %s (dry-run mode)\n", $file));
 		    }
 		    else {
-			if(!unlink($file)) {
-			    printf(sprintf("%s:%d: error: failed unlink file %s\n", basename(__FILE__), __LINE__, $file));
+			if($options->debug) {
+			    printf("debug: deleting file %s\n", $file);
+			}
+			if(!unlink($curr)) {
+			    printf(sprintf("%s: failed unlink file %s\n", basename(__FILE__), $file));
+			    return false;
 			}
 		    }
 		}
@@ -387,6 +396,19 @@ function cache_delete_directory($path, $options)
 	}
 	closedir($handle);
     }
+    
+    if($options->debug) {
+	printf("debug: deleting directory %s\n", basename($path));
+    }
+    if(!rmdir($path)) {
+	printf(sprintf("%s: failed remove directory %s\n", basename(__FILE__), basename($path)));
+	return false;
+    }
+    if($options->verbose) {
+	printf("deleted directory %s\n", $path);
+    }
+    
+    return true;
 }
 
 // 
@@ -407,7 +429,7 @@ function main(&$argv, $argc)
 		      "ipaddr" => null,
 		      "age" => 0,
 		      "now" => time(),
-		      "dry-run" => false,
+		      "dry_run" => false,
 		      "machine" => false,
 		      "debug" => false, 
 		      "verbose" => 0,
@@ -487,18 +509,13 @@ function main(&$argv, $argc)
 	foreach($dirs as $hostid => $jobdirs) { 
 	    foreach($jobdirs as $jobdir) {
 		$path = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
-		if($options->debug || $options->dry-run) {
-		    printf("debug: about to delete directory %s\n", $path);
+		if($options->debug || $options->dry_run) {
+		    printf("debug: about to delete directory %s (hostid = %s)\n", $jobdir, $hostid);
 		}
-		if($options->dry-run) {
-		    printf("dry-run: skipping delete of directory %s\n", $path);
+		if($options->debug || $options->verbose) {
+		    printf("%sdeleting directory %s (hostid = %s)\n", ($options->debug ? "debug: " : ""), $jobdir, $hostid);
 		}
-		else {
-		    if($options->debug || $options->verbose) {
-			printf("%sdeleting directory %s\n", ($options->debug ? "debug: " : ""), $path);
-		    }
-		    cache_delete_directory($path);
-		}
+		cache_delete_directory($path, $options);
 	    }
 	}
     }
