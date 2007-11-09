@@ -224,24 +224,30 @@ function cache_get_hostid($options)
 function cache_find_jobs($hostid, $options)
 {
     $dirname = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $hostid);
-    result = array();
 
+    if($options->debug) {
+	printf("processing job dirctories of hostid %s\n", $hostid);
+    }
+    
     $handle = opendir($dirname);
     if($handle) {
 	$result = array();
 	while(false !== ($dir = readdir($handle))) {
 	    if($dir != "." && $dir != "..") {
-		if(isset($opions->age)) {
+		if($options->age) {
 		    // 
 		    // Only append directories older than age filter.
 		    // 
 		    if(intval($dir) > $options->age) {
 			if($options->debug) {
-			    printf("debug: directory %s/%s is newer than %d (skipped)\n", 
-				   $hostid, $dir, $options->age);
+			    printf("debug: directory %s is newer than %d (skipped)\n", 
+				   $dir, $options->age);
 			}
 			continue;
 		    }
+		}
+		if($options->debug) {
+		    printf("debug: appending %s to list of job directories.\n", $dir);
 		}
 		array_push($result, $dir);
 	    }
