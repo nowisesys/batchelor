@@ -290,8 +290,9 @@ function check_predefined_variables(&$failed)
 }
 
 // 
-// Check required extensions. The list are created from list of
-// all used functions (using php --rf $func).
+// Check required extensions. The list was created by scanning
+// the output from running 'using php --rf $func' on all used
+// functions, see check_builtin_functions().
 // 
 function check_loaded_extensions(&$failed)
 {
