@@ -17,5 +17,11 @@ No effort has been put in creating a good looking UI, as I expect the users
 of this piece of code to modify the show_form() function to produce HTML
 output that conforms with their sites "look-and-feel".
 
+Finished jobs can be deleted by running the PHP script named cache.php 
+from the source directory. The job directories to delete can be filtered 
+by date, host/ip-address and hostid. Its better to use this script than 
+the find command, as cache.php has internal knowledge about how the cache 
+is organized.
+
 Anders Lövgren,
 2007-11-05
