@@ -254,7 +254,14 @@ function main(&$argv, $argc)
     if($options->debug) {
 	var_dump($options);
     }
-    
+
+    // 
+    // Perform sanity check on options.
+    // 
+    if(isset($options->hostid) && isset($options->ipaddr)) {
+	die("option '--hostid' should not be used together with option '--ipaddr'\n");
+    }
+
     // 
     // Process options.
     // 
