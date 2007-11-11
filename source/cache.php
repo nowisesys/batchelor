@@ -32,60 +32,82 @@ include "../include/getopt.inc";
 //
 // Show basic usage.
 //
-function cache_usage($prog)
-{
-    print <<< END
-$prog - send notifications to event listener
-      
-Usage: $prog options...
-Options:
+function cache_usage($prog, $sect)
+{    
+    if(!isset($sect)) {
+	$sect = "general";
+    }
     
-  Actions:
-    -c,--cleanup:         Delete job directories.
-    -l,--list:            List job directories.
-    -f,--find:            Used with -x or -i for lookups.
-      
-  Filters:
-    -x,--hostid=str:      Filter on hostid.
-    -i,--ipaddr=str:      Filter on ip-address or hostname.
-    -a,--age=timespec:    Filter on timespec. The timespec string is a number and
-                          a suffix character. The following suffix characters can
-                          be used: 
-                          s = second, m = minute, h = hour, 
-                          D = day, W = week, M = month, Y = year
-
-  Miscellanous options:
-    --dry-run:            Just print what should have be done, but do not perform 
-                          any modifications. Useful together with --cleanup
-    -m,--machine:         Generate output for parsing by other program or scripts.
-      
-  Standard options:  
-    -d,--debug:           Enable debug.
-    -v,--verbose:         Be more verbose.
-    -h,--help:            This help.
-    -V,--version:         Show version info.
-      
-Example:
-    * Delete all job directories older than seven days:
-    bash$> $prog -c -a 7d
-      
-    * Get hostid for host host.domain.com:
-    bash$> $prog -f -i host.domain.com
-
-    * Reverse lookup from hostid 837ec5754f503cfaaee0929fd48974e7:
-    bash$> $prog -f -x 837ec5754f503cfaaee0929fd48974e7
-      
-    * List all jobs created from host host.domain.com:
-    bash$> $prog -l -i host.domain.com
-    
-    * Delete all jobs older than three month created from ip-address 192.168.10.56
-    bash$> $prog -c -a 12W -i 192.168.10.56
-      
-Warning:
-    If no filter (-a, -i or -x) is in effect, then the action (-c or -l) is
-    applied to all. Use --dry-run to test.
-
-END;
+    switch($sect) {
+     case "general":
+	print "$prog - job cache management tool\n";
+	print "\n";      
+	print "Usage: $prog options...\n";
+	print "Options:\n";
+	print "\n";    
+	print "  Actions:\n";
+	print "    -c,--cleanup:         Delete job directories.\n";
+	print "    -l,--list:            List job directories.\n";
+	print "    -f,--find:            Used with -x or -i for lookups.\n";
+	print "\n";      
+	print "  Filters:\n";
+	print "    -x,--hostid=str:      Filter on hostid.\n";
+	print "    -i,--ipaddr=str:      Filter on ip-address or hostname.\n";
+	print "    -a,--age=timespec:    Filter on timespec (see examples and timespec belove).\n";
+	print "\n";
+	print "  Miscellanous options:\n";
+	print "    --dry-run:            Just print what should have be done, but do not perform\n";
+	print "                          any modifications. Useful together with -c\n";
+	print "    -m,--machine:         Generate output for parsing by other program or scripts.\n";
+	print "\n";      
+	print "  Standard options:\n";
+	print "    -d,--debug:           Enable debug.\n";
+	print "    -v,--verbose:         Be more verbose.\n";
+	print "    -h,--help{=sect}:     This help or use sect={example,timespec}.\n";
+	print "    -V,--version:         Show version info.\n";
+	print "\n";
+	print "Warning:\n";
+	print "    If no filter (-a, -i or -x) is in effect, then the action (-c or -l) is\n";
+	print "    applied to all. Use --dry-run to test.\n";
+	break;
+     case "timespec":
+	print "\n";
+	print "Timespec:\n";
+	print "-------------------------\n";
+	print "\n";
+	print "The timespec string for option -a filters directories on their creation time.\n";
+	print "If no -a filter is specified, then no directories are filtered out and the\n";
+	print "selected actions (-c or -l) is applied to all directories.\n";
+	print "\n";
+	print "The timespec consist of a number and a suffix, i.e. 36h (36 hours). The following\n";
+	print "suffixes can be used:\n";
+	print "\n";
+	print "    s = second, m = minute, h = hour,\n";
+	print "    D = day,    W = week,   M = month, Y = year\n";
+	print "\n";
+	break;
+     case "example":
+	print "\n";
+	print "Examples:\n";
+	print "-------------------------\n";
+	print "\n";
+	print "    * Delete all job directories older than seven days:\n";
+	print "    bash$> $prog -c -a 7D\n";
+	print "\n";      
+	print "    * Get hostid for host host.domain.com:\n";
+	print "    bash$> $prog -f -i host.domain.com\n";
+	print "\n";
+	print "    * Reverse lookup from hostid 837ec5754f503cfaaee0929fd48974e7:\n";
+	print "    bash$> $prog -f -x 837ec5754f503cfaaee0929fd48974e7\n";
+	print "\n";
+	print "    * List all jobs created from host host.domain.com:\n";
+	print "    bash$> $prog -l -i host.domain.com\n";
+	print "\n";    
+	print "    * Delete all jobs older than three months created from ip-address 192.168.10.56\n";
+	print "    bash$> $prog -c -a 3M -i 192.168.10.56\n";
+	print "\n";
+	break;
+    }
 }
 
 //
@@ -93,7 +115,7 @@ END;
 //
 function cache_version($prog, $vers)
 {
-    print "Cache management tool $prog ($vers)\n";
+    print "$prog - job cache management tool ($vers)\n";
 }
 
 // 
@@ -193,8 +215,7 @@ function parse_options(&$argv, $argc, &$options)
 	    break;
 	 case "-h":
 	 case "--help":            // Show help.
-	    check_arg($key, $val, false, $options->prog);
-	    cache_usage($options['prog']);
+	    cache_usage($options['prog'], $val);
 	    exit(0);
 	 case "-V":
 	 case "--version":         // Show version info.
