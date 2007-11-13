@@ -16,7 +16,9 @@
 
 // 
 // Functions for checking if the system is up to date for running 
-// batchelor. All check_xxx function returns true if successful.
+// batchelor. The functions takes an callback function argument
+// that is called to print the response. All function returns true
+// if successful.
 // 
 
 // 
@@ -91,39 +93,6 @@ function print_section_header($str)
 }
 
 // 
-// Check configuration files.
-// 
-function check_config_files(&$failed)
-{
-    print_section_header("Checking configuration files");
-
-    // 
-    // The config.inc file is required.
-    // 
-    output("Checking if config.inc exists: ");
-    if(file_exists("../conf/config.inc")) {
-	success("OK");
-    }
-    else {
-	failed("No, copy ../conf/config.inc.in to ../conf/config.inc and edit the file, then rerun the test");
-	$failed = true;
-    }
-
-    // 
-    // The apache.inc may not be used.
-    // 
-    output("Checking if apache.conf exists: ");
-    if(file_exists("../conf/apache.conf")) {
-	success("OK");
-    }
-    else {
-	warning("No, if you are using Apache web server, then copy ../conf/apache.conf.in to ../conf/apache.conf and edit the file, then rerun the test");
-    }
-    
-    return $failed == false;
-}
-
-// 
 // Check PHP version.
 // 
 function check_php_version($failed)
@@ -160,8 +129,6 @@ function check_php_version($failed)
 	    output("\nPlease upgrade to latest PHP release from: http://www.php.net\n", true);
 	}
     }
-
-    return $failed == false;
 }
 
 // 
@@ -173,7 +140,7 @@ function check_web_server(&$failed)
     // Skip test if running under CLI.
     // 
     if(WPRINTF_MODE == "cli") {
-	return true;
+	return;
     }
 
     print_section_header("Checking web server");
@@ -195,8 +162,6 @@ function check_web_server(&$failed)
     $user = posix_getpwuid(posix_getuid());
     $real = posix_getpwuid(posix_geteuid());
     success(sprintf("real=%s, effective=%s", $real['name'], $user['name']));
-
-    return $failed == false;
 }
 
 // 
@@ -249,8 +214,6 @@ function check_external_commands(&$failed)
 	    $failed = true;
 	}
     }
-
-    return $failed == false;
 }
 
 // 
@@ -278,8 +241,6 @@ function check_builtin_functions(&$failed)
 	    $failed = true;
 	}
     }    
-
-    return $failed == false;
 }
 
 // 
@@ -326,8 +287,6 @@ function check_predefined_variables(&$failed)
 	failed("no");
 	$failed = true;
     }
-
-    return $failed == false;
 }
 
 // 
@@ -349,8 +308,6 @@ function check_loaded_extensions(&$failed)
 	    $failed = true;
 	}
     }
-
-    return $failed == false;
 }
 
 // 
@@ -392,8 +349,6 @@ function check_cache_permission(&$failed)
 	    $failed = true;
 	}
     }
-
-    return $failed == false;
 }
 
 // 
@@ -452,8 +407,6 @@ function check_php_settings(&$failed)
 	output("Checking persistent cookies lifetime: ");	
 	success(seconds_to_string(COOKIE_LIFE_TIME));
     }
-
-    return $failed == false;
 }
 
 //
@@ -463,22 +416,14 @@ function run_all_tests()
 {
     $failed = false;
 
-    // 
-    // This test is fundamental and we should not continue 
-    // unless it returns true.
-    // 
-    if(check_config_files($failed)) {
-	include "../conf/config.inc";
-    
-	check_php_version($failed);
-	check_web_server($failed);
-	check_external_commands($failed);
-	check_loaded_extensions($failed);
-	check_cache_permission($failed);
-	check_builtin_functions($failed);
-	check_predefined_variables($failed);
-	check_php_settings($failed);
-    }
+    check_php_version($failed);
+    check_web_server($failed);
+    check_external_commands($failed);
+    check_loaded_extensions($failed);
+    check_cache_permission($failed);
+    check_builtin_functions($failed);
+    check_predefined_variables($failed);
+    check_php_settings($failed);
     
     print_section_header("Summary");
     if($failed) {
