@@ -46,9 +46,11 @@ if(realpath(dirname(__FILE__)) != getcwd()) {
     die("This script should be run from inside the source directory.");
 }
 
-include "../conf/config.inc";
-include "../include/common.inc";
+// 
+// Include system checks.
+// 
 include "../include/check.inc";
+include "../include/common.inc";
 
 // 
 // Running as CLI or under a web server?
