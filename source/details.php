@@ -29,7 +29,9 @@ include "../include/common.inc";
 // 
 $jobid  = $_REQUEST['jobid'];    // Job ID.
 $jobdir = $_REQUEST['result'];   // Job directory.
-$indata = $_REQUEST['data'];     // Show indata.
+if(isset($_REQUEST['data'])) {
+    $indata = $_REQUEST['data']; // Show indata.
+}
 
 // 
 // Get hostid from cookie.
