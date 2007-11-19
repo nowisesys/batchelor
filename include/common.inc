@@ -310,7 +310,7 @@ function get_queued_jobs()
 // 
 function format_timestamp($stamp)
 {
-    return strftime(TIMESTAMP_FORMAT, $stamp);
+    return strftime(TIMESTAMP_FORMAT, intval($stamp));
 }
 
 // 
