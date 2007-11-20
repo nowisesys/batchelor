@@ -184,6 +184,26 @@ function error_exit($str)
 }
 
 // 
+// This function should be called prior to error_exit() to
+// clean the job directory on failure.
+// 
+function cleanup_jobdir($jobdir, $indata = null)
+{
+    if(isset($indata)) {
+	if(file_exists($indata)) {
+	    if(!unlink($indata)) {
+		error_exit("Failed cleanup job directory");
+	    }
+	}
+    }
+    if(file_exists($jobdir)) {
+	if(!rmdir($jobdir)) {
+	    error_exit("Failed cleanup job directory");
+	}
+    }
+}
+
+// 
 // Script execution starts here (main).
 // 
 
@@ -247,7 +267,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	// Save the data to file.
 	// 
 	if(!file_put_contents($indata, $_REQUEST['data'])) {
-	    error_exit("Failed save data to file");
+	    cleanup_jobdir($jobdir, $indata);
+	    if(strlen($_REQUEST['data']) == 0) {
+		error_exit("No job data was submitted");
+	    }
+	    else {
+		error_exit("Failed save data to file");
+	    }
 	}
     }
     else {
@@ -256,14 +282,8 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	// system file, i.e. /etc/passwd
 	// 
 	if(is_uploaded_file($_FILES['file']['tmp_name'])) {
-	    if(UPLOAD_MIN_FILESIZE != 0 && filesize($_FILES['file']['tmp_name']) < UPLOAD_MIN_FILESIZE) {
-		unlink($_FILES['file']['tmp_name']);
-		rmdir($jobdir);
-		error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", UPLOAD_MIN_FILESIZE));
-	    }
 	    if(!rename($_FILES['file']['tmp_name'], $indata)) {
-		unlink($_FILES['file']['tmp_name']);
-		rmdir($jobdir);
+		cleanup_jobdir($jobdir, $_FILES['file']['tmp_name']);
 		error_exit("Failed move uploaded file");
 	    }
 	}
@@ -320,6 +340,16 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	    }
 	}
     }
+
+    // 
+    // The filesize test on uploaded data applies to both HTTP uploaded file
+    // and data saved from request parameter data. Both gets saved to file
+    // pointed to by $indata.
+    // 
+    if(filesize($indata) < UPLOAD_MIN_FILESIZE) {
+	cleanup_jobdir($jobdir, $indata);
+	error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", UPLOAD_MIN_FILESIZE));
+    }
     
     // 
     // File uploaded or created. Now we just has to start the batch
@@ -327,6 +357,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // 
     $resdir = sprintf("%s/result", $jobdir);
     if(!mkdir($resdir, CACHE_PERMISSION, true)) {
+	cleanup_jobdir($jobdir, $indata);
 	error_exit("Failed create result directory");
     }
     $script = realpath(dirname(__FILE__) . "/../include/script.sh");
