@@ -20,6 +20,15 @@
 // 
 
 // 
+// Include replacements for missing file_put_contents() and
+// stream_get_contents(). This is required if PHP < 5.0.0
+// 
+if(!function_exists("stream_get_contents") && 
+   !function_exists("file_put_contents")) {
+    include "contents.inc";
+}
+
+// 
 // Runs a batch job. Returns associative array with jobid, date, 
 // time and unix timestamp for started job.
 // 
