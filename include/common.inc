@@ -417,7 +417,6 @@ function create_directory($path, $mode, $recursive)
 	foreach($parts as $part) {
 	    $dir .= $part . "/";
 	    if(!file_exists($dir)) {
-	    print "dir: $dir\n";
 		$result = mkdir($dir, $mode);
 		if(!$result) {
 		    return $result;
