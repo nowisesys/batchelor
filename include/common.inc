@@ -51,7 +51,12 @@ function run_process($cmd, $dir)
     // 
     // Run the command as a batch job.
     //
-    $process = proc_open(sprintf(BATCH_COMMAND, $cmd), $fds, $pipes, null, $env);
+    if(version_compare(phpversion(), "5.0.0") < 0) {
+	$process = proc_open(sprintf(BATCH_COMMAND, $cmd), $fds, $pipes);
+    }
+    else {
+	$process = proc_open(sprintf(BATCH_COMMAND, $cmd), $fds, $pipes, null, $env);
+    }
     if(is_resource($process)) {
 	// 
 	// Read stdot and stderr.
