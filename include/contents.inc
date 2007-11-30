@@ -83,8 +83,19 @@ function stream_get_contents($handle, $length = -1, $offset = 0)
 	    return false;
 	}
     }
-    
-    return fread($handle, $length);
+    if($length != -1) {
+	return fread($handle, $length);
+    }
+    else {
+	$result = "";
+	while(!feof($handle)) {
+	    $str = fread($handle, 4096);
+	    if($str) {
+		$result .= $str;
+	    }
+	}
+	return $result;
+    }
 }
 
 ?>
