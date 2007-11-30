@@ -236,13 +236,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // 
     $jobdir = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $GLOBALS["hostid"]);
     if(!file_exists($jobdir)) {
-	if(!mkdir($jobdir, CACHE_PERMISSION, true)) {
+	if(!create_directory($jobdir, CACHE_PERMISSION, true)) {
 	    error_exit("Failed create output directory");
 	}
     }
     
     $jobdir = sprintf("%s/%d", $jobdir, time());
-    if(!mkdir($jobdir, CACHE_PERMISSION, true)) {
+    if(!create_directory($jobdir, CACHE_PERMISSION, true)) {
 	error_exit("Failed create output directory");
     }
     
@@ -356,7 +356,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // job. The path to the wrapper script path must be absolute.
     // 
     $resdir = sprintf("%s/result", $jobdir);
-    if(!mkdir($resdir, CACHE_PERMISSION, true)) {
+    if(!create_directory($resdir, CACHE_PERMISSION, true)) {
 	cleanup_jobdir($jobdir, $indata);
 	error_exit("Failed create result directory");
     }

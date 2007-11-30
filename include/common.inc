@@ -122,19 +122,19 @@ function save_hostid_mapping($mapdir, $hostid, $peer)
     // Create directory if not already exists.
     // 
     if(!file_exists($mapdir)) {
-	if(!mkdir($mapdir, CACHE_PERMISSION, true)) {
+	if(!create_directory($mapdir, CACHE_PERMISSION, true)) {
 	    error_exit("Failed create peer to hostid map directory");
 	}
     }
     $adir = sprintf("%s/inaddr", $mapdir);
     if(!file_exists($adir)) {
-	if(!mkdir($adir, CACHE_PERMISSION, true)) {
+	if(!create_directory($adir, CACHE_PERMISSION, true)) {
 	    error_exit("Failed create peer => hostid map directory");
 	}
     }
     $hdir = sprintf("%s/hostid", $mapdir);
     if(!file_exists($hdir)) {
-	if(!mkdir($hdir, CACHE_PERMISSION, true)) {
+	if(!create_directory($hdir, CACHE_PERMISSION, true)) {
 	    error_exit("Failed create peer => hostid map directory");
 	}
     }
@@ -386,6 +386,35 @@ function bytes_to_string($original)
     }
     
     return $bytestr;
+}
+
+// 
+// A portable mkdir() replacement.
+//
+function create_directory($path, $mode, $recursive)
+{
+    if(version_compare(phpversion(), "5.0.0") < 0) {
+	// 
+	// mkdir() in PHP < 5.0.0 don't handle recursive.
+	// 
+	$parts = explode("/", $path);
+	$dir = "";
+	$result = false;
+	foreach($parts as $part) {
+	    $dir .= $part . "/";
+	    if(!file_exists($dir)) {
+	    print "dir: $dir\n";
+		$result = mkdir($dir, $mode);
+		if(!$result) {
+		    return $result;
+		}
+	    }
+	}
+	return $result;
+    }
+    else {
+	return mkdir($path, $mode, $recursive);
+    }
 }
 
 ?>
