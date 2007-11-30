@@ -64,22 +64,16 @@ $zipfile = "result.zip";
 
 chdir($resdir);
 if(!file_exists("result.zip")) {
-    if(extension_loaded("zip") && version_compare(phpversion(), "5.2.0", ">="))  {
+    // 
+    // Use bundled PECL zip extention if available.
+    //
+    if(extension_loaded("zip") && version_compare(phpversion(), "5.2.0", ">=")) {
 	// 
-	// Use bundled PECL zip extention.
-	//
-	$zip = new ZipArchive();	 
-	if($zip->open($zipfile, ZIPARCHIVE::CREATE)) {
-	    $dir = opendir($zipdir);
-	    if($dir) {
-		while(false !== ($file = readdir($dir))) {
-		    if($file != "." && $file != "..") {
-			$zip->addFile(sprintf("%s/%s", $zipdir, $file));
-		    }
-		}
-	    }
-	}
-	$zip->close();
+	// This is a workaround because the PHP4 compiler will die
+	// on enums (like ZipArchive::CREATE).
+	// 
+	include "../include/zip5.inc";
+	create_zipfile($zipfile, $zipdir);	
     }
     else {
 	// 
