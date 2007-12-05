@@ -2,3 +2,9 @@ Version 0.3.1:
 
 	* Ported to run using PHP 4
 	
+Version 0.3.2:
+
+	* Added option for running multiple jobs in parallell. Controlled
+	  by BATCH_LIMIT in conf/config.inc
+	  
+	  
