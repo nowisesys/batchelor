@@ -34,10 +34,28 @@ define ("CONTACT_STRING", sprintf("<a href=\"mailto:%s\">%s</a>",
 				  CONTACT_ADDRESS, CONTACT_NAME));
 
 // 
-// The batch cammand to run. The %s gets substituted with the batch
-// job command, including its arguments.
+// This command lists number of running jobs from all users.
+// 
+define ("BATCH_RUNNING", "at -l | grep '=' | wc -l");
+
+// 
+// The maximum number of jobs thats allowed to run simultanous. The number
+// to use must be determined by experimenting. A good starting point might be
+// to allow 2 * N(c) - 1, where N(c) == number of CPU cores. 
+// 
+// Use 0 to force all jobs to be queued using the BATCH_COMMAND command.
+// 
+define ("BATCH_LIMIT", 3);
+
+// 
+// The batch cammand to run. The %s gets substituted with the batch job
+// command, including its arguments. The command BATCH_COMMAND should queue
+// the job and the BATCH_EXECUTE should start the job immidiatly. The
+// BATCH_EXECUTE is used iff BATCH_RUNNING < BATCH_LIMIT, otherwise the job
+// is queued for later execution.
 // 
 define ("BATCH_COMMAND", "echo \"%s\" | batch");
+define ("BATCH_EXECUTE", "echo \"%s\" | at now");
 
 // 
 // List all batch jobs. Jobs in queue 'b' is pending batch jobs and 
@@ -46,8 +64,8 @@ define ("BATCH_COMMAND", "echo \"%s\" | batch");
 define ("BATCH_LISTING", "at -l");
 
 // 
-// Remove a pending job from the batch queue. The %d gets expanded to
-// the job ID to remove from queue.
+// Remove a pending job from the batch queue. The %d is substituted
+// with the job ID to remove from queue.
 // 
 define ("BATCH_REMOVE", "atrm %d");
 

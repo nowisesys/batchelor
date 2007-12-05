@@ -51,11 +51,24 @@ function run_process($cmd, $dir)
     // 
     // Run the command as a batch job.
     //
-    if(version_compare(phpversion(), "5.0.0") < 0) {
-	$process = proc_open(sprintf(BATCH_COMMAND, $cmd), $fds, $pipes);
+    
+    $running = exec(BATCH_RUNNING);
+    if(!is_numeric($running)) {
+	error_exit("Failed get number of running jobs");
+    }
+    
+    if($running < BATCH_LIMIT) {
+	$method = BATCH_EXECUTE;
     }
     else {
-	$process = proc_open(sprintf(BATCH_COMMAND, $cmd), $fds, $pipes, null, $env);
+	$method = BATCH_COMMAND;
+    }
+    
+    if(version_compare(phpversion(), "5.0.0") < 0) {
+	$process = proc_open(sprintf($method, $cmd), $fds, $pipes);
+    }
+    else {
+	$process = proc_open(sprintf($method, $cmd), $fds, $pipes, null, $env);
     }
     if(is_resource($process)) {
 	// 
