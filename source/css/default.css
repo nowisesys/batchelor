@@ -1,0 +1,46 @@
+a {
+    color: #000099;
+}
+a:hover {
+    color: #0000ff;
+}
+td {
+    white-space: nowrap;
+}
+td.banner {
+    padding-left: 50px;
+}
+td.menu {
+    vertical-align: top;
+    border: 2px solid #eeeeee;
+    padding-right: 10px;
+    padding-left: -25px;
+}
+td.body {
+    border: 2px solid #eeeeee;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 90%;
+}
+td.body td {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+td.footer, td.footer a {
+    color: #999999;
+    width: 50%;
+}
+td.footer a:hover {
+    color: #666666;
+}
+td.copyright {
+    text-align: right;
+    width: 50%;
+}
+div.indent {
+    left: 200px;
+}
+h3 {
+    color: #000066;
+    text-decoration: underline;
+}
