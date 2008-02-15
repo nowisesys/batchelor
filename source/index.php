@@ -19,12 +19,21 @@
 // is set, then we save it and process the indata. The form for submitting jobs and
 // the queue view is always visible.
 // 
+// The code is a bit messy because we use interface templates (with callbacks), 
+// meta-refresh and reports errors using the same function as prints the page.
+// 
 
 // 
 // Include configuration and libs.
 // 
 include "../conf/config.inc";
 include "../include/common.inc";
+include "../include/ui.inc";
+
+// 
+// The array of pending and running jobs.
+// 
+// $jobs = null;
 
 function show_jobs_table(&$jobs)
 {
@@ -38,7 +47,7 @@ function show_jobs_table(&$jobs)
 		    "crashed"  => "#666666" );
       
     print "<br><h3>Job queue:</h3>\n";
-    print "<hr><table width=\"50%\"><tr><th>Started</th><th>Job</th><th>Status</th><th>Links</th></tr>\n";
+    print "<div class=\"indent\"><table width=\"50%\"><tr><th>Started</th><th>Job</th><th>Status</th><th>Links</th></tr>\n";
     foreach($jobs as $jobdir => $job) {	    
 	$label = sprintf("(%s)", $job['state']);
 	switch($job['state']) {
@@ -104,33 +113,17 @@ function show_jobs_table(&$jobs)
 	}
 	printf("<td>%s</td></tr>\n", implode(", ", $links));
     }
-    print "</table>\n";
+    print "</table></div>\n";
 }
 
-function show_form($error = null)
+// 
+// This function prints the page body.
+// 
+function print_body()
 {
-    // 
-    // Get array of all running and finished jobs for peer identified
-    // by the hostid superglobal variable.
-    // 
-    $jobs = get_jobs($GLOBALS['hostid']);
-
-    print "<html><head>\n";
-    print "<title>Submit data for processing</title>\n";
-    if(PAGE_REFRESH_RATE > 0) {
-	// 
-	// Only output meta refresh tag if we got pending 
-	// or running jobs.
-	// 
-	foreach($jobs as $job) {
-	    if($job['state'] == "pending" || $job['state'] == "running") {
-		printf("<meta http-equiv=\"refresh\" content=\"%d\" />", PAGE_REFRESH_RATE);
-		break;
-	    }
-	}
-    }
-    print "</head>\n";
-    print "<body><h3>Submit data for processing</h3><hr>\n";
+    global $jobs;
+    
+    print "<h3>Submit data for processing:</h3>\n";
 
     // 
     // The form for uploading a file.
@@ -156,8 +149,8 @@ function show_form($error = null)
     // 
     // Should we show an error message?
     //
-    if(isset($error)) {
-	printf("<hr><b>Error:</b> %s\n", $error);
+    if(isset($GLOBALS['error'])) {
+	printf("<hr><b>Error:</b> %s\n", $GLOBALS['error']);
     }
 
     // 
@@ -166,10 +159,57 @@ function show_form($error = null)
     if(count($jobs)) {
 	show_jobs_table($jobs);
     }
-    printf("<hr>Last updated: %s\n", format_timestamp(time()));
-    printf("<br>Contact: %s\n", CONTACT_STRING);
-      
-    print "</body></html>\n";
+}
+
+// 
+// The output callback used by interface template.
+// 
+function print_html($what)
+{
+    switch($what) {
+     case "body":
+	print_body();
+	break;
+     case "title":
+	print "Submit data for processing";
+	break;
+     default:
+	print_common_html($what);    // Use default callback.
+	break;
+    }
+}
+
+// 
+// This is where we start output the whole page.
+// 
+function show_page($error = null) 
+{
+    global $jobs;
+    
+    if(isset($error)) {
+	$GLOBALS['error'] = $error;
+    }
+    
+    // 
+    // Get array of all running and finished jobs for peer identified
+    // by the hostid superglobal variable.
+    // 
+    $jobs = get_jobs($GLOBALS['hostid']);
+    
+    if(PAGE_REFRESH_RATE > 0) {
+	// 
+	// Only output meta refresh tag if we got pending 
+	// or running jobs.
+	// 
+	foreach($jobs as $job) {
+	    if($job['state'] == "pending" || $job['state'] == "running") {
+		$GLOBALS['refresh'] = true;
+		break;
+	    }
+	}
+    }
+    
+    include "../template/standard.ui";
 }
 
 // 
@@ -179,7 +219,7 @@ function show_form($error = null)
 //
 function error_exit($str)
 {
-    show_form($str);
+    show_page($str);
     exit(1);
 }
 
@@ -384,6 +424,6 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 // 
 // Show form and running and finished jobs.
 // 
-show_form();
+show_page();
 
 ?>

@@ -23,6 +23,7 @@
 // 
 include "../conf/config.inc";
 include "../include/common.inc";
+include "../include/ui.inc";
 
 // 
 // Get request parameters.
@@ -60,60 +61,67 @@ if(!file_exists($jobdir)) {
     die("The job directory is missing");
 }
 
-// 
-// Print HTML header.
-// 
-function print_header($title)
+function print_title()
 {
-    print "<html><head><title>$title</title><style type=\"text/css\">p { border: 1px solid #000066; }</style></head>\n";
-    print "<body>\n";
+    if(isset($GLOBALS['indata'])) {
+	printf("Data for Job ID %d", $GLOBALS['jobid']);
+    }
+    else {
+	printf("Details for Job ID %d", $GLOBALS['jobid']);
+    }
 }
 
-// 
-// Print HTML footer.
-// 
-function print_footer()
+function print_body()
 {
-    print "</body></html>\n";
-}
-
-// 
-// Display job details.
-// 
-if(isset($indata)) {
-    print_header(sprintf("Data for Job ID %d", $jobid));
-    printf("<h3>Data for Job ID %d</h3><hr>\n", $jobid);
-    print "<p><pre>\n";
-    readfile(sprintf("%s/indata", $jobdir));
-    print "</pre></p>\n";
-}
-else {
-    print_header(sprintf("Details for Job ID %d", $jobid));
-    printf("<h3>Details for Job ID %d</h3><hr>\n", $jobid);
-    $cwd = getcwd();
-    chdir($jobdir);
-    // 
-    // Display job details.
-    // 
-    print "<p><table>";
-    if(file_exists("started")) {
-	printf("<tr><td><b>Started:</b></td><td>%s</td></tr>\n", format_timestamp(trim(file_get_contents("started"))));
+    if(isset($GLOBALS['indata'])) {
+	printf("<h3>Data for Job ID %d</h3><hr>\n", $GLOBALS['jobid']);
+	print "<p><pre>\n";
+	readfile(sprintf("%s/indata", $GLOBALS['jobdir']));
+	print "</pre></p>\n";
     }
-    if(file_exists("finished")) {
-	printf("<tr><td><b>Finished:</b></td><td>%s</td></tr>\n", format_timestamp(trim(file_get_contents("finished"))));
-    }
-    print "</table></p>\n";
-    if(file_exists("stdout")) {
-	printf("<p><b>Output:</b><br><pre>%s</pre></p>\n", file_get_contents("stdout"));
-    }
-    if(file_exists("stderr")) {
-	printf("<p><b>Error:</b><br><pre>%s</pre></p>\n", file_get_contents("stderr"));
-    }
+    else {
+	printf("<h3>Details for Job ID %d</h3><hr>\n", $GLOBALS['jobid']);
+	$cwd = getcwd();
+	chdir($GLOBALS['jobdir']);
+	// 
+	// Display job details.
+	// 
+	print "<p><table>";
+	if(file_exists("started")) {
+	    printf("<tr><td><b>Started:</b></td><td>%s</td></tr>\n", format_timestamp(trim(file_get_contents("started"))));
+	}
+	if(file_exists("finished")) {
+	    printf("<tr><td><b>Finished:</b></td><td>%s</td></tr>\n", format_timestamp(trim(file_get_contents("finished"))));
+	}
+	print "</table></p>\n";
+	if(file_exists("stdout")) {
+	    printf("<p><b>Output:</b><br><pre>%s</pre></p>\n", file_get_contents("stdout"));
+	}
+	if(file_exists("stderr")) {
+	    printf("<p><b>Error:</b><br><pre>%s</pre></p>\n", file_get_contents("stderr"));
+	}
 	
-    printf("<p><a href=\"details.php?jobid=%d&result=%s&data=1\" target=\"_blank\">View indata...</a></p>", 
-	   $_REQUEST['jobid'], $_REQUEST['result']);
-    chdir($cwd);
+	printf("<p><a href=\"details.php?jobid=%d&result=%s&data=1\" target=\"_blank\">View indata...</a></p>", 
+	       $_REQUEST['jobid'], $_REQUEST['result']);
+	chdir($cwd);
+    }
 }
-print_footer();
+
+function print_html($what)
+{
+    switch($what) {
+     case "body":
+	print_body();
+	break;
+     case "title":
+	print_title();
+	break;
+     default:
+	print_common_html($what);    // Use default callback.
+	break;
+    }
+}
+
+include "../template/popup.ui";
 
 ?>
