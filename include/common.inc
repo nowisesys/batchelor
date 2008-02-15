@@ -287,11 +287,19 @@ function get_jobs($hostid)
 	    }
 	}
 	else {
-	    if(!isset($queued[$job['jobid']])) {
-		$job['state'] = "crashed";
+	    if(isset($job['jobid'])) {
+		if(!isset($queued[$job['jobid']])) {
+		    $job['state'] = "crashed";
+		}
+		else {
+		    $job['state'] = $queued[$job['jobid']];
+		}
 	    }
 	    else {
-		$job['state'] = $queued[$job['jobid']];
+		// 
+		// No jobid (0)? This must be a crashed job.
+		// 
+		$job['state'] = "crashed";
 	    }
 	}
 	$result[$key] = $job;
