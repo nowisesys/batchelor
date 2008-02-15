@@ -64,13 +64,32 @@ else {
 
 define ("WPRINTF_MODE", $mode);
 
-if($mode == "www") {
-    print "<html><head><title>Batchelor: system check</title></head>\n";
-    print "<body><h3>Batchelor: system check</h3><hr><pre>\n";
+// 
+// This function gets called when runned in www mode.
+// 
+function print_html($what)
+{
+    switch($what) {
+     case "body":
+	print "<h3>Batchelor: system check</h3><hr><pre>\n";
+	run_all_tests();
+	print "</pre>\n";
+	break;
+     case "title":
+	print "Batchelor: system check";
+	break;
+     default:
+	print_common_html($what);
+	break;
+    }
 }
-run_all_tests();
-if($mode == "www") {    
-    print "</pre></body></html>\n";
+
+if($mode == "www") {
+    include "../include/ui.inc";
+    include "../template/popup.ui";
+}
+else {
+    run_all_tests();
 }
 
 ?>
