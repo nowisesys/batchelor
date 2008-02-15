@@ -150,7 +150,7 @@ function print_body()
     // Should we show an error message?
     //
     if(isset($GLOBALS['error'])) {
-	printf("<hr><b>Error:</b> %s\n", $GLOBALS['error']);
+	printf("<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/warning.png\"></td><td valign=\"top\">%s</td></tr></table></div>", $GLOBALS['error']);
     }
 
     // 

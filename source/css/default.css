@@ -41,6 +41,13 @@ td.copyright {
 div.indent {
     left: 200px;
 }
+#info {
+    border: 1px solid #999999;
+    margin: 2px;
+    margin-right: 10px;
+    padding: 4px;
+    background: #f6f6c0;
+}
 h3 {
     color: #000066;
     text-decoration: underline;
