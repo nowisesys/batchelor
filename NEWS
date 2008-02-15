@@ -1,4 +1,4 @@
-Version 0.3.3:
+Version 0.3.3 (2008-02-15):
 
         * Various fixes for minor bugs (like E_NOTICE warnings).
 	
@@ -6,11 +6,16 @@ Version 0.3.3:
 	  by modifying the standard.ui and popup.ui templates and optionally
 	  the CSS file.
 
-Version 0.3.2:
+Version 0.3.2 (2007-12-05):
 
 	* Added option for running multiple jobs in parallell. Controlled
 	  by BATCH_LIMIT in conf/config.inc
 	  
-Version 0.3.1:
+Version 0.3.1 (2007-11-30):
 
 	* Ported to run using PHP 4
+
+Version 0.3.0 (2007-??-??):
+
+	* Too many changes to even try to mention some. 
+	
