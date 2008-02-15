@@ -16,6 +16,8 @@
 	     |             +-- conf/
 	     |             +-- include/  
 	     |             +-- source/      // Aliased in Apache conf, see conf/apache.conf
+	     |             +-- utils/       // Contains the command wrapper script.sh
+	     |             +-- template/    // UI templates (modify at will).
 	     +-- cgi-bin/
 	     +-- htdocs/                    // The standard webroot, plain HTML
 	     +-- error/                     // Apache internal
@@ -66,9 +68,11 @@
 ** CONFIGURE THE SOURCE:
 
    Open conf/config.inc and edit its content. Then continue with editing the
-   wrapper script include/script.sh, just replace the 'simula ...' line with
-   the command.
-   
+   wrapper script utils/script.sh, just replace the 'simula ...' line with
+   the command you want to run.
+
+   Check your installation by pointing a browser at http://localhost/batchelor/check.php
+   or run it from inside the source directory as 'php check.php'.
    
 ** TESTING THE JOB QUEUE:
 

@@ -482,7 +482,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	cleanup_jobdir($jobdir, $indata);
 	error_exit("Failed create result directory");
     }
-    $script = realpath(dirname(__FILE__) . "/../include/script.sh");
+    $script = realpath(dirname(__FILE__) . "/../utils/script.sh");
     $command = sprintf("%s %s %s %s", $script, $jobdir, $indata, $resdir);
     $job = run_process($command, $jobdir);
     
