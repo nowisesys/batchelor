@@ -22,7 +22,7 @@
 //
 // The script should only be run in CLI mode.
 //
-if(isset($_SERVER['HTTP_USER_AGENT'])) {
+if(isset($_SERVER['SERVER_ADDR'])) {
     die("This script should be runned in CLI mode.\n");
 }
 

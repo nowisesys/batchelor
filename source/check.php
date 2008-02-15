@@ -26,7 +26,7 @@ $trusted_hosts = array( "127.0.0.1", "::1" );
 //
 // Sanity check:
 //
-if(isset($_SERVER['HTTP_USER_AGENT'])) {
+if(isset($_SERVER['SERVER_ADDR'])) {
     $trusted = false;
     foreach($trusted_hosts as $host) {
 	if($_SERVER['REMOTE_ADDR'] == $host) {
@@ -55,7 +55,7 @@ include "../include/common.inc";
 // 
 // Running as CLI or under a web server?
 // 
-if(isset($_SERVER['HTTP_USER_AGENT'])) {
+if(isset($_SERVER['SERVER_ADDR'])) {
     $mode = "www";
 }
 else {
