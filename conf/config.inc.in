@@ -137,4 +137,10 @@ define ("TIMESTAMP_FORMAT", "%Y-%m-%d %H:%M:%S");
 // 
 define ("ZIP_FILE_COMMAND", "7z a %s %s -tzip");
 
+// 
+// Configures whether to present the job queue with icons or plain text 
+// inside the table view.
+// 
+define ("USE_ICONIZED_QUEUE", true);
+
 ?>

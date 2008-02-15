@@ -37,6 +37,89 @@ include "../include/ui.inc";
 
 function show_jobs_table(&$jobs)
 {
+    print "<br><h3>Job queue:</h3>\n";
+    if(USE_ICONIZED_QUEUE) {
+	show_jobs_table_icons($jobs);
+    }
+    else {
+	show_jobs_table_plain($jobs);
+    }
+}
+
+function show_jobs_table_icons(&$jobs)
+{
+    print "<div class=\"indent\"><table width=\"50%\"><tr><th>Queued</th><th>Finished</th><th>Started</th><th>Job</th><th>Download</th><th>Delete</th></tr>\n";
+    foreach($jobs as $jobdir => $job) {	    
+	// $label = sprintf("(%s)", $job['state']);
+	switch($job['state']) {
+	 case "pending":
+	    $title = sprintf("queued %s, \nwaiting in queue", 
+			     format_timestamp($job['queued'])); 
+	    break;
+	 case "running":
+	    $title = sprintf("started %s, \nstill running", 
+			     format_timestamp($job['started']));
+	    break;
+	 case "finished":
+	    $title = sprintf("started %s, \nfinished %s", 
+			     format_timestamp($job['started']), 
+			     format_timestamp($job['finished']));
+	    break;
+	 case "error":
+	    $title = sprintf("started %s, \nfinished with errors %s", 
+			     format_timestamp($job['started']), 
+			     format_timestamp($job['stderr']));
+	    break;
+	 case "crashed":
+	    $title = sprintf("started %s, \njob has crashed (not running)", 
+			     format_timestamp($job['started']));
+	    break;
+	}
+	
+	// 
+	// The queued and status column.
+	// 
+	if($job['state'] == "running" || $job['state'] == "pending") {
+	    printf("<tr align=\"right\"><td><img src=\"icons/nuvola/%s.png\" alt=\"%s\"></td><td>&nbsp;</td>", $job['state'], $job['state']);
+	}
+	else {	    
+	    printf("<tr align=\"right\"><td>&nbsp;</td><td><img src=\"icons/nuvola/%s.png\" alt=\"%s\"></td>", $job['state'], $job['state']);
+	}
+	
+	// 
+	// Finished jobs column:
+	// 
+	if($job['state'] == "pending") {
+	    print "<td align=\"center\">---</td>";
+	}
+	else {
+	    printf("<td nowrap>%s</td>", format_timestamp($job['started']));
+	}
+	
+	// 
+	// Job column
+	// 
+	printf("<td nowrap><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
+	       $job['jobid'], $jobdir, $title, $job['jobid']);
+		
+	// 
+	// Download and delete column
+	// 
+	if($job['state'] == "finished") {
+	    printf("<td><a href=\"download.php?jobid=%d&result=%s\" title=\"download result\"><img src=\"icons/nuvola/download.png\" alt=\"download\"></a></td>", $job['jobid'], $jobdir);
+	}
+	else {
+	    printf("<td>&nbsp;</td>\n");
+	}
+	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
+	    printf("<td nowrap><a href=\"delete.php?jobid=%d&result=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td></tr>", $job['jobid'], $jobdir);
+	}
+    }
+    print "</table></div>\n";
+}
+
+function show_jobs_table_plain(&$jobs)
+{
     // 
     // Font colors:
     // 
@@ -46,7 +129,6 @@ function show_jobs_table(&$jobs)
 		    "error"    => "#990000",
 		    "crashed"  => "#666666" );
       
-    print "<br><h3>Job queue:</h3>\n";
     print "<div class=\"indent\"><table width=\"50%\"><tr><th>Started</th><th>Job</th><th>Status</th><th>Links</th></tr>\n";
     foreach($jobs as $jobdir => $job) {	    
 	$label = sprintf("(%s)", $job['state']);
