@@ -39,7 +39,7 @@ td.copyright {
     width: 50%;
 }
 div.indent {
-    left: 200px;
+    left: 20px;
 }
 #info {
     border: 1px solid #999999;
@@ -48,7 +48,11 @@ div.indent {
     padding: 4px;
     background: #f6f6c0;
 }
-h3 {
+#secthead {
     color: #000066;
     text-decoration: underline;
+    font: normal bold 1.2em arial
+}
+img {
+    border: none;
 }

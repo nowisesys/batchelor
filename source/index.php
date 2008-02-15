@@ -35,14 +35,43 @@ include "../include/ui.inc";
 // 
 // $jobs = null;
 
+function print_select($label, $name, $values, $selected)
+{
+    printf("<td>%s:&nbsp;<select name=\"%s\">\n", $label, $name);
+    foreach($values as $key => $val) {
+	if(isset($selected) && $val == $selected) {
+	    printf("<option value=\"%s\" selected>%s</option>\n", $val, $key);
+	}
+	else {
+	    printf("<option value=\"%s\">%s</option>\n", $val, $key);
+	}
+    }
+    print "</select></td>\n";
+}
+
+// 
+// 
 function show_jobs_table(&$jobs)
 {
-    print "<br><h3>Job queue:</h3>\n";
-    if(USE_ICONIZED_QUEUE) {
-	show_jobs_table_icons($jobs);
-    }
-    else {
-	show_jobs_table_plain($jobs);
+    print "<br><table><tr><td><span id=\"secthead\">Job queue:</span></td>\n";
+    print "<td><form action=\"index.php\" method=\"get\">\n";
+    print "<table><tr>\n";
+    print_select("Sort on", "sort", array( "None" => "none", "Started" => "started", 
+					   "Job ID" => "jobid", "Status" => "state" ), 
+		 $_REQUEST['sort']);
+    print_select("Show", "filter",  array( "All" => "all", "Pending" => "pending", 
+					   "Running" => "running", "Finished" => "finished", 
+					   "Error" => "error", "Crashed" => "crashed" ),
+		 $_REQUEST['filter']);
+    print "<td><input type=\"submit\" value=\"Refresh\"></td>\n";
+    print "</tr></table></form></td></tr></table>\n";
+    if(count($jobs)) {	
+	if(USE_ICONIZED_QUEUE) {
+	    show_jobs_table_icons($jobs);
+	}
+	else {
+	    show_jobs_table_plain($jobs);
+	}
     }
 }
 
@@ -205,7 +234,7 @@ function print_body()
 {
     global $jobs;
     
-    print "<h3>Submit data for processing:</h3>\n";
+    print "<br><span id=\"secthead\">Submit data for processing:</span><br><br>\n";
 
     // 
     // The form for uploading a file.
@@ -238,9 +267,7 @@ function print_body()
     // 
     // Show jobs.
     //
-    if(count($jobs)) {
-	show_jobs_table($jobs);
-    }
+    show_jobs_table($jobs);
 }
 
 // 
@@ -518,10 +545,16 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 // Validate request parameters.
 // 
 if(isset($_REQUEST['sort'])) {
-    check_request_param("sort", array( "started", "jobid", "state" ));
+    check_request_param("sort", array( "none", "started", "jobid", "state" ));
+    if($_REQUEST['sort'] == "none") {
+	unset($_REQUEST['sort']);
+    }
 }
 if(isset($_REQUEST['filter'])) {
-    check_request_param("filter", array( "pending", "running", "finished", "error", "crashed" ));
+    check_request_param("filter", array( "all", "pending", "running", "finished", "error", "crashed" ));
+    if($_REQUEST['filter'] == "all") {
+	unset($_REQUEST['filter']);
+    }
 }
 
 // 
