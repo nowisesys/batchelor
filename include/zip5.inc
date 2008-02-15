@@ -29,7 +29,7 @@ function create_zipfile($zipfile, $zipdir)
 	if($dir) {
 	    while(false !== ($file = readdir($dir))) {
 		if($file != "." && $file != "..") {
-		    if($zip->addFile(sprintf("%s/%s", $zipdir, $file))) {
+		    if(!$zip->addFile(sprintf("%s/%s", $zipdir, $file))) {
 			$zip->close();
 			unlink($zipfile);
 			closedir($dir);

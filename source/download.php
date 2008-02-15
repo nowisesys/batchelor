@@ -72,8 +72,11 @@ if(!file_exists("result.zip")) {
 	// This is a workaround because the PHP4 compiler will die
 	// on enums (like ZipArchive::CREATE).
 	// 
-	include "../include/zip5.inc";
-	create_zipfile($zipfile, $zipdir);	
+	$zipinc = realpath(sprintf("%s/../include/zip5.inc", dirname(__FILE__)));
+	include $zipinc;
+	if(!create_zipfile($zipfile, $zipdir)) {
+	    die("Failed create zip-file");
+	}
     }
     else {
 	// 
