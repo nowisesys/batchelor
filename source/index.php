@@ -83,23 +83,23 @@ function show_jobs_table(&$jobs)
 	    print "<tr align=\"center\"><td align=\"center\">---</td>";
 	}
 	else {
-	    printf("<tr align=\"center\"><td>%s</td>", format_timestamp($job['started']));
+	    printf("<tr align=\"center\"><td nowrap>%s</td>", format_timestamp($job['started']));
 	}
 	
 	// 
 	// Job column
 	// 
-	printf("<td><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
+	printf("<td nowrap><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
 	       $job['jobid'], $jobdir, $title, $job['jobid']);
 	
 	// 
 	// Status column
 	// 
 	if($job['state'] == "running") {
-	    printf("<td>==&gt; <font color=\"%s\">%s</font> &lt;==</td>", $color[$job['state']], $label);
+	    printf("<td nowrap>==&gt; <font color=\"%s\">%s</font> &lt;==</td>", $color[$job['state']], $label);
 	}
 	else {
-	    printf("<td><font color=\"%s\">%s</font></td>", $color[$job['state']], $label);
+	    printf("<td nowrap><font color=\"%s\">%s</font></td>", $color[$job['state']], $label);
 	}
 	
 	// 
@@ -111,7 +111,7 @@ function show_jobs_table(&$jobs)
 	if($job['state'] == "finished") {
 	    array_push($links, sprintf("<a href=\"download.php?jobid=%d&result=%s\">download</a>", $job['jobid'], $jobdir));
 	}
-	printf("<td>%s</td></tr>\n", implode(", ", $links));
+	printf("<td nowrap>%s</td></tr>\n", implode(", ", $links));
     }
     print "</table></div>\n";
 }
