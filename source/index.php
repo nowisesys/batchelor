@@ -271,12 +271,12 @@ function show_page($error = null)
     if(isset($error)) {
 	$GLOBALS['error'] = $error;
     }
-    
+        
     // 
     // Get array of all running and finished jobs for peer identified
     // by the hostid superglobal variable.
     // 
-    $jobs = get_jobs($GLOBALS['hostid']);
+    $jobs = get_jobs($GLOBALS['hostid'], $_REQUEST['sort'], $_REQUEST['filter']);
     
     if(PAGE_REFRESH_RATE > 0) {
 	// 
@@ -322,6 +322,17 @@ function cleanup_jobdir($jobdir, $indata = null)
 	if(!rmdir($jobdir)) {
 	    error_exit("Failed cleanup job directory");
 	}
+    }
+}
+
+// 
+// Validate request parameter.
+// 
+function check_request_param($name, $accepted)
+{
+    if(!in_array($_REQUEST[$name], $accepted)) {
+	error_exit(sprintf("Invalid value '%s' for request parameter '%s'", 
+			   $_REQUEST[$name], $name));
     }
 }
 
@@ -501,6 +512,16 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // update to submit the same data or file twice or more.
     // 
     header("Location: index.php");    
+}
+
+// 
+// Validate request parameters.
+// 
+if(isset($_REQUEST['sort'])) {
+    check_request_param("sort", array( "started", "jobid", "state" ));
+}
+if(isset($_REQUEST['filter'])) {
+    check_request_param("filter", array( "pending", "running", "finished", "error", "crashed" ));
 }
 
 // 

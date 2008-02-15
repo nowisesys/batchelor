@@ -179,6 +179,29 @@ function save_hostid_mapping($mapdir, $hostid, $peer)
     }
 }
 
+//
+// This callback is used by get_jobs() to sort the jobs array based
+// on value of global variable 'sort' (request paramter).
+// 
+function sort_jobs($a, $b)
+{
+    if(isset($GLOBALS['order']) && $GLOBALS['order'] == "desc") {
+	return $a[$GLOBALS['sort']] < $b[$GLOBALS['sort']];
+    }
+    else {
+	return $a[$GLOBALS['sort']] > $b[$GLOBALS['sort']];
+    }
+}
+
+// 
+// This callback is used by get_jobs() to filter out values based
+// on value of the global variable 'filter' (request parameter).
+//
+function filter_jobs($a)
+{
+    return $a['state'] == $GLOBALS['filter'];
+}
+
 // 
 // Get jobs for peer associated by the hostid variable.
 // 
@@ -188,7 +211,16 @@ function save_hostid_mapping($mapdir, $hostid, $peer)
 // 3. Crashed  - no finished timestamp and jobid is missing in queue.
 // 4. Error    - finished with non-empty error output.
 // 
-function get_jobs($hostid)
+// The $sort parameter defines the ordering between elements in result
+// array. Possible values for $sort is started, jobid or state. The 
+// sorting can be further finetuned by defining the global valiable 
+// order to either asc or desc.
+// 
+// The $filter parameter defines which elements should be inserted
+// in the result array. Possible values are pending, running, finished, 
+// error or crashed.
+// 
+function get_jobs($hostid, $sort, $filter)
 {
     // 
     // The result array.
@@ -303,6 +335,22 @@ function get_jobs($hostid)
 	    }
 	}
 	$result[$key] = $job;
+    }
+
+    // 
+    // Apply filter if requested.
+    // 
+    if(isset($filter)) {
+	$GLOBALS['filter'] = $filter;
+	$result = array_filter($result, "filter_jobs");
+    }
+    
+    // 
+    // Apply sorting if requested.
+    // 
+    if(isset($sort)) {
+	$GLOBALS['sort'] = $sort;
+	uasort($result, "sort_jobs");
     }
     
     return $result;

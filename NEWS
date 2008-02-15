@@ -1,3 +1,13 @@
+Version 0.3.4 (2008-02-15):
+
+	* Added graphic and plain text mode used when displaying the queued jobs.
+	
+	* Moved shell script wrapper (script.sh) to utils. It shouldn't be 
+	  mixed with PHP source.
+	  
+	* Implemented sorting and filtering of jobs in job queue. Adding a delete
+	  all (in list) button is planned.
+	
 Version 0.3.3 (2008-02-15):
 
         * Various fixes for minor bugs (like E_NOTICE warnings).
