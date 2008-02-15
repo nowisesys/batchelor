@@ -94,10 +94,10 @@ function print_body()
 	    printf("<tr><td><b>Finished:</b></td><td>%s</td></tr>\n", format_timestamp(trim(file_get_contents("finished"))));
 	}
 	print "</table></p>\n";
-	if(file_exists("stdout")) {
+	if(file_exists("stdout") && filesize("stdout") > 0) {
 	    printf("<p><b>Output:</b><br><pre>%s</pre></p>\n", file_get_contents("stdout"));
 	}
-	if(file_exists("stderr")) {
+	if(file_exists("stderr") && filesize("stderr") > 0) {
 	    printf("<p><b>Error:</b><br><pre>%s</pre></p>\n", file_get_contents("stderr"));
 	}
 	
