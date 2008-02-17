@@ -33,8 +33,8 @@ function print_header()
 // 
 function print_menu()
 {
-    $links = array( "Submit"    => "index.php?show=submit",
-		    "Job Queue" => "index.php?show=queue" );
+    $links = array( "Submit"    => "queue.php?show=submit",
+		    "Job Queue" => "queue.php?show=queue" );
     
     echo "<ul>\n";
     foreach($links as $name => $link) {

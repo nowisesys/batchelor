@@ -59,7 +59,7 @@ function print_select($label, $name, $values)
 function show_jobs_table(&$jobs)
 {
     print "<br><table><tr><td><span id=\"secthead\">Job queue:</span></td>\n";
-    print "<td><form action=\"index.php\" method=\"get\">\n";
+    print "<td><form action=\"queue.php\" method=\"get\">\n";
     print "<input type=\"hidden\" name=\"show\" value=\"queue\" />\n";
     print "<table><tr>\n";
     print_select("Sort on", "sort", array( "None" => "none", "Started" => "started", 
@@ -262,7 +262,7 @@ function print_body()
 	// 
 	// The form for uploading a file.
 	// 
-	print "<form enctype=\"multipart/form-data\" action=\"index.php\" method=\"POST\">\n";
+	print "<form enctype=\"multipart/form-data\" action=\"queue.php\" method=\"POST\">\n";
 	if(UPLOAD_MAX_FILESIZE > 0) {
 	    print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
 	    printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", UPLOAD_MAX_FILESIZE);
@@ -282,7 +282,7 @@ function print_body()
 	// 
 	// The form for submitting a data.
 	// 
-	print "<form action=\"index.php\" method=\"GET\">\n";
+	print "<form action=\"queue.php\" method=\"GET\">\n";
 	print "   Process data: <textarea name=\"data\" cols=\"50\" rows=\"5\"></textarea>\n";
 	print "   <input type=\"submit\" value=\"Send Data\" />\n";
 	if(isset($_REQUEST['sort'])) {
@@ -576,10 +576,10 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     }
     
     // 
-    // Redirect the browser to an empty index.php to prevent page
+    // Redirect the browser to an empty queue.php to prevent page
     // update to submit the same data or file twice or more.
     // 
-    header("Location: index.php?queued=yes");
+    header("Location: queue.php?queued=yes");
 }
 
 // 

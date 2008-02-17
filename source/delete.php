@@ -133,6 +133,6 @@ else {
 $sort   = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : "none";
 $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "all";
 
-header(sprintf("Location: index.php?show=queue&sort=%s&filter=%s", $sort, $filter));
+header(sprintf("Location: queue.php?show=queue&sort=%s&filter=%s", $sort, $filter));
 
 ?>
