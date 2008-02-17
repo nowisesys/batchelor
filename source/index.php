@@ -35,8 +35,11 @@ include "../include/ui.inc";
 // 
 // $jobs = null;
 
-function print_select($label, $name, $values, $selected)
+function print_select($label, $name, $values)
 {
+    if(isset($_REQUEST[$name])) {
+	$selected = $_REQUEST[$name];
+    }
     printf("<td>%s:&nbsp;<select name=\"%s\">\n", $label, $name);
     foreach($values as $key => $val) {
 	if(isset($selected) && $val == $selected) {
@@ -57,12 +60,10 @@ function show_jobs_table(&$jobs)
     print "<td><form action=\"index.php\" method=\"get\">\n";
     print "<table><tr>\n";
     print_select("Sort on", "sort", array( "None" => "none", "Started" => "started", 
-					   "Job ID" => "jobid", "Status" => "state" ), 
-		 $_REQUEST['sort']);
+					   "Job ID" => "jobid", "Status" => "state" )); 
     print_select("Show", "filter",  array( "All" => "all", "Pending" => "pending", 
 					   "Running" => "running", "Finished" => "finished", 
-					   "Error" => "error", "Crashed" => "crashed" ),
-		 $_REQUEST['filter']);
+					   "Error" => "error", "Crashed" => "crashed" ));
     print "<td><input type=\"submit\" value=\"Refresh\"></td>\n";
     print "</tr></table></form></td></tr></table>\n";
     if(count($jobs)) {	
@@ -244,6 +245,12 @@ function print_body()
 	print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
 	printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", UPLOAD_MAX_FILESIZE);
     }
+    if(isset($_REQUEST['sort'])) {
+	printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
+    }
+    if(isset($_REQUEST['filter'])) {
+	printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+    }
     print "   <!-- Name of input element determines name in \$_FILES array -->\n";
     print "   Process file: <input name=\"file\" type=\"file\" />\n";
     print "   <input type=\"submit\" value=\"Send File\" />\n";
@@ -255,6 +262,12 @@ function print_body()
     print "<form action=\"index.php\" method=\"GET\">\n";
     print "   Process data: <textarea name=\"data\" cols=\"50\" rows=\"5\"></textarea>\n";
     print "   <input type=\"submit\" value=\"Send Data\" />\n";
+    if(isset($_REQUEST['sort'])) {
+	printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
+    }
+    if(isset($_REQUEST['filter'])) {
+	printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+    }
     print "</form>\n";
     
     // 
@@ -546,15 +559,15 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 // 
 if(isset($_REQUEST['sort'])) {
     check_request_param("sort", array( "none", "started", "jobid", "state" ));
-    if($_REQUEST['sort'] == "none") {
-	unset($_REQUEST['sort']);
-    }
+} 
+else {
+    $_REQUEST['sort'] = "none";
 }
 if(isset($_REQUEST['filter'])) {
     check_request_param("filter", array( "all", "pending", "running", "finished", "error", "crashed" ));
-    if($_REQUEST['filter'] == "all") {
-	unset($_REQUEST['filter']);
-    }
+}
+else {
+    $_REQUEST['filter'] = "all";
 }
 
 // 

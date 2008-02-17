@@ -212,15 +212,15 @@ function filter_jobs($a)
 // 4. Error    - finished with non-empty error output.
 // 
 // The $sort parameter defines the ordering between elements in result
-// array. Possible values for $sort is started, jobid or state. The 
-// sorting can be further finetuned by defining the global valiable 
+// array. Possible values for $sort is none, started, jobid or state. 
+// The sorting can be further finetuned by defining the global variable 
 // order to either asc or desc.
 // 
 // The $filter parameter defines which elements should be inserted
-// in the result array. Possible values are pending, running, finished, 
+// in the result array. Possible values are all, pending, running, finished, 
 // error or crashed.
 // 
-function get_jobs($hostid, $sort, $filter)
+function get_jobs($hostid, $sort = "none", $filter = "all")
 {
     // 
     // The result array.
@@ -340,7 +340,7 @@ function get_jobs($hostid, $sort, $filter)
     // 
     // Apply filter if requested.
     // 
-    if(isset($filter)) {
+    if($filter != "all") {
 	$GLOBALS['filter'] = $filter;
 	$result = array_filter($result, "filter_jobs");
     }
@@ -348,7 +348,7 @@ function get_jobs($hostid, $sort, $filter)
     // 
     // Apply sorting if requested.
     // 
-    if(isset($sort)) {
+    if($sort != "none") {
 	$GLOBALS['sort'] = $sort;
 	uasort($result, "sort_jobs");
     }
