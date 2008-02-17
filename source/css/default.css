@@ -51,8 +51,17 @@ div.indent {
 #secthead {
     color: #000066;
     text-decoration: underline;
-    font: normal bold 1.2em arial
+    font: normal bold 1.2em arial;
 }
 img {
     border: none;
+}
+p {
+    position: relative;
+    left: 20px;
+}
+code {
+    position: relative;
+    left: 20px;
+    font: normal normal 1.0em courier;
 }
