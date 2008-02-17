@@ -58,6 +58,7 @@ function show_jobs_table(&$jobs)
 {
     print "<br><table><tr><td><span id=\"secthead\">Job queue:</span></td>\n";
     print "<td><form action=\"index.php\" method=\"get\">\n";
+    print "<input type=\"hidden\" name=\"show\" value=\"queue\" />\n";
     print "<table><tr>\n";
     print_select("Sort on", "sort", array( "None" => "none", "Started" => "started", 
 					   "Job ID" => "jobid", "Status" => "state" )); 
@@ -234,41 +235,48 @@ function show_jobs_table_plain(&$jobs)
 function print_body()
 {
     global $jobs;
-    
-    print "<br><span id=\"secthead\">Submit data for processing:</span><br><br>\n";
 
-    // 
-    // The form for uploading a file.
-    // 
-    print "<form enctype=\"multipart/form-data\" action=\"index.php\" method=\"POST\">\n";
-    if(UPLOAD_MAX_FILESIZE > 0) {
-	print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
-	printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", UPLOAD_MAX_FILESIZE);
+    if(!isset($_REQUEST['show'])) {	
+	$_REQUEST['show'] = "submit";
     }
-    if(isset($_REQUEST['sort'])) {
-	printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
+
+    if($_REQUEST['show'] == "submit") {
+	print "<br><span id=\"secthead\">Submit data for processing:</span><br><br>\n";
+
+	// 
+	// The form for uploading a file.
+	// 
+	print "<form enctype=\"multipart/form-data\" action=\"index.php\" method=\"POST\">\n";
+	if(UPLOAD_MAX_FILESIZE > 0) {
+	    print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
+	    printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", UPLOAD_MAX_FILESIZE);
+	}
+	if(isset($_REQUEST['sort'])) {
+	    printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
+	}
+	if(isset($_REQUEST['filter'])) {
+	    printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+	}
+	
+	print "   <!-- Name of input element determines name in \$_FILES array -->\n";
+	print "   Process file: <input name=\"file\" type=\"file\" />\n";
+	print "   <input type=\"submit\" value=\"Send File\" />\n";
+	print "</form>\n";
+	
+	// 
+	// The form for submitting a data.
+	// 
+	print "<form action=\"index.php\" method=\"GET\">\n";
+	print "   Process data: <textarea name=\"data\" cols=\"50\" rows=\"5\"></textarea>\n";
+	print "   <input type=\"submit\" value=\"Send Data\" />\n";
+	if(isset($_REQUEST['sort'])) {
+	    printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
+	}
+	if(isset($_REQUEST['filter'])) {
+	    printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+	}
+	print "</form>\n";
     }
-    if(isset($_REQUEST['filter'])) {
-	printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
-    }
-    print "   <!-- Name of input element determines name in \$_FILES array -->\n";
-    print "   Process file: <input name=\"file\" type=\"file\" />\n";
-    print "   <input type=\"submit\" value=\"Send File\" />\n";
-    print "</form>\n";
-    
-    // 
-    // The form for submitting a data.
-    // 
-    print "<form action=\"index.php\" method=\"GET\">\n";
-    print "   Process data: <textarea name=\"data\" cols=\"50\" rows=\"5\"></textarea>\n";
-    print "   <input type=\"submit\" value=\"Send Data\" />\n";
-    if(isset($_REQUEST['sort'])) {
-	printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
-    }
-    if(isset($_REQUEST['filter'])) {
-	printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
-    }
-    print "</form>\n";
     
     // 
     // Should we show an error message?
@@ -277,10 +285,12 @@ function print_body()
 	printf("<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/warning.png\"></td><td valign=\"top\">%s</td></tr></table></div>", $GLOBALS['error']);
     }
 
-    // 
-    // Show jobs.
-    //
-    show_jobs_table($jobs);
+    if($_REQUEST['show'] == "queue") {
+	// 
+	// Show jobs.
+	//
+	show_jobs_table($jobs);
+    }
 }
 
 // 
@@ -568,6 +578,9 @@ if(isset($_REQUEST['filter'])) {
 }
 else {
     $_REQUEST['filter'] = "all";
+}
+if(isset($_REQUEST['show'])) {
+    check_request_param("show", array( "submit", "queue" ));
 }
 
 // 
