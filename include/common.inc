@@ -208,6 +208,9 @@ function sort_jobs($a, $b)
 //
 function filter_jobs($a)
 {
+    if($GLOBALS['filter'] == "waiting") {
+	return $a['state'] == "pending" || $a['state'] == "running";
+    } 
     return $a['state'] == $GLOBALS['filter'];
 }
 

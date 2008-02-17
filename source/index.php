@@ -64,7 +64,7 @@ function show_jobs_table(&$jobs)
     print "<table><tr>\n";
     print_select("Sort on", "sort", array( "None" => "none", "Started" => "started", 
 					   "Job ID" => "jobid", "Status" => "state" )); 
-    print_select("Show", "filter",  array( "All" => "all", "Pending" => "pending", 
+    print_select("Show", "filter",  array( "All" => "all", "Unfinished" => "waiting", "Pending" => "pending", 
 					   "Running" => "running", "Finished" => "finished", 
 					   "Error" => "error", "Crashed" => "crashed" ));
     print "<td><input type=\"submit\" value=\"Refresh\"></td>\n";
@@ -584,7 +584,7 @@ else {
     $_REQUEST['sort'] = "none";
 }
 if(isset($_REQUEST['filter'])) {
-    check_request_param("filter", array( "all", "pending", "running", "finished", "error", "crashed" ));
+    check_request_param("filter", array( "all", "waiting", "pending", "running", "finished", "error", "crashed" ));
 }
 else {
     $_REQUEST['filter'] = "all";
