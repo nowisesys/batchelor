@@ -77,6 +77,14 @@ function show_jobs_table(&$jobs)
 	    show_jobs_table_plain($jobs);
 	}
     }
+    // 
+    // Add button for deleting currently shown jobs.
+    // 
+    printf("<br>\n");
+    printf("<form action=\"delete.php\" method=\"GET\">\n");
+    printf("  <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+    printf("  <input type=\"submit\" name=\"multiple\" value=\"Delete Jobs\" title=\"Delete all jobs in this list\" />\n");
+    printf("</form>\n");
 }
 
 // 
