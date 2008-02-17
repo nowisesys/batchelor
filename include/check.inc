@@ -132,7 +132,9 @@ function check_php_version($failed)
     
     $version = phpversion();
     list($maj, $min, $rev) = explode(".", $version);
-    list($rev, $rel) = explode("_", $rev);
+    if(strstr($rev, "_")) {
+	list($rev, $rel) = explode("_", $rev);
+    }
     
     output("PHP version is: ");
     if($maj >= 5) {
