@@ -53,6 +53,8 @@ function print_select($label, $name, $values)
 }
 
 // 
+// This function presents the job queue in text only or
+// graphic mode depending on config preferences.
 // 
 function show_jobs_table(&$jobs)
 {
@@ -77,6 +79,9 @@ function show_jobs_table(&$jobs)
     }
 }
 
+// 
+// Show job queue in graphic mode.
+// 
 function show_jobs_table_icons(&$jobs)
 {
     print "<div class=\"indent\"><table width=\"50%\"><tr><th>Queued</th><th>Finished</th><th>Started</th><th>Job</th><th>Download</th><th>Delete</th></tr>\n";
@@ -149,6 +154,9 @@ function show_jobs_table_icons(&$jobs)
     print "</table></div>\n";
 }
 
+//
+// Show job queue in text only mode.
+// 
 function show_jobs_table_plain(&$jobs)
 {
     // 
@@ -321,22 +329,24 @@ function show_page($error = null)
     if(isset($error)) {
 	$GLOBALS['error'] = $error;
     }
-        
-    // 
-    // Get array of all running and finished jobs for peer identified
-    // by the hostid superglobal variable.
-    // 
-    $jobs = get_jobs($GLOBALS['hostid'], $_REQUEST['sort'], $_REQUEST['filter']);
     
-    if(PAGE_REFRESH_RATE > 0) {
+    if(isset($_REQUEST['show']) && $_REQUEST['show'] == "queue") {
 	// 
-	// Only output meta refresh tag if we got pending 
-	// or running jobs.
+	// Get array of all running and finished jobs for peer identified
+	// by the hostid superglobal variable.
 	// 
-	foreach($jobs as $job) {
-	    if($job['state'] == "pending" || $job['state'] == "running") {
-		$GLOBALS['refresh'] = true;
-		break;
+	$jobs = get_jobs($GLOBALS['hostid'], $_REQUEST['sort'], $_REQUEST['filter']);
+	
+	if(PAGE_REFRESH_RATE > 0) {
+	    // 
+	    // Only output meta refresh tag if we got pending 
+	    // or running jobs.
+	    // 
+	    foreach($jobs as $job) {
+		if($job['state'] == "pending" || $job['state'] == "running") {
+		    $GLOBALS['refresh'] = true;
+		    break;
+		}
 	    }
 	}
     }
@@ -561,7 +571,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // Redirect the browser to an empty index.php to prevent page
     // update to submit the same data or file twice or more.
     // 
-    header("Location: index.php");    
+    header("Location: index.php?queued=yes");
 }
 
 // 
