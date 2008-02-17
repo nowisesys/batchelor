@@ -185,6 +185,15 @@ function save_hostid_mapping($mapdir, $hostid, $peer)
 // 
 function sort_jobs($a, $b)
 {
+    // 
+    // If jobs is pending then we can't sort on started i.e.
+    // 
+    if(isset($GLOBALS['sort'])) {
+	if(!isset($a[$GLOBALS['sort']])) {
+	    return false;
+	}
+    }
+    
     if(isset($GLOBALS['order']) && $GLOBALS['order'] == "desc") {
 	return $a[$GLOBALS['sort']] < $b[$GLOBALS['sort']];
     }
