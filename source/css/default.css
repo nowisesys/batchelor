@@ -10,6 +10,13 @@ a:hover {
 	color: #0000ff;
 }
 
+h2 {
+	background-color: #ffffff;
+	color: #000066;
+	border: 1px solid #9999aa;
+	padding-left: 5px;
+}
+
 td {
 	white-space: nowrap;
 }
