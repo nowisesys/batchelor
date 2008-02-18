@@ -260,8 +260,15 @@ function print_body()
 	print "<br><span id=\"secthead\">Submit data for processing:</span><br><br>\n";
 
 	// 
+	// Put both forms inside an table to get them aligned. This looks much better
+	// both in GUI and text based browsers.
+	//
+	print "<table>\n";
+	
+	// 
 	// The form for uploading a file.
 	// 
+	print "<tr><td>Process file:</td><td>\n";
 	print "<form enctype=\"multipart/form-data\" action=\"queue.php\" method=\"POST\">\n";
 	if(UPLOAD_MAX_FILESIZE > 0) {
 	    print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
@@ -275,15 +282,17 @@ function print_body()
 	}
 	
 	print "   <!-- Name of input element determines name in \$_FILES array -->\n";
-	print "   Process file: <input name=\"file\" type=\"file\" />\n";
+	print "   <input name=\"file\" type=\"file\" />\n";
 	print "   <input type=\"submit\" value=\"Send File\" />\n";
 	print "</form>\n";
+	print "</td></tr>\n";
 	
 	// 
 	// The form for submitting a data.
 	// 
+	print "<tr><td>Process data:</td><td>\n";	
 	print "<form action=\"queue.php\" method=\"GET\">\n";
-	print "   Process data: <textarea name=\"data\" cols=\"50\" rows=\"5\"></textarea>\n";
+	print "   <textarea name=\"data\" cols=\"50\" rows=\"8\"></textarea>\n";
 	print "   <input type=\"submit\" value=\"Send Data\" />\n";
 	if(isset($_REQUEST['sort'])) {
 	    printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
@@ -292,6 +301,7 @@ function print_body()
 	    printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
 	}
 	print "</form>\n";
+	print "</td></tr></table>\n";
     }
     
     // 
