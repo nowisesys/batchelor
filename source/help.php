@@ -1,0 +1,76 @@
+<?php
+
+// -------------------------------------------------------------------------------
+//  Copyright (C) 2007 Anders Lövgren
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+// -------------------------------------------------------------------------------
+
+// 
+// This is the help page. Installers or integrators should add source/help.html
+// to change the help content.
+// 
+
+// 
+// Include configuration and libs.
+// 
+include "../include/ui.inc";
+
+// 
+// The default help message displayed if help.html is missing.
+// 
+function print_help()
+{
+    printf("<h1>Help contents</h1>\n");
+    printf("<hr>\n");
+    
+    printf("<span id=\"secthead\">General</span>\n");
+    printf("<p>You see this page because no installation specific help has been written (yet). ");
+    printf("If this is your installation then create the file <b>source/help.html</b> giving ");
+    printf("information on how to use your batch queue, i.e. describing the accepted format ");
+    printf("of uploaded data.</p>\n");
+    
+    printf("<span id=\"secthead\">Reporting bugs</span>\n");
+    printf("<p>If you think you found a bug in batchelor, then see the <a href=\"about.php\">");
+    printf("about</a> page for bug report information.</p>\n");
+}
+
+// 
+// Display user supplied index.html if exists.
+// 
+function print_body()
+{
+    if(file_exists("help.html")) {
+	include "help.html";
+    }
+    else {
+	print_help();
+    }
+}
+
+function print_html($what)
+{
+    switch($what) {
+     case "body":
+	print_body();
+	break;
+     case "title":
+	print "Batchelor - Help";
+	break;
+     default:
+	print_common_html($what);
+	break;
+    }
+}
+
+include "../template/popup.ui";
+
+?>
