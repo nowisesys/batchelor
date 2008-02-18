@@ -15,7 +15,8 @@
 // -------------------------------------------------------------------------------
 
 // 
-// This is the index page. Modify print_body() to change its content.
+// This is the index page. Installers or integrators should add source/index.html
+// to change the index content.
 // 
 
 // 
