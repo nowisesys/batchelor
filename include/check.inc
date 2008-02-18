@@ -102,10 +102,15 @@ function check_config_files(&$failed)
     // 
     output("Checking if config.inc exists: ");
     if(file_exists("../conf/config.inc")) {
-	success("OK");
+	if(filemtime("../conf/config.inc.in") < filemtime("../conf/config.inc")) {
+	    success("OK");
+	}
+	else {
+	    warning("File exists but 'conf/config.inc.in' is newer than 'conf/config.inc' (possibly updated)");
+	}
     }
     else {
-	failed("No, copy ../conf/config.inc.in to ../conf/config.inc and edit the file, then rerun the test");
+	failed("No, copy 'conf/config.inc.in' to 'conf/config.inc' and edit the file, then rerun the test");
 	$failed = true;
     }
 
@@ -114,12 +119,44 @@ function check_config_files(&$failed)
     // 
     output("Checking if apache.conf exists: ");
     if(file_exists("../conf/apache.conf")) {
-	success("OK");
+	if(filemtime("../conf/apache.conf.in") < filemtime("../conf/apache.conf")) {
+	    success("OK");
+	}
+	else {
+	    warning("File exists but 'conf/apache.conf.in' is newer than 'conf/apache.conf' (possibly updated)");
+	}
     }
     else {
-	warning("No, if you are using Apache web server, then copy ../conf/apache.conf.in to ../conf/apache.conf and edit the file, then rerun the test");
+	warning("No, if you are using Apache web server, then copy 'conf/apache.conf.in' to 'conf/apache.conf' and edit the file, then rerun the test");
     }
     
+    return $failed == false;
+}
+
+// 
+// Check utility files.
+// 
+function check_utility_files(&$failed)
+{
+    print_section_header("Checking utility files");
+
+    // 
+    // The script.sh file is required.
+    // 
+    output("Checking if script.sh exists: ");
+    if(file_exists("../utils/script.sh")) {
+	if(filemtime("../utils/script.sh.in") < filemtime("../utils/script.sh")) {
+	    success("OK");
+	}
+	else {
+	    warning("File exists but 'utils/script.sh.in' is newer than 'utils/script.sh' (possibly updated)");
+	}
+    }
+    else {
+	failed("No, copy 'utils/script.sh.in' to 'utils/script.sh' and edit the file, then rerun the test");
+	$failed = true;
+    }
+
     return $failed == false;
 }
 
@@ -471,7 +508,8 @@ function run_all_tests()
     // 
     if(check_config_files($failed)) {
 	include "../conf/config.inc";
-    
+
+	check_utility_files($failed);
 	check_php_version($failed);
 	check_web_server($failed);
 	check_external_commands($failed);
