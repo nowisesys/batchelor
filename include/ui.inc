@@ -23,6 +23,7 @@
 // 
 function print_header()
 {
+    printf("<!-- A web application using: batchelor - batch job queue manager -->\n");
     if(isset($GLOBALS['refresh'])) {
 	printf("<meta http-equiv=\"refresh\" content=\"%d\" />", PAGE_REFRESH_RATE);
     }
@@ -34,7 +35,9 @@ function print_header()
 function print_menu()
 {
     $links = array( "Submit"    => "queue.php?show=submit",
-		    "Job Queue" => "queue.php?show=queue" );
+		    "Job Queue" => "queue.php?show=queue",
+		    "About"     => "about.php",
+		    "Help"      => "help.php" );
     
     echo "<ul>\n";
     foreach($links as $name => $link) {
