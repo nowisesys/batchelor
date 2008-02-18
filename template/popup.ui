@@ -19,6 +19,7 @@
       <td class="banner"><h1>Batchelor - batch job queue manager</h1></td>
     </tr>
   </table>  
+  <div class="top"></div>
   <?php print_html("body"); ?>
 </body>
 </html>
