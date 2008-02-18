@@ -34,16 +34,31 @@ function print_header()
 // 
 function print_menu()
 {
-    $links = array( "Submit"    => "queue.php?show=submit",
-		    "Job Queue" => "queue.php?show=queue",
-		    "About"     => "about.php",
-		    "Help"      => "help.php" );
+    // echo "<div class=\"menu\">\n";
     
-    echo "<ul>\n";
+    $links = array( "Submit Jobs" => array( "href" => "queue.php?show=submit", "attr" => "" ),
+		    "Show Queue"  => array( "href" => "queue.php?show=queue",  "attr" => "" ));
+    
+    echo "<div class=\"menuhead\"><img src=\"icons/nuvola/users.png\">&nbsp;&nbsp;Job Queue</div>\n";
+    echo "<ul class=\"menu\">\n";
     foreach($links as $name => $link) {
-	printf("<li><a href=\"%s\">%s</a></li>\n", $link, $name);
+	printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
     }
     echo "</ul>\n";
+    // echo "</div>\n";
+
+    $links = array( "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"" ),
+		    "Help"  => array( "href" => "help.php",  "attr" => "target=\"_blank\"" ));
+    
+    echo "<div class=\"menuhead\"><img src=\"icons/nuvola/utils.png\">&nbsp;&nbsp;Utilities</div>\n";
+    echo "<ul class=\"menu\">\n";
+    foreach($links as $name => $link) {
+	printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
+    }
+    echo "</ul>\n";
+    // echo "</div>\n";
+    
+    // echo "</div>\n";
 }
 
 // 

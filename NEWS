@@ -1,3 +1,10 @@
+Version 0.4.0 (2008-02-18):
+
+	* Adding PHP index, help and about pages (that can be either overridden or 
+	  complemented by installing corresponding HTML pages (i.e. index.html).
+	
+	* Improved visual interface by splitting he menu into sections.
+	
 Version 0.3.5 (2008-02-17):
 
 	* Its now possible to delete multiple jobs using filter options for
