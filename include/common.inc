@@ -192,6 +192,9 @@ function sort_jobs($a, $b)
 	if(!isset($a[$GLOBALS['sort']])) {
 	    return false;
 	}
+	if(!isset($b[$GLOBALS['sort']])) {
+	    return true;
+	}	
     }
     
     if(isset($GLOBALS['order']) && $GLOBALS['order'] == "desc") {
