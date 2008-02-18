@@ -34,8 +34,6 @@ function print_header()
 // 
 function print_menu()
 {
-    // echo "<div class=\"menu\">\n";
-    
     $links = array( "Submit Jobs" => array( "href" => "queue.php?show=submit", "attr" => "" ),
 		    "Show Queue"  => array( "href" => "queue.php?show=queue",  "attr" => "" ));
     
@@ -45,7 +43,6 @@ function print_menu()
 	printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
     }
     echo "</ul>\n";
-    // echo "</div>\n";
 
     $links = array( "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"" ),
 		    "Help"  => array( "href" => "help.php",  "attr" => "target=\"_blank\"" ));
@@ -56,9 +53,6 @@ function print_menu()
 	printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
     }
     echo "</ul>\n";
-    // echo "</div>\n";
-    
-    // echo "</div>\n";
 }
 
 // 
