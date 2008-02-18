@@ -78,7 +78,9 @@ function print_about()
     
     printf("<span id=\"secthead\">Bug reports</span>\n");    
     printf("<p>If you think you have found a bug in the batch queue application (batchelor), ");
-    printf("then send them to Anders Lövgren &lt;<a href=\"mailto:lespaul@algonet.se\">lespaul@algonet.se</a>&gt;</p>\n");
+    printf("then send them to Anders Lövgren &lt;<a href=\"mailto:lespaul@algonet.se\">lespaul@algonet.se</a>&gt;. ");
+    printf("Include any error message, the relevant lines from the Apache error log and the output ");
+    printf("from check.php (runned from the command line is OK). Use 'batchelor: bug report' as subject line.</p>\n");
 }
 
 function print_html($what)
