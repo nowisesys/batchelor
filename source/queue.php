@@ -330,6 +330,7 @@ function print_body()
     if(isset($_REQUEST['error'])) {
 	switch($_REQUEST['error']) {
 	 case "download":
+	 case "details":
 	    switch($_REQUEST['type']) {
 	     case "zip":
 		print_message_box("error", sprintf("Failed create zip archive. This is probably a permanent error.<br>Please report it to %s", CONTACT_STRING));

@@ -26,39 +26,14 @@ include "../include/common.inc";
 include "../include/ui.inc";
 
 // 
-// Get request parameters.
+// The error handler.
 // 
-$jobid  = $_REQUEST['jobid'];    // Job ID.
-$jobdir = $_REQUEST['result'];   // Job directory.
-if(isset($_REQUEST['data'])) {
-    $indata = $_REQUEST['data']; // Show indata.
-}
-
-// 
-// Get hostid from cookie.
-// 
-$hostid = $_COOKIE['hostid'];
-
-// 
-// Sanity check:
-// 
-if(!isset($hostid)) {
-    die("Failed get host ID. Do you have cookies enabled?");
-}
-if(!isset($jobid) || !isset($jobdir)) {
-    die("One or more required request parameters is missing or unset");
-}
-
-// 
-// Build absolute path to job directory:
-// 
-$jobdir = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
-
-// 
-// If job directory is missing, the show an error message.
-// 
-if(!file_exists($jobdir)) {
-    die("The job directory is missing");
+function error_handler($type)
+{
+    // 
+    // Redirect caller back to queue.php and let it report an error.
+    // 
+    header("Location: queue.php?show=queue&error=details&type=$type");
 }
 
 function print_title()
@@ -120,6 +95,42 @@ function print_html($what)
 	print_common_html($what);    // Use default callback.
 	break;
     }
+}
+
+// 
+// Check required parameters.
+// 
+if(!isset($_REQUEST['jobid']) || !isset($_REQUEST['result'])) {
+    error_handler("params");
+}
+if(!isset($_COOKIE['hostid'])) {
+    error_handler("hostid");
+}
+
+// 
+// Get request parameters.
+// 
+$jobid  = $_REQUEST['jobid'];    // Job ID.
+$jobdir = $_REQUEST['result'];   // Job directory.
+if(isset($_REQUEST['data'])) {
+    $indata = $_REQUEST['data']; // Show indata.
+}
+
+// 
+// Get hostid from cookie.
+// 
+$hostid = $_COOKIE['hostid'];
+
+// 
+// Build absolute path to job directory:
+// 
+$jobdir = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
+
+// 
+// If job directory is missing, the show an error message.
+// 
+if(!file_exists($jobdir)) {
+    die("The job directory is missing");
 }
 
 include "../template/popup.ui";
