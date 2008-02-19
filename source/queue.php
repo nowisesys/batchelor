@@ -35,6 +35,18 @@ include "../include/ui.inc";
 // 
 // $jobs = null;
 
+// 
+// Prints the message box that displays i.e. error messages.
+// The $type argument is either error, warning or info.
+// 
+function print_message_box($type, $msg)
+{
+    if($type == "error") {
+	$type = "warning";
+    }
+    print "<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/$type.png\"></td><td valign=\"top\">$msg</td></tr></table></div>";
+}
+
 function print_select($label, $name, $values)
 {
     if(isset($_REQUEST[$name])) {
@@ -305,18 +317,21 @@ function print_body()
 	print "</td></tr></table>\n";
     }
     
-    // 
-    // Should we show an error message?
-    //
-    if(isset($GLOBALS['error'])) {
-	printf("<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/warning.png\"></td><td valign=\"top\">%s</td></tr></table></div>", $GLOBALS['error']);
-    }
-
     if($_REQUEST['show'] == "queue") {
 	// 
 	// Show jobs.
 	//
 	show_jobs_table($jobs);
+    }
+    
+    // 
+    // Should we show an error message?
+    //
+    if(isset($GLOBALS['error'])) {
+	print_message_box("error", $GLOBALS['error']);
+    }
+    if(isset($_REQUEST['queued'])) {
+	print_message_box("info", "The submitted job has been queued.<br>Click on <a href=\"queue.php?show=queue\">Show Queue</a> to view its status and download the result.");
     }
 }
 
