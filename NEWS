@@ -1,3 +1,9 @@
+Version 0.4.1 (2008-02-20):
+
+	* Adding message box function for reporting errors and info.
+	
+	* Fixed error handling in download.php, details.php and delete.php
+	
 Version 0.4.0 (2008-02-18):
 
 	* Adding PHP index, help and about pages (that can be either overridden or 
