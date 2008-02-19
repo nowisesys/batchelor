@@ -327,6 +327,25 @@ function print_body()
     // 
     // Should we show an error message?
     //
+    if(isset($_REQUEST['error'])) {
+	switch($_REQUEST['error']) {
+	 case "download":
+	    switch($_REQUEST['type']) {
+	     case "zip":
+		print_message_box("error", sprintf("Failed create zip archive. This is probably a permanent error.<br>Please report it to %s", CONTACT_STRING));
+		break;
+	     case "hostid":
+		print_message_box("error", "Failed get host ID. Do you have cookies enabled?");
+		break;
+	     case "params":
+		print_message_box("error", "One or more required request parameters is missing or unset");
+		break;
+	     case "resdir":
+		print_message_box("error", "The result directory is missing");
+		break;
+	    }
+	}
+    }
     if(isset($GLOBALS['error'])) {
 	print_message_box("error", $GLOBALS['error']);
     }
