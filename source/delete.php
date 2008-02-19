@@ -97,10 +97,21 @@ function delete_multiple_jobs($hostid, $filter)
 }
 
 // 
+// The error handler.
+// 
+function error_handler($type)
+{
+    // 
+    // Redirect caller back to queue.php and let it report an error.
+    // 
+    header("Location: queue.php?error=delete&type=$type");
+}
+
+// 
 // Sanity check:
 // 
 if(!isset($_COOKIE['hostid'])) {
-    die("Failed get host ID. Do you have cookies enabled?");
+    error_handler("hostid");
 }
 
 // 
@@ -111,7 +122,7 @@ if(isset($_REQUEST['multiple'])) {
     // Sanity check:
     // 
     if(!isset($_REQUEST['filter'])) {
-	die("One or more required request parameters is missing or unset");
+	error_handler("params");
     }
     
     delete_multiple_jobs($_COOKIE['hostid'], $_REQUEST['filter']);
@@ -121,7 +132,7 @@ else {
     // Sanity check:
     // 
     if(!isset($_REQUEST['jobid']) || !isset($_REQUEST['result'])) {
-	die("One or more required request parameters is missing or unset");
+	error_handler("params");
     }
 
     delete_single_job($_COOKIE['hostid'], $_REQUEST['result'], $_REQUEST['jobid']);
