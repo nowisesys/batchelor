@@ -29,7 +29,7 @@ include "../include/ui.inc";
 // 
 function print_help()
 {
-    printf("<h1>Help contents</h1>\n");
+    printf("<h2>Help contents</h2>\n");
     printf("<hr>\n");
     
     printf("<span id=\"secthead\">General</span>\n");

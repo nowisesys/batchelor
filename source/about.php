@@ -31,7 +31,7 @@ include "../include/ui.inc";
 // 
 function print_about()
 {
-    printf("<h1>About batchelor</h1>\n");
+    printf("<h2>About batchelor</h2>\n");
     printf("<hr>\n");
 
     if(file_exists("about.html")) {
