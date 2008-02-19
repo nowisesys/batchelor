@@ -44,7 +44,8 @@ function print_menu()
     }
     echo "</ul>\n";
 
-    $links = array( "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"" ),
+    $links = array( "Statistics" => array( "href" => "statistics.php", "attr" => "" ),
+		    "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"" ),
 		    "Help"  => array( "href" => "help.php",  "attr" => "target=\"_blank\"" ));
     
     echo "<div class=\"menuhead\"><img src=\"icons/nuvola/utils.png\">&nbsp;&nbsp;Utilities</div>\n";
