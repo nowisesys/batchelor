@@ -44,7 +44,7 @@ function print_message_box($type, $msg)
     if($type == "error") {
 	$type = "warning";
     }
-    print "<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/$type.png\"></td><td valign=\"top\">$msg</td></tr></table></div>";
+    print "<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/big/$type.png\"></td><td valign=\"top\">$msg</td></tr></table></div>";
 }
 
 function print_select($label, $name, $values)
