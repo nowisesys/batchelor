@@ -37,10 +37,15 @@
 #define EXIT_FAILED 1
 #define EXIT_CRASH  255
 
-enum { STATUS_SUCCESS, STATUS_ERROR, STATUS_CRASH, STATUS_LAST };
+enum { STATUS_SUCCESS, 
+       STATUS_WARNING, 
+       STATUS_ERROR, 
+       STATUS_CRASH, 
+       STATUS_LAST };
 
 static int simulate_success(const char *indata, const char *resdir);
 static int simulate_error(const char *indata, const char *resdir);
+static int simulate_warning(const char *indata, const char *resdir);
 static int simulate_crash(const char *indata, const char *resdir);
 static void dump_options(const char *indata, const char *resdir, int status, int duration, int endtime, int busy);
 static int write_file(const char *path, const char *msg);
@@ -52,7 +57,6 @@ int main(int argc, char **argv)
 	int endtime;
 	int busy;
 	int code = EXIT_FAILED;
-	int childs;
 	
 	const char *indata = argv[1];
 	const char *resdir = argv[2];
@@ -82,6 +86,9 @@ int main(int argc, char **argv)
 		switch(status) {
 		case STATUS_SUCCESS:
 			code = simulate_success(indata, resdir);
+			break;
+		case STATUS_WARNING:
+			code = simulate_warning(indata, resdir);
 			break;
 		case STATUS_ERROR:
 			code = simulate_error(indata, resdir);
@@ -118,9 +125,16 @@ int simulate_success(const char *indata, const char *resdir)
 
 int simulate_error(const char *indata, const char *resdir)
 {
-	fprintf(stderr, "This message should be captured as stderr\n");
+	fprintf(stderr, "This message should be captured as stderr (error message)\n");
 	fprintf(stderr, "Exiting with status %d\n", EXIT_FAILED);
 	return EXIT_FAILED;
+}
+
+int simulate_warning(const char *indata, const char *resdir)
+{
+	fprintf(stderr, "This message should be captured as stderr (warning message)\n");
+	fprintf(stderr, "Exiting with status %d\n", EXIT_SUCCESS);
+	return EXIT_SUCCESS;
 }
 
 int simulate_crash(const char *indata, const char *resdir)
