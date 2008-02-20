@@ -13,9 +13,8 @@ a:hover {
 h2 {
 	background-color: #ffffff;
 	color: #000055;
-	border: 1px solid #cccccc;
+	border: 1px solid #bbbbdd;
 	padding-left: 10px;
-	background: #dcdcdc url('../images/menuhead.gif') left top repeat-x;
 }
 
 td {
