@@ -7,22 +7,89 @@
 # $2 : The indata file to process.
 # $3 : The result directory where output files should go.
 #
-# We save a timestamp when we start and when we are finished.
+# This table describe the relation between batchelors job state and 
+# the batch queue (system queue) and files created from this script:
+#
+# +----------------------------------------------+-------------------+
+# | files (created here)                         | queue (system)    |
+# +--------+--------+-------+---------+----------+---------+---------+----------+
+# | stdout | stderr | fatal | started | finished | waiting | running | state    |
+# +--------+--------+-------+---------+----------+---------+---------+----------+------------+
+# |        |        |       |         |          |    X    |         | pending  |            |
+# +--------+--------+-------+---------+----------+---------+---------+----------+ unfinished |  (1)
+# |   (X)  |        |       |   (X)   |          |         |    X    | running  |            |
+# +--------+--------+-------+---------+----------+---------+---------+----------+------------+
+# |   (X)  |        |       |    X    |     X    |         |         | success  |            |
+# +--------+--------+-------+---------+----------+---------+---------+----------+            |
+# |   (X)  |   X    |       |    X    |     X    |         |         | warning  |            |
+# +--------+--------+-------+---------+----------+---------+---------+----------+ finished   |  (2)
+# |   (X)  |   X    |   X   |    X    |     X    |         |         | error    |            |
+# +--------+--------+-------+---------+----------+---------+---------+----------+            |
+# |   (X)  |        |       |    X    |          |         |         | crashed  |            |
+# +--------+--------+-------+---------+----------+---------+---------+----------+------------+
+#
+#   X == exists, (X) == optional. 
+# 
+# The states in (1) is out of control of this script, it only depends on batch 
+# queue properties. The states in (2) is direct affected by this script. Use the 
+# qsignal($state, $msg) function to communicate state to batchelor.
 
+##
+## Required parameters:
+##
 jobdir="$1"
 indata="$2"
 resdir="$3"
 
-# Save start timestamp:
-date -u +"%s" > $jobdir/started
+##
+## Use this function to communicate the state to batchelor.
+##
+function qsignal()
+{
+  state="$1"
+  msg="$2"
+  
+  case "$state" in 
+    started)
+      # Save start timestamp:
+      date -u +"%s" > $jobdir/started
+      ;;
+    finished)
+      # Save finished timestamp:
+      date -u +"%s" > $jobdir/finished
+      exit 0
+      ;;
+    fatal)
+      # This is *really* bad:
+      errorcode="$?"
+      date -u +"%s" > $jobdir/finished
+      echo "$msg"   > $jobdir/fatal
+      exit $errorcode
+      ;;
+  esac
+}
 
-# Put the command to run here with stdout and stderr redirected.
-# The command must be in PATH or being an absolute path.
+##
+## Signal started to batchelor:
+##
+qsignal "started"
+
+##
+## Sanity check:
+##
+[ -z "$jobdir" -o -z "$indata" -o -z "$resdir" ] && qsignal "fatal" "missing argument for script"
+
+##
+## Put the command to run here with stdout and stderr redirected.
+## The command must be in PATH or being an absolute path.
+##
 $(dirname $0)/simula $indata $resdir 1> $jobdir/stdout 2> $jobdir/stderr
-exitcode="$?"
 
-# Save finished timestamp:
-date -u +"%s" > $jobdir/finished
-
-# Return exit code to shell.
-exit $exitcode
+##
+## Signal finished to batchelor:
+##
+if [ "$?" == "0" ]; then
+  qsignal "finished"
+else
+  qsignal "fatal" "The command exited with error state"
+fi
