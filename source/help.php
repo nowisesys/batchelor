@@ -49,7 +49,15 @@ function print_help()
 function print_body()
 {
     if(file_exists("help.html")) {
-	include "help.html";
+	$help = file_get_contents("help.html");
+	$matches = array();
+	if(preg_match("/<body>((.*?|[ \n]*)*)<\/body>/m", $help, $matches)) {
+	    print $matches[1];
+	}
+	else {
+	    print "<h2>Failed match pattern.</h2>\n"; 
+	    print "The file help.html should be a complete HTML page, including headers.";
+	}
     }
     else {
 	print_help();
