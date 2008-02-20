@@ -79,7 +79,7 @@ function show_jobs_table(&$jobs)
 					   "Job ID" => "jobid", "Status" => "state" )); 
     print_select("Show", "filter",  array( "All" => "all", "Unfinished" => "waiting", "Pending" => "pending", 
 					   "Running" => "running", "Finished" => "finished", 
-					   "Error" => "error", "Crashed" => "crashed" ));
+					   "Warning" => "warning", "Error" => "error", "Crashed" => "crashed" ));
     print "<td><input type=\"submit\" value=\"Refresh\"></td>\n";
     print "</tr></table></form></td></tr></table>\n";
     if(count($jobs)) {	
@@ -122,8 +122,13 @@ function show_jobs_table_icons(&$jobs)
 			     format_timestamp($job['started']), 
 			     format_timestamp($job['finished']));
 	    break;
+	 case "warning":
+	    $title = sprintf("started %s, \nfinished (with warnings) %s",
+			     format_timestamp($job['started']),
+			     format_timestamp($job['stderr']));
+	    break;	    
 	 case "error":
-	    $title = sprintf("started %s, \nfinished with errors %s", 
+	    $title = sprintf("started %s, \nfinished (with errors) %s", 
 			     format_timestamp($job['started']), 
 			     format_timestamp($job['stderr']));
 	    break;
@@ -162,7 +167,7 @@ function show_jobs_table_icons(&$jobs)
 	// 
 	// Download and delete column
 	// 
-	if($job['state'] == "finished") {
+	if($job['state'] == "finished" || $job['state'] == "warning") {
 	    printf("<td><a href=\"download.php?jobid=%d&result=%s\" title=\"download result\"><img src=\"icons/nuvola/download.png\" alt=\"download\"></a></td>", $job['jobid'], $jobdir);
 	}
 	else {
@@ -639,7 +644,7 @@ else {
     $_REQUEST['sort'] = "none";
 }
 if(isset($_REQUEST['filter'])) {
-    check_request_param("filter", array( "all", "waiting", "pending", "running", "finished", "error", "crashed" ));
+    check_request_param("filter", array( "all", "waiting", "pending", "running", "finished", "warning", "error", "crashed" ));
 }
 else {
     $_REQUEST['filter'] = "all";

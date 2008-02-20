@@ -224,7 +224,8 @@ function filter_jobs($a)
 // 1. Running  - no finished timestamp and jobid is in queue.
 // 2. Finished - finished timestamp exists.
 // 3. Crashed  - no finished timestamp and jobid is missing in queue.
-// 4. Error    - finished with non-empty error output.
+// 4. Warning  - finished with non-empty error output.
+// 5. Error    - same as Warning, but also has an fatal exit message file.
 // 
 // The $sort parameter defines the ordering between elements in result
 // array. Possible values for $sort is none, started, jobid or state. 
@@ -233,7 +234,7 @@ function filter_jobs($a)
 // 
 // The $filter parameter defines which elements should be inserted
 // in the result array. Possible values are all, pending, running, finished, 
-// error or crashed.
+// warning, error or crashed.
 // 
 function get_jobs($hostid, $sort = "none", $filter = "all")
 {
@@ -290,6 +291,9 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
 					    $job[$file] = filemtime($file);   // save timestamp if filesize > 0 bytes
 					}
 					break;
+				     case "fatal":
+					$job[$file] = filemtime($file);
+					break;
 				    }
 				}
 			    }
@@ -319,7 +323,7 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
     }
     
     // 
-    // Now classify all jobs as either running, finished, error or crashed.
+    // Now classify all jobs as either running, finished, warning, error or crashed.
     // 
     $queued = get_queued_jobs();
     $result = array();
@@ -327,7 +331,12 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
     foreach($jobs as $key => $job) {
 	if(isset($job['finished'])) {
 	    if(isset($job['stderr'])) {
-		$job['state'] = "error";
+		if(isset($job['fatal'])) {
+		    $job['state'] = "error";
+		}
+		else {
+		    $job['state'] = "warning";
+		}
 	    }
 	    else {
 		$job['state'] = "finished";
