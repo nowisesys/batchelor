@@ -20,6 +20,8 @@
     </tr>
   </table>  
   <div class="top"></div>
+  <div class="body">
   <?php print_html("body"); ?>
+  </div>
 </body>
 </html>
