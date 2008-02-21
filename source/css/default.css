@@ -52,7 +52,7 @@ td.menu {
 	padding-left: -25px;
 }
 
-td.body {
+td.body, div.body {
 	vertical-align: top;
 	border: 2px solid #eeeeee;
 	padding-left: 20px;
@@ -118,4 +118,41 @@ ul.menu {
 	position: relative;
 	list-style-type: none;
 	left: -20px;
+}
+
+/*
+ * Tab menu:
+ */
+#tabmenu ul {
+        list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+#tabmenu li {
+        display: inline;
+	margin: 0 2px 0 0;
+	border: 1px solid #dddddd;
+}
+
+#tabmenu a {
+        padding: 0 1em;
+	text-decoration: none;
+	background: #eeeeee;
+	color: #000000;
+}
+
+#tabmenu a:hover {
+        background: #cccccc;
+}0123456789a
+	
+#tabmenu #selected {
+}
+
+#tabmenu #selected a {
+        padding-bottom: 2px;
+	font-weight: bold;
+	color: black;
+	color: black;
+	background: #dddddd;
 }
