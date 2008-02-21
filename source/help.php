@@ -29,7 +29,7 @@ include "../include/ui.inc";
 // 
 function print_help()
 {
-    printf("<h2>Help contents</h2>\n");
+    printf("<h2><img src=\"icons/nuvola/help.png\"> Help contents</h2>\n");
     printf("<hr>\n");
     
     printf("<span id=\"secthead\">General</span>\n");
@@ -55,7 +55,7 @@ function print_body()
 	    print $matches[1];
 	}
 	else {
-	    print "<h2>Failed match pattern.</h2>\n"; 
+	    print "<h2><img src=\"icons/nuvola/error.png\"> Failed match pattern.</h2>\n"; 
 	    print "The file help.html should be a complete HTML page, including headers.";
 	}
     }

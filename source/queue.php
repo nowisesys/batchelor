@@ -70,7 +70,7 @@ function print_select($label, $name, $values)
 // 
 function show_jobs_table(&$jobs)
 {
-    print "<h2>Job Queue:</h2>\n";
+    print "<h2><img src=\"icons/nuvola/services.png\"> Job Queue:</h2>\n";
     print "<table><tr><td align=\"left\"><span id=\"secthead\">Filter Options:</span></td>\n";
     print "<td><form action=\"queue.php\" method=\"get\">\n";
     print "<input type=\"hidden\" name=\"show\" value=\"queue\" />\n";
@@ -275,7 +275,7 @@ function print_body()
     }
 
     if($_REQUEST['show'] == "submit") {
-	print "<h2>Submit data for processing:</h2>\n";
+	print "<h2><img src=\"icons/nuvola/network.png\"> Submit data for processing:</h2>\n";
 
 	// 
 	// Put both forms inside an table to get them aligned. This looks much better

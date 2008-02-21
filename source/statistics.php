@@ -28,7 +28,7 @@ include "../include/statistics.inc";
 
 function print_body()
 {
-    printf("<h2>Statistics</h2>\n");
+    printf("<h2><img src=\"icons/nuvola/statistics.png\"> Statistics</h2>\n");
 }
 
 function print_html($what)
