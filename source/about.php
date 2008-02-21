@@ -16,7 +16,7 @@
 
 // 
 // This is the about page. Installers or integrators should add additional content
-// to source/about.html.
+// to source/about_xxx.html. See $tabmeny() in function print_about().
 // 
 // See README before you modify the Licensing or Authors section!
 // 
@@ -27,18 +27,10 @@
 include "../include/ui.inc";
 
 // 
-// The about message with additional content from about.html is existing.
+// Print about info for batchelor.
 // 
-function print_about()
+function print_about_batchelor()
 {
-    printf("<h2>About batchelor</h2>\n");
-    printf("<hr>\n");
-
-    if(file_exists("about.html")) {
-	printf("<span id=\"secthead\">Additional notes</span>\n");
-	include "about.html";
-    }
-    
     printf("<span id=\"secthead\">About batchelor</span>\n");
     printf("<p>Batchelor is an batch queue manager meant to allow potentional long ");
     printf("running jobs to be submitted to an web server and scheduled for later ");
@@ -81,6 +73,93 @@ function print_about()
     printf("then send them to Anders Lövgren &lt;<a href=\"mailto:lespaul@algonet.se\">lespaul@algonet.se</a>&gt;. ");
     printf("Include any error message, the relevant lines from the Apache error log and the output ");
     printf("from check.php (runned from the command line is OK). Use 'batchelor: bug report' as subject line.</p>\n");
+}
+
+function print_about_page($page, $desc)
+{
+    if(file_exists($page)) {
+    	$about = file_get_contents($page);
+    	$matches = array();
+    	if(preg_match("/<body>((.*?|[ \n]*)*)<\/body>/m", $about, $matches)) {
+    	    print $matches[1];
+    	}
+    	else {
+    	    print "<span id=\"secthead\">Failed match pattern.</span>\n"; 
+    	    print "<p>The file $path should be a complete HTML page, including headers with one or \n";
+	    print "more sections (inside span tags with id secthead). Each section should have one \n";
+	    print "or more paragraphs.\n";
+	}
+    }
+    else {
+    	printf("<span id=\"secthead\">Missing page</span>\n");
+	printf("<p>The about page for '%s' is missing. Please check your installation. If this is \n", $desc);	
+	printf("a new installation, then create a HTML page named '%s' with information \n", $page);
+	printf("about your application or remove this tab menu entry inside about.php.\n");
+    }
+}
+
+// 
+// Print the tab menu.
+// 
+function print_about_menu(&$map, $selected)
+{    
+    print "<div id=\"tabmenu\"><ul>\n";
+    foreach($map as $name => $entry) {
+	if($name == $selected) {
+	    printf("<li id=\"selected\"><a href=\"about.php?sect=%s\">%s</a></li><!-- Fix IE\n -->\n",
+		   $name, $entry['desc']);
+	}
+	else {
+	    printf("<li><a href=\"about.php?sect=%s\">%s</a></li><!-- Fix IE\n -->\n",
+		   $name, $entry['desc']);
+	}
+    }
+    print "</div></u>\n";
+}
+
+// 
+// The about message with additional content from about_xxx.html is existing.
+// 
+function print_about()
+{
+    // 
+    // Add pages to the tab menu. You can add your own tabs by either:
+    //   1. Add an function in this file (like for batchelor).
+    //   2. Add an external page (like the app example).
+    //
+    $tabmenu = array( "appname"   => array( "desc" => "The Application",
+					    "func" => null,
+					    "page" => "about_app.html" ),
+		      "batchelor" => array( "desc" => "Batchelor",
+					    "func" => "print_about_batchelor",
+					    "page" => null ));
+    
+    $selected = "appname";
+    if(isset($_REQUEST['sect'])) {
+	$selected = $_REQUEST['sect'];
+    }
+    
+    printf("<h2><img src=\"icons/nuvola/info.png\"> About %s</h2>\n", $tabmenu[$selected]['desc']);
+    printf("<hr>\n");
+    
+    // 
+    // Print tab menu:
+    // 
+    print_about_menu($tabmenu, $selected);
+    
+    // 
+    // Print page body:
+    // 
+    print "<div class=\"body\"><br>\n";
+    if(isset($tabmenu[$selected]['page'])) {
+	print_about_page($tabmenu[$selected]['page'],
+			 $tabmenu[$selected]['desc']);
+    }
+    else if(isset($tabmenu[$selected]['func'])) {
+	$func = $tabmenu[$selected]['func'];
+	$func();
+    }
+    print "</div>\n";
 }
 
 function print_html($what)
