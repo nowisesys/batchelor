@@ -185,6 +185,7 @@ function print_about()
 	$func();
     }
     print "</div>\n";
+    print "<br>\n";
 }
 
 function print_html($what)
