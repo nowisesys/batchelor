@@ -39,7 +39,7 @@ function print_about_batchelor()
     printf("the result from <a href=\"queue?show=queue\">the queue view</a>.</p>\n");
     
     printf("<span id=\"secthead\">Licensing</span>\n");    
-    printf("<p>Batchelor is released under GNU Public License (GPL) and free ");
+    printf("<p>Batchelor is released under <a href=\"about.php?sect=license\">GNU Public License</a> (GPL) and free ");
     printf("for anyone to modify or redistribute. See the file COPYING bundled ");
     printf("together with batchelor. Batchelor is originally developed and copyrighted ");
     printf("&copy; 2007-2008 by Anders Lövgren.</p>\n");
@@ -75,6 +75,23 @@ function print_about_batchelor()
     printf("from check.php (runned from the command line is OK). Use 'batchelor: bug report' as subject line.</p>\n");
 }
 
+// 
+// Show batchelor license file.
+//
+function print_license()
+{
+    $license = "../COPYING";
+    if(file_exists($license)) {
+	printf("<span id=\"secthead\">GNU Public License</span>\n");
+	printf("<p><pre>\n");
+	include $license;
+	printf("</pre></p>\n");
+    }
+}
+
+// 
+// Print an external HTML page.
+// 
 function print_about_page($page, $desc)
 {
     if(file_exists($page)) {
@@ -105,13 +122,15 @@ function print_about_menu(&$map, $selected)
 {    
     print "<div id=\"tabmenu\"><ul>\n";
     foreach($map as $name => $entry) {
-	if($name == $selected) {
-	    printf("<li id=\"selected\"><a href=\"about.php?sect=%s\">%s</a></li><!-- Fix IE\n -->\n",
-		   $name, $entry['desc']);
-	}
-	else {
-	    printf("<li><a href=\"about.php?sect=%s\">%s</a></li><!-- Fix IE\n -->\n",
-		   $name, $entry['desc']);
+	if($entry['show']) {
+	    if($name == $selected) {
+		printf("<li id=\"selected\"><a href=\"about.php?sect=%s\">%s</a></li><!-- Fix IE\n -->\n",
+		       $name, $entry['desc']);
+	    }
+	    else {
+		printf("<li><a href=\"about.php?sect=%s\">%s</a></li><!-- Fix IE\n -->\n",
+		       $name, $entry['desc']);
+	    }
 	}
     }
     print "</div></u>\n";
@@ -129,10 +148,16 @@ function print_about()
     //
     $tabmenu = array( "appname"   => array( "desc" => "The Application",
 					    "func" => null,
-					    "page" => "about_app.html" ),
+					    "page" => "about_app.html",
+					    "show" => true ),
 		      "batchelor" => array( "desc" => "Batchelor",
 					    "func" => "print_about_batchelor",
-					    "page" => null ));
+					    "page" => null,
+					    "show" => true ),
+		      "license"   => array( "desc" => "GNU Public License",
+					    "func" => "print_license",
+					    "page" => null,
+					    "show" => false ));
     
     $selected = "appname";
     if(isset($_REQUEST['sect'])) {
