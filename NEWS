@@ -1,5 +1,8 @@
 Version 0.4.2 (2008-02-21):
-
+	
+	* Added qsignal() function to utils/script.sh.in to help users
+	  communicate the job state to batchelor in a well-defined way.
+	  
 	* Its now easy to add new items to the tab menu in about.php. Just
 	  create an external HTML page or an function inside about.php and
 	  add it to the tabmenu array inside the function print_about().
