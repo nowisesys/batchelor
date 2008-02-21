@@ -1,3 +1,14 @@
+Version 0.4.2 (2008-02-21):
+
+	* Its now easy to add new items to the tab menu in about.php. Just
+	  create an external HTML page or an function inside about.php and
+	  add it to the tabmenu array inside the function print_about().
+	  
+	* Adding icons to page headers (like About, Help and Job Queue).
+	
+	* Adding warning state (in addition to existing pending, running,
+	  finished, error and crashed).
+	  
 Version 0.4.1 (2008-02-20):
 
 	* Adding message box function for reporting errors and info.
