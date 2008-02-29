@@ -30,30 +30,85 @@ function print_header()
 }
 
 // 
-// Print left-side menu. Add additional links to the array.
+// Print menu accoring to user preferences.
 // 
 function print_menu()
 {
-    $links = array( "Submit Jobs" => array( "href" => "queue.php?show=submit", "attr" => "" ),
-		    "Show Queue"  => array( "href" => "queue.php?show=queue",  "attr" => "" ));
+    $queue = array( "Submit Jobs" => array( "href" => "queue.php?show=submit", "attr" => "", "icon" => "network.png" ),
+		    "Show Queue"  => array( "href" => "queue.php?show=queue",  "attr" => "", "icon" => "services.png" ));
+    $utils = array( "Statistics" => array( "href" => "statistics.php", "attr" => "", "icon" => "statistics.png" ),
+		    "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"", "icon" => "info.png" ),
+		    "Help"  => array( "href" => "help.php",  "attr" => "target=\"_blank\"", "icon" => "help.png" ));
     
-    echo "<div class=\"menuhead\"><img src=\"icons/nuvola/users.png\">&nbsp;&nbsp;Job Queue</div>\n";
-    echo "<ul class=\"menu\">\n";
-    foreach($links as $name => $link) {
-	printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
+    if(!defined(MENU_ORIENTATION)) {
+	define ("MENU_ORIENTATION", "vertical");
     }
-    echo "</ul>\n";
+    if(!defined(MENU_STYLE)) {
+	define ("MENU_STYLE", "graphic");
+    }
+    
+    if(MENU_ORIENTATION == "vertical") {
+	print_menu_vertical($queue, $utils);
+    } 
+    else {
+	print_menu_horizontal($queue, $utils);
+    }
+}
 
-    $links = array( "Statistics" => array( "href" => "statistics.php", "attr" => "" ),
-		    "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"" ),
-		    "Help"  => array( "href" => "help.php",  "attr" => "target=\"_blank\"" ));
-    
-    echo "<div class=\"menuhead\"><img src=\"icons/nuvola/utils.png\">&nbsp;&nbsp;Utilities</div>\n";
+// 
+// Print vertical styles menu, suitable for a left-side menu.
+// 
+function print_menu_vertical($queue, $utils)
+{
+    if(MENU_STYLE == "graphic") {
+	echo "<div class=\"menuhead\"><img src=\"icons/nuvola/users.png\">&nbsp;&nbsp;Job Queue</div>\n";
+    }
     echo "<ul class=\"menu\">\n";
-    foreach($links as $name => $link) {
+    foreach($queue as $name => $link) {
+	printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
+    }
+    if(MENU_STYLE != "compact") {
+	echo "</ul>\n";
+    }
+
+    if(MENU_STYLE == "graphic") {
+	echo "<div class=\"menuhead\"><img src=\"icons/nuvola/utils.png\">&nbsp;&nbsp;Utilities</div>\n";
+    }
+    if(MENU_STYLE != "compact") {	
+	echo "<ul class=\"menu\">\n";
+    }
+    foreach($utils as $name => $link) {
 	printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
     }
     echo "</ul>\n";
+}
+
+// 
+// Print horizontal menu, suitable for a top-menu.
+//
+function print_menu_horizontal($queue, $utils)
+{
+    echo "<table><tr>\n";
+    foreach($queue as $name => $opts) {
+	echo "<td class=\"topmenuitem\">\n";
+	if(MENU_STYLE == "graphic") {
+	    printf("<img src=\"icons/nuvola/%s\">", $opts['icon']);
+	}
+	printf("<a href=\"%s\" %s>%s</a>", $opts['href'], $opts['attr'], $name);
+	echo "</td>\n";
+    }
+    if(MENU_STYLE != "compact") {
+	echo "<td width=\"60\">\n";
+    }
+    foreach($utils as $name => $opts) {
+	echo "<td class=\"topmenuitem\">\n";
+	if(MENU_STYLE == "graphic") {
+	    printf("<img src=\"icons/nuvola/%s\">", $opts['icon']);
+	}
+	printf("<a href=\"%s\" %s>%s</a>", $opts['href'], $opts['attr'], $name);
+	echo "</td>\n";
+    }
+    echo "</tr></table>\n";
 }
 
 // 

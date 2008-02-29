@@ -143,4 +143,14 @@ define ("ZIP_FILE_COMMAND", "7z a %s %s -tzip");
 // 
 define ("USE_ICONIZED_QUEUE", true);
 
+// 
+// Configure the menu style. Use either "graphic", "text" or "compact".
+// 
+define ("MENU_STYLE", "graphic");
+
+// 
+// Configure the menu orientation. Use either "vertical" or "horizontal".
+// 
+define ("MENU_ORIENTATION", "vertical");
+
 ?>
