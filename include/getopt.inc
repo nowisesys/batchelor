@@ -86,6 +86,13 @@
 function get_opt($argv, $argc, &$opts)
 {
     $args = array();
+
+    // 
+    // Make sure we got any arguments.
+    // 
+    if($argc == 0 || count($argv) == 0) {
+	return;
+    }
     
     //
     // Skip script name if set.
