@@ -40,10 +40,10 @@ function print_menu()
 		    "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"", "icon" => "info.png" ),
 		    "Help"  => array( "href" => "help.php",  "attr" => "target=\"_blank\"", "icon" => "help.png" ));
     
-    if(!defined(MENU_ORIENTATION)) {
+    if(!defined("MENU_ORIENTATION")) {
 	define ("MENU_ORIENTATION", "vertical");
     }
-    if(!defined(MENU_STYLE)) {
+    if(!defined("MENU_STYLE")) {
 	define ("MENU_STYLE", "graphic");
     }
     
