@@ -20,6 +20,7 @@
 #include <time.h>
 #include <signal.h>
 #include <limits.h>
+#include <string.h>
 
 #define MIN_RUN_LENGTH 5
 #define MAX_RUN_LENGTH 20
@@ -49,6 +50,8 @@ static int simulate_warning(const char *indata, const char *resdir);
 static int simulate_crash(const char *indata, const char *resdir);
 static void dump_options(const char *indata, const char *resdir, int status, int duration, int endtime, int busy);
 static int write_file(const char *path, const char *msg);
+static void usage(void);
+static void version(void);
 
 int main(int argc, char **argv)
 {
@@ -57,17 +60,66 @@ int main(int argc, char **argv)
 	int endtime;
 	int busy;
 	int code = EXIT_FAILED;
-	
-	const char *indata = argv[1];
-	const char *resdir = argv[2];
-	
+	int c;
+	const char *indata = NULL;
+	const char *resdir = NULL;
+
+	if(argc == 1) {
+		usage();
+		return 1;
+	}
+		
 	srand(time(NULL));
 	
 	status   = rand() % STATUS_LAST;
 	duration = MIN_RUN_LENGTH + rand() % (MAX_RUN_LENGTH - MIN_RUN_LENGTH);
 	
-	endtime = time(NULL) + duration;
 	busy = rand() % 2;
+	
+	while((c = getopt(argc, argv, "bd:hi:r:s:V")) != -1) {
+		switch(c) {
+		case 'b':
+			busy = 1;
+			break;
+		case 'd':
+			duration = atoi(optarg);
+			break;
+		case 'h':
+			usage();
+			exit(0);
+		case 'i':
+			indata = optarg;
+			break;
+		case 'r':
+			resdir = optarg;
+			break;
+		case 's':
+			if(strcmp(optarg, "success") == 0) {
+				status = STATUS_SUCCESS;
+			}
+			else if(strcmp(optarg, "warning") == 0) {
+				status = STATUS_WARNING;
+			}
+			else if(strcmp(optarg, "error") == 0) {
+				status = STATUS_ERROR;
+			}
+			else if(strcmp(optarg, "crash") == 0) {
+				status = STATUS_CRASH;
+			}
+			else {
+				fprintf(stderr, "unknown option value %s for '-s'\n", optarg);
+				exit(1);
+			}
+			break;
+		case 'V':
+			version();
+			exit(0);
+		default:
+			fprintf(stderr, "unknown option '%s'\n", optarg);
+			exit(1);
+		}
+	}
+	endtime = time(NULL) + duration;
 	
 	dump_options(indata, resdir, status, duration, endtime, busy);
 	
@@ -166,4 +218,25 @@ int write_file(const char *path, const char *msg)
 	
 	printf("Created file %s\n", path);
 	return 0;
+}
+
+void usage(void)
+{
+	/* "bd:hi:r:s:V */
+	printf("Usage: simula -i indata -r resdir [options...]\n");
+	printf("Options:\n");
+	printf("  -b:     run in busy mode\n");
+	printf("  -d sec: set duration\n");
+	printf("  -h:         this help\n");
+	printf("  -i indata:  read indata file\n");
+	printf("  -r resdir:  save result to resdir\n");
+	printf("  -s status:  set exit status (success, warning, error or crash)\n");
+	printf("  -V:         show version\n");
+	printf("This program is released under GPL version 2 or later.\n");
+	printf("Send bug reports to anders.lovgren@bmc.uu.se\n");
+}
+
+void version(void)
+{
+	printf("simula version 0.4.2\n");
 }
