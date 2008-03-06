@@ -3,6 +3,8 @@ Version 0.x.y (2008-mm-dd):
 	* Its now possible to configure menu orientation (horizontal or
 	  vertical) and menu style (graphic, text or compact) from inside
 	  conf/config.inc.
+	  
+	* Added program options to simula.c (test program).
 
 Version 0.4.2 (2008-02-21):
 	
