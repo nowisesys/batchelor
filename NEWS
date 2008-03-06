@@ -6,8 +6,10 @@ Version 0.5.0 (2008-03-06):
 	  
 	* Added program options to simula.c (test program).
 	
-	* Ported batchelor to BSD/Mac OS X (tested with 10.4.11).
-
+	* Ported batchelor to BSD/Mac OS X (tested with 10.4.11). The running 
+	  state is not available on OSX using its builtin at command due to 
+	  missing information in its output.
+	  
 Version 0.4.2 (2008-02-21):
 	
 	* Added qsignal() function to utils/script.sh.in to help users
