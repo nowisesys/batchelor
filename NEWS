@@ -1,10 +1,12 @@
-Version 0.x.y (2008-mm-dd):
+Version 0.5.0 (2008-03-06):
 
 	* Its now possible to configure menu orientation (horizontal or
 	  vertical) and menu style (graphic, text or compact) from inside
 	  conf/config.inc.
 	  
 	* Added program options to simula.c (test program).
+	
+	* Ported batchelor to BSD/Mac OS X (tested with 10.4.11).
 
 Version 0.4.2 (2008-02-21):
 	
