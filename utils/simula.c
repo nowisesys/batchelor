@@ -50,6 +50,7 @@ static int simulate_warning(const char *indata, const char *resdir);
 static int simulate_crash(const char *indata, const char *resdir);
 static void dump_options(const char *indata, const char *resdir, int status, int duration, int endtime, int busy);
 static int write_file(const char *path, const char *msg);
+static void write_files(const char *resdir);
 static void usage(void);
 static void version(void);
 
@@ -159,16 +160,7 @@ int main(int argc, char **argv)
 
 int simulate_success(const char *indata, const char *resdir)
 {
-	char path[PATH_MAX];
-	
-	sprintf(path, "%s/file1", resdir);
-	write_file(path, "Some text..., ");
-
-	sprintf(path, "%s/file2", resdir);
-	write_file(path, "some more text..., ");
-
-	sprintf(path, "%s/file3", resdir);
-	write_file(path, "the end!");
+	write_files(resdir);
 	
 	printf("This message should be captured as stdout\n");
 	printf("Exiting with status %d\n", EXIT_SUCCESS);
@@ -184,6 +176,8 @@ int simulate_error(const char *indata, const char *resdir)
 
 int simulate_warning(const char *indata, const char *resdir)
 {
+	write_files(resdir);
+	
 	fprintf(stderr, "This message should be captured as stderr (warning message)\n");
 	fprintf(stderr, "Exiting with status %d\n", EXIT_SUCCESS);
 	return EXIT_SUCCESS;
@@ -218,6 +212,20 @@ int write_file(const char *path, const char *msg)
 	
 	printf("Created file %s\n", path);
 	return 0;
+}
+
+void write_files(const char *resdir)
+{	
+	char path[PATH_MAX];
+	
+	sprintf(path, "%s/file1", resdir);
+	write_file(path, "Some text..., ");
+
+	sprintf(path, "%s/file2", resdir);
+	write_file(path, "some more text..., ");
+
+	sprintf(path, "%s/file3", resdir);
+	write_file(path, "the end!");
 }
 
 void usage(void)
