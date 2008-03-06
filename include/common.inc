@@ -135,6 +135,12 @@ function split_batch_output($str)
 	    $stamp = strtotime(sprintf("%s %s", $match[2], $match[3]));
 	    return array( "jobid" => $match[1], "date" => $match[2], "time" => $match[3], "stamp" => $stamp);
 	}
+	else if(preg_match('/job (\d+) at (.*)/', $row, $match)) {
+	    $stamp = strtotime($match[2]);
+	    $time  = strftime("%H:%M", $stamp);
+	    $date  = strftime("%G-%m-%d", $stamp);
+	    return array( "jobid" => $match[1], "date" => $date, "time" => $time, "stamp" => $stamp);
+	}
     }
     
     return null;
@@ -394,14 +400,26 @@ function get_queued_jobs()
     if($handle = popen(BATCH_LISTING, "r")) {
 	while($str = fgets($handle)) {
 	    // 
-	    // Split batch jobs output. 
-	    // Exempel: 
+	    // Split batch jobs output. The output format differs between Linux and BDS/Mac OS X.
+	    // 
+	    // Exempel1 (Linux): 
 	    // '25      2007-11-05 02:54 b apache'   // pending
 	    // '24      2007-11-05 02:54 = apache'   // running
+	    // 
+	    // Exempel2 (Mac OS X):
+	    // '1       Thu Mar  6 09:38:00 2008'
+	    // '2       Thu Mar  6 09:39:00 2008'
+	    // 
 	    $match = array();
 	    if(preg_match("/(\d+)\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\s+([0-9]{2}:[0-9]{2})\s+([b=]{1})\s+(.*)/", $str, $match)) {
 		$jobs[$match[1]] = ($match[4] == "=") ? "running" : "pending";
 	    }
+	    else if(preg_match("/(\d+)\s+(.*)/", $str, $match)) {
+		// 
+		// Simply flag job as pending because information is missing.
+		// 
+		$jobs[$match[1]] = "pending";
+	    } 
 	    else {
 		error_exit("Failed parse batch queue output.");
 	    }
