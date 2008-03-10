@@ -633,7 +633,7 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $bar)
 // Create graph of total submits for hostid (that might be all)
 // for all years.
 // 
-function graph_total_submit($graphdir, $hostid, $data)
+function graph_total_submit($graphdir, $hostid, $options, $data)
 {
     $image  = sprintf("%s/submit.png", $graphdir);
     $values = array();
@@ -668,7 +668,7 @@ function graph_total_submit($graphdir, $hostid, $data)
 // 
 // Create graph of submits for one year for hostid (that might be all)
 // 
-function graph_yearly_submit($graphdir, $hostid, $timestamp, $data)
+function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
     $image  = sprintf("%s/submit.png", $graphdir);
     $values = array();
@@ -716,7 +716,7 @@ function graph_yearly_submit($graphdir, $hostid, $timestamp, $data)
 // 
 // Create graph of submits for one month for hostid (that might be all)
 // 
-function graph_monthly_submit($graphdir, $hostid, $timestamp, $data)
+function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
     $image  = sprintf("%s/submit.png", $graphdir);
     $values = array();
@@ -765,7 +765,7 @@ function graph_monthly_submit($graphdir, $hostid, $timestamp, $data)
 // 
 // Create graph of submits for one day for hostid (that might be all)
 // 
-function graph_daily_submit($graphdir, $hostid, $timestamp, $data)
+function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
 }
 
@@ -786,7 +786,7 @@ function collect_flush_graphics($statdir, $data, $options)
     // 
     foreach($data as $hostid => $data1) {              // total level
 	$graphdir = sprintf("%s/%s", $statdir, $hostid);
-	graph_total_submit($graphdir, $hostid, $data1);
+	graph_total_submit($graphdir, $hostid, $options, $data1);
 	foreach($data1 as $sect1 => $data2) {          // year level
 	    if(!is_numeric($sect1)) {
 		continue;
@@ -800,7 +800,7 @@ function collect_flush_graphics($statdir, $data, $options)
 		printf("debug:   hostid = %s\n", $hostid);
 		printf("debug:   resdir = %s\n", $graphdir);
 	    }
-	    graph_yearly_submit($graphdir, $hostid, $datetime, $data2);
+	    graph_yearly_submit($graphdir, $hostid, $options, $datetime, $data2);
 		
 	    foreach($data2 as $sect2 => $data3) {      // month level
 		if(!is_numeric($sect2)) {
@@ -815,7 +815,7 @@ function collect_flush_graphics($statdir, $data, $options)
 		    printf("debug:   hostid = %s\n", $hostid);
 		    printf("debug:   resdir = %s\n", $graphdir);
 		}
-		graph_monthly_submit($graphdir, $hostid, $datetime, $data3);
+		graph_monthly_submit($graphdir, $hostid, $options, $datetime, $data3);
 
 		foreach($data3 as $sect3 => $data4) {  // day level
 		    if(!is_numeric($sect3)) {
@@ -830,7 +830,7 @@ function collect_flush_graphics($statdir, $data, $options)
 			printf("debug:   hostid = %s\n", $hostid);
 			printf("debug:   resdir = %s\n", $graphdir);
 		    }
-		    graph_daily_submit($graphdir, $hostid, $datetime, $data4);			
+		    graph_daily_submit($graphdir, $hostid, $options, $datetime, $data4);			
 		}
 	    }
 	}
