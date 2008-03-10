@@ -694,18 +694,12 @@ function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
 	if(is_numeric($month)) {
 	    foreach($data1 as $sect => $value) {
 		if($sect == "submit") {
-		    printf("month = %s, intval = %d\n", $month, intval($month));
 		    $values[intval($month) - 1] = $value['count'];
 		    $total += $value['count'];
 		}
 	    }
 	}
     }
-    if($options->debug) {
-	printf("debug: label count = %d, value count = %d\n", count($labels), count($values));
-    }
-    print_r($values);
-    print_r($labels);
 
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);	
@@ -743,18 +737,12 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
 	if(is_numeric($day)) {
 	    foreach($data1 as $sect => $value) {
 		if($sect == "submit") {
-		    printf("day = %s, intval = %d\n", $day, intval($day));
 		    $values[intval($day) - 1] = $value['count'];
 		    $total += $value['count'];
 		}
 	    }
 	}
     }
-    if($options->debug) {
-	printf("debug: label count = %d, value count = %d\n", count($labels), count($values));
-    }
-    print_r($values);
-    print_r($labels);
 
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);	
@@ -795,8 +783,7 @@ function collect_flush_graphics($statdir, $data, $options)
 	    $graphdir = sprintf("%s/%s/%s", $statdir, $hostid, $sect1);
 	    $datetime = mktime(0, 0, 0, 1, 1, $sect1);
 	    if($options->debug) {
-		printf("debug: generate yearly (%s) graphics:\n",
-		       strftime("%G-%m-%d", $datetime));
+		printf("debug: generate yearly (%s) graphics:\n", strftime("%G-%m-%d", $datetime));
 		printf("debug:   hostid = %s\n", $hostid);
 		printf("debug:   resdir = %s\n", $graphdir);
 	    }
