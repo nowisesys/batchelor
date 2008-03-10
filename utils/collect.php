@@ -54,6 +54,22 @@ include "../conf/config.inc";
 include "../include/common.inc";
 include "../include/getopt.inc";
 
+if(USE_JPGRAPH_LIB) {
+    include "../conf/jpgraph.inc";
+    if(defined("JPGRAPH_LIB_PATH")) {
+	ini_set("include_path", ini_get("include_path") . ":" . JPGRAPH_LIB_PATH);
+    }
+    if(!@include "jpgraph.php") {
+	die("Failed include jpgraph.php (see JPGRAPH_LIB_PATH inside conf/jpgraph.inc)\n");
+    }
+    if(!@include "jpgraph_bar.php") {
+	die("Failed include jpgraph_bar.php (see JPGRAPH_LIB_PATH inside conf/jpgraph.inc)\n");
+    }
+    if(!class_exists("Graph")) {
+	die("Class Graph (from JpGraph) is undefined (check your JpGraph installation)\n");
+    }
+}
+
 define ("LIST_QUEUE_ONCE", 0);
 define ("LIST_QUEUE_PER_HOSTID", 1);
 define ("LIST_QUEUE_PER_JOBDIR", 2);
@@ -307,9 +323,9 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
     }
     $data[$hostid][$year]['proctime']['count']++;
     $data[$hostid][$year]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year]['proctime']['count'],
-								$data[$hostid][$year]['proctime']['waiting'], $waiting);
+								       $data[$hostid][$year]['proctime']['waiting'], $waiting);
     $data[$hostid][$year]['proctime']['running'] = floating_mean_value($data[$hostid][$year]['proctime']['count'],
-								$data[$hostid][$year]['proctime']['running'], $running);
+								       $data[$hostid][$year]['proctime']['running'], $running);
     if($process < $data[$hostid][$year]['proctime']['min']) {
 	$data[$hostid][$year]['proctime']['min'] = $process;
     }
@@ -329,9 +345,9 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
     }
     $data[$hostid][$year][$month]['proctime']['count']++;
     $data[$hostid][$year][$month]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year][$month]['proctime']['count'],
-								$data[$hostid][$year][$month]['proctime']['waiting'], $waiting);
+									       $data[$hostid][$year][$month]['proctime']['waiting'], $waiting);
     $data[$hostid][$year][$month]['proctime']['running'] = floating_mean_value($data[$hostid][$year][$month]['proctime']['count'],
-								$data[$hostid][$year][$month]['proctime']['running'], $running);
+									       $data[$hostid][$year][$month]['proctime']['running'], $running);
     if($process < $data[$hostid][$year][$month]['proctime']['min']) {
 	$data[$hostid][$year][$month]['proctime']['min'] = $process;
     }
@@ -351,9 +367,9 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
     }
     $data[$hostid][$year][$month][$day]['proctime']['count']++;
     $data[$hostid][$year][$month][$day]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year][$month][$day]['proctime']['count'],
-								$data[$hostid][$year][$month][$day]['proctime']['waiting'], $waiting);
+										     $data[$hostid][$year][$month][$day]['proctime']['waiting'], $waiting);
     $data[$hostid][$year][$month][$day]['proctime']['running'] = floating_mean_value($data[$hostid][$year][$month][$day]['proctime']['count'],
-								$data[$hostid][$year][$month][$day]['proctime']['running'], $running);
+										     $data[$hostid][$year][$month][$day]['proctime']['running'], $running);
     if($process < $data[$hostid][$year][$month][$day]['proctime']['min']) {
 	$data[$hostid][$year][$month][$day]['proctime']['min'] = $process;
     }
@@ -468,6 +484,9 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
     }
 }
 
+// 
+// Recursive write data files (text) from collected statistics.
+// 
 function collect_flush_data($topdir, $data, $options)
 {
     $summary = sprintf("%s/summary.dat", $topdir);    
@@ -519,6 +538,306 @@ function collect_flush_stats($statdir, $statdata, $options)
 }
 
 // 
+// Draws a bar plot.
+// 
+function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $bar)
+{
+    $width = 460;
+    $height = 210;
+    
+    if(count($values) > 12) {
+	$width += count($values) * 5;
+    }
+    
+    // 
+    // Create the graph and setup the basic parameters 
+    // 
+    $graph = new Graph($width, $height, 'auto');    
+    $graph->img->SetMargin(40, 30, 40, 40);
+    $graph->SetScale("textint");
+    $graph->SetFrame(true, JPGRAPH_FRAME_FOREGROUND_COLOR, JPGRAPH_FRAME_BORDER_WIDTH); 
+    $graph->SetColor(JPGRAPH_GRAPH_BACKGROUND_COLOR);
+    $graph->SetMarginColor(JPGRAPH_FRAME_BACKGROUND_COLOR);
+    
+    // 
+    // Add some grace to the top so that the scale doesn't
+    // end exactly at the max value. 
+    // 
+    $graph->yaxis->scale->SetGrace(20);
+    
+    // 
+    // Setup X-axis labels
+    // 
+    $graph->xaxis->SetTickLabels($labels);
+    $graph->xaxis->SetFont(FF_FONT1, FS_BOLD);
+    $graph->xaxis->SetColor(JPGRAPH_XAXIS_SCALE_COLOR, JPGRAPH_XAXIS_LABEL_COLOR);
+
+    // 
+    // Setup "hidden" y-axis by given it the same color
+    // as the background
+    // 
+    $graph->yaxis->SetColor(JPGRAPH_YAXIS_SCALE_COLOR, JPGRAPH_YAXIS_LABEL_COLOR);
+    $graph->ygrid->SetColor(JPGRAPH_GRAPH_FOREGROUND_COLOR);
+
+    // 
+    // Setup graph title ands fonts
+    // 
+    $graph->title->Set($title);
+    $graph->title->SetColor(JPGRAPH_TITLE_MAIN_COLOR);
+    $graph->title->SetFont(FF_FONT2, FS_BOLD);
+    $graph->subtitle->Set(sprintf("(%s)", $subtitle));
+    $graph->subtitle->SetColor(JPGRAPH_TITLE_SUBTITLE_COLOR);
+
+    $graph->xaxis->title->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+    $graph->xaxis->title->SetFont(FF_FONT1, FS_NORMAL);
+    $graph->xaxis->title->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
+    
+    // 
+    // Create a bar pot
+    // 
+    $bplot = new BarPlot($values);    
+    // Setup color for gradient fill style 
+    $bplot->SetFillGradient($bar['color']['start'], $bar['color']['end'], GRAD_HOR);
+    $bplot->SetWidth(0.5);
+    if(isset($bar['color']['outline'])) {
+	$bplot->SetColor($bar['color']['outline']);
+    }
+    if(isset($bar['color']['shadow'])) {
+	$bplot->SetShadow($bar['color']['shadow']);
+    }
+    
+    // 
+    // Setup the values that are displayed on top of each bar
+    // 
+    $bplot->value->Show();
+    
+    // 
+    // Must use TTF fonts if we want text at an arbitrary angle
+    // 
+    $bplot->value->SetFont(FF_ARIAL, FS_NORMAL, 8);
+    $bplot->value->SetFormat('%d');
+    
+    // 
+    // Black color for positive values and darkred for negative values
+    // 
+    $bplot->value->SetColor($bar['text']['positive'], $bar['text']['negative']);
+    $graph->Add($bplot);
+    
+    // 
+    // Finally stroke the graph
+    //
+    $graph->Stroke($image);
+}
+
+// 
+// Create graph of total submits for hostid (that might be all)
+// for all years.
+// 
+function graph_total_submit($graphdir, $hostid, $data)
+{
+    $image  = sprintf("%s/submit.png", $graphdir);
+    $values = array();
+    $labels = array();
+    $title  = "Total number of submits";
+    $total  = 0;
+    $barcol = array( "color" => array( "start"    => "navy",
+				       "end"      => "lightsteelblue",
+				       "outline"  => "darkblue" ),
+		     "text"  => array( "positive" => "black",
+				       "negative" => "lightgray" )
+		     );
+    
+    foreach($data as $year => $data1) {
+	if(is_numeric($year)) {
+	    foreach($data1 as $sect => $value) {
+		if($sect == "submit") {
+		    array_push($values, $value['count']);
+		    array_push($labels, $year);
+		    $total += $value['count'];
+		}
+	    }
+	}
+    }
+
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
+    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $barcol);
+}
+
+// 
+// Create graph of submits for one year for hostid (that might be all)
+// 
+function graph_yearly_submit($graphdir, $hostid, $timestamp, $data)
+{
+    $image  = sprintf("%s/submit.png", $graphdir);
+    $values = array();
+    $labels = array();
+    $title  = sprintf("Number of submits %s", strftime("%G", $timestamp));
+    $total  = 0;
+    $barcol = array( "color" => array( "start"    => "orange",
+				       "end"      => "yellow",
+				       "outline"  => "red" ),
+		     "text"  => array( "positive" => "black",
+				       "negative" => "lightgray" )
+		     );
+
+    // 
+    // Initilize data.
+    // 
+    for($i = 0; $i < 12; ++$i) {
+	$values[$i] = 0;
+	$labels[$i] = strftime("%b", mktime(0, 0, 0, $i + 1, 1, 1));
+    }
+    
+    foreach($data as $month => $data1) {
+	if(is_numeric($month)) {
+	    foreach($data1 as $sect => $value) {
+		if($sect == "submit") {
+		    printf("month = %s, intval = %d\n", $month, intval($month));
+		    $values[intval($month) - 1] = $value['count'];
+		    $total += $value['count'];
+		}
+	    }
+	}
+    }
+    if($options->debug) {
+	printf("debug: label count = %d, value count = %d\n", count($labels), count($values));
+    }
+    print_r($values);
+    print_r($labels);
+
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);	
+    }
+    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $barcol);
+}
+
+// 
+// Create graph of submits for one month for hostid (that might be all)
+// 
+function graph_monthly_submit($graphdir, $hostid, $timestamp, $data)
+{
+    $image  = sprintf("%s/submit.png", $graphdir);
+    $values = array();
+    $labels = array();
+    $title  = sprintf("Number of submits for %s", strftime("%B %G", $timestamp));
+    $total  = 0;
+    $barcol = array( "color" => array( "start"    => "green",
+				       "end"      => "yellow",
+				       "outline"  => "darkgreen" ),
+		     "text"  => array( "positive" => "black",
+				       "negative" => "lightgray" )
+		     );
+
+    // 
+    // Initilize data.
+    // TODO: This depends on number of days in this month!
+    // 
+    for($i = 0; $i < 31; ++$i) {
+	$values[$i] = 0;
+	$labels[$i] = $i + 1;
+    }
+    
+    foreach($data as $day => $data1) {
+	if(is_numeric($day)) {
+	    foreach($data1 as $sect => $value) {
+		if($sect == "submit") {
+		    printf("day = %s, intval = %d\n", $day, intval($day));
+		    $values[intval($day) - 1] = $value['count'];
+		    $total += $value['count'];
+		}
+	    }
+	}
+    }
+    if($options->debug) {
+	printf("debug: label count = %d, value count = %d\n", count($labels), count($values));
+    }
+    print_r($values);
+    print_r($labels);
+
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);	
+    }
+    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $barcol);
+}
+
+// 
+// Create graph of submits for one day for hostid (that might be all)
+// 
+function graph_daily_submit($graphdir, $hostid, $timestamp, $data)
+{
+}
+
+// 
+// Generate graphics from collected statistics.
+// 
+function collect_flush_graphics($statdir, $data, $options)
+{
+    if(!USE_JPGRAPH_LIB) {
+	if($options->debug) {
+	    printf("debug: not generating graphics from statistics (disabled in config.inc)\n");
+	    return;
+	}
+    }
+    
+    // 
+    // TODO: add call of user supplied hook functions.
+    // 
+    foreach($data as $hostid => $data1) {              // total level
+	$graphdir = sprintf("%s/%s", $statdir, $hostid);
+	graph_total_submit($graphdir, $hostid, $data1);
+	foreach($data1 as $sect1 => $data2) {          // year level
+	    if(!is_numeric($sect1)) {
+		continue;
+	    }
+	
+	    $graphdir = sprintf("%s/%s/%s", $statdir, $hostid, $sect1);
+	    $datetime = mktime(0, 0, 0, 1, 1, $sect1);
+	    if($options->debug) {
+		printf("debug: generate yearly (%s) graphics:\n",
+		       strftime("%G-%m-%d", $datetime));
+		printf("debug:   hostid = %s\n", $hostid);
+		printf("debug:   resdir = %s\n", $graphdir);
+	    }
+	    graph_yearly_submit($graphdir, $hostid, $datetime, $data2);
+		
+	    foreach($data2 as $sect2 => $data3) {      // month level
+		if(!is_numeric($sect2)) {
+		    continue;
+		}
+		
+		$graphdir = sprintf("%s/%s/%s/%s", $statdir, $hostid, $sect1, $sect2);
+		$datetime = mktime(0, 0, 0, $sect2, 1, $sect1);
+		if($options->debug) {
+		    printf("debug: generate monthly (%s) graphics:\n", 
+			   strftime("%G-%m-%d", $datetime));
+		    printf("debug:   hostid = %s\n", $hostid);
+		    printf("debug:   resdir = %s\n", $graphdir);
+		}
+		graph_monthly_submit($graphdir, $hostid, $datetime, $data3);
+
+		foreach($data3 as $sect3 => $data4) {  // day level
+		    if(!is_numeric($sect3)) {
+			continue;
+		    }
+		
+		    $graphdir = sprintf("%s/%s/%s/%s/%s", $statdir, $hostid, $sect1, $sect2, $sect3);
+		    $datetime = mktime(0, 0, 0, $sect2, $sect3, $sect1);
+		    if($options->debug) {
+			printf("debug: generate daily (%s) graphics:\n", 
+			       strftime("%G-%m-%d", $datetime));
+			printf("debug:   hostid = %s\n", $hostid);
+			printf("debug:   resdir = %s\n", $graphdir);
+		    }
+		    graph_daily_submit($graphdir, $hostid, $datetime, $data4);			
+		}
+	    }
+	}
+    }
+}
+
+// 
 // Collect statistics from job directories.
 // 
 function collect_statistics($jobsdir, $statdir, $options)
@@ -537,14 +856,13 @@ function collect_statistics($jobsdir, $statdir, $options)
     // 
     // Create statistics directories if missing:
     // 
-    foreach(array( "$statdir", "$statdir/date", "$statdir/hostid", "$statdir/misc") as $subdir)
-      if(!file_exists($subdir)) {
-	  if($options->debug) {
-	      printf("debug: creating directory '%s'\n", $subdir);
-	  }
-	  if(!mkdir($subdir)) {
-	      die(sprintf("%s: failed create directory '%s'\n", $options->prog, $subdir));
-	  }
+    if(!file_exists($statdir)) {
+	if($options->debug) {
+	    printf("debug: creating statistics directory '%s'\n", $statdir);
+	}
+	if(!mkdir($statdir)) {
+	    die(sprintf("%s: failed create directory '%s'\n", $options->prog, $statdir));
+	}
     }
     
     // 
@@ -590,14 +908,17 @@ function collect_statistics($jobsdir, $statdir, $options)
     // 
     if($options->debug) {
 	printf("debug: writing collected data to serialized cache (%s)\n", $statfile);
-	print_r($statdata);
+	if($options->verbose > 1) {
+	    print_r($statdata);
+	}
     }
     file_put_contents($statfile, serialize($statdata));
 
     // 
     // Flush collected statistics to filesystem:
     // 
-    collect_flush_stats($statdir, $statdata, $options);    
+    collect_flush_stats($statdir, $statdata, $options);
+    collect_flush_graphics($statdir, $statdata, $options);
 }
 
 // 

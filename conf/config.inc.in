@@ -153,4 +153,12 @@ define ("MENU_STYLE", "graphic");
 // 
 define ("MENU_ORIENTATION", "vertical");
 
+// 
+// Use the JpGraph library for generating graphics from statistics? Enable
+// this is recommended. JpGraph can be downloaded from http://www.aditus.nu/jpgraph/
+// 
+// Settings for JpGraph can be tuned inside the file conf/jpgraph.inc
+// 
+define ("USE_JPGRAPH_LIB", false);
+
 ?>
