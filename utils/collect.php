@@ -657,7 +657,18 @@ function graph_total_submit($graphdir, $hostid, $options, $data)
 	    }
 	}
     }
-
+    
+    // 
+    // Add one extra year before first year and after last year to prevent
+    // odd looking graphics when only one year statistics is present.
+    // 
+    if(count($labels) < 3) {
+	array_unshift($values, 0);
+	array_unshift($labels, $labels[0] - 1);
+	array_push($values, 0);
+	array_push($labels, $labels[count($labels) - 1] + 1);
+    }
+    
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
