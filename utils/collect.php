@@ -596,7 +596,6 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $bar)
     // Create a bar pot
     // 
     $bplot = new BarPlot($values);    
-    // Setup color for gradient fill style 
     $bplot->SetFillGradient($bar['color']['start'], $bar['color']['end'], GRAD_HOR);
     $bplot->SetWidth(0.5);
     if(isset($bar['color']['outline'])) {
@@ -895,7 +894,7 @@ function collect_statistics($jobsdir, $statdir, $options)
     // 
     if($options->debug) {
 	printf("debug: writing collected data to serialized cache (%s)\n", $statfile);
-	if($options->verbose > 1) {
+	if($options->verbose) {
 	    print_r($statdata);
 	}
     }
