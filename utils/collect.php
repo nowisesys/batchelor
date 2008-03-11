@@ -300,88 +300,88 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
     // Process accounting total:
     // 
     if(!isset($data[$hostid]['proctime'])) {
-	$data[$hostid]['proctime']['waiting'] = 0;      // mean value of queued time
-	$data[$hostid]['proctime']['running'] = 0;      // mean value of execution time
-	$data[$hostid]['proctime']['count'] = 0;        // number of jobs
-	$data[$hostid]['proctime']['min'] = $process;   // minimum time from submit to finished
-	$data[$hostid]['proctime']['max'] = 0;          // maximum time from submit to finished
+	$data[$hostid]['proctime']['waiting'] = 0;         // mean value of queued time
+	$data[$hostid]['proctime']['running'] = 0;         // mean value of execution time
+	$data[$hostid]['proctime']['count'] = 0;           // number of jobs
+	$data[$hostid]['proctime']['minimum'] = $process;  // minimum time from submit to finished
+	$data[$hostid]['proctime']['maximum'] = 0;         // maximum time from submit to finished
     }
     $data[$hostid]['proctime']['count']++;
     $data[$hostid]['proctime']['waiting'] = floating_mean_value($data[$hostid]['proctime']['count'],
 								$data[$hostid]['proctime']['waiting'], $waiting);
     $data[$hostid]['proctime']['running'] = floating_mean_value($data[$hostid]['proctime']['count'],
 								$data[$hostid]['proctime']['running'], $running);
-    if($process < $data[$hostid]['proctime']['min']) {
-	$data[$hostid]['proctime']['min'] = $process;
+    if($process < $data[$hostid]['proctime']['minimum']) {
+	$data[$hostid]['proctime']['minimum'] = $process;
     }
-    if($process > $data[$hostid]['proctime']['max']) {
-	$data[$hostid]['proctime']['max'] = $process;
+    if($process > $data[$hostid]['proctime']['maximum']) {
+	$data[$hostid]['proctime']['maximum'] = $process;
     }
     
     // 
     // Process accounting by year:
     // 
     if(!isset($data[$hostid][$year]['proctime'])) {
-	$data[$hostid][$year]['proctime']['waiting'] = 0;      // mean value of queued time
-	$data[$hostid][$year]['proctime']['running'] = 0;      // mean value of execution time
-	$data[$hostid][$year]['proctime']['count'] = 0;        // number of jobs
-	$data[$hostid][$year]['proctime']['min'] = $process;   // minimum time from submit to finished
-	$data[$hostid][$year]['proctime']['max'] = 0;          // maximum time from submit to finished
+	$data[$hostid][$year]['proctime']['waiting'] = 0;         // mean value of queued time
+	$data[$hostid][$year]['proctime']['running'] = 0;         // mean value of execution time
+	$data[$hostid][$year]['proctime']['count'] = 0;           // number of jobs
+	$data[$hostid][$year]['proctime']['minimum'] = $process;  // minimum time from submit to finished
+	$data[$hostid][$year]['proctime']['maximum'] = 0;         // maximum time from submit to finished
     }
     $data[$hostid][$year]['proctime']['count']++;
     $data[$hostid][$year]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year]['proctime']['count'],
 								       $data[$hostid][$year]['proctime']['waiting'], $waiting);
     $data[$hostid][$year]['proctime']['running'] = floating_mean_value($data[$hostid][$year]['proctime']['count'],
 								       $data[$hostid][$year]['proctime']['running'], $running);
-    if($process < $data[$hostid][$year]['proctime']['min']) {
-	$data[$hostid][$year]['proctime']['min'] = $process;
+    if($process < $data[$hostid][$year]['proctime']['minimum']) {
+	$data[$hostid][$year]['proctime']['minimum'] = $process;
     }
-    if($process > $data[$hostid][$year]['proctime']['max']) {
-	$data[$hostid][$year]['proctime']['max'] = $process;
+    if($process > $data[$hostid][$year]['proctime']['maximum']) {
+	$data[$hostid][$year]['proctime']['maximum'] = $process;
     }
 
     // 
     // Process accounting by month:
     // 
     if(!isset($data[$hostid][$year][$month]['proctime'])) {
-	$data[$hostid][$year][$month]['proctime']['waiting'] = 0;      // mean value of queued time
-	$data[$hostid][$year][$month]['proctime']['running'] = 0;      // mean value of execution time
-	$data[$hostid][$year][$month]['proctime']['count'] = 0;        // number of jobs
-	$data[$hostid][$year][$month]['proctime']['min'] = $process;   // minimum time from submit to finished
-	$data[$hostid][$year][$month]['proctime']['max'] = 0;          // maximum time from submit to finished
+	$data[$hostid][$year][$month]['proctime']['waiting'] = 0;          // mean value of queued time
+	$data[$hostid][$year][$month]['proctime']['running'] = 0;          // mean value of execution time
+	$data[$hostid][$year][$month]['proctime']['count'] = 0;            // number of jobs
+	$data[$hostid][$year][$month]['proctime']['minimum'] = $process;   // minimum time from submit to finished
+	$data[$hostid][$year][$month]['proctime']['maximum'] = 0;          // maximum time from submit to finished
     }
     $data[$hostid][$year][$month]['proctime']['count']++;
     $data[$hostid][$year][$month]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year][$month]['proctime']['count'],
 									       $data[$hostid][$year][$month]['proctime']['waiting'], $waiting);
     $data[$hostid][$year][$month]['proctime']['running'] = floating_mean_value($data[$hostid][$year][$month]['proctime']['count'],
 									       $data[$hostid][$year][$month]['proctime']['running'], $running);
-    if($process < $data[$hostid][$year][$month]['proctime']['min']) {
-	$data[$hostid][$year][$month]['proctime']['min'] = $process;
+    if($process < $data[$hostid][$year][$month]['proctime']['minimum']) {
+	$data[$hostid][$year][$month]['proctime']['minimum'] = $process;
     }
-    if($process > $data[$hostid][$year][$month]['proctime']['max']) {
-	$data[$hostid][$year][$month]['proctime']['max'] = $process;
+    if($process > $data[$hostid][$year][$month]['proctime']['maximum']) {
+	$data[$hostid][$year][$month]['proctime']['maximum'] = $process;
     }
 
     // 
     // Process accounting by day:
     // 
     if(!isset($data[$hostid][$year][$month][$day]['proctime'])) {
-	$data[$hostid][$year][$month][$day]['proctime']['waiting'] = 0;      // mean value of queued time
-	$data[$hostid][$year][$month][$day]['proctime']['running'] = 0;      // mean value of execution time
-	$data[$hostid][$year][$month][$day]['proctime']['count'] = 0;        // number of jobs
-	$data[$hostid][$year][$month][$day]['proctime']['min'] = $process;   // minimum time from submit to finished
-	$data[$hostid][$year][$month][$day]['proctime']['max'] = 0;          // maximum time from submit to finished
+	$data[$hostid][$year][$month][$day]['proctime']['waiting'] = 0;          // mean value of queued time
+	$data[$hostid][$year][$month][$day]['proctime']['running'] = 0;          // mean value of execution time
+	$data[$hostid][$year][$month][$day]['proctime']['count'] = 0;            // number of jobs
+	$data[$hostid][$year][$month][$day]['proctime']['minimum'] = $process;   // minimum time from submit to finished
+	$data[$hostid][$year][$month][$day]['proctime']['maximum'] = 0;          // maximum time from submit to finished
     }
     $data[$hostid][$year][$month][$day]['proctime']['count']++;
     $data[$hostid][$year][$month][$day]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year][$month][$day]['proctime']['count'],
 										     $data[$hostid][$year][$month][$day]['proctime']['waiting'], $waiting);
     $data[$hostid][$year][$month][$day]['proctime']['running'] = floating_mean_value($data[$hostid][$year][$month][$day]['proctime']['count'],
 										     $data[$hostid][$year][$month][$day]['proctime']['running'], $running);
-    if($process < $data[$hostid][$year][$month][$day]['proctime']['min']) {
-	$data[$hostid][$year][$month][$day]['proctime']['min'] = $process;
+    if($process < $data[$hostid][$year][$month][$day]['proctime']['minimum']) {
+	$data[$hostid][$year][$month][$day]['proctime']['minimum'] = $process;
     }
-    if($process > $data[$hostid][$year][$month][$day]['proctime']['max']) {
-	$data[$hostid][$year][$month][$day]['proctime']['max'] = $process;
+    if($process > $data[$hostid][$year][$month][$day]['proctime']['maximum']) {
+	$data[$hostid][$year][$month][$day]['proctime']['maximum'] = $process;
     }
 }
 
@@ -818,8 +818,8 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barco
     $width = 560;
     $height = 210;
 
-    if(count($labels) > 12) {
-	$width += count($labels) * 5;
+    if(count($labels) > 5) {
+	$width += count($labels) * 10;
     }
     
     // 
@@ -950,11 +950,9 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
 	if(is_numeric($year)) {
 	    foreach($data1 as $sect => $value) {
 		if($sect == "proctime") {
-		    array_push($values['waiting'], $value['waiting']);
-		    array_push($values['running'], $value['running']);
-		    array_push($values['count'],   $value['count']);
-		    array_push($values['minimum'], $value['min']);
-		    array_push($values['maximum'], $value['max']);
+		    foreach(array_keys($values) as $key) {
+			array_push($values[$key], $value[$key]);
+		    }
 		    array_push($labels, $year);
 		    $total += $value['count'];
 		}
@@ -967,17 +965,11 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
     // odd looking graphics when only one year statistics is present.
     // 
     if(count($labels) < 3) {
-	array_unshift($values['waiting'], 0);
-	array_unshift($values['running'], 0);
-	array_unshift($values['count'], 0);
-	array_unshift($values['minimum'], 0);
-	array_unshift($values['maximum'], 0);
+	foreach(array_keys($values) as $key) {
+	    array_unshift($values[$key], 0);
+	    array_push($values[$key], 0);
+	}
 	array_unshift($labels, $labels[0] - 1);
-	array_push($values['waiting'], 0);
-	array_push($values['running'], 0);
-	array_push($values['count'], 0);
-	array_push($values['minimum'], 0);
-	array_push($values['maximum'], 0);
 	array_push($labels, $labels[count($labels) - 1] + 1);
     }
     
@@ -985,6 +977,73 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
 	printf("debug: creating graphic file %s\n", $image);
     }
     graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
+}
+
+// 
+// Create graph of process time for one year for hostid (that might be all)
+// 
+function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
+{
+    $image  = sprintf("%s/proctime.png", $graphdir);
+    $values = array( "waiting" => array(), 
+		     "running" => array(), 
+		     "count"   => array(), 
+		     "minimum" => array(), 
+		     "maximum" => array());
+    $labels = array();
+    $title  = sprintf("Process time %s (avarage)", strftime("%G", $timestamp));
+    $total  = 0;
+    $barcol = array( "color" => array( "waiting"  => "yellow",
+				       "running"  => "green",
+				       "minimum"  => "lightgray",
+				       "maximum"  => "red", 
+				       "count"    => "darkblue" ),		     
+		     "text"  => array( "positive" => "black",
+				       "negative" => "lightgray" )
+		     );
+
+    // 
+    // Initilize data.
+    // 
+    for($i = 0; $i < 12; ++$i) {
+	foreach(array_keys($values) as $key) {
+	    $values[$key][$i] = 0;
+	}
+	$labels[$i] = strftime("%b", mktime(0, 0, 0, $i + 1, 1, 1));
+    }
+    
+    foreach($data as $month => $data1) {
+	if(is_numeric($month)) {
+	    foreach($data1 as $sect => $value) {
+		if($sect == "proctime") {
+		    $index = intval($month) - 1;
+		    foreach(array_keys($values) as $key) {
+			$values[$key][$index] = $value[$key];
+		    }
+		    $total += $value['count'];
+		}
+	    }
+	}
+    }
+    
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
+    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
+}
+
+// 
+// Create graph of process time for one month for hostid (that might be all)
+// 
+function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
+{
+}
+
+// 
+// Create graph of process time for one day for hostid (that might be all)
+// 
+function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
+{
 }
 
 // 
@@ -1019,6 +1078,7 @@ function collect_flush_graphics($statdir, $data, $options)
 		printf("debug:   resdir = %s\n", $graphdir);
 	    }
 	    graph_yearly_submit($graphdir, $hostid, $options, $datetime, $data2);
+	    graph_yearly_proctime($graphdir, $hostid, $options, $datetime, $data2);
 		
 	    foreach($data2 as $sect2 => $data3) {      // month level
 		if(!is_numeric($sect2)) {
@@ -1034,6 +1094,7 @@ function collect_flush_graphics($statdir, $data, $options)
 		    printf("debug:   resdir = %s\n", $graphdir);
 		}
 		graph_monthly_submit($graphdir, $hostid, $options, $datetime, $data3);
+		graph_monthly_proctime($graphdir, $hostid, $options, $datetime, $data3);
 
 		foreach($data3 as $sect3 => $data4) {  // day level
 		    if(!is_numeric($sect3)) {
@@ -1048,7 +1109,8 @@ function collect_flush_graphics($statdir, $data, $options)
 			printf("debug:   hostid = %s\n", $hostid);
 			printf("debug:   resdir = %s\n", $graphdir);
 		    }
-		    graph_daily_submit($graphdir, $hostid, $options, $datetime, $data4);			
+		    graph_daily_submit($graphdir, $hostid, $options, $datetime, $data4);
+		    graph_daily_proctime($graphdir, $hostid, $options, $datetime, $data4);
 		}
 	    }
 	}
