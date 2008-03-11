@@ -816,7 +816,7 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
 function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barcol)
 {
     $width = 560;
-    $height = 210;
+    $height = 250;
 
     if(count($labels) > 5) {
 	$width += count($labels) * 10;
@@ -846,7 +846,7 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barco
     // Add some grace to the top so that the scale doesn't
     // end exactly at the max value. 
     // 
-    $graph->yaxis->scale->SetGrace(10);
+    $graph->yaxis->scale->SetGrace(15);
     $graph->y2axis->scale->SetGrace(20);
     
     // 
@@ -903,15 +903,19 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barco
     // Create the grouped bar plot and add it to the graph:
     // 
     $abplot = new AccBarPlot(array($b1plot, $b2plot));
-    $abplot->value->show();
     $abplot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
+    $abplot->value->SetAngle(90);
+    $abplot->value->show();
 
     $y1plot = new GroupBarPlot(array($abplot, $z0plot, $z0plot));
     $y2plot = new GroupBarPlot(array($z0plot, $b3plot, $b4plot));
-    $b3plot->value->show();
-    $b4plot->value->show();
+    
     $b3plot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
     $b4plot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
+    $b3plot->value->SetAngle(90);
+    $b4plot->value->SetAngle(90);
+    $b3plot->value->show();
+    $b4plot->value->show();
     
     $graph->Add($y1plot);
     $graph->AddY2($y2plot);
