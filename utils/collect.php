@@ -837,7 +837,7 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
 function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barcol)
 {
     $width = 560;
-    $height = 250;
+    $height = 260;
 
     if(count($labels) > 5 && count($labels) <= 12 ) {
 	$width += count($labels) * 10;
@@ -870,8 +870,8 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barco
     // Add some grace to the top so that the scale doesn't
     // end exactly at the max value. 
     // 
-    $graph->yaxis->scale->SetGrace(15);
-    $graph->y2axis->scale->SetGrace(20);
+    $graph->yaxis->scale->SetGrace(20);
+    $graph->y2axis->scale->SetGrace(25);
     
     // 
     // Setup X-axis labels
@@ -933,6 +933,8 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barco
 
     $y1plot = new GroupBarPlot(array($abplot, $z0plot, $z0plot));
     $y2plot = new GroupBarPlot(array($z0plot, $b3plot, $b4plot));
+    $y1plot->SetWidth(0.97);
+    $y2plot->SetWidth(0.97);
     
     $b3plot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
     $b4plot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
