@@ -840,8 +840,11 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barco
     $width = 560;
     $height = 250;
 
-    if(count($labels) > 5) {
+    if(count($labels) > 5 && count($labels) <= 12 ) {
 	$width += count($labels) * 10;
+    }
+    if(count($labels) > 12) {
+	$width += count($labels) * 16;
     }
     
     // 
