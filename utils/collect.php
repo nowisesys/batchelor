@@ -59,11 +59,10 @@ if(USE_JPGRAPH_LIB) {
     if(defined("JPGRAPH_LIB_PATH")) {
 	ini_set("include_path", ini_get("include_path") . ":" . JPGRAPH_LIB_PATH);
     }
-    if(!@include "jpgraph.php") {
-	die("Failed include jpgraph.php (see JPGRAPH_LIB_PATH inside conf/jpgraph.inc)\n");
-    }
-    if(!@include "jpgraph_bar.php") {
-	die("Failed include jpgraph_bar.php (see JPGRAPH_LIB_PATH inside conf/jpgraph.inc)\n");
+    foreach(array( "jpgraph.php", "jpgraph_bar.php", "jpgraph_line.php" ) as $jpgraph) {
+	if(!@include($jpgraph)) {
+	    die(sprintf("Failed include %s (see JPGRAPH_LIB_PATH inside conf/jpgraph.inc)\n", $jpgraph));
+	}
     }
     if(!class_exists("Graph")) {
 	die("Class Graph (from JpGraph) is undefined (check your JpGraph installation)\n");
@@ -626,7 +625,7 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $bar)
     $bplot->value->SetFormat('%d');
     
     // 
-    // Black color for positive values and darkred for negative values
+    // Set colors for positive and negative values
     // 
     $bplot->value->SetColor($bar['text']['positive'], $bar['text']['negative']);
     $graph->Add($bplot);
@@ -812,6 +811,183 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
 }
 
 // 
+// Draws a diagram of process time data.
+// 
+function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barcol)
+{
+    $width = 560;
+    $height = 210;
+
+    if(count($labels) > 12) {
+	$width += count($labels) * 5;
+    }
+    
+    // 
+    // The zeroes array is used as a placeholder when grouping bars.
+    // 
+    $zeroes = array();
+    for($i = 0; $i < count($labels); ++$i) {
+	array_push($zeroes, 0);
+    }
+
+    // 
+    // Create the graph.
+    // 
+    $graph = new Graph($width, $height, 'auto');           
+    $graph->SetScale("textlin");
+    $graph->SetY2Scale("lin");
+    $graph->img->SetMargin(40, 150, 20, 40);        
+    $graph->SetFrame(true, JPGRAPH_FRAME_FOREGROUND_COLOR, JPGRAPH_FRAME_BORDER_WIDTH); 
+    $graph->SetColor(JPGRAPH_GRAPH_BACKGROUND_COLOR);
+    $graph->SetMarginColor(JPGRAPH_FRAME_BACKGROUND_COLOR);
+    $graph->legend->Pos(0.03, 0.1);
+    
+    // 
+    // Add some grace to the top so that the scale doesn't
+    // end exactly at the max value. 
+    // 
+    $graph->yaxis->scale->SetGrace(10);
+    $graph->y2axis->scale->SetGrace(20);
+    
+    // 
+    // Setup X-axis labels
+    // 
+    $graph->xaxis->SetTickLabels($labels);
+    $graph->xaxis->SetFont(FF_FONT1, FS_BOLD);
+    $graph->xaxis->SetColor(JPGRAPH_XAXIS_SCALE_COLOR, JPGRAPH_XAXIS_LABEL_COLOR);
+
+    // 
+    // Setup Y-axis labels
+    // 
+    $graph->yaxis->SetColor(JPGRAPH_YAXIS_SCALE_COLOR, JPGRAPH_YAXIS_LABEL_COLOR);
+    $graph->y2axis->SetColor(JPGRAPH_YAXIS_SCALE_COLOR, JPGRAPH_YAXIS_LABEL_COLOR);
+    $graph->ygrid->SetColor(JPGRAPH_GRAPH_FOREGROUND_COLOR);
+    $graph->yaxis->title->Set("Running / Waiting (seconds)");
+    $graph->y2axis->title->Set("Minimum / Maximum (seconds)");
+
+    // 
+    // Setup graph title ands fonts
+    // 
+    $graph->title->Set($title);
+    $graph->title->SetColor(JPGRAPH_TITLE_MAIN_COLOR);
+    $graph->title->SetFont(FF_FONT2, FS_BOLD);
+    $graph->subtitle->Set(sprintf("(%s)", $subtitle));
+    $graph->subtitle->SetColor(JPGRAPH_TITLE_SUBTITLE_COLOR);
+
+    $graph->xaxis->title->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+    $graph->xaxis->title->SetFont(FF_FONT1, FS_NORMAL);
+    $graph->xaxis->title->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
+    
+    // 
+    // Create the bar and line plots
+    // 
+    $b1plot = new BarPlot($values['waiting']);
+    $b1plot->SetFillColor($barcol['color']['waiting']);
+    $b1plot->Setlegend("Waiting");
+
+    $b2plot = new BarPlot($values['running']);
+    $b2plot->SetFillColor($barcol['color']['running']);
+    $b2plot->SetLegend("Running");
+
+    $b3plot = new BarPlot($values['maximum']);
+    $b3plot->SetFillColor($barcol['color']['maximum']);
+    $b3plot->SetLegend("Maximum");
+
+    $b4plot = new BarPlot($values['minimum']);
+    $b4plot->SetFillColor($barcol['color']['minimum']);
+    $b4plot->SetLegend("Minimum");
+
+    $z0plot = new BarPlot($zeroes);
+    
+    // 
+    // Create the grouped bar plot and add it to the graph:
+    // 
+    $abplot = new AccBarPlot(array($b1plot, $b2plot));
+    $abplot->value->show();
+    $abplot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
+
+    $y1plot = new GroupBarPlot(array($abplot, $z0plot, $z0plot));
+    $y2plot = new GroupBarPlot(array($z0plot, $b3plot, $b4plot));
+    $b3plot->value->show();
+    $b4plot->value->show();
+    $b3plot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
+    $b4plot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
+    
+    $graph->Add($y1plot);
+    $graph->AddY2($y2plot);
+    
+    // 
+    // Create the graph
+    // 
+    $graph->Stroke($image);
+}
+
+// 
+// Create graph of total process time for hostid (that might be all)
+// for all years.
+// 
+function graph_total_proctime($graphdir, $hostid, $options, $data)
+{
+    $image  = sprintf("%s/proctime.png", $graphdir);
+    $values = array( "waiting" => array(), 
+		     "running" => array(), 
+		     "count"   => array(), 
+		     "minimum" => array(), 
+		     "maximum" => array());
+    $labels = array();
+    $title  = "Total process time (avarage)";
+    $total  = 0;
+    $barcol = array( "color" => array( "waiting"  => "yellow",
+				       "running"  => "green",
+				       "minimum"  => "lightgray",
+				       "maximum"  => "red", 
+				       "count"    => "darkblue" ),		     
+		     "text"  => array( "positive" => "black",
+				       "negative" => "lightgray" )
+		     );
+    
+    foreach($data as $year => $data1) {
+	if(is_numeric($year)) {
+	    foreach($data1 as $sect => $value) {
+		if($sect == "proctime") {
+		    array_push($values['waiting'], $value['waiting']);
+		    array_push($values['running'], $value['running']);
+		    array_push($values['count'],   $value['count']);
+		    array_push($values['minimum'], $value['min']);
+		    array_push($values['maximum'], $value['max']);
+		    array_push($labels, $year);
+		    $total += $value['count'];
+		}
+	    }
+	}
+    }
+    
+    // 
+    // Add one extra year before first year and after last year to prevent
+    // odd looking graphics when only one year statistics is present.
+    // 
+    if(count($labels) < 3) {
+	array_unshift($values['waiting'], 0);
+	array_unshift($values['running'], 0);
+	array_unshift($values['count'], 0);
+	array_unshift($values['minimum'], 0);
+	array_unshift($values['maximum'], 0);
+	array_unshift($labels, $labels[0] - 1);
+	array_push($values['waiting'], 0);
+	array_push($values['running'], 0);
+	array_push($values['count'], 0);
+	array_push($values['minimum'], 0);
+	array_push($values['maximum'], 0);
+	array_push($labels, $labels[count($labels) - 1] + 1);
+    }
+    
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
+    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
+}
+
+// 
 // Generate graphics from collected statistics.
 // 
 function collect_flush_graphics($statdir, $data, $options)
@@ -829,6 +1005,7 @@ function collect_flush_graphics($statdir, $data, $options)
     foreach($data as $hostid => $data1) {              // total level
 	$graphdir = sprintf("%s/%s", $statdir, $hostid);
 	graph_total_submit($graphdir, $hostid, $options, $data1);
+	graph_total_proctime($graphdir, $hostid, $options, $data1);
 	foreach($data1 as $sect1 => $data2) {          // year level
 	    if(!is_numeric($sect1)) {
 		continue;
