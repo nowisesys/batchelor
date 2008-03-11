@@ -74,4 +74,14 @@ define ("JPGRAPH_NOTES_FOREGROUND_COLOR", "#666666");
 // 
 define ("JPGRAPH_ENABLE_ANTIALIASING", false);
 
+// 
+// Enable gradient bars? The value is a bitmask of one or more of the 
+// following constants:
+// 
+define ("JPGRAPH_GRADIENT_NONE", 0);
+define ("JPGRAPH_GRADIENT_SUBMIT", 1);
+define ("JPGRAPH_GRADIENT_PROCTIME", 2);
+define ("JPGRAPH_GRADIENT_ALL", JPGRAPH_GRADIENT_SUBMIT | JPGRAPH_GRADIENT_PROCTIME);
+define ("JPGRAPH_ENABLE_GRADIENTS", JPGRAPH_GRADIENT_ALL);
+
 ?>

@@ -570,7 +570,7 @@ function collect_flush_stats($statdir, $statdata, $options)
 // 
 // Draws a bar plot.
 // 
-function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $bar)
+function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors)
 {
     $width = 460;
     $height = 210;
@@ -626,13 +626,13 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $bar)
     // Create a bar pot
     // 
     $bplot = new BarPlot($values);    
-    $bplot->SetFillGradient($bar['color']['start'], $bar['color']['end'], GRAD_HOR);
+    $bplot->SetFillGradient($colors['color']['start'], $colors['color']['end'], GRAD_HOR);
     $bplot->SetWidth(0.5);
-    if(isset($bar['color']['outline'])) {
-	$bplot->SetColor($bar['color']['outline']);
+    if(isset($colors['color']['outline'])) {
+	$bplot->SetColor($colors['color']['outline']);
     }
-    if(isset($bar['color']['shadow'])) {
-	$bplot->SetShadow($bar['color']['shadow']);
+    if(isset($colors['color']['shadow'])) {
+	$bplot->SetShadow($colors['color']['shadow']);
     }
     
     // 
@@ -649,7 +649,7 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $bar)
     // 
     // Set colors for positive and negative values
     // 
-    $bplot->value->SetColor($bar['text']['positive'], $bar['text']['negative']);
+    $bplot->value->SetColor($colors['text']['positive'], $colors['text']['negative']);
     $graph->Add($bplot);
     
     // 
@@ -669,7 +669,7 @@ function graph_total_submit($graphdir, $hostid, $options, $data)
     $labels = array();
     $title  = "Total number of submits";
     $total  = 0;
-    $barcol = array( "color" => array( "start"    => "navy",
+    $colors = array( "color" => array( "start"    => "navy",
 				       "end"      => "lightsteelblue",
 				       "outline"  => "darkblue" ),
 		     "text"  => array( "positive" => "black",
@@ -702,7 +702,7 @@ function graph_total_submit($graphdir, $hostid, $options, $data)
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
-    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $barcol);
+    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $colors);
 }
 
 // 
@@ -715,7 +715,7 @@ function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
     $labels = array();
     $title  = sprintf("Number of submits %s", strftime("%G", $timestamp));
     $total  = 0;
-    $barcol = array( "color" => array( "start"    => "orange",
+    $colors = array( "color" => array( "start"    => "orange",
 				       "end"      => "yellow",
 				       "outline"  => "red" ),
 		     "text"  => array( "positive" => "black",
@@ -744,7 +744,7 @@ function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);	
     }
-    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $barcol);
+    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $colors);
 }
 
 // 
@@ -757,7 +757,7 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
     $labels = array();
     $title  = sprintf("Number of submits for %s", strftime("%B %G", $timestamp));
     $total  = 0;
-    $barcol = array( "color" => array( "start"    => "green",
+    $colors = array( "color" => array( "start"    => "green",
 				       "end"      => "yellow",
 				       "outline"  => "darkgreen" ),
 		     "text"  => array( "positive" => "black",
@@ -786,7 +786,7 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);	
     }
-    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $barcol);
+    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $colors);
 }
 
 // 
@@ -799,7 +799,7 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
     $labels = array();
     $title  = sprintf("Number of submits for %s", strftime("%G-%m-%d", $timestamp));
     $total  = 0;
-    $barcol = array( "color" => array( "start"    => "purple",
+    $colors = array( "color" => array( "start"    => "purple",
 				       "end"      => "red",
 				       "outline"  => "pink" ),
 		     "text"  => array( "positive" => "black",
@@ -828,13 +828,13 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);	
     }
-    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $barcol);
+    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $colors);
 }
 
 // 
 // Draws a diagram of process time data.
 // 
-function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barcol)
+function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $colors)
 {
     $width = 560;
     $height = 260;
@@ -901,33 +901,46 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barco
     $graph->xaxis->title->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
     $graph->xaxis->title->SetFont(FF_FONT1, FS_NORMAL);
     $graph->xaxis->title->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
-    
+        
     // 
     // Create the bar and line plots
     // 
     $b1plot = new BarPlot($values['waiting']);
-    $b1plot->SetFillColor($barcol['color']['waiting']);
     $b1plot->Setlegend("Waiting");
-
+        
     $b2plot = new BarPlot($values['running']);
-    $b2plot->SetFillColor($barcol['color']['running']);
     $b2plot->SetLegend("Running");
-
+        
     $b3plot = new BarPlot($values['maximum']);
-    $b3plot->SetFillColor($barcol['color']['maximum']);
     $b3plot->SetLegend("Maximum");
-
+    
     $b4plot = new BarPlot($values['minimum']);
-    $b4plot->SetFillColor($barcol['color']['minimum']);
     $b4plot->SetLegend("Minimum");
-
+    
     $z0plot = new BarPlot($zeroes);
+
+    if(JPGRAPH_ENABLE_GRADIENTS & JPGRAPH_GRADIENT_PROCTIME) {
+	$b1plot->SetFillGradient($colors['color']['waiting']['start'], $colors['color']['waiting']['end'], GRAD_MIDVER);
+	$b2plot->SetFillGradient($colors['color']['running']['start'], $colors['color']['running']['end'], GRAD_MIDVER);
+	$b3plot->SetFillGradient($colors['color']['maximum']['start'], $colors['color']['maximum']['end'], GRAD_MIDVER);
+	$b4plot->SetFillGradient($colors['color']['minimum']['start'], $colors['color']['minimum']['end'], GRAD_MIDVER);
+	$b1plot->SetColor($colors['color']['waiting']['outline']);
+	$b2plot->SetColor($colors['color']['running']['outline']);
+	$b3plot->SetColor($colors['color']['maximum']['outline']);
+	$b4plot->SetColor($colors['color']['minimum']['outline']);
+    }
+    else {
+	$b1plot->SetFillColor($colors['color']['waiting']['start']);
+	$b2plot->SetFillColor($colors['color']['running']['start']);
+	$b3plot->SetFillColor($colors['color']['maximum']['start']);
+	$b4plot->SetFillColor($colors['color']['minimum']['start']);
+    }
     
     // 
     // Create the grouped bar plot and add it to the graph:
     // 
     $abplot = new AccBarPlot(array($b1plot, $b2plot));
-    $abplot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
+    $abplot->value->SetColor($colors['text']['positive'], $colors['text']['negative']);
     $abplot->value->SetAngle(90);
     $abplot->value->show();
 
@@ -935,21 +948,46 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $barco
     $y2plot = new GroupBarPlot(array($z0plot, $b3plot, $b4plot));
     $y1plot->SetWidth(0.97);
     $y2plot->SetWidth(0.97);
-    
-    $b3plot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
-    $b4plot->value->SetColor($barcol['text']['positive'], $barcol['text']['negative']);
+
+    $b3plot->value->SetColor($colors['text']['positive'], $colors['text']['negative']);
+    $b4plot->value->SetColor($colors['text']['positive'], $colors['text']['negative']);
     $b3plot->value->SetAngle(90);
     $b4plot->value->SetAngle(90);
     $b3plot->value->show();
     $b4plot->value->show();
-    
+        
     $graph->Add($y1plot);
     $graph->AddY2($y2plot);
-    
+
     // 
     // Create the graph
     // 
     $graph->Stroke($image);
+
+}
+
+// 
+// Returns array with color definitions for proctime data.
+// 
+function proctime_colors()
+{
+    $colors = array( "waiting"  => array( "start"   => "orange",
+					  "end"     => "yellow",
+					  "outline" => "red" ),
+		     "running"  => array( "start"   => "darkgreen",
+					  "end"     => "green",
+					  "outline" => "darkgreen" ),
+		     "minimum"  => array( "start"   => "darkgray",
+					  "end"     => "gray",
+					  "outline" => "darkgray" ),
+		     "maximum"  => array( "start"   => "red",
+					  "end"     => "orange",
+					  "outline" => "darkred" ),
+		     "count"    => array( "start"   => "darkblue",
+					  "end"     => "blue",
+					  "outline" => "lightblue" )
+		     );
+    return $colors;
 }
 
 // 
@@ -967,11 +1005,7 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
     $labels = array();
     $title  = "Total process time (avarage)";
     $total  = 0;
-    $barcol = array( "color" => array( "waiting"  => "yellow",
-				       "running"  => "green",
-				       "minimum"  => "lightgray",
-				       "maximum"  => "red", 
-				       "count"    => "darkblue" ),		     
+    $colors = array( "color" => proctime_colors(),		     
 		     "text"  => array( "positive" => "black",
 				       "negative" => "lightgray" )
 		     );
@@ -1006,7 +1040,7 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
-    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
+    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $colors);
 }
 
 // 
@@ -1023,11 +1057,7 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
     $labels = array();
     $title  = sprintf("Process time %s (avarage)", strftime("%G", $timestamp));
     $total  = 0;
-    $barcol = array( "color" => array( "waiting"  => "yellow",
-				       "running"  => "green",
-				       "minimum"  => "lightgray",
-				       "maximum"  => "red", 
-				       "count"    => "darkblue" ),		     
+    $colors = array( "color" => proctime_colors(),		     
 		     "text"  => array( "positive" => "black",
 				       "negative" => "lightgray" )
 		     );
@@ -1059,7 +1089,7 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
-    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
+    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $colors);
 }
 
 // 
@@ -1076,11 +1106,7 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
     $labels = array();
     $title  = sprintf("Process time %s (avarage)", strftime("%B %G", $timestamp));
     $total  = 0;
-    $barcol = array( "color" => array( "waiting"  => "yellow",
-				       "running"  => "green",
-				       "minimum"  => "lightgray",
-				       "maximum"  => "red", 
-				       "count"    => "darkblue" ),		     
+    $colors = array( "color" => proctime_colors(),		     
 		     "text"  => array( "positive" => "black",
 				       "negative" => "lightgray" )
 		     );
@@ -1112,7 +1138,7 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
-    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
+    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $colors);
 }
 
 // 
@@ -1129,11 +1155,7 @@ function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
     $labels = array();
     $title  = sprintf("Process time %s (avarage)", strftime("%G-%m-%d", $timestamp));
     $total  = 0;
-    $barcol = array( "color" => array( "waiting"  => "yellow",
-				       "running"  => "green",
-				       "minimum"  => "lightgray",
-				       "maximum"  => "red", 
-				       "count"    => "darkblue" ),		     
+    $colors = array( "color" => proctime_colors(),		     
 		     "text"  => array( "positive" => "black",
 				       "negative" => "lightgray" )
 		     );
@@ -1164,7 +1186,7 @@ function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
-    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
+    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $colors);
 }
 
 // 
