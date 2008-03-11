@@ -225,7 +225,7 @@ function collect_job_state($jobdir, $jobqueue)
 // 
 // Update submit count.
 // 
-function collect_submit_count($hostid, &$data, $year, $month, $day)
+function collect_submit_count($hostid, &$data, $year, $month, $day, $hour)
 {
     // 
     // Submit total:
@@ -258,6 +258,14 @@ function collect_submit_count($hostid, &$data, $year, $month, $day)
 	$data[$hostid][$year][$month][$day]['submit']['count'] = 0;
     }
     $data[$hostid][$year][$month][$day]['submit']['count']++;    
+
+    // 
+    // Submit by hour:
+    // 
+    if(!isset($data[$hostid][$year][$month][$day][$hour]['submit']['count'])) {
+	$data[$hostid][$year][$month][$day][$hour]['submit']['count'] = 0;
+    }
+    $data[$hostid][$year][$month][$day][$hour]['submit']['count']++;    
 }
 
 // 
@@ -455,12 +463,13 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 		$year  = $date['year'];
 		$month = sprintf("%02d", $date['mon']);
 		$day   = sprintf("%02d", $date['mday']);
+		$hour  = sprintf("%02d", $date['hours']);
 		
 		// 
 		// Save submit, state and process accounting statistics into array:
 		// 
-		collect_submit_count($hostid, $data, $year, $month, $day);
-		collect_submit_count("all", $data, $year, $month, $day);
+		collect_submit_count($hostid, $data, $year, $month, $day, $hour);
+		collect_submit_count("all", $data, $year, $month, $day, $hour);
 		collect_state_count($hostid, $data, $state);
 		collect_state_count("all", $data, $state);
 		// 
@@ -765,6 +774,41 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
+    $image  = sprintf("%s/submit.png", $graphdir);
+    $values = array();
+    $labels = array();
+    $title  = sprintf("Number of submits for %s", strftime("%G-%m-%d", $timestamp));
+    $total  = 0;
+    $barcol = array( "color" => array( "start"    => "purple",
+				       "end"      => "red",
+				       "outline"  => "pink" ),
+		     "text"  => array( "positive" => "black",
+				       "negative" => "lightgray" )
+		     );
+
+    // 
+    // Initilize data.
+    // 
+    for($i = 0; $i < 23; ++$i) {
+	$values[$i] = 0;
+	$labels[$i] = $i + 1;
+    }
+    
+    foreach($data as $hour => $data1) {
+	if(is_numeric($hour)) {
+	    foreach($data1 as $sect => $value) {
+		if($sect == "submit") {
+		    $values[intval($hour) - 1] = $value['count'];
+		    $total += $value['count'];
+		}
+	    }
+	}
+    }
+
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);	
+    }
+    graph_draw_barplot($labels, $values, $image, $title, sprintf("total %d submits", $total), $barcol);
 }
 
 // 
