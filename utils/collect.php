@@ -809,16 +809,16 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
     // 
     // Initilize data.
     // 
-    for($i = 0; $i < 23; ++$i) {
+    for($i = 0; $i < 24; ++$i) {
 	$values[$i] = 0;
-	$labels[$i] = $i + 1;
+	$labels[$i] = sprintf("%02d", $i);
     }
     
     foreach($data as $hour => $data1) {
 	if(is_numeric($hour)) {
 	    foreach($data1 as $sect => $value) {
 		if($sect == "submit") {
-		    $values[intval($hour) - 1] = $value['count'];
+		    $values[intval($hour)] = $value['count'];
 		    $total += $value['count'];
 		}
 	    }
@@ -1143,16 +1143,15 @@ function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
 	foreach(array_keys($values) as $key) {
 	    $values[$key][$i] = 0;
 	}
-	$labels[$i] = sprintf("%02d", $i + 1);
+	$labels[$i] = sprintf("%02d", $i);
     }
     
     foreach($data as $hour => $data1) {
 	if(is_numeric($hour)) {
 	    foreach($data1 as $sect => $value) {
 		if($sect == "proctime") {
-		    $index = intval($hour) - 1;
 		    foreach(array_keys($values) as $key) {
-			$values[$key][$index] = $value[$key];
+			$values[$key][intval($hour)] = $value[$key];
 		    }
 		    $total += $value['count'];
 		}
