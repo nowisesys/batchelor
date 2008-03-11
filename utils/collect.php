@@ -766,9 +766,8 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
 
     // 
     // Initilize data.
-    // TODO: This depends on number of days in this month!
     // 
-    for($i = 0; $i < 31; ++$i) {
+    for($i = 0; $i < date('t', $timestamp); ++$i) {
 	$values[$i] = 0;
 	$labels[$i] = $i + 1;
     }
@@ -1086,9 +1085,8 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 
     // 
     // Initilize data.
-    // TODO: fix number of days in month!
     // 
-    for($i = 0; $i < 31; ++$i) {
+    for($i = 0; $i < date('t', $timestamp); ++$i) {
 	foreach(array_keys($values) as $key) {
 	    $values[$key][$i] = 0;
 	}
