@@ -1250,49 +1250,76 @@ function graph_total_state($graphdir, $hostid, $options, $data)
 	array_push($values, $val);
 	array_push($labels, ucfirst($key));
     }
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
     graph_draw_pieplot($labels, $values, $image, $title, $colors);
 }
 
 // 
 // Plot by daily system load.
 // 
-function graph_system_load_daily($graphdir, $timestamp, $data)
+function graph_system_load_daily($graphdir, $options, $timestamp, $data)
 {
+    $image = sprintf("%s/sysload.png", $graphdir);
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
 }
 
 // 
 // Plot by monthly system load.
 // 
-function graph_system_load_monthly($graphdir, $timestamp, $data)
+function graph_system_load_monthly($graphdir, $options, $timestamp, $data)
 {
+    $image = sprintf("%s/sysload.png", $graphdir);
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
 }
 
 // 
 // Plot by yearly system load.
 // 
-function graph_system_load_yearly($graphdir, $timestamp, $data)
+function graph_system_load_yearly($graphdir, $options, $timestamp, $data)
 {
+    $image = sprintf("%s/sysload.png", $graphdir);
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
 }
 
 // 
 // Plot data accumulated by day of the week.
 // 
-function graph_system_load_weekly($graphdir, $data)
+function graph_system_load_weekly($graphdir, $options, $data)
 {
+    $image = sprintf("%s/sysload_weekly.png", $graphdir);
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
 }
  
 // 
 // Plot data accumulated by hour of the day.
 // 
-function graph_system_load_hourly($graphdir, $data)
+function graph_system_load_hourly($graphdir, $options, $data)
 {
+    $image = sprintf("%s/sysload_hourly.png", $graphdir);
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
 }
 
 // 
 // Plot over all data for the system lifetime.
 // 
-function graph_system_load_total($graphdir, $data)
+function graph_system_load_total($graphdir, $options, $data)
 {
+    $image = sprintf("%s/sysload_total.png", $graphdir);
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
 }
 
 // 
@@ -1383,6 +1410,7 @@ function graph_system_load($graphdir, $data, $options)
 							    $year, 
 							    $month, 
 							    $day), 
+						    $options,
 						    mktime(0, 0, 0, $month, $day, $year),
 						    $daily);
 			    // 
@@ -1397,6 +1425,7 @@ function graph_system_load($graphdir, $data, $options)
 						      $graphdir, 
 						      $year, 
 						      $month), 
+					      $options, 
 					      mktime(0, 0, 0, $month, 1, $year),
 					      $monthly);
 		    // 
@@ -1410,6 +1439,7 @@ function graph_system_load($graphdir, $data, $options)
 	    graph_system_load_yearly(sprintf("%s/%s",
 					     $graphdir,
 					     $year),
+				     $options,
 				     mktime(0, 0, 0, 1, 1, $year),
 				     $yearly);
 	    // 
@@ -1421,9 +1451,9 @@ function graph_system_load($graphdir, $data, $options)
     // 
     // Plot the three special graphs:
     // 
-    graph_system_load_weekly($graphdir, $weekly);
-    graph_system_load_hourly($graphdir, $hourly);
-    graph_system_load_total($graphdir, $total);
+    graph_system_load_weekly($graphdir, $options, $weekly);
+    graph_system_load_hourly($graphdir, $options, $hourly);
+    graph_system_load_total($graphdir, $options, $total);
 }
 
 // 
@@ -1500,7 +1530,7 @@ function collect_flush_graphics($statdir, $data, $options)
     // 
     // Generate system load graph (this function creates huge arrays). 
     // 
-    graph_system_load(sprintf("%s/all", $graphdir), $data['all'], $options);
+    graph_system_load(sprintf("%s/all", $statdir), $data['all'], $options);
 }
 
 // 
