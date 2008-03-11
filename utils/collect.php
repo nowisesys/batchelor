@@ -290,7 +290,7 @@ function floating_mean_value($count, $acc, $last)
 // 
 // Update process accounting.
 // 
-function collect_process_accounting($hostid, &$data, $queued, $started, $finished, $year, $month, $day)
+function collect_process_accounting($hostid, &$data, $queued, $started, $finished, $year, $month, $day, $hour)
 {
     $waiting = $started - $queued;
     $running = $finished - $started;
@@ -382,6 +382,28 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
     }
     if($process > $data[$hostid][$year][$month][$day]['proctime']['maximum']) {
 	$data[$hostid][$year][$month][$day]['proctime']['maximum'] = $process;
+    }
+
+    // 
+    // Process accounting by hour:
+    // 
+    if(!isset($data[$hostid][$year][$month][$day][$hour]['proctime'])) {
+	$data[$hostid][$year][$month][$day][$hour]['proctime']['waiting'] = 0;          // mean value of queued time
+	$data[$hostid][$year][$month][$day][$hour]['proctime']['running'] = 0;          // mean value of execution time
+	$data[$hostid][$year][$month][$day][$hour]['proctime']['count'] = 0;            // number of jobs
+	$data[$hostid][$year][$month][$day][$hour]['proctime']['minimum'] = $process;   // minimum time from submit to finished
+	$data[$hostid][$year][$month][$day][$hour]['proctime']['maximum'] = 0;          // maximum time from submit to finished
+    }
+    $data[$hostid][$year][$month][$day][$hour]['proctime']['count']++;
+    $data[$hostid][$year][$month][$day][$hour]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year][$month][$day][$hour]['proctime']['count'],
+										     $data[$hostid][$year][$month][$day][$hour]['proctime']['waiting'], $waiting);
+    $data[$hostid][$year][$month][$day][$hour]['proctime']['running'] = floating_mean_value($data[$hostid][$year][$month][$day][$hour]['proctime']['count'],
+										     $data[$hostid][$year][$month][$day][$hour]['proctime']['running'], $running);
+    if($process < $data[$hostid][$year][$month][$day][$hour]['proctime']['minimum']) {
+	$data[$hostid][$year][$month][$day][$hour]['proctime']['minimum'] = $process;
+    }
+    if($process > $data[$hostid][$year][$month][$day][$hour]['proctime']['maximum']) {
+	$data[$hostid][$year][$month][$day][$hour]['proctime']['maximum'] = $process;
     }
 }
 
@@ -475,8 +497,8 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 		// Only count finished jobs with result.
 		// 
 		if($finished > 0 && ($state == "success" || $state == "warning")) {
-		    collect_process_accounting($hostid, $data, $queued, $started, $finished, $year, $month, $day);
-		    collect_process_accounting("all", $data, $queued, $started, $finished, $year, $month, $day);
+		    collect_process_accounting($hostid, $data, $queued, $started, $finished, $year, $month, $day, $hour);
+		    collect_process_accounting("all", $data, $queued, $started, $finished, $year, $month, $day, $hour);
 		}
 		
 		// 
