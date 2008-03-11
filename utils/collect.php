@@ -59,7 +59,7 @@ if(USE_JPGRAPH_LIB) {
     if(defined("JPGRAPH_LIB_PATH")) {
 	ini_set("include_path", ini_get("include_path") . ":" . JPGRAPH_LIB_PATH);
     }
-    foreach(array( "jpgraph.php", "jpgraph_bar.php", "jpgraph_line.php" ) as $jpgraph) {
+    foreach(array( "jpgraph.php", "jpgraph_bar.php", "jpgraph_line.php", "jpgraph_pie.php" ) as $jpgraph) {
 	if(!@include($jpgraph)) {
 	    die(sprintf("Failed include %s (see JPGRAPH_LIB_PATH inside conf/jpgraph.inc)\n", $jpgraph));
 	}
@@ -1168,6 +1168,52 @@ function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
 }
 
 // 
+// 
+// 
+function graph_draw_pieplot($labels, $values, $image, $title, $colors)
+{
+    $graph = new PieGraph(320, 200, "auto");
+    
+    $graph->title->Set($title);
+    $graph->title->SetFont(FF_FONT2, FS_BOLD);
+    $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+
+    $graph->SetFrame(true, JPGRAPH_FRAME_FOREGROUND_COLOR, JPGRAPH_FRAME_BORDER_WIDTH); 
+    if(JPGRAPH_ENABLE_ANTIALIASING) {
+	$graph->SetAntiAliasing();
+    }
+    
+    $pie = new PiePlot($values);
+    $pie->SetLegends($labels);
+    $pie->SetCenter(0.35);
+    $pie->SetSliceColors($colors);
+    $pie->value->SetColor(JPGRAPH_XAXIS_LABEL_COLOR);
+    
+    $graph->Add($pie);
+    $graph->Stroke($image);    
+}
+
+// 
+// Generate state graphics for hostid (might be all).
+// 
+function graph_total_state($graphdir, $hostid, $options, $data)
+{
+    $image  = sprintf("%s/state.png", $graphdir);
+    $title  = "Exit status of jobs";
+    $piecol = array( "success" => "green", "warning" => "yellow", "error" => "red", "crashed" => "gray" );
+    $colors = array();
+    $labels = array();
+    $values = array();
+    
+    foreach($data['state'] as $key => $val) {
+	array_push($colors, $piecol[$key]);
+	array_push($values, $val);
+	array_push($labels, ucfirst($key));
+    }
+    graph_draw_pieplot($labels, $values, $image, $title, $colors);
+}
+
+// 
 // Generate graphics from collected statistics.
 // 
 function collect_flush_graphics($statdir, $data, $options)
@@ -1186,6 +1232,7 @@ function collect_flush_graphics($statdir, $data, $options)
 	$graphdir = sprintf("%s/%s", $statdir, $hostid);
 	graph_total_submit($graphdir, $hostid, $options, $data1);
 	graph_total_proctime($graphdir, $hostid, $options, $data1);
+	graph_total_state($graphdir, $hostid, $options, $data1);
 	foreach($data1 as $sect1 => $data2) {          // year level
 	    if(!is_numeric($sect1)) {
 		continue;
