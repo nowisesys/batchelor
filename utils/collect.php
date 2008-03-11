@@ -1041,6 +1041,53 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
+    $image  = sprintf("%s/proctime.png", $graphdir);
+    $values = array( "waiting" => array(), 
+		     "running" => array(), 
+		     "count"   => array(), 
+		     "minimum" => array(), 
+		     "maximum" => array());
+    $labels = array();
+    $title  = sprintf("Process time %s (avarage)", strftime("%B %G", $timestamp));
+    $total  = 0;
+    $barcol = array( "color" => array( "waiting"  => "yellow",
+				       "running"  => "green",
+				       "minimum"  => "lightgray",
+				       "maximum"  => "red", 
+				       "count"    => "darkblue" ),		     
+		     "text"  => array( "positive" => "black",
+				       "negative" => "lightgray" )
+		     );
+
+    // 
+    // Initilize data.
+    // TODO: fix number of days in month!
+    // 
+    for($i = 0; $i < 31; ++$i) {
+	foreach(array_keys($values) as $key) {
+	    $values[$key][$i] = 0;
+	}
+	$labels[$i] = $i + 1;
+    }
+    
+    foreach($data as $day => $data1) {
+	if(is_numeric($day)) {
+	    foreach($data1 as $sect => $value) {
+		if($sect == "proctime") {
+		    $index = intval($day) - 1;
+		    foreach(array_keys($values) as $key) {
+			$values[$key][$index] = $value[$key];
+		    }
+		    $total += $value['count'];
+		}
+	    }
+	}
+    }
+    
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
+    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
 }
 
 // 
@@ -1048,6 +1095,52 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
+    $image  = sprintf("%s/proctime.png", $graphdir);
+    $values = array( "waiting" => array(), 
+		     "running" => array(), 
+		     "count"   => array(), 
+		     "minimum" => array(), 
+		     "maximum" => array());
+    $labels = array();
+    $title  = sprintf("Process time %s (avarage)", strftime("%G-%m-%d", $timestamp));
+    $total  = 0;
+    $barcol = array( "color" => array( "waiting"  => "yellow",
+				       "running"  => "green",
+				       "minimum"  => "lightgray",
+				       "maximum"  => "red", 
+				       "count"    => "darkblue" ),		     
+		     "text"  => array( "positive" => "black",
+				       "negative" => "lightgray" )
+		     );
+
+    // 
+    // Initilize data.
+    // 
+    for($i = 0; $i < 24; ++$i) {
+	foreach(array_keys($values) as $key) {
+	    $values[$key][$i] = 0;
+	}
+	$labels[$i] = sprintf("%02d", $i + 1);
+    }
+    
+    foreach($data as $hour => $data1) {
+	if(is_numeric($hour)) {
+	    foreach($data1 as $sect => $value) {
+		if($sect == "proctime") {
+		    $index = intval($hour) - 1;
+		    foreach(array_keys($values) as $key) {
+			$values[$key][$index] = $value[$key];
+		    }
+		    $total += $value['count'];
+		}
+	    }
+	}
+    }
+    
+    if($options->debug) {
+	printf("debug: creating graphic file %s\n", $image);
+    }
+    graph_draw_proctime($labels, $values, $image, $title, sprintf("totally %d finished jobs counted", $total), $barcol);
 }
 
 // 
