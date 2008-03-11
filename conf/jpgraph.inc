@@ -68,4 +68,10 @@ define ("JPGRAPH_TITLE_SUBTITLE_COLOR", "#333333");
 // 
 define ("JPGRAPH_NOTES_FOREGROUND_COLOR", "#666666");
 
+// 
+// Enable antialiasing? This might improve the visual appearance of pie graphs
+// at the expense of longer image generation time.
+// 
+define ("JPGRAPH_ENABLE_ANTIALIASING", false);
+
 ?>
