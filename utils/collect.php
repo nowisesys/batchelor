@@ -680,8 +680,14 @@ function graph_total_submit($graphdir, $hostid, $options, $data)
 	if(is_numeric($year)) {
 	    foreach($data1 as $sect => $value) {
 		if($sect == "submit") {
-		    array_push($values, $value['count']);
-		    array_push($labels, $year);
+		    if(count($labels) == 0 || $year > $labels[0]) {
+			array_push($values, $value['count']);
+			array_push($labels, $year);
+		    }
+		    else {
+			array_unshift($values, $value['count']);
+			array_unshift($labels, $year);
+		    }
 		    $total += $value['count'];
 		}
 	    }
@@ -1010,20 +1016,32 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
 				       "negative" => "lightgray" )
 		     );
     
+    // 
+    // The data can be in any order due to locale setting. Don't trust
+    // it to be in increasing numeric order.
+    // 
     foreach($data as $year => $data1) {
 	if(is_numeric($year)) {
 	    foreach($data1 as $sect => $value) {
 		if($sect == "proctime") {
-		    foreach(array_keys($values) as $key) {
-			array_push($values[$key], $value[$key]);
+		    if(count($labels) == 0 || $year > $labels[0]) {
+			foreach(array_keys($values) as $key) {
+			    array_push($values[$key], $value[$key]);
+			}
+			array_push($labels, $year);
 		    }
-		    array_push($labels, $year);
+		    else {
+			foreach(array_keys($values) as $key) {
+			    array_unshift($values[$key], $value[$key]);
+			}
+			array_unshift($labels, $year);
+		    }
 		    $total += $value['count'];
 		}
 	    }
 	}
     }
-    
+        
     // 
     // Add one extra year before first year and after last year to prevent
     // odd looking graphics when only one year statistics is present.
@@ -1236,6 +1254,179 @@ function graph_total_state($graphdir, $hostid, $options, $data)
 }
 
 // 
+// Plot by daily system load.
+// 
+function graph_system_load_daily($graphdir, $timestamp, $data)
+{
+}
+
+// 
+// Plot by monthly system load.
+// 
+function graph_system_load_monthly($graphdir, $timestamp, $data)
+{
+}
+
+// 
+// Plot by yearly system load.
+// 
+function graph_system_load_yearly($graphdir, $timestamp, $data)
+{
+}
+
+// 
+// Plot data accumulated by day of the week.
+// 
+function graph_system_load_weekly($graphdir, $data)
+{
+}
+ 
+// 
+// Plot data accumulated by hour of the day.
+// 
+function graph_system_load_hourly($graphdir, $data)
+{
+}
+
+// 
+// Plot over all data for the system lifetime.
+// 
+function graph_system_load_total($graphdir, $data)
+{
+}
+
+// 
+// This function creates an over all view of the system load. What we are
+// interested in is to plot number of submits, waiting and running time as
+// a function of time. 
+// 
+// Three special graphs are:
+//   * total load over lifetime
+//   * system load per hour of day
+//   * system load per weekday.
+// 
+// In addition we create per year, per month and per day graphs.
+// 
+function graph_system_load($graphdir, $data, $options)
+{
+    $weekly = array();     // by weekday system load
+    $hourly = array();     // by hour system load
+    $total  = array();     // from birth to last sample system load
+    
+    // 
+    // Initilize weekly and hourly arrays:
+    // 
+    foreach(array( "submit", "waiting", "running" ) as $key) {
+	for($i = 0; $i < 7; ++$i) {
+	    $weekly[$key][$i] = 0;
+	}
+	for($i = 0; $i < 24; ++$i) {
+	    $hourly[$key][$i] = 0;
+	}
+    }
+    
+    // 
+    // Begin data mining from input data:
+    // 
+    foreach($data as $year => $data1) {
+	if(is_numeric($year)) {
+	    $yearly = array();
+	    foreach($data1 as $month => $data2) {
+		if(is_numeric($month)) {
+		    $monthly = array();
+		    // 
+		    // Initilize monthly array:
+		    // 
+		    $days = date('t', mktime(0, 0, 0, $month, 1, $year));
+		    foreach(array( "submit", "waiting", "running" ) as $key) {
+			for($i = 0; $i < $days; ++$i) {
+			    $stamp = mktime($i, 0, 0, $month, $i, $year);
+			    $monthly[$key][$stamp] = 0;
+			}
+		    }
+		    foreach($data2 as $day => $data3) {
+			if(is_numeric($day)) {
+			    $daily = array();
+			    // 
+			    // Initilize daily array:
+			    // 
+			    foreach(array( "submit", "waiting", "running" ) as $key) {
+				for($i = 0; $i < 24; ++$i) {
+				    $stamp = mktime($i, 0, 0, $month, $day, $year);
+				    $daily[$key][$stamp] = 0;
+				}
+			    }
+			    foreach($data3 as $hour => $data4) {
+				if(is_numeric($hour)) {
+				    $stamp = mktime($hour, 0, 0, $month, $day, $year);
+				    $daily['submit'][$stamp]  = $data4['submit']['count'];
+				    $daily['waiting'][$stamp] = $data4['proctime']['waiting'];
+				    $daily['running'][$stamp] = $data4['proctime']['running'];
+				    // 
+				    // First day in week should be monday.
+				    // 
+				    $weekday = (date('w', $stamp) + 6) % 7;
+				    $weekly['submit'][$weekday]  = $data4['submit']['count'];
+				    $weekly['waiting'][$weekday] = $data4['proctime']['waiting'];
+				    $weekly['running'][$weekday] = $data4['proctime']['running'];
+				    
+				    $hourly['submit'][$hour]  += $data4['submit']['count'];
+				    $hourly['waiting'][$hour] += $data4['proctime']['waiting'];
+				    $hourly['running'][$hour] += $data4['proctime']['running'];
+				}
+			    }
+			    // 
+			    // Plot by day system load.
+			    // 
+			    graph_system_load_daily(sprintf("%s/%s/%s/%s", 
+							    $graphdir, 
+							    $year, 
+							    $month, 
+							    $day), 
+						    mktime(0, 0, 0, $month, $day, $year),
+						    $daily);
+			    // 
+			    // TODO: merge daily array with monthly array.
+			    // 
+			}
+		    }
+		    // 
+		    // Plot by month system load.
+		    // 
+		    graph_system_load_monthly(sprintf("%s/%s/%s", 
+						      $graphdir, 
+						      $year, 
+						      $month), 
+					      mktime(0, 0, 0, $month, 1, $year),
+					      $monthly);
+		    // 
+		    // TODO: merge monthly array with yearly array.
+		    // 
+		}
+	    }
+	    // 
+	    // Plot by year system load.
+	    // 
+	    graph_system_load_yearly(sprintf("%s/%s",
+					     $graphdir,
+					     $year),
+				     mktime(0, 0, 0, 1, 1, $year),
+				     $yearly);
+	    // 
+	    // TODO: merge yealy array with total array.
+	    // 
+	}
+    }
+    
+    // 
+    // Plot the three special graphs:
+    // 
+    graph_system_load_weekly($graphdir, $weekly);
+    graph_system_load_hourly($graphdir, $hourly);
+    graph_system_load_total($graphdir, $total);
+}
+
+// 
 // Generate graphics from collected statistics.
 // 
 function collect_flush_graphics($statdir, $data, $options)
@@ -1305,6 +1496,11 @@ function collect_flush_graphics($statdir, $data, $options)
 	    }
 	}
     }
+    
+    // 
+    // Generate system load graph (this function creates huge arrays). 
+    // 
+    graph_system_load(sprintf("%s/all", $graphdir), $data['all'], $options);
 }
 
 // 
