@@ -46,6 +46,13 @@ define ("JPGRAPH_GRAPH_BACKGROUND_COLOR", "#ffffff");
 define ("JPGRAPH_GRAPH_LINE_WIDTH", 1);
 
 // 
+// The legend box.
+// 
+define ("JPGRAPH_LEGEND_BACKGROUND_COLOR", "#ffffff");
+define ("JPGRAPH_LEGEND_FOREGROUND_COLOR", "#000000");
+define ("JPGRAPH_LEGEND_BORDER_COLOR", "#000000");
+
+// 
 // The X-axis.
 // 
 define ("JPGRAPH_XAXIS_SCALE_COLOR", "#aaaaaa");

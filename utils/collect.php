@@ -16,31 +16,52 @@
 
 // 
 // Collect statistics from runned jobs. This script should be runned either
-// from the command line or as a cron job.
+// from the command line or as a cron job (preferable with nice 20).
 // 
-// The statistics is collected in a directory structure organized as:
+// The statistics is collected in a directory structure organized like this:
 // 
 // cache/
 //   +-- ...
 //  ...
-//   +-- stats/                           // root of statistics
-//        +-- date/                       // by date statistics
-//             +-- summary.dat            // summary of 2007, 2008, ... (text)
-//             +-- summary.png            // summary of 2007, 2008, ... (image)
-//             +-- 2007/
-//             +-- 2008/
-//                  +-- summary.dat       // summary of 01, 02, ..., 12 (text)
-//                  +-- summary.png       // summary of 01, 02, ..., 12 (image)
-//                  +-- 01/               // statistics for january (month 01)
-//                  +-- 02/               // statistics for february (month 02)
-//                 ...
-//                  +-- 12/               // statistics for december (month 12)
-//                       +-- summary.dat  // summary of december (text)
-//                       +-- summary.png  // summary of december (image)
-//                       +-- hostxx.dat   // december statistics for hostxx (hostid)
-//        +-- hostid/                     // by hostid statistics
-//        +-- misc/                       // misc statistics used by collect 
-//                                        // hooks (user defined functions)
+//   +-- stat/                                     // root of statistics
+//        +-- cache.ser                            // serialiserad data (cache)
+//        +-- hostid1/                             // per hostid statistics
+//        |    +-- *.png                           // graphics (1)
+//        |    +-- summary.dat                     // text data (statistics)
+//        |    +-- 2008/                           // by year statistics
+//        |         +-- *.png                      // graphics (2)
+//        |         +-- summary.dat                // text data (statistics)
+//        |         +-- 03/                        // by month statistics
+//        |              +-- *.png                 // graphics (2)
+//        |              +-- summary.dat           // text data (statistics)
+//        |              +-- 12/                   // by day statistics
+//        |                   +-- *.png            // graphics (2)
+//        |                   +-- summary.dat      // text data (statistics)
+//        |                   +-- 15/              // by hour statistics
+//        |                        +-- summary.dat // text data (statistics)
+//        +-- hostid2/                             // per hostid statistics
+//        |     +-- ...
+//        +-- hostid3/                             // per hostid statistics
+//       ...
+//        +-- all/                                 // global statistics
+//             +-- *.png                           // graphics (3)
+//             +-- summary.dat                     // text data (statistics)
+//             +-- 2008/                           // by year statistics
+//                  +-- *.png                      // graphics (4)
+//                  +-- summary.dat                // text data (statistics)
+//                  +-- 03/                        // by month statistics
+//                       +-- *.png                 // graphics (4)
+//                       +-- summary.dat           // text data (statistics)
+//                       +-- 12/                   // by day statistics
+//                            +-- *.png            // graphics (4)
+//                            +-- summary.dat      // text data (statistics)
+//                            +-- 15/              // by hour statistics
+//                                 +-- summary.dat // text data (statistics)
+// 
+// (1): proctime.png, state.png, submit.png
+// (2): proctime.png, submit.png
+// (3): proctime.png, state.png, submit.png, sysload_hourly.png, sysload_total.png, sysload_weekly.png
+// (4): proctime.png, submit.png, sysload.png
 // 
 
 //
@@ -588,6 +609,10 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors
     $graph->SetFrame(true, JPGRAPH_FRAME_FOREGROUND_COLOR, JPGRAPH_FRAME_BORDER_WIDTH); 
     $graph->SetColor(JPGRAPH_GRAPH_BACKGROUND_COLOR);
     $graph->SetMarginColor(JPGRAPH_FRAME_BACKGROUND_COLOR);
+    $graph->legend->SetFillColor(JPGRAPH_LEGEND_BACKGROUND_COLOR);
+    $graph->legend->SetColor(JPGRAPH_LEGEND_FOREGROUND_COLOR, JPGRAPH_LEGEND_BORDER_COLOR);
+    $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+    $graph->footer->right->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
     
     // 
     // Add some grace to the top so that the scale doesn't
@@ -618,7 +643,6 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors
     $graph->subtitle->Set(sprintf("(%s)", $subtitle));
     $graph->subtitle->SetColor(JPGRAPH_TITLE_SUBTITLE_COLOR);
 
-    $graph->xaxis->title->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
     $graph->xaxis->title->SetFont(FF_FONT1, FS_NORMAL);
     $graph->xaxis->title->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
     
@@ -871,6 +895,10 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $color
     $graph->SetColor(JPGRAPH_GRAPH_BACKGROUND_COLOR);
     $graph->SetMarginColor(JPGRAPH_FRAME_BACKGROUND_COLOR);
     $graph->legend->Pos(0.03, 0.1);
+    $graph->legend->SetFillColor(JPGRAPH_LEGEND_BACKGROUND_COLOR);
+    $graph->legend->SetColor(JPGRAPH_LEGEND_FOREGROUND_COLOR, JPGRAPH_LEGEND_BORDER_COLOR);
+    $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+    $graph->footer->right->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
     
     // 
     // Add some grace to the top so that the scale doesn't
@@ -904,7 +932,6 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $color
     $graph->subtitle->Set(sprintf("(%s)", $subtitle));
     $graph->subtitle->SetColor(JPGRAPH_TITLE_SUBTITLE_COLOR);
 
-    $graph->xaxis->title->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
     $graph->xaxis->title->SetFont(FF_FONT1, FS_NORMAL);
     $graph->xaxis->title->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
         
@@ -1217,6 +1244,9 @@ function graph_draw_pieplot($labels, $values, $image, $title, $colors)
     $graph->title->Set($title);
     $graph->title->SetFont(FF_FONT2, FS_BOLD);
     $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+    $graph->footer->right->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
+    $graph->legend->SetFillColor(JPGRAPH_LEGEND_BACKGROUND_COLOR);
+    $graph->legend->SetColor(JPGRAPH_LEGEND_FOREGROUND_COLOR, JPGRAPH_LEGEND_BORDER_COLOR);
 
     $graph->SetFrame(true, JPGRAPH_FRAME_FOREGROUND_COLOR, JPGRAPH_FRAME_BORDER_WIDTH); 
     if(JPGRAPH_ENABLE_ANTIALIASING) {
@@ -1257,14 +1287,227 @@ function graph_total_state($graphdir, $hostid, $options, $data)
 }
 
 // 
+// Converts a timestamp for daily data.
+// 
+function timestamp_for_daily($stamp) {
+    return date('H:i', $stamp);
+}
+
+// 
+// Converts a timestamp for monthly data.
+// 
+function timestamp_for_monthly($stamp)
+{
+    return date('j', $stamp);
+}
+
+// 
+// Convert a timestamp for yearly data.
+// 
+function timestamp_for_yearly($stamp)
+{
+    return date('M', $stamp);
+}
+
+// 
+// Convert a weekly key value to weekday.
+// 
+function timestamp_for_weekly($value)
+{
+    $days = array( "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" );
+    return $days[$value / 24];
+}
+
+// 
+// Convert an hour value to hh:mm string.
+// 
+function timestamp_for_hourly($value)
+{
+    if($value == 24) {
+	return "24:00";
+    }
+    return date('H:i', mktime($value, 0));
+}
+
+// 
+// Convert an timestamp from the total array to year and month.
+// 
+function timestamp_for_total($stamp)
+{
+    $date = getdate($stamp);
+    if($date['mday'] == 1) {
+	if(($date['mon'] - 1) % 3 == 0) {
+	    if($date['mon'] == 1)
+	      return date('Y', $stamp);
+	    else 
+	      return date('M', $stamp);
+	}
+    }
+}
+
+// 
+// Plot system load data.
+// 
+function graph_draw_system_load($data, $image, $title, $mode, $options)
+{
+    $graph = new Graph(550, 250);
+    $graph->SetMargin(40, 140, 30, 50);
+    $graph->SetFrame(true, JPGRAPH_FRAME_FOREGROUND_COLOR, JPGRAPH_FRAME_BORDER_WIDTH);
+    $graph->SetColor(JPGRAPH_GRAPH_BACKGROUND_COLOR);
+    $graph->SetMarginColor(JPGRAPH_FRAME_BACKGROUND_COLOR);
+    $graph->legend->Pos(0.03, 0.1);
+    $graph->legend->SetFillColor(JPGRAPH_LEGEND_BACKGROUND_COLOR);
+    $graph->legend->SetColor(JPGRAPH_LEGEND_FOREGROUND_COLOR, JPGRAPH_LEGEND_BORDER_COLOR);
+    $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+    $graph->footer->right->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
+        
+    //
+    // Setup graph title ands fonts
+    //		
+    $graph->title->Set($title);
+    $graph->title->SetColor(JPGRAPH_TITLE_MAIN_COLOR);
+    $graph->title->SetFont(FF_FONT2, FS_BOLD);
+    
+    // 
+    // Get smallest and largest key in data array. The keys are timestamps.
+    // 
+    $min = min(array_keys($data['submit']));
+    $max = max(array_keys($data['submit']));
+
+    // 
+    // Sort data to ensure the timestamps are in order.
+    // 
+    foreach(array_keys($data) as $key) {
+	if(!ksort($data[$key], SORT_NUMERIC)) {
+	    die(sprintf("%s: failed sort data array for key %s in graph_draw_system_load", 
+			$options->prog, $key));
+	    if($options->debug) {
+		printf("debug: sorting data array keys (timestamps) for %s\n", $key);
+	    }
+	}
+    }
+    
+    // 
+    // Set the scale to match keys in data.
+    // 
+    $graph->SetScale("textint", 0, 0, $min, $max);
+    $graph->SetY2Scale("lin");
+
+    // 
+    // Add some grace to the top so that the scale doesn't
+    // end exactly at the max value. 
+    // 
+    $graph->yaxis->scale->SetGrace(20);
+    
+    // 
+    // Customize to match mode:
+    // 
+    switch($mode) {
+     case "daily":
+	$graph->xaxis->SetLabelFormatCallback('timestamp_for_daily');
+	$graph->xaxis->scale->ticks->Set(2 * 3600, 3600);
+	$datefmt = "Y-m-d H:i";
+	break;
+     case "monthly":
+	$graph->xaxis->SetLabelFormatCallback('timestamp_for_monthly');
+	$graph->xaxis->scale->ticks->Set(24 * 3600, 24 * 3600);
+	$datefmt = "Y-m-d";
+	break;
+     case "yearly":
+	$graph->xaxis->SetLabelFormatCallback('timestamp_for_yearly');
+	$graph->xaxis->scale->ticks->Set(31 * 24 * 3600, 7 * 24 * 3600);	
+	$datefmt = "Y-m-d";
+	break;
+     case "weekly":
+	$graph->xaxis->SetLabelFormatCallback('timestamp_for_weekly');
+	$graph->xaxis->scale->ticks->Set(24, 3600);	
+	break;
+     case "hourly":
+	$graph->xaxis->SetLabelFormatCallback('timestamp_for_hourly');
+	$graph->xaxis->scale->ticks->Set(1, 0.25);
+	break;
+     case "total":
+	$graph->xaxis->SetLabelFormatCallback('timestamp_for_total');
+	$graph->xaxis->scale->ticks->Set(24 * 3600, 24 * 3600);
+	$graph->xaxis->scale->ticks->SupressTickMarks(true);
+	$datefmt = "Y-m-d H:i";
+	break;
+    }
+
+    if($options->debug) {
+	if($mode != "weekly" && $mode != "hourly") {
+	    printf("debug: plotting %s system load data between %s (%d) and %s (%d)\n",
+		   $mode,
+		   date($datefmt, $min), 
+		   $min,
+		   date($datefmt, $max), 
+		   $max);
+	}
+	else {
+	    printf("debug: plotting %s system load data between hour %d and %d\n", 
+		   $mode, $min, $mode == "weekly" ? $max / 24 : $max);
+	} 
+	$str = sprintf("debug: maximums for %s array: ", $mode);
+	foreach(array_keys($data) as $key) {
+	    $str .= sprintf("%s=%d ", $key, max($data[$key]));
+	}
+	printf("%s\n", $str);
+    }
+    
+    // 
+    // Setup the X-axis:
+    // 
+    $graph->xaxis->SetColor(JPGRAPH_XAXIS_SCALE_COLOR, JPGRAPH_XAXIS_LABEL_COLOR);
+    $graph->xaxis->SetLabelAngle(90);
+    $graph->xaxis->title->SetFont(FF_FONT1, FS_NORMAL);
+    $graph->xaxis->title->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
+    $graph->xaxis->SetFont(FF_FONT1, FS_BOLD);
+    
+    // 
+    // Setup the Y-axis:
+    // 
+    $graph->yaxis->SetColor(JPGRAPH_YAXIS_SCALE_COLOR, JPGRAPH_YAXIS_LABEL_COLOR);
+    $graph->y2axis->SetColor(JPGRAPH_YAXIS_SCALE_COLOR, JPGRAPH_YAXIS_LABEL_COLOR);
+    $graph->ygrid->SetColor(JPGRAPH_GRAPH_FOREGROUND_COLOR);
+    $graph->yaxis->title->Set("Running / Waiting (seconds)");
+    $graph->y2axis->title->Set("Submitted jobs");
+
+    // 
+    // Create the line plots:
+    // 
+    $submit = new LinePlot(array_values($data['submit']), array_keys($data['submit']));
+    $submit->SetColor('blue');
+    $submit->SetLegend('Submit');
+    $graph->AddY2($submit);
+    
+    $waiting = new LinePlot(array_values($data['waiting']), array_keys($data['waiting']));
+    $waiting->SetColor('red');
+    $waiting->SetLegend('Waiting');
+    $graph->Add($waiting);
+    
+    $running = new LinePlot(array_values($data['running']), array_keys($data['running']));
+    $running->SetColor('green');    
+    $running->SetLegend('Running');
+    $graph->Add($running);
+    
+    //
+    // Finally stroke the graph:
+    //		
+    $graph->Stroke($image);
+}
+
+// 
 // Plot by daily system load.
 // 
 function graph_system_load_daily($graphdir, $options, $timestamp, $data)
 {
     $image = sprintf("%s/sysload.png", $graphdir);
+    $title = sprintf("System load (%s)", strftime("%G-%m-%d", $timestamp));
+    
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
+    graph_draw_system_load($data, $image, $title, "daily", $options);
 }
 
 // 
@@ -1273,9 +1516,12 @@ function graph_system_load_daily($graphdir, $options, $timestamp, $data)
 function graph_system_load_monthly($graphdir, $options, $timestamp, $data)
 {
     $image = sprintf("%s/sysload.png", $graphdir);
+    $title = sprintf("System load (%s)", strftime("%B %G", $timestamp));
+    
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
+    graph_draw_system_load($data, $image, $title, "monthly", $options);
 }
 
 // 
@@ -1284,9 +1530,11 @@ function graph_system_load_monthly($graphdir, $options, $timestamp, $data)
 function graph_system_load_yearly($graphdir, $options, $timestamp, $data)
 {
     $image = sprintf("%s/sysload.png", $graphdir);
+    $title = sprintf("System load (year %s)", strftime("%G", $timestamp));
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
+    graph_draw_system_load($data, $image, $title, "yearly", $options);
 }
 
 // 
@@ -1295,9 +1543,11 @@ function graph_system_load_yearly($graphdir, $options, $timestamp, $data)
 function graph_system_load_weekly($graphdir, $options, $data)
 {
     $image = sprintf("%s/sysload_weekly.png", $graphdir);
+    $title = "System load total (by day of week)";
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
+    graph_draw_system_load($data, $image, $title, "weekly", $options);
 }
  
 // 
@@ -1306,9 +1556,11 @@ function graph_system_load_weekly($graphdir, $options, $data)
 function graph_system_load_hourly($graphdir, $options, $data)
 {
     $image = sprintf("%s/sysload_hourly.png", $graphdir);
+    $title = "System load total (by hours of the day)";
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
+    graph_draw_system_load($data, $image, $title, "hourly", $options);
 }
 
 // 
@@ -1317,9 +1569,55 @@ function graph_system_load_hourly($graphdir, $options, $data)
 function graph_system_load_total($graphdir, $options, $data)
 {
     $image = sprintf("%s/sysload_total.png", $graphdir);
+    $title = "System load total (overall system lifetime)";
     if($options->debug) {
 	printf("debug: creating graphic file %s\n", $image);
     }
+    graph_draw_system_load($data, $image, $title, "total", $options);
+}
+
+// 
+// Helper function for merging data from the source array into the dest array.
+// 
+function system_load_merge_array(&$dest, &$source)
+{
+    foreach(array_keys($source) as $key) {
+	$dest[$key] += $source[$key];
+    }
+}
+
+// 
+// Merge daily array with montly array. Do a simple copy.
+// 
+function system_load_merge_daily_array(&$monthly, &$daily)
+{  
+    system_load_merge_array($monthly, $daily);
+}
+
+// 
+// The montly array contains too many sample points (~ 24h * 31d). We need
+// to reduce it into each day of the year.
+// 
+function system_load_merge_montly_array(&$yearly, &$monthly)
+{
+    foreach($monthly as $key => $data) {
+	foreach($data as $stamp => $value) {
+	    if($value) {       // Skip 0 values.
+		$date = getdate($stamp);
+		$time = mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']);
+		$yearly[$key][$time] = $value;
+	    }
+	}
+    }
+}
+
+// 
+// Merge the yearly array with the total array. The number of keys in
+// yearly should be ~365. Do a simple copy.
+// 
+function system_load_merge_yearly_array(&$total, &$yearly)
+{
+    system_load_merge_array($total, $yearly);
 }
 
 // 
@@ -1341,15 +1639,18 @@ function graph_system_load($graphdir, $data, $options)
     $total  = array();     // from birth to last sample system load
     
     // 
-    // Initilize weekly and hourly arrays:
+    // Initilize weekly, hourly and total arrays:
     // 
     foreach(array( "submit", "waiting", "running" ) as $key) {
 	for($i = 0; $i < 7; ++$i) {
-	    $weekly[$key][$i] = 0;
+	    for($j = 0; $j < 24; ++$j) {
+		$weekly[$key][$j + $i * 24] = 0;
+	    }
 	}
-	for($i = 0; $i < 24; ++$i) {
+	for($i = 0; $i <= 24; ++$i) {
 	    $hourly[$key][$i] = 0;
 	}
+	$total[$key] = array();
     }
     
     // 
@@ -1358,6 +1659,18 @@ function graph_system_load($graphdir, $data, $options)
     foreach($data as $year => $data1) {
 	if(is_numeric($year)) {
 	    $yearly = array();
+	    $leapyear = date('L', mktime(0, 0, 0, 1, 1, $year));
+	    // 
+	    // Initilize the yearly array:
+	    // 
+	    foreach(array( "submit", "waiting", "running" ) as $key) {
+		$yearly[$key] = array();
+		$days = 365 + $leapyear;       // Adjust for leap years
+		for($i = 1; $i <= $days; ++$i) {
+		    $stamp = mktime(0, 0, 0, 1, $i, $year);
+		    $yearly[$key][$stamp] = 0;
+		}
+	    }
 	    foreach($data1 as $month => $data2) {
 		if(is_numeric($month)) {
 		    $monthly = array();
@@ -1366,8 +1679,8 @@ function graph_system_load($graphdir, $data, $options)
 		    // 
 		    $days = date('t', mktime(0, 0, 0, $month, 1, $year));
 		    foreach(array( "submit", "waiting", "running" ) as $key) {
-			for($i = 0; $i < $days; ++$i) {
-			    $stamp = mktime($i, 0, 0, $month, $i, $year);
+			for($i = 1; $i <= $days; ++$i) {
+			    $stamp = mktime(0, 0, 0, $month, $i, $year);
 			    $monthly[$key][$stamp] = 0;
 			}
 		    }
@@ -1378,7 +1691,7 @@ function graph_system_load($graphdir, $data, $options)
 			    // Initilize daily array:
 			    // 
 			    foreach(array( "submit", "waiting", "running" ) as $key) {
-				for($i = 0; $i < 24; ++$i) {
+				for($i = 0; $i <= 24; ++$i) {
 				    $stamp = mktime($i, 0, 0, $month, $day, $year);
 				    $daily[$key][$stamp] = 0;
 				}
@@ -1386,20 +1699,23 @@ function graph_system_load($graphdir, $data, $options)
 			    foreach($data3 as $hour => $data4) {
 				if(is_numeric($hour)) {
 				    $stamp = mktime($hour, 0, 0, $month, $day, $year);
-				    $daily['submit'][$stamp]  = $data4['submit']['count'];
-				    $daily['waiting'][$stamp] = $data4['proctime']['waiting'];
-				    $daily['running'][$stamp] = $data4['proctime']['running'];
-				    // 
-				    // First day in week should be monday.
-				    // 
 				    $weekday = (date('w', $stamp) + 6) % 7;
-				    $weekly['submit'][$weekday]  = $data4['submit']['count'];
-				    $weekly['waiting'][$weekday] = $data4['proctime']['waiting'];
-				    $weekly['running'][$weekday] = $data4['proctime']['running'];
-				    
-				    $hourly['submit'][$hour]  += $data4['submit']['count'];
-				    $hourly['waiting'][$hour] += $data4['proctime']['waiting'];
-				    $hourly['running'][$hour] += $data4['proctime']['running'];
+				    if($options->debug) {
+					printf("debug: adding %s (weekday %d, offset %d) to daily, weekly and hourly arrays (weekday 0 = monday)\n", 
+					       date('Y-m-d H:i', $stamp), 
+					       $weekday,
+					       $hour + $weekday * 24);
+				    }
+				    if(isset($data4['proctime'])) {
+					foreach(array( "waiting", "running" ) as $key) {
+					    $daily[$key][$stamp]  = $data4['proctime'][$key];
+					    $weekly[$key][$hour + $weekday * 24] += $data4['proctime'][$key];
+					    $hourly[$key][$hour] += $data4['proctime'][$key];
+					}
+				    }
+				    $daily['submit'][$stamp]  = $data4['submit']['count'];
+				    $weekly['submit'][$hour + $weekday * 24] += $data4['submit']['count'];
+				    $hourly['submit'][$hour] += $data4['submit']['count'];
 				}
 			    }
 			    // 
@@ -1414,8 +1730,12 @@ function graph_system_load($graphdir, $data, $options)
 						    mktime(0, 0, 0, $month, $day, $year),
 						    $daily);
 			    // 
-			    // TODO: merge daily array with monthly array.
+			    // Merge daily array with monthly array.
 			    // 
+			    if($options->debug) {
+				printf("debug: merging the daily array with the monthly\n");
+			    }
+			    system_load_merge_daily_array($monthly, $daily);
 			}
 		    }
 		    // 
@@ -1429,8 +1749,12 @@ function graph_system_load($graphdir, $data, $options)
 					      mktime(0, 0, 0, $month, 1, $year),
 					      $monthly);
 		    // 
-		    // TODO: merge monthly array with yearly array.
+		    // Merge monthly array with yearly array.
 		    // 
+		    if($options->debug) {
+			printf("debug: merging the monthly array with the yearly array\n");
+		    }
+		    system_load_merge_montly_array($yearly, $monthly);
 		}
 	    }
 	    // 
@@ -1443,8 +1767,12 @@ function graph_system_load($graphdir, $data, $options)
 				     mktime(0, 0, 0, 1, 1, $year),
 				     $yearly);
 	    // 
-	    // TODO: merge yealy array with total array.
+	    // Merge yearly array with total array.
 	    // 
+	    if($options->debug) {
+		printf("debug: merging the yearly array with the total array\n");
+	    }
+	    system_load_merge_yearly_array($total, $yearly);
 	}
     }
     
@@ -1467,7 +1795,7 @@ function collect_flush_graphics($statdir, $data, $options)
 	    return;
 	}
     }
-    
+
     // 
     // TODO: add call of user supplied hook functions.
     // 
