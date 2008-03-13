@@ -35,18 +35,6 @@ include "../include/ui.inc";
 // 
 // $jobs = null;
 
-// 
-// Prints the message box that displays i.e. error messages.
-// The $type argument is either error, warning or info.
-// 
-function print_message_box($type, $msg)
-{
-    if($type == "error") {
-	$type = "warning";
-    }
-    print "<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/big/$type.png\"></td><td valign=\"top\">$msg</td></tr></table></div>";
-}
-
 function print_select($label, $name, $values)
 {
     if(isset($_REQUEST[$name])) {
@@ -464,24 +452,7 @@ function check_request_param($name, $accepted)
 // Set cookie so we can associate peer with submitted, running
 // and finished jobs.
 // 
-if(isset($_COOKIE['hostid'])) {
-    $GLOBALS['hostid'] = $_COOKIE['hostid'];
-}
-else {
-    $GLOBALS['hostid'] = md5($_SERVER['REMOTE_ADDR']);
-    if(USE_SESSION_COOKIES) {
-	// 
-	// Set a session cookie.
-	// 
-	setcookie("hostid", $GLOBALS['hostid']);
-    }
-    else {
-	// 
-	// Set a persistent cookie.
-	// 
-	setcookie("hostid", $GLOBALS['hostid'], time() + COOKIE_LIFE_TIME);
-    }
-}
+update_hostid_cookie();
 
 if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // 
