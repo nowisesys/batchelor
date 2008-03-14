@@ -1,3 +1,8 @@
+Version 0.6.0 (2008-03-14):
+
+	* Added statistics module. Run utils/collect.php to generate the
+	  statistics data. Access control is configured in conf/config.inc.
+
 Version 0.5.1 (2008-03-07):
 
 	* Maintenance release to fix version issues.

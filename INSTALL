@@ -36,6 +36,10 @@
    code is also prepared to use an external zip command, like 7-zip. 7-zip is
    GPL/BSD licensed and can be downloaded from http://p7zip.sourceforge.net/.
 
+   Its recommended to install JpGraph (http://www.aditus.nu/jpgraph/) if you
+   plan to use the statistics module. Without it, all statistics is
+   presented as plain text.
+   
    The code is developed and tested on Gentoo Linux 2007.0 and getting it to run
    on any other UNIX/Linux shouldn't be any problem. Windows may be tricky due to 
    the tight interaction with the batch queue (at/atrm/atd).
