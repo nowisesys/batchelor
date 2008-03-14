@@ -236,6 +236,25 @@ function print_state_section($data, $statdir, $subsect)
 function print_sysload_section($data, $statdir, $images, $subsect)
 {
     printf("<span id=\"secthead\">System Load:</span>\n");
+
+    if($data['submit']['count'] != $data['proctime']['count']) {
+	printf("<p>A total of <b>%d jobs</b> was submitted during this period. %d was completed and %d failed.</p>\n",
+	       $data['submit']['count'], $data['proctime']['count'], $data['submit']['count'] - $data['proctime']['count']);
+    }
+    else {
+	printf("<p>A total of <b>%d jobs</b> was submitted during this period and all jobs completed without errors.</p>\n",
+	       $data['submit']['count']);
+    }
+    printf("<p>On avarage each job took <b>%.01f seconds</b> to complete (from submitted until it finished execute).<br>", 
+	   $data['proctime']['waiting'] + $data['proctime']['running']);
+    printf("The jobs took between <b>%d</b> and <b>%d</b> seconds to complete (min/max).</p>\n",
+	   $data['proctime']['minimum'], $data['proctime']['maximum']);
+    
+    printf("<p><table>\n");
+    printf("<tr><td>Time waiting:</td><td>%.01f seconds (avarage)</td></tr>\n", $data['proctime']['waiting']);
+    printf("<tr><td>Time running:</td><td>%.01f seconds (avarage)</td></tr>\n", $data['proctime']['running']);
+    printf("</table></p>\n");
+
     printf("<p>\n");
     foreach($images as $image) {
 	if(file_exists(sprintf("%s/%s.png", $statdir, $image))) {
