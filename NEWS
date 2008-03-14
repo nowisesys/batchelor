@@ -1,3 +1,13 @@
+Version 0.6.1 (2008-03-14):
+
+	* Deleting a job directory is now working recursive (bugfix).
+	
+	* Preserve original filename of uploaded file is now possible. The
+	  filename is not preserved by default (see conf/config.inc).
+	
+	* Fixed bug where subdirs under cache/../result/ got added to the
+	  zipfile as regular files when using the PECL zip extension.
+	
 Version 0.6.0 (2008-03-14):
 
 	* Added statistics module. Run utils/collect.php to generate the
