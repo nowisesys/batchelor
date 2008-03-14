@@ -432,7 +432,8 @@ function print_body()
     // 
     $statdir = sprintf("%s/stat", CACHE_DIRECTORY);
     if(!file_exists($statdir)) {
-        print_message_box("info", "No statistics have been generated yet.");
+        print_message_box("info", sprintf("No statistics has been generated yet. Contact %s to have this fixed.",
+					  CONTACT_STRING));
 	return;
     }
     
@@ -508,6 +509,22 @@ function print_html($what)
 // Get or set the hostid cookie.
 // 
 update_hostid_cookie();
+
+// 
+// Do access control of statistics module is locked.
+// 
+if(STATISTICS_EXPOSED == "locked") {
+    $hosts = explode(":", STATISTICS_TRUSTED);
+    $found = false;
+    foreach($hosts as $host) {
+	if($host == $_SERVER['REMOTE_ADDR']) {
+	    $found = true;
+	}
+    }
+    if(!$found) {
+	error_exit(sprintf("You are not allowed to access statistics on this server.<br>Contact %s if you have any questions.", CONTACT_STRING));
+    }
+}
 
 // 
 // Validate request parameters.

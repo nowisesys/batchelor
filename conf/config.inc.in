@@ -161,4 +161,18 @@ define ("MENU_ORIENTATION", "vertical");
 // 
 define ("USE_JPGRAPH_LIB", false);
 
+// 
+// Define how to expose the statistics module. Possible values are:
+// * public => expose statistics for all.
+// * hidden => hide link to statistics module.
+// * locked => only trusted host can access statistics.
+// 
+define ("STATISTICS_EXPOSED", "public");
+
+// 
+// If STATISTICS_EXPOSED is locked, then set this to a colon (':') separated
+// list of hosts that are allowed to access the statistics module.
+// 
+define ("STATISTICS_TRUSTED", "127.0.0.1");
+
 ?>

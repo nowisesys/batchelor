@@ -78,6 +78,9 @@ function print_menu_vertical($queue, $utils)
 	echo "<ul class=\"menu\">\n";
     }
     foreach($utils as $name => $link) {
+	if($name == "Statistics" && STATISTICS_EXPOSED == "hidden") {
+	    continue;
+	}
 	printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
     }
     echo "</ul>\n";
