@@ -19,37 +19,48 @@
 // 
 
 // 
-// Create zip-archive. Return true if successful.
+// This function will recursive add any file or directory in
+// subdir to the zipfile represented by the objzip object.
 // 
-function create_zipfile($zipfile, $zipdir)
+function add_zipfile(&$objzip, $subdir)
 {
-    $zip = new ZipArchive();	 	
-    if($zip->open($zipfile, ZipArchive::CREATE)) {
-	$dir = opendir($zipdir);
-	if($dir) {
-	    while(false !== ($file = readdir($dir))) {
-		if($file != "." && $file != "..") {
-		    if(!$zip->addFile(sprintf("%s/%s", $zipdir, $file))) {
-			$zip->close();
-			unlink($zipfile);
-			closedir($dir);
+    $handle = opendir($subdir);
+    if($handle) {
+	while(false !== ($file = readdir($handle))) {
+	    if($file != "." && $file != "..") {
+		$path = sprintf("%s/%s", $subdir, $file);
+		if(is_dir($path)) {
+		    if(!add_zipfile(&$objzip, $path)) {
+			return false;
+		    }
+		}
+		else {
+		    if(!$objzip->addFile($path)) {
 			return false;
 		    }
 		}
 	    }
-	    closedir($dir);
 	}
-	else {
-	    $zip->close();
+	closedir($handle);
+    }
+    return true;
+}
+
+// 
+// Create zip-archive. Return true if successful.
+// 
+function create_zipfile($zipfile, $zipdir)
+{
+    $objzip =& new ZipArchive();	 	
+    if($objzip->open(&$zipfile, ZipArchive::CREATE)) {
+	if(!add_zipfile($objzip, $zipdir)) {
+	    $objzip->close();
 	    unlink($zipfile);
 	    return false;
 	}
-	$zip->close();
-	return true;
     }
-    else {
-	return false;
-    }
+    $objzip->close();
+    return true;
 }
 
 ?>
