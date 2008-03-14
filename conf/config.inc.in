@@ -79,6 +79,11 @@ define ("UPLOAD_MIN_FILESIZE", 5000);
 define ("UPLOAD_MAX_FILESIZE", 0);
 
 // 
+// Should original name of uploaded file be preserved?
+// 
+define ("UPLOAD_PRESERVE_FILENAME", false);
+
+// 
 // The number of seconds between reload of the page waiting for
 // running jobs to finish (in seconds). Set to 0 to disable automatic
 // page refresh. Note that some browsers don't handle meta refresh

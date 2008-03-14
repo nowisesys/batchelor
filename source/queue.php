@@ -481,8 +481,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // 
     // Create path to indata file.
     // 
-    $indata = sprintf("%s/indata", $jobdir);
-
+    if(UPLOAD_PRESERVE_FILENAME && isset($_FILES['file']['name'])) {
+	$indata = sprintf("%s/%s", $jobdir, $_FILES['file']['name']);
+    }
+    else {
+	$indata = sprintf("%s/indata", $jobdir);
+    }
+    
     // 
     // Process request parameters.
     // 
@@ -509,6 +514,11 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	    if(!rename($_FILES['file']['tmp_name'], $indata)) {
 		cleanup_jobdir($jobdir, $_FILES['file']['tmp_name']);
 		error_exit("Failed move uploaded file");
+	    }
+	    if(UPLOAD_PRESERVE_FILENAME) {
+		if(!symlink($indata, sprintf("%s/indata", $jobdir))) {
+		    error_exit("Failed symlink uploaded file");
+		}
 	    }
 	}
 	else {
