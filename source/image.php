@@ -29,6 +29,8 @@ function check_request_param($name, $pattern)
 {    
     if(isset($_REQUEST[$name])) {
 	if(!preg_match("/^$pattern$/", $_REQUEST[$name])) {
+	    error_log(sprintf("Request parameter %s do not match regexp pattern %s",
+			      $name, $pattern));
 	    exit(1);
 	}
     }
@@ -80,6 +82,10 @@ if(file_exists($image)) {
     header(sprintf("Content-Type: %s", "image/png"));
     header(sprintf("Content-Length: %d", filesize($image)));
     readfile($image);
+}
+else {
+    error_log(sprintf("The image file %s do not exist", $image));
+    exit(1);
 }
 
 ?>
