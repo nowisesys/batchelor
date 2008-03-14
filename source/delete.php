@@ -26,26 +26,30 @@ include "../conf/config.inc";
 include "../include/common.inc";
 
 // 
-// Helper function for deleting a directory.
+// Helper function for deleting a directory (recursive).
 // 
-function delete_directory($path)
+function delete_directory($root)
 {
-    if(file_exists($path)) {
-	$top = $path;
-	
-	$handle = opendir($path);
+    if(file_exists($root)) {
+	$handle = opendir($root);
 	if($handle) {
 	    while(false !== ($file = readdir($handle))) {
 		if($file != "." && $file != "..") {
-		    $path = sprintf("%s/%s", $top, $file);
-		    if(is_file($path)) {
+		    $path = sprintf("%s/%s", $root, $file);
+		    if(is_dir($path)) {
+			delete_directory($path);
+		    }
+		    if(is_file($path) || is_link($path)) {
 			unlink($path);
 		    }
 		}
 	    }
 	    closedir($handle);
-	    rmdir($top);
 	}
+	else {
+	    die("Failed read directory");
+	}
+	rmdir($root);
     }
 }
 
@@ -77,7 +81,9 @@ function delete_single_job($hostid, $resdir, $jobid)
 	    $handle = popen(sprintf(BATCH_REMOVE, $jobid), "r");
 	    pclose($handle);
 	    
-	    delete_directory(sprintf("%s/result", $resdir));
+	    // 
+	    // Recursive delete the job directory.
+	    // 
 	    delete_directory($resdir);
 	}
     }
