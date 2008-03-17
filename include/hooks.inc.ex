@@ -56,7 +56,7 @@ function pre_enqueue_hook($file, &$error)
 // 
 // Save a file with ip-address of submitter.
 // 
-function post_enqueue_hook($indata, $jobdir)
+function post_enqueue_hook($file, $jobdir)
 {
     file_put_contents(sprintf("%s/ipaddr", $jobdir), $_SERVER['REMOTE_ADDR']);
 }
