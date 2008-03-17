@@ -32,6 +32,11 @@
 // 
 
 // 
+// Add some bogus ip-addresses for testing?
+// 
+define ("HOOKS_ADD_BOGUS_IPADDR", false);
+
+// 
 // Validate peer against array of hosts allowed to submit jobs.
 // 
 function pre_enqueue_hook($file, &$error)
@@ -58,7 +63,7 @@ function post_enqueue_hook($indata, $jobdir)
 
 // 
 // Count number of submits per host. For clearity, we only show how to do this
-// for total, yearly and montly.
+// for total, yearly and monthly.
 // 
 function collect_data_hook($hostid, &$data, $jobdir, $year, $month, $day, $hour)
 {
@@ -75,6 +80,13 @@ function collect_data_hook($hostid, &$data, $jobdir, $year, $month, $day, $hour)
     $sect = "ipaddr";
     $file = sprintf("%s/ipaddr", $jobdir);
 
+    // 
+    // This will make sure a ipaddr file exists.
+    // 
+    if(HOOKS_ADD_BOGUS_IPADDR) {
+	file_put_contents($file, sprintf("192.168.32.%s", rand(2, 32)));
+    }
+    
     if(file_exists($file)) {
 	$addr = file_get_contents($file);
    
@@ -154,13 +166,45 @@ function graph_data_hook($graphdir, $hostid, $options, $datetime, $data, $type)
 }
 
 // 
-// This is just a callback to fine-tune the bar plot graph.
+// This is a callback for fine-tuning the bar plot graph.
 // 
 function graph_data_hook_callback(&$graph)
 {
     $graph->img->SetMargin(40, 30, 40, 75);
     $graph->xaxis->SetFont(FF_ARIAL, FS_NORMAL, 7);
     $graph->xaxis->SetLabelAngle(45);
+}
+
+// 
+// This function gets called to present the collected data and
+// related graphics.
+// 
+function show_data_hook($data, $statdir, $subsect)
+{
+    if(isset($data['ipaddr'])) {
+	$hosts = count($data['ipaddr']);
+	$total = 0;
+	$topnum = 0;
+	foreach($data['ipaddr'] as $host => $count) {
+	    if($count > $topnum) {
+		$tophost = $host;
+		$topnum  = $count;
+	    }
+	    $total += $count;
+	}
+
+	printf("<span id=\"secthead\">Queued jobs:</span>\n");
+
+	printf("<p>%d hosts has queued a total of %d jobs. The top user of the queue is <b>%s</b><br> with a total of %d enqueued jobs.</p>\n", 
+	       $hosts, $total, $tophost, $topnum);
+	
+	printf("<p>\n");
+	if(file_exists(sprintf("%s/ipaddr.png", $statdir))) {
+	    printf("<img src=\"image.php?%s\">\n", 
+		   request_params(array( "image" => "ipaddr" )));
+	}
+	printf("</p>\n");
+    }
 }
 
 ?>

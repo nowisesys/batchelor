@@ -26,6 +26,10 @@ include "../include/common.inc";
 include "../include/ui.inc";
 include "../include/statistics.inc";
 
+if(file_exists("../include/hooks.inc")) {
+    include "../include/hooks.inc";
+}
+
 // 
 // Call exit on script if request parameter name is set but
 // don't match the pattern.
@@ -278,6 +282,9 @@ function stat_show_root($statdir, $hostid)
 	    print_links_section($data, $subdirs, "year", null);
 	}
 	if($_REQUEST['stat'] == "glob" || $_REQUEST['stat'] == "pers") {
+	    if(function_exists("show_data_hook")) {
+		show_data_hook($data, $statdir, $subsect);
+	    }
 	    print_submit_section($data, $statdir, $subsect);
 	    print_proctime_section($data, $statdir, $subsect);
 	    print_state_section($data, $statdir, $subsect);
@@ -303,6 +310,9 @@ function stat_show_year($statdir, $hostid)
 	    print_links_section($data, $subdirs, "month", "root");
 	}
 	if($_REQUEST['stat'] == "glob" || $_REQUEST['stat'] == "pers") {
+	    if(function_exists("show_data_hook")) {
+		show_data_hook($data, $statdir, $subsect);
+	    }
 	    print_submit_section($data, $statdir, $subsect);
 	    print_proctime_section($data, $statdir, $subsect);
 	}
@@ -325,6 +335,9 @@ function stat_show_month($statdir, $hostid)
 	    print_links_section($data, $subdirs, "day", "year");
 	}
 	if($_REQUEST['stat'] == "glob" || $_REQUEST['stat'] == "pers") {
+	    if(function_exists("show_data_hook")) {
+		show_data_hook($data, $statdir, $subsect);
+	    }
 	    print_submit_section($data, $statdir, $subsect);
 	    print_proctime_section($data, $statdir, $subsect);
 	}
@@ -347,6 +360,9 @@ function stat_show_day($statdir, $hostid)
 	    print_links_section($data, $subdirs, null, "month");
 	}
 	if($_REQUEST['stat'] == "glob" || $_REQUEST['stat'] == "pers") {
+	    if(function_exists("show_data_hook")) {
+		show_data_hook($data, $statdir, $subsect);
+	    }
 	    print_submit_section($data, $statdir, $subsect);
 	    print_proctime_section($data, $statdir, $subsect);
 	}
