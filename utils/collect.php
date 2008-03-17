@@ -603,7 +603,7 @@ function collect_flush_stats($statdir, $statdata, $options)
 // 
 // Draws a bar plot.
 // 
-function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors)
+function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors, $callback = null)
 {
     $width = 460;
     $height = 210;
@@ -687,6 +687,13 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors
     // 
     $bplot->value->SetColor($colors['text']['positive'], $colors['text']['negative']);
     $graph->Add($bplot);
+
+    // 
+    // Any last minute changes?
+    // 
+    if($callback) {
+	$callback(&$graph);
+    }
     
     // 
     // Finally stroke the graph
