@@ -49,4 +49,16 @@
 //     $data[$hostid][$year]['mysect']['key'] = // something... 
 // }
 
+// 
+// This function gets called to generate graphics from the data collected
+// in call to collect_data_hook(). The graphdir argument is the directory
+// where the image should be saved. The datetime is an timestamp suitable for
+// printing dates on the image. The type is either "total", "yearly", "monthly",
+// or "daily" and tells the function what kind of statistics the date argument
+// contains.
+// 
+// function graph_data_hook($graphdir, $hostid, $options, $datetime, $data, $type)
+// {
+// }
+
 ?>

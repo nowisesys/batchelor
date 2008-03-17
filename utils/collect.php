@@ -1816,6 +1816,9 @@ function collect_flush_graphics($statdir, $data, $options)
 	graph_total_submit($graphdir, $hostid, $options, $data1);
 	graph_total_proctime($graphdir, $hostid, $options, $data1);
 	graph_total_state($graphdir, $hostid, $options, $data1);
+	if(function_exists("graph_data_hook")) {
+	    graph_data_hook($graphdir, $hostid, $options, 0, $data1, "total");
+	}
 	
 	foreach($data1 as $sect1 => $data2) {          // year level
 	    if(!is_numeric($sect1)) {
@@ -1831,6 +1834,9 @@ function collect_flush_graphics($statdir, $data, $options)
 	    }
 	    graph_yearly_submit($graphdir, $hostid, $options, $datetime, $data2);
 	    graph_yearly_proctime($graphdir, $hostid, $options, $datetime, $data2);
+	    if(function_exists("graph_data_hook")) {
+		graph_data_hook($graphdir, $hostid, $options, $datetime, $data2, "yearly");
+	    }
 		
 	    foreach($data2 as $sect2 => $data3) {      // month level
 		if(!is_numeric($sect2)) {
@@ -1847,6 +1853,9 @@ function collect_flush_graphics($statdir, $data, $options)
 		}
 		graph_monthly_submit($graphdir, $hostid, $options, $datetime, $data3);
 		graph_monthly_proctime($graphdir, $hostid, $options, $datetime, $data3);
+		if(function_exists("graph_data_hook")) {
+		    graph_data_hook($graphdir, $hostid, $options, $datetime, $data3, "montly");
+		}
 
 		foreach($data3 as $sect3 => $data4) {  // day level
 		    if(!is_numeric($sect3)) {
@@ -1863,6 +1872,9 @@ function collect_flush_graphics($statdir, $data, $options)
 		    }
 		    graph_daily_submit($graphdir, $hostid, $options, $datetime, $data4);
 		    graph_daily_proctime($graphdir, $hostid, $options, $datetime, $data4);
+		    if(function_exists("graph_data_hook")) {
+			graph_data_hook($graphdir, $hostid, $options, $datetime, $data4, "daily");
+		    }
 		}
 	    }
 	}
