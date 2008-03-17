@@ -577,17 +577,6 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	    }
 	}
     }
-
-    //
-    // Call user supplied input data validator function if its defined.
-    // 
-    if(function_exists("validate_indata_hook")) {
-	$error = "";
-	if(!validate_indata_hook($indata, $error)) {
-	    cleanup_jobdir($jobdir, $indata);
-	    error_exit($error);
-	}
-    }
       
     // 
     // The filesize test on uploaded data applies to both HTTP uploaded file
@@ -597,6 +586,17 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     if(filesize($indata) < UPLOAD_MIN_FILESIZE) {
 	cleanup_jobdir($jobdir, $indata);
 	error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", UPLOAD_MIN_FILESIZE));
+    }
+
+    //
+    // Call pre enqueue hook if function is defined.
+    // 
+    if(function_exists("pre_enqueue_hook")) {
+	$error = "";
+	if(!pre_enqueue_hook($indata, $error)) {
+	    cleanup_jobdir($jobdir, $indata);
+	    error_exit($error);
+	}
     }
     
     // 
@@ -620,6 +620,13 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     }
     if(!file_put_contents(sprintf("%s/queued", $jobdir), time())) {
 	error_exit("Failed save job enqueue time");
+    }
+
+    //
+    // Call post enqueue hook if function is defined.
+    // 
+    if(function_exists("post_enqueue_hook")) {
+	post_enqueue_hook($indata, $jobdir);
     }
     
     // 

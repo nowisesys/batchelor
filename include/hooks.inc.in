@@ -23,14 +23,23 @@
 // 
 
 // 
-// This function allows you to reject an uploaded file before its even moved
-// to its job directory. This function should return true if the file should 
-// be accepted. If the file should be rejected, then set error to an string
-// describing the cause and return false.
+// This function gets called prior to a job being added to the job queue. This 
+// allows submitted data and files (in $file) to be validated and rejected if
+// its invalid. This function should return true if the file should be accepted. 
+// If the file should be rejected, then set error to an string describing the
+// cause and return false.
 // 
-// function validate_indata_hook($file, &$error)
+// function pre_enqueue_hook($file, &$error)
 // {
 //     return true;
+// }
+
+// 
+// This function gets called after the data has been enqueued. The $file
+// argument is the input data and $jobdir is the per job directory.
+// 
+// function post_enqueue_hook($indata, $jobdir)
+// {
 // }
 
 // 
