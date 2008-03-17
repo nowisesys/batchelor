@@ -48,7 +48,7 @@ check_request_param("stat",  "(glob|pers|load)");
 check_request_param("year",  "(19|20)\\d{2}");
 check_request_param("month", "(0[1-9]|1[0-2])");
 check_request_param("day",   "(0[1-9]|[12][0-9]|3[0-1])");
-check_request_param("image", "(proctime|state|submit|sysload.*)");
+check_request_param("image", "\w+");
 
 // 
 // Build the path:
