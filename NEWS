@@ -1,3 +1,9 @@
+Version 0.x.y (2008-mm-dd):
+
+	* Hook functions added. This allows the behavour and functionality
+	  of batchelor to be extended by user provided callback functions
+	  defined in include/hooks.inc.
+	  
 Version 0.6.1 (2008-03-14):
 
 	* Deleting a job directory is now working recursive (bugfix).
