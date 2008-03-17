@@ -29,6 +29,9 @@
 include "../conf/config.inc";
 include "../include/common.inc";
 include "../include/ui.inc";
+if(file_exists("../include/hooks.inc")) {
+    include "../include/hooks.inc";
+}
 
 // 
 // The array of pending and running jobs.
@@ -575,6 +578,17 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 	}
     }
 
+    //
+    // Call user supplied input data validator function if its defined.
+    // 
+    if(function_exists("validate_indata_hook")) {
+	$error = "";
+	if(!validate_indata_hook($indata, $error)) {
+	    cleanup_jobdir($jobdir, $indata);
+	    error_exit($error);
+	}
+    }
+      
     // 
     // The filesize test on uploaded data applies to both HTTP uploaded file
     // and data saved from request parameter data. Both gets saved to file

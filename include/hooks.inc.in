@@ -1,0 +1,36 @@
+<?php
+
+// -------------------------------------------------------------------------------
+//  Copyright (C) 2007 Anders Lövgren
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+// -------------------------------------------------------------------------------
+
+// 
+// This file contains functions that you can use to hook in into the script
+// execution at various steps to perform tasks as indata validation.
+// 
+// Copy this file to include/hooks.inc, uncomment functions related to the
+// task you like to affect.
+// 
+
+// 
+// This function allows you to reject an uploaded file before its even moved
+// to its job directory. This function should return true if the file should 
+// be accepted. If the file should be rejected, then set error to an string
+// describing the cause and return false.
+// 
+// function validate_indata_hook($file, &$error)
+// {
+//     return true;
+// }
+
+?>
