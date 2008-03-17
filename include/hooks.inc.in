@@ -33,4 +33,20 @@
 //     return true;
 // }
 
+// 
+// This function gets called during collection of statistics data. The data is
+// later saved to the directory structure under cache/stat. The hostid argument
+// is either "all" or a unique ID of submitter. The jobdir is the directory
+// to harvest statistics from. The year, month, day and hour is the time when
+// this job got queued (submitted).
+// 
+// function collect_data_hook($hostid, &$data, $jobdir, $year, $month, $day, $hour)
+// {
+//     // 
+//     // Example of saving total and per year data in the private section 'mysect':
+//     // 
+//     $data[$hostid]['mysect']['key'] = // something... 
+//     $data[$hostid][$year]['mysect']['key'] = // something... 
+// }
+
 ?>

@@ -90,6 +90,10 @@ if(USE_JPGRAPH_LIB) {
     }
 }
 
+if(file_exists("../include/hooks.inc")) {
+    include "../include/hooks.inc";
+}
+
 define ("LIST_QUEUE_ONCE", 0);
 define ("LIST_QUEUE_PER_HOSTID", 1);
 define ("LIST_QUEUE_PER_JOBDIR", 2);
@@ -447,7 +451,7 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
     if($options->qmode == LIST_QUEUE_PER_HOSTID) {
 	$jobqueue = get_queued_jobs();
     }
-	
+    
     $handle = @opendir($hiddir);
     if($handle) {
 	if($options->debug) {
@@ -520,6 +524,14 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 		if($finished > 0 && ($state == "success" || $state == "warning")) {
 		    collect_process_accounting($hostid, $data, $queued, $started, $finished, $year, $month, $day, $hour);
 		    collect_process_accounting("all", $data, $queued, $started, $finished, $year, $month, $day, $hour);
+		}
+		
+		// 
+		// Call user supplied statistics collection hook function if defined.
+		// 
+		if(function_exists("collect_data_hook")) {
+		    collect_data_hook($hostid, $data, $jobdir, $year, $month, $day, $hour);
+		    collect_data_hook("all", $data, $jobdir, $year, $month, $day, $hour);
 		}
 		
 		// 
@@ -1795,7 +1807,7 @@ function collect_flush_graphics($statdir, $data, $options)
 	    return;
 	}
     }
-
+    
     // 
     // TODO: add call of user supplied hook functions.
     // 
@@ -1804,6 +1816,7 @@ function collect_flush_graphics($statdir, $data, $options)
 	graph_total_submit($graphdir, $hostid, $options, $data1);
 	graph_total_proctime($graphdir, $hostid, $options, $data1);
 	graph_total_state($graphdir, $hostid, $options, $data1);
+	
 	foreach($data1 as $sect1 => $data2) {          // year level
 	    if(!is_numeric($sect1)) {
 		continue;
