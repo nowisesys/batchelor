@@ -1606,7 +1606,7 @@ function system_load_merge_array(&$dest, &$source)
 }
 
 // 
-// Merge daily array with montly array. Do a simple copy.
+// Merge daily array with monthly array. Do a simple copy.
 // 
 function system_load_merge_daily_array(&$monthly, &$daily)
 {  
@@ -1614,10 +1614,10 @@ function system_load_merge_daily_array(&$monthly, &$daily)
 }
 
 // 
-// The montly array contains too many sample points (~ 24h * 31d). We need
+// The monthly array contains too many sample points (~ 24h * 31d). We need
 // to reduce it into each day of the year.
 // 
-function system_load_merge_montly_array(&$yearly, &$monthly)
+function system_load_merge_monthly_array(&$yearly, &$monthly)
 {
     foreach($monthly as $key => $data) {
 	foreach($data as $stamp => $value) {
@@ -1773,7 +1773,7 @@ function graph_system_load($graphdir, $data, $options)
 		    if($options->debug) {
 			printf("debug: merging the monthly array with the yearly array\n");
 		    }
-		    system_load_merge_montly_array($yearly, $monthly);
+		    system_load_merge_monthly_array($yearly, $monthly);
 		}
 	    }
 	    // 
@@ -1861,7 +1861,7 @@ function collect_flush_graphics($statdir, $data, $options)
 		graph_monthly_submit($graphdir, $hostid, $options, $datetime, $data3);
 		graph_monthly_proctime($graphdir, $hostid, $options, $datetime, $data3);
 		if(function_exists("graph_data_hook")) {
-		    graph_data_hook($graphdir, $hostid, $options, $datetime, $data3, "montly");
+		    graph_data_hook($graphdir, $hostid, $options, $datetime, $data3, "monthly");
 		}
 
 		foreach($data3 as $sect3 => $data4) {  // day level
