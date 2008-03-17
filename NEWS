@@ -4,6 +4,9 @@ Version 0.x.y (2008-mm-dd):
 	  of batchelor to be extended by user provided callback functions
 	  defined in include/hooks.inc.
 	  
+	* Its now possible to delete directories with jobid 0 as long as the
+	  jobid file is missing (indicates a server failure or missconfiguration).
+	  
 Version 0.6.1 (2008-03-14):
 
 	* Deleting a job directory is now working recursive (bugfix).

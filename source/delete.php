@@ -86,6 +86,12 @@ function delete_single_job($hostid, $resdir, $jobid)
 	    // 
 	    delete_directory($resdir);
 	}
+	else if($jobid == 0) {
+	    // 
+	    // This is a job directory crashed due to missconfiguration.
+	    // 
+	    delete_directory($resdir);
+	}
     }
 }
 
