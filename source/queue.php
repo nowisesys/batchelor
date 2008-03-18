@@ -362,7 +362,17 @@ function print_html($what)
 	print_body();
 	break;
      case "title":
-	print "Submit data for processing";
+	if(isset($_REQUEST['show'])) {
+	    if($_REQUEST['show'] == "submit") {
+		print "Batchelor - Submit Jobs";
+	    }
+	    else if($_REQUEST['show'] == "queue") {
+		print "Batchelor - Show Queue";
+	    }
+	}
+	else {
+	    print "Batchelor - Batch job Queue Manager";
+	}
 	break;
      default:
 	print_common_html($what);    // Use default callback.

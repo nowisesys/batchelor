@@ -510,7 +510,44 @@ function print_html($what)
 	print_body();
 	break;
      case "title":
-	print "Batchelor - Statistics";
+	// 
+	// Set date string:
+	// 
+	if(isset($_REQUEST['day'])) {
+	    $date = subsect_date_string("day");
+	}
+	else if(isset($_REQUEST['month'])) {
+	    $date = subsect_date_string("month");
+	}
+	else if(isset($_REQUEST['year'])) {
+	    $date = sprintf("Year %s", subsect_date_string("year"));
+	}
+	else {
+	    $date = "Total";
+	}
+	// 
+	// Set section string:
+	// 
+	if(isset($_REQUEST['stat'])) {
+	    switch($_REQUEST['stat']) {
+	     case "glob":
+		$sect = "System Statistics";
+		break;
+	     case "pers":
+		$sect = "Personal Statistics";
+		break;
+	     case "load":
+		$sect = "System Load";
+		break;
+	    }
+	}
+	else {
+	    $sect = "Statistics";
+	}
+	// 
+	// Print HTML page title:
+	// 
+	printf("Batchelor - %s - %s", $sect, $date);
 	break;
      default:
 	print_common_html($what);
