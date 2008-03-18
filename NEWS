@@ -7,6 +7,9 @@ Version 0.6.3 (2008-02-18):
 	  chronological order.
 	  
 	* The name for the page title can now be configured in conf/config.inc
+	
+	* Fixed about notes for batchelor. Added credits, download and
+	  copyright sections.
 
 Version 0.6.2 (2008-02-17):
 
