@@ -23,13 +23,19 @@
 // Include configuration and libs.
 // 
 include "../include/ui.inc";
+include "../conf/config.inc";
 
 // 
 // The default welcome message displayed if index.html is missing.
 // 
 function print_welcome()
 {
-    printf("<h1>Welcome to batchelor!</h1>\n");
+    if(strcasecmp(HTML_PAGE_TITLE, "batchelor") == 0) {
+	printf("<h1>Welcome to batchelor!</h1>\n");
+    }
+    else {
+	printf("<h1>Welcome to %s, powered by Batchelor!</h1>\n", HTML_PAGE_TITLE);
+    }
     printf("<hr>\n");
     
     printf("<span id=\"secthead\">Congratulations!</span>\n");
@@ -109,7 +115,7 @@ function print_html($what)
 	print_body();
 	break;
      case "title":
-	print "Batchelor - Welcome";
+	printf("%s - Welcome", HTML_PAGE_TITLE);
 	break;
      default:
 	print_common_html($what);

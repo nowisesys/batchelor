@@ -39,10 +39,10 @@ function error_handler($type)
 function print_title()
 {
     if(isset($GLOBALS['indata'])) {
-	printf("Data for Job ID %d", $GLOBALS['jobid']);
+	printf("%s - Data for Job ID %d", HTML_PAGE_TITLE, $GLOBALS['jobid']);
     }
     else {
-	printf("Details for Job ID %d", $GLOBALS['jobid']);
+	printf("%s - Details for Job ID %d", HTML_PAGE_TITLE, $GLOBALS['jobid']);
     }
 }
 

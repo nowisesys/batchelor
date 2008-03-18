@@ -5,6 +5,8 @@ Version 0.6.3 (2008-02-18):
 	  
 	* Fixed sorting of date in statistics navigator. The links now has
 	  chronological order.
+	  
+	* The name for the page title can now be configured in conf/config.inc
 
 Version 0.6.2 (2008-02-17):
 

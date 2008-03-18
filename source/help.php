@@ -23,6 +23,7 @@
 // Include configuration and libs.
 // 
 include "../include/ui.inc";
+include "../conf/config.inc";
 
 // 
 // The default help message displayed if help.html is missing.
@@ -71,7 +72,7 @@ function print_html($what)
 	print_body();
 	break;
      case "title":
-	print "Batchelor - Help";
+	printf("%s - Help", HTML_PAGE_TITLE);
 	break;
      default:
 	print_common_html($what);

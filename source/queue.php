@@ -364,14 +364,14 @@ function print_html($what)
      case "title":
 	if(isset($_REQUEST['show'])) {
 	    if($_REQUEST['show'] == "submit") {
-		print "Batchelor - Submit Jobs";
+		printf("%s - Submit Jobs", HTML_PAGE_TITLE);
 	    }
 	    else if($_REQUEST['show'] == "queue") {
-		print "Batchelor - Show Queue";
+		printf("%s - Queue Manager", HTML_PAGE_TITLE);
 	    }
 	}
 	else {
-	    print "Batchelor - Batch job Queue Manager";
+	    printf("%s - Batch Job Queue Manager", HTML_PAGE_TITLE);
 	}
 	break;
      default:

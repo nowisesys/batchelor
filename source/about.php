@@ -25,6 +25,7 @@
 // Include configuration and libs.
 // 
 include "../include/ui.inc";
+include "../conf/config.inc";
 
 // 
 // Print about info for batchelor.
@@ -195,7 +196,7 @@ function print_html($what)
 	print_about();
 	break;
      case "title":
-	print "Batchelor - About";
+	printf("%s - About", HTML_PAGE_TITLE);
 	break;
      default:
 	print_common_html($what);

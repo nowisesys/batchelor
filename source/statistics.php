@@ -547,7 +547,7 @@ function print_html($what)
 	// 
 	// Print HTML page title:
 	// 
-	printf("Batchelor - %s - %s", $sect, $date);
+	printf("%s - %s - %s", HTML_PAGE_TITLE, $sect, $date);
 	break;
      default:
 	print_common_html($what);
