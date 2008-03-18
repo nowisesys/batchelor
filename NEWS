@@ -1,3 +1,11 @@
+Version 0.6.3 (2008-02-18):
+
+	* Fixed HTML title in generated HTML code. Each page should get an
+	  unique title.
+	  
+	* Fixed sorting of date in statistics navigator. The links now has
+	  chronological order.
+
 Version 0.6.2 (2008-02-17):
 
 	* Hook functions added. This allows the behaviour and functionality
