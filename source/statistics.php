@@ -153,6 +153,7 @@ function print_links_section($data, $subdirs, $child, $parent)
 	printf("<li>Up to <a href=\"statistics.php?%s\">parent</a> directory</li>\n", request_params(array(), array( $map[$parent] )));
     }
     if($child) {
+	sort($subdirs);
 	printf("<li>Statistics by %s: ", $child);
 	foreach($subdirs as $subdir) {
 	    printf("<a href=\"statistics.php?%s\">%s %s </a>",
