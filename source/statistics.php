@@ -474,6 +474,7 @@ function print_body()
 	    // 
 	    if(!(isset($_REQUEST['switch']) && $GLOBALS['sect'] == "pers")) {
 		print_message_box("error", "Requested statistics not found.");
+		return;
 	    }
 	    $child = $parent;
 	    $statdir = dirname($statdir);
