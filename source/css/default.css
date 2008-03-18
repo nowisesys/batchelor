@@ -67,20 +67,20 @@ td.body td {
 	padding-right: 10px;
 }
 
-td.footer, td.footer a {
+td.footer, td.footer a, td.notes, td.notes a {
 	color: #999999;
 	vertical-align: top;
-	width: 50%;
+	width: 10%;
 }
 
 td.footer a:hover {
 	color: #666666;
 }
 
-td.copyright {
-	text-align: right;
+td.copyright, td.copyright a {
+	color: #bbbbbb;
 	vertical-align: top;
-	width: 50%;
+	width: 100%;
 }
 
 div.indent {

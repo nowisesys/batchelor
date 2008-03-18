@@ -119,10 +119,14 @@ function print_menu_horizontal($queue, $utils)
 // 
 function print_footer()
 {
-    print "<table width=\"90%\"><tr>\n";
-    printf("<td class=\"footer\">Last updated: %s<br>Contact: %s</td>\n", format_timestamp(time()), CONTACT_STRING);
-    print "<td class=\"copyright\">Copyright &copy; 2007-2008 Anders Lövgren</td>\n";
-    print "</tr></table>\n";
+    print  "<table>\n";
+    print  "  <tr>\n";
+    printf("    <td class=\"footer\">Last updated: %s<br>Contact: %s</td><td width=\"100%%\">&nbsp;</td>\n", format_timestamp(time()), CONTACT_STRING);
+    print  "    <td class=\"notes\">This web application is powered by <a href=\"about.php?sect=batchelor\" target=\"_blank\">Batchelor</a></td></tr>\n";
+    print  "  <tr><td>&nbsp;</td></tr>\n";
+    print  "  <tr>\n";
+    print  "    <td class=\"copyright\" colspan=\"3\">Batchelor is Copyright &copy; 2007-2008 by Anders Lövgren and the <a href=\"http://www.bmc.uu.se\" target=\"blank\">Computing Department at Uppsala Biomedical Centre</a>, Uppsala University</td></tr>\n";
+    print  "</table>\n";
 }
 
 function print_common_html($what)
