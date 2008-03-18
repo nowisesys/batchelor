@@ -180,4 +180,10 @@ define ("STATISTICS_EXPOSED", "public");
 // 
 define ("STATISTICS_TRUSTED", "127.0.0.1");
 
+// 
+// Define footer info.
+// 
+define ("FOOTER_SHOW_NOTES", true);
+define ("FOOTER_SHOW_COPYING", true);
+
 ?>
