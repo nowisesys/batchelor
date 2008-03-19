@@ -571,11 +571,20 @@ function collect_flush_data($topdir, $data, $options)
 	    if(!$handle) {
 		die(sprintf("%s: failed append data to file %s\n", $options->prog, $summary));
 	    }
-	    fprintf($handle, "[%s]\n", $sect);
-	    foreach($arr as $key => $val) {
-		fprintf($handle, "%s = %s\n", $key, $val);
+	    if(function_exists("fprintf")) {
+		fprintf($handle, "[%s]\n", $sect);
+		foreach($arr as $key => $val) {
+		    fprintf($handle, "%s = %s\n", $key, $val);
+		}
+		fprintf($handle, "\n");
 	    }
-	    fprintf($handle, "\n");
+	    else {
+		fwrite($handle, sprintf("[%s]\n", $sect));
+		foreach($arr as $key => $val) {
+		    fwrite($handle, sprintf("%s = %s\n", $key, $val));
+		}
+		fwrite($handle, "\n");
+	    }
 	    fclose($handle);
 	}
     }
