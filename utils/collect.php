@@ -701,7 +701,7 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors
     // Any last minute changes?
     // 
     if($callback) {
-	$callback(&$graph);
+	$callback($graph);
     }
     
     // 
