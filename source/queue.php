@@ -430,7 +430,7 @@ function error_exit($str)
 // This function should be called prior to error_exit() to
 // clean the job directory on failure.
 // 
-function cleanup_jobdir($jobdir, $indata = null)
+function cleanup_jobdir($root, $indata = null)
 {
     if(isset($indata)) {
 	if(file_exists($indata)) {
@@ -439,10 +439,27 @@ function cleanup_jobdir($jobdir, $indata = null)
 	    }
 	}
     }
-    if(file_exists($jobdir)) {
-	if(!rmdir($jobdir)) {
-	    error_exit("Failed cleanup job directory");
+    
+    if(file_exists($root)) {
+	$handle = opendir($root);
+	if($handle) {
+	    while(false !== ($file = readdir($handle))) {
+		if($file != "." && $file != "..") {
+		    $path = sprintf("%s/%s", $root, $file);
+		    if(is_dir($path)) {
+			cleanup_jobdir($path);
+		    }
+		    if(is_file($path) || is_link($path)) {
+			unlink($path);
+		    }
+		}
+	    }
+	    closedir($handle);
 	}
+	else {
+	    error_exit("Failed read job directory");
+	}
+	rmdir($root);
     }
 }
 
