@@ -29,7 +29,7 @@
 // If the file should be rejected, then set error to an string describing the
 // cause and return false.
 // 
-// function pre_enqueue_hook($file, &$error)
+// function pre_enqueue_hook($file, $jobdir, &$error)
 // {
 //     return true;
 // }

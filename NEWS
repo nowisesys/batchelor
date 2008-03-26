@@ -1,3 +1,8 @@
+Version 0.x.y (2008-mm-dd):
+
+	* Added jobdir argument to pre_enqueue_hook() (make sure to update
+	  include/hooks.inc if you use it).
+
 Version 0.6.3 (2008-02-18):
 
 	* Fixed HTML title in generated HTML code. Each page should get an

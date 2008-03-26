@@ -30,7 +30,7 @@ include "../conf/config.inc";
 include "../include/common.inc";
 include "../include/ui.inc";
 if(file_exists("../include/hooks.inc")) {
-    include "../include/hooks.inc";
+    include("../include/hooks.inc");
 }
 
 // 
@@ -603,7 +603,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // 
     if(function_exists("pre_enqueue_hook")) {
 	$error = "";
-	if(!pre_enqueue_hook($indata, $error)) {
+	if(!pre_enqueue_hook($indata, $jobdir, $error)) {
 	    cleanup_jobdir($jobdir, $indata);
 	    error_exit($error);
 	}
