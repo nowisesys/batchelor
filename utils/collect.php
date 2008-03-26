@@ -1824,9 +1824,6 @@ function collect_flush_graphics($statdir, $data, $options)
 	}
     }
     
-    // 
-    // TODO: add call of user supplied hook functions.
-    // 
     foreach($data as $hostid => $data1) {              // total level
 	$graphdir = sprintf("%s/%s", $statdir, $hostid);
 	graph_total_submit($graphdir, $hostid, $options, $data1);
