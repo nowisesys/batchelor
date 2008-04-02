@@ -98,6 +98,12 @@ define ("LIST_QUEUE_ONCE", 0);
 define ("LIST_QUEUE_PER_HOSTID", 1);
 define ("LIST_QUEUE_PER_JOBDIR", 2);
 
+// 
+// Filter settings:
+// 
+define ("HOURLY_FUZZY_FILTER_POINTS", 8);
+define ("PARABLE_FILTER_DIST", 0.8);      // disturbance
+
 //
 // Show basic usage.
 //
@@ -1315,6 +1321,43 @@ function graph_total_state($graphdir, $hostid, $options, $data)
 }
 
 // 
+// Makes array data smoother by inserting $points extra values between
+// each value in the array. This filter creates a parable with every
+// second value slightly disturbed from its calculated value.
+// 
+function apply_parable_filter(&$arr, $points) 
+{
+    $data = array();
+    for($i = 0; $i < count($arr); $i++) {
+	$curr = $arr[$i];
+	$next = isset($arr[$i + 1]) ? $arr[$i + 1] : $curr;
+	for($j = 1; $j <= $points; $j++) {
+	    // 
+	    // Calculate the parable:
+	    // 
+	    $x = $j / $points;
+	    $y = $curr - 4 * $curr * ( $x * $x - $x + 0.25 );
+	    // 
+	    // Add some fuzz to non-zero values:
+	    // 
+	    if($y != 0) {
+		if($j % 2 == 1) {
+		    $y -= rand(0, $y) * PARABLE_FILTER_DIST;
+		}
+	    }
+	    // 
+	    // Smooth out to next value:
+	    // 
+	    if($j == $points && $next != 0) {
+		$y += PARABLE_FILTER_DIST * $next * $j / $points;
+	    }
+	    $data[] = $y;
+	}
+    }
+    $arr = $data;
+}
+
+// 
 // Converts a timestamp for daily data.
 // 
 function timestamp_for_daily($stamp) {
@@ -1351,6 +1394,7 @@ function timestamp_for_weekly($value)
 // 
 function timestamp_for_hourly($value)
 {
+    $value /= HOURLY_FUZZY_FILTER_POINTS;
     if($value == 24) {
 	return "24:00";
     }
@@ -1378,6 +1422,12 @@ function timestamp_for_total($stamp)
 // 
 function graph_draw_system_load($data, $image, $title, $mode, $options)
 {
+    if($mode == "hourly") {
+	apply_parable_filter($data['submit'], HOURLY_FUZZY_FILTER_POINTS);
+	apply_parable_filter($data['waiting'], HOURLY_FUZZY_FILTER_POINTS);
+	apply_parable_filter($data['running'], HOURLY_FUZZY_FILTER_POINTS);	
+    }
+    
     $graph = new Graph(550, 250);
     $graph->SetMargin(40, 140, 30, 50);
     $graph->SetFrame(true, JPGRAPH_FRAME_FOREGROUND_COLOR, JPGRAPH_FRAME_BORDER_WIDTH);
@@ -1452,7 +1502,7 @@ function graph_draw_system_load($data, $image, $title, $mode, $options)
 	break;
      case "hourly":
 	$graph->xaxis->SetLabelFormatCallback('timestamp_for_hourly');
-	$graph->xaxis->scale->ticks->Set(1, 0.25);
+	$graph->xaxis->scale->ticks->Set(HOURLY_FUZZY_FILTER_POINTS, HOURLY_FUZZY_FILTER_POINTS / 4);
 	break;
      case "total":
 	$graph->xaxis->SetLabelFormatCallback('timestamp_for_total');
@@ -1675,7 +1725,7 @@ function graph_system_load($graphdir, $data, $options)
 		$weekly[$key][$j + $i * 24] = 0;
 	    }
 	}
-	for($i = 0; $i <= 24; ++$i) {
+	for($i = 0; $i < 24; ++$i) {
 	    $hourly[$key][$i] = 0;
 	}
 	$total[$key] = array();
