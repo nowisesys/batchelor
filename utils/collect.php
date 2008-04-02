@@ -1726,6 +1726,7 @@ function graph_system_load($graphdir, $data, $options)
 			    }
 			    foreach($data3 as $hour => $data4) {
 				if(is_numeric($hour)) {
+				    $hour = intval($hour);
 				    $stamp = mktime($hour, 0, 0, $month, $day, $year);
 				    $weekday = (date('w', $stamp) + 6) % 7;
 				    if($options->debug) {
