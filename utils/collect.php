@@ -102,7 +102,8 @@ define ("LIST_QUEUE_PER_JOBDIR", 2);
 // Filter settings:
 // 
 define ("HOURLY_FUZZY_FILTER_POINTS", 8);
-define ("PARABLE_FILTER_DIST", 0.8);      // disturbance
+define ("DAILY_FUZZY_FILTER_POINTS", 12);
+define ("PARABLE_FILTER_DIST", 0.7);      // disturbance
 
 //
 // Show basic usage.
@@ -1327,10 +1328,18 @@ function graph_total_state($graphdir, $hostid, $options, $data)
 // 
 function apply_parable_filter(&$arr, $points) 
 {
+    // 
+    // We need to do some ugly hacks because not all arrays are zero-indexed.
+    // It is taken for granted that the array we process have keys that forms
+    // an arithmetric serie.
+    // 
     $data = array();
-    for($i = 0; $i < count($arr); $i++) {
-	$curr = $arr[$i];
-	$next = isset($arr[$i + 1]) ? $arr[$i + 1] : $curr;
+    $keys = array_keys($arr);
+    $step = floor(($keys[1] - $keys[0]) / $points);
+    
+    for($i = 0; $i < count($keys); $i++) {
+	$curr = $arr[$keys[$i]];
+	$next = isset($keys[$i + 1]) ? $arr[$keys[$i + 1]] : $curr;
 	for($j = 1; $j <= $points; $j++) {
 	    // 
 	    // Calculate the parable:
@@ -1351,7 +1360,12 @@ function apply_parable_filter(&$arr, $points)
 	    if($j == $points && $next != 0) {
 		$y += PARABLE_FILTER_DIST * $next * $j / $points;
 	    }
-	    $data[] = $y;
+	    if($keys[0] == 0) {
+		$data[] = $y;
+	    }
+	    else {
+		$data[$keys[$i] + ($j - 1) * $step] = $y;
+	    }
 	}
     }
     $arr = $data;
@@ -1426,6 +1440,11 @@ function graph_draw_system_load($data, $image, $title, $mode, $options)
 	apply_parable_filter($data['submit'], HOURLY_FUZZY_FILTER_POINTS);
 	apply_parable_filter($data['waiting'], HOURLY_FUZZY_FILTER_POINTS);
 	apply_parable_filter($data['running'], HOURLY_FUZZY_FILTER_POINTS);	
+    }
+    if($mode == "daily") {
+	apply_parable_filter($data['submit'], DAILY_FUZZY_FILTER_POINTS);
+	apply_parable_filter($data['waiting'], DAILY_FUZZY_FILTER_POINTS);
+	apply_parable_filter($data['running'], DAILY_FUZZY_FILTER_POINTS);	
     }
     
     $graph = new Graph(550, 250);

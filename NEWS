@@ -2,6 +2,9 @@ Version 0.x.y (2008-mm-dd):
 
 	* Added jobdir argument to pre_enqueue_hook() (make sure to update
 	  include/hooks.inc if you use it).
+	  
+	* Added parable curve filter to smoothen data when plotting the
+	  sysload by hours statistics.
 
 Version 0.6.3 (2008-02-18):
 
