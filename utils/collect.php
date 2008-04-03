@@ -99,11 +99,23 @@ define ("LIST_QUEUE_PER_HOSTID", 1);
 define ("LIST_QUEUE_PER_JOBDIR", 2);
 
 // 
+// Filter types:
+// 
+define ("FILTER_TYPE_PARABLE", 1);
+define ("FILTER_TYPE_DISTRIB", 2);
+
+// 
 // Filter settings:
 // 
 define ("HOURLY_FUZZY_FILTER_POINTS", 8);
 define ("DAILY_FUZZY_FILTER_POINTS", 12);
 define ("PARABLE_FILTER_DIST", 0.7);      // disturbance
+
+// 
+// Filters used:
+// 
+define ("HOURLY_FILTER_TYPE", FILTER_TYPE_DISTRIB);
+define ("DAILY_FILTER_TYPE",  FILTER_TYPE_PARABLE);
 
 //
 // Show basic usage.
@@ -1324,7 +1336,9 @@ function graph_total_state($graphdir, $hostid, $options, $data)
 // 
 // Makes array data smoother by inserting $points extra values between
 // each value in the array. This filter creates a parable with every
-// second value slightly disturbed from its calculated value.
+// second value slightly disturbed from its calculated value. Note 
+// that this filter only guarantee that the max value in each step is 
+// preserved.
 // 
 function apply_parable_filter(&$arr, $points) 
 {
@@ -1365,6 +1379,44 @@ function apply_parable_filter(&$arr, $points)
 	    }
 	    else {
 		$data[$keys[$i] + ($j - 1) * $step] = $y;
+	    }
+	}
+    }
+    $arr = $data;
+}
+
+// 
+// This filter makes a random distibution of the value in each interval.
+// 
+function apply_distrib_filter(&$arr, $points) 
+{
+    $data = array();
+    $keys = array_keys($arr);
+    $step = floor(($keys[1] - $keys[0]) / $points);
+    
+    for($i = 0; $i < count($keys); $i++) {
+	$curr = $arr[$keys[$i]];
+	$randmax = floor($curr / $points);
+	if($randmax == 0) {
+	    $randmax = ($curr == 0) ? 0 : 1;
+	}
+	$used = 0;
+	for($j = 1; $j <= $points; $j++) {
+	    if($j == $points) {
+		$rand = $curr - $used;
+		if($rand < 0) {
+		    $rand = 0;
+		}
+	    }
+	    else {
+		$rand = rand(0, $randmax);
+		$used += $rand;
+	    }
+	    if($keys[0] == 0) {
+		$data[] = $rand;
+	    }
+	    else {
+		$data[$keys[$i] + ($j - 1) * $step] = $rand;
 	    }
 	}
     }
@@ -1437,14 +1489,28 @@ function timestamp_for_total($stamp)
 function graph_draw_system_load($data, $image, $title, $mode, $options)
 {
     if($mode == "hourly") {
-	apply_parable_filter($data['submit'], HOURLY_FUZZY_FILTER_POINTS);
-	apply_parable_filter($data['waiting'], HOURLY_FUZZY_FILTER_POINTS);
-	apply_parable_filter($data['running'], HOURLY_FUZZY_FILTER_POINTS);	
+	if(HOURLY_FILTER_TYPE == FILTER_TYPE_PARABLE) {
+	    apply_parable_filter($data['submit'], HOURLY_FUZZY_FILTER_POINTS);
+	    apply_parable_filter($data['waiting'], HOURLY_FUZZY_FILTER_POINTS);
+	    apply_parable_filter($data['running'], HOURLY_FUZZY_FILTER_POINTS);	
+	}
+	else if(HOURLY_FILTER_TYPE == FILTER_TYPE_DISTRIB) {
+	    apply_distrib_filter($data['submit'], HOURLY_FUZZY_FILTER_POINTS);
+	    apply_distrib_filter($data['waiting'], HOURLY_FUZZY_FILTER_POINTS);
+	    apply_distrib_filter($data['running'], HOURLY_FUZZY_FILTER_POINTS);	
+	}
     }
     if($mode == "daily") {
-	apply_parable_filter($data['submit'], DAILY_FUZZY_FILTER_POINTS);
-	apply_parable_filter($data['waiting'], DAILY_FUZZY_FILTER_POINTS);
-	apply_parable_filter($data['running'], DAILY_FUZZY_FILTER_POINTS);	
+	if(DAILY_FILTER_TYPE == FILTER_TYPE_PARABLE) {
+	    apply_parable_filter($data['submit'], DAILY_FUZZY_FILTER_POINTS);
+	    apply_parable_filter($data['waiting'], DAILY_FUZZY_FILTER_POINTS);
+	    apply_parable_filter($data['running'], DAILY_FUZZY_FILTER_POINTS);	
+	}
+	else if(DAILY_FILTER_TYPE == FILTER_TYPE_DISTRIB) {
+	    apply_distrib_filter($data['submit'], HOURLY_FUZZY_FILTER_POINTS);
+	    apply_distrib_filter($data['waiting'], HOURLY_FUZZY_FILTER_POINTS);
+	    apply_distrib_filter($data['running'], HOURLY_FUZZY_FILTER_POINTS);	
+	}
     }
     
     $graph = new Graph(550, 250);
