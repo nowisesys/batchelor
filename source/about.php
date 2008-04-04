@@ -50,8 +50,7 @@ function print_about_batchelor()
     print "<span id=\"secthead\">Licensing</span>\n";    
     print "<p>Batchelor is released under <a href=\"about.php?sect=license\">GNU Public License</a> (GPL) and free ";
     print "for anyone to modify or redistribute. See the file COPYING bundled ";
-    print "together with batchelor. Batchelor is originally developed and copyrighted ";
-    print "&copy; 2007-2008 by Anders Lövgren.</p>\n";
+    print "together with batchelor. Batchelor is originally developed Anders L&ouml;vgren.</p>\n";
 
     print "<span id=\"secthead\">Authors</span>\n";    
     print "<p>The following people have contributed to batchelor:\n</p><p>";
@@ -63,7 +62,8 @@ function print_about_batchelor()
 		if($str[0] != '#') {
 		    $pattern = '/(.*)\s+<(.*)>\s+-(.*)/';
 		    $replace = '${1} <<a href="mailto:${2}">${2}</a>>: ${3}';
-		    printf("<code>%s</code><br>\n", preg_replace($pattern, $replace, $str));
+		    printf("<code>%s</code><br>\n", strtr(preg_replace($pattern, $replace, $str),
+							  array( "å" => "&aring;", "ä" => "&auml;", "ö" => "&ouml;" )));
 		}
 	    }
 	    fclose($fp);
@@ -78,8 +78,8 @@ function print_about_batchelor()
     print "</p>\n";
 
     print "<span id=\"secthead\">Copyright</span>\n";
-    print "<p>Batchelor is Copyright &copy; 2007-2008 by Anders Lövgren and the ";
-    print "Computing Department at Uppsala Biomedical Centre, Uppsala University.</p>\n";
+    print "<p>Batchelor is Copyright &copy; 2007-2008 by Anders L&ouml;vgren and the ";
+    print "Computing Department at <a href=\"http://www.bmc.uu.se\">Uppsala Biomedical Centre</a>, Uppsala University.</p>\n";
         
     $credits = "../CREDITS";
     if(file_exists($credits)) {
@@ -122,7 +122,7 @@ function print_about_batchelor()
     
     print "<span id=\"secthead\">Bug reports</span>\n";    
     print "<p>If you think you have found a bug in the batch queue application (batchelor), ";
-    print "then send them to Anders Lövgren &lt;<a href=\"mailto:lespaul@algonet.se\">lespaul@algonet.se</a>&gt;. ";
+    print "then send them to Anders L&ouml;vgren &lt;<a href=\"mailto:lespaul@algonet.se\">lespaul@algonet.se</a>&gt;. ";
     print "Include any error message, the relevant lines from the Apache error log and the output ";
     print "from check.php (runned from the command line is OK). Use 'batchelor: bug report' as subject line.</p>\n";
 }
