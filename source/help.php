@@ -52,7 +52,7 @@ function print_body()
     if(file_exists("help.html")) {
 	$help = file_get_contents("help.html");
 	$matches = array();
-	if(preg_match("/<body>((.*?|[ \n]*)*)<\/body>/m", $help, $matches)) {
+	if(preg_match("/<body.*?>((.*?|[ \n]*)*)<\/body>/mi", $help, $matches)) {
 	    print $matches[1];
 	}
 	else {
