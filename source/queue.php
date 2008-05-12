@@ -152,20 +152,20 @@ function show_jobs_table_icons(&$jobs)
 	// 
 	// Job column
 	// 
-	printf("<td nowrap><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
+	printf("<td nowrap><a href=\"details.php?jobid=%s&result=%s\" target=\"_blank\" title=\"%s\">Job %s</a></td>", 
 	       $job['jobid'], $jobdir, $title, $job['jobid']);
 		
 	// 
 	// Download and delete column
 	// 
 	if($job['state'] == "finished" || $job['state'] == "warning") {
-	    printf("<td><a href=\"download.php?jobid=%d&result=%s\" title=\"download result\"><img src=\"icons/nuvola/download.png\" alt=\"download\"></a></td>", $job['jobid'], $jobdir);
+	    printf("<td><a href=\"download.php?jobid=%s&result=%s\" title=\"download result\"><img src=\"icons/nuvola/download.png\" alt=\"download\"></a></td>", $job['jobid'], $jobdir);
 	}
 	else {
 	    printf("<td>&nbsp;</td>\n");
 	}
 	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
-	    printf("<td nowrap><a href=\"delete.php?jobid=%d&result=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td></tr>", $job['jobid'], $jobdir);
+	    printf("<td nowrap><a href=\"delete.php?jobid=%s&result=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td></tr>", $job['jobid'], $jobdir);
 	}
     }
     print "</table></div>\n";
@@ -227,7 +227,7 @@ function show_jobs_table_plain(&$jobs)
 	// 
 	// Job column
 	// 
-	printf("<td nowrap><a href=\"details.php?jobid=%d&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
+	printf("<td nowrap><a href=\"details.php?jobid=%s&result=%s\" target=\"_blank\" title=\"%s\">Job %d</a></td>", 
 	       $job['jobid'], $jobdir, $title, $job['jobid']);
 	
 	// 
@@ -244,10 +244,10 @@ function show_jobs_table_plain(&$jobs)
 	// Links column
 	$links = array();
 	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
-	    array_push($links, sprintf("<a href=\"delete.php?jobid=%d&result=%s\">delete</a>", $job['jobid'], $jobdir));
+	    array_push($links, sprintf("<a href=\"delete.php?jobid=%s&result=%s\">delete</a>", $job['jobid'], $jobdir));
 	}
 	if($job['state'] == "finished") {
-	    array_push($links, sprintf("<a href=\"download.php?jobid=%d&result=%s\">download</a>", $job['jobid'], $jobdir));
+	    array_push($links, sprintf("<a href=\"download.php?jobid=%s&result=%s\">download</a>", $job['jobid'], $jobdir));
 	}
 	printf("<td nowrap>%s</td></tr>\n", implode(", ", $links));
     }
@@ -655,7 +655,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     if(function_exists("post_enqueue_hook")) {
 	post_enqueue_hook($indata, $jobdir);
     }
-    
+        
     // 
     // Redirect the browser to an empty queue.php to prevent page
     // update to submit the same data or file twice or more.
