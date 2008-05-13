@@ -39,23 +39,23 @@ function error_handler($type)
 function print_title()
 {
     if(isset($GLOBALS['indata'])) {
-	printf("%s - Data for Job ID %d", HTML_PAGE_TITLE, $GLOBALS['jobid']);
+	printf("%s - Data for Job ID %s", HTML_PAGE_TITLE, $GLOBALS['jobid']);
     }
     else {
-	printf("%s - Details for Job ID %d", HTML_PAGE_TITLE, $GLOBALS['jobid']);
+	printf("%s - Details for Job ID %s", HTML_PAGE_TITLE, $GLOBALS['jobid']);
     }
 }
 
 function print_body()
 {
     if(isset($GLOBALS['indata'])) {
-	printf("<h3>Data for Job ID %d</h3><hr>\n", $GLOBALS['jobid']);
+	printf("<h3>Data for Job ID %s</h3><hr>\n", $GLOBALS['jobid']);
 	print "<p><pre>\n";
 	readfile(sprintf("%s/indata", $GLOBALS['jobdir']));
 	print "</pre></p>\n";
     }
     else {
-	printf("<h3>Details for Job ID %d</h3><hr>\n", $GLOBALS['jobid']);
+	printf("<h3>Details for Job ID %s</h3><hr>\n", $GLOBALS['jobid']);
 	$cwd = getcwd();
 	chdir($GLOBALS['jobdir']);
 	// 
@@ -76,7 +76,7 @@ function print_body()
 	    printf("<p><b>Error:</b><br><pre>%s</pre></p>\n", file_get_contents("stderr"));
 	}
 	
-	printf("<p><a href=\"details.php?jobid=%d&result=%s&data=1\" target=\"_blank\">View indata...</a></p>", 
+	printf("<p><a href=\"details.php?jobid=%s&result=%s&data=1\" target=\"_blank\">View indata...</a></p>", 
 	       $_REQUEST['jobid'], $_REQUEST['result']);
 	chdir($cwd);
     }

@@ -105,7 +105,7 @@ if(file_exists($zipfile)) {
     //
     // Hint browser about filename to use for "save as..."
     // 
-    header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("result-job-%d.zip", $jobid)));
+    header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("result-job-%s.zip", $jobid)));
     header(sprintf("Content-Type: %s", "application/zip"));
     header(sprintf("Content-Length: %d", filesize($zipfile)));
     
