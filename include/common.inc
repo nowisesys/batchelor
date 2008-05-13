@@ -357,7 +357,11 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
 	else {
 	    if(isset($job['jobid'])) {
 		if(!isset($queued[$job['jobid']])) {
-		    $job['state'] = "crashed";
+		    if(defined("BATCH_START_DEQUEUES") && BATCH_START_DEQUEUES == 1) {
+		        $job['state'] = "running";
+		    } else {
+		        $job['state'] = "crashed";
+		    }
 		}
 		else {
 		    $job['state'] = $queued[$job['jobid']];

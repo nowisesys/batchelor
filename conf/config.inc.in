@@ -75,6 +75,12 @@ define ("BATCH_LISTING", "at -l");
 define ("BATCH_REMOVE", "atrm %d");
 
 // 
+// Define to 1 if jobs are removed from the batch queue listing when 
+// they are started. Normally they remains until the job has finished.
+// 
+// define ("BATCH_START_DEQUEUES", 0);
+
+// 
 // 
 // The minimum/maximum file size accepted (in bytes). Set to 0 to 
 // disable minimum/maximum file size check. The maximum is affected
