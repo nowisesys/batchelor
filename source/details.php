@@ -50,9 +50,16 @@ function print_body()
 {
     if(isset($GLOBALS['indata'])) {
 	printf("<h3>Data for Job ID %s</h3><hr>\n", $GLOBALS['jobid']);
-	print "<p><pre>\n";
-	readfile(sprintf("%s/indata", $GLOBALS['jobdir']));
-	print "</pre></p>\n";
+	$content = file(sprintf("%s/indata", $GLOBALS['jobdir']));
+	// 
+	// Single line input data must be wrapped by browser, or
+	// the output may look like empty space on the page.
+	// 
+	if(count($content) == 1) {
+	    printf("<p>%s</p>\n", $content[0]);
+	} else {
+	    printf("<p><pre>%s</pre></p>\n", implode("\n", $content));
+	}
     }
     else {
 	printf("<h3>Details for Job ID %s</h3><hr>\n", $GLOBALS['jobid']);
