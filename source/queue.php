@@ -300,7 +300,7 @@ function print_body()
 	// The form for submitting a data.
 	// 
 	print "<tr><td>Process data:</td><td>\n";	
-	print "<form action=\"queue.php\" method=\"GET\">\n";
+	print "<form action=\"queue.php\" method=\"POST\">\n";
 	print "   <textarea name=\"data\" cols=\"50\" rows=\"8\"></textarea>\n";
 	print "   <input type=\"submit\" value=\"Send Data\" />\n";
 	if(isset($_REQUEST['sort'])) {
