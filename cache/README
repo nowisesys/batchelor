@@ -1,0 +1,4 @@
+This directory is used as cache by default, unless another directory is
+defined by CACHE_DIRECTORY in conf/config.inc. Make sure to change
+permissions on this directory to make it writable by the user the web server
+is running as (usually nobody or a dedicated user named apache or http).

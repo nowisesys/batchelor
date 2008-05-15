@@ -1,0 +1,48 @@
+<HTML>
+<HEAD>
+	<TITLE>About ChemGPS-NP</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#4A92F8" VLINK="#A57BEE" ALINK="#705E8D">
+
+	<TABLE CELLSPACING=5 VALIGN="TOP">
+		<TR>
+			<TD COLSPAN=3>
+				<FONT FACE="Verdana, Verdana, Arial, Helvetica, sans-serif" COLOR="#000099">
+				<H2>ChemGPS-NP
+				</FONT>
+			</TD>
+		</TR>
+		<TR>
+			<TD VALIGN=TOP><FONT FACE="Arial, Helvetica, sans-serif" COLOR="FFFFFF"><B></B></FONT></TD>
+			<TD VALIGN=TOP COLSPAN=2><FONT FACE="Arial, helvetica, sans-serif" SIZE=-1>
+
+			<span id="secthead">About ChemGPS-NP</span>
+			<P>
+			ChemGPS-NP is a principal component analysis (PCA) based global space map or a chemical global positioning system.
+			<P>
+			ChemGPS-NP has eight principal components (dimensions) describing physical-chemical properties such as size, shape,<BR>
+			polarizability, lipophilicity, polarity, flexibility, rigidity, and hydrogen bond capacity for a reference set of <BR>
+			compounds. Compounds of interest or under study are positioned onto this map using interpolation in terms of (PCA) <BR>
+			score prediction. 
+			<P>
+			The properties of the compounds together with trends and groupings can easily be interpreted from the resulting projections.
+			<P>
+			ChemGPS-NP is tuned for exploration of the regions of chemical space most likely to enclose compounds with <BR>
+			biologically relevant functions and activities.  Large libraries can for instance be compared without positions <BR>
+			changing as new structures are included. For instance known inhibitors of a certain target can first be positioned <BR>
+			on the map and possible active regions of space can be discovered. Full libraries can then be positioned on the <BR>
+			map and selection of candidates to continue with can be selected from the active region. 
+			<P>
+			For more information about ChemGPS-NP, read the original publication:<
+			<P>
+			<B>Larsson J, Gottfries J, Muresan S, Backlund A. </B>ChemGPS-NP: tuned for navigation in biologically relevant chemical space. <I>J Nat Prod. 2007;70(5):789-794.</I>
+
+		</TR>
+	</TABLE>
+</BODY>
+</HTML>
+
+
+
+

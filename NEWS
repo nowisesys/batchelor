@@ -1,0 +1,141 @@
+Version 0.6.6 (2008-05-14):
+
+	* Works together with batch queue not using numeric job ID's.
+	
+	* The indata uploaded thru the "process data" form is now only
+	  limited by PHP's max upload size config variable.
+	  
+Version 0.6.5 (2008-05-12):
+
+	* Ported batchelor to SUN Solaris 8.
+	
+	* Fixed encoding problems of swedish characters.
+	
+Version 0.6.4 (2008-04-03):
+
+	* Added jobdir argument to pre_enqueue_hook() (make sure to update
+	  include/hooks.inc if you use this function).
+	  
+	* Added parable curve and random distribution (non-strict) filter to 
+	  smoothen data when plotting the sysload by hours statistics. These
+	  can be configured in utils/collect.php
+
+Version 0.6.3 (2008-03-18):
+
+	* Fixed HTML title in generated HTML code. Each page should get an
+	  unique title.
+	  
+	* Fixed sorting of date in statistics navigator. The links now has
+	  chronological order.
+	  
+	* The name for the page title can now be configured in conf/config.inc
+	
+	* Fixed about notes for batchelor. Added credits, download and
+	  copyright sections.
+
+Version 0.6.2 (2008-03-17):
+
+	* Hook functions added. This allows the behaviour and functionality
+	  of batchelor to be extended by user defined callback functions.
+	  See callback skeletons in include/hooks.inc.
+	  
+	* Its now possible to delete directories with jobid 0 as long as the
+	  jobid file is missing (indicates a server failure or missconfiguration).
+	  
+Version 0.6.1 (2008-03-14):
+
+	* Deleting a job directory is now working recursive (bugfix).
+	
+	* Preserve original filename of uploaded file is now possible. The
+	  filename is not preserved by default (see conf/config.inc).
+	
+	* Fixed bug where subdirs under cache/../result/ got added to the
+	  zipfile as regular files when using the PECL zip extension.
+	
+Version 0.6.0 (2008-03-14):
+
+	* Added statistics module. Run utils/collect.php to generate the
+	  statistics data. Access control is configured in conf/config.inc.
+
+Version 0.5.1 (2008-03-07):
+
+	* Maintenance release to fix version issues.
+	
+Version 0.5.0 (2008-03-06):
+
+	* Its now possible to configure menu orientation (horizontal or
+	  vertical) and menu style (graphic, text or compact) from inside
+	  conf/config.inc.
+	  
+	* Added program options to simula.c (test program).
+	
+	* Ported batchelor to BSD/Mac OS X (tested with 10.4.11). The running 
+	  state is not available on OSX using its builtin at command due to 
+	  missing information in its output.
+	  
+Version 0.4.2 (2008-02-21):
+	
+	* Added qsignal() function to utils/script.sh.in to help users
+	  communicate the job state to batchelor in a well-defined way.
+	  
+	* Its now easy to add new items to the tab menu in about.php. Just
+	  create an external HTML page or an function inside about.php and
+	  add it to the tabmenu array inside the function print_about().
+	  
+	* Adding icons to page headers (like About, Help and Job Queue).
+	
+	* Adding warning state (in addition to existing pending, running,
+	  finished, error and crashed).
+	  
+Version 0.4.1 (2008-02-20):
+
+	* Adding message box function for reporting errors and info.
+	
+	* Fixed error handling in download.php, details.php and delete.php
+	
+Version 0.4.0 (2008-02-18):
+
+	* Adding PHP index, help and about pages (that can be either overridden or 
+	  complemented by installing corresponding HTML pages (i.e. index.html).
+	
+	* Improved visual interface by splitting he menu into sections.
+	
+Version 0.3.5 (2008-02-17):
+
+	* Its now possible to delete multiple jobs using filter options for
+	  the job queue (i.e. deleting all failed jobs).
+
+	* Separated the submit form and queue view. Adding option (filter) to 
+	  only list running and pending jobs.
+	  
+Version 0.3.4 (2008-02-15):
+
+	* Added graphic and plain text mode used when displaying the queued jobs.
+	
+	* Moved shell script wrapper (script.sh) to utils. It shouldn't be 
+	  mixed with PHP source.
+	  
+	* Implemented sorting and filtering of jobs in job queue. Adding a delete
+	  all (in list) button is planned.
+	
+Version 0.3.3 (2008-02-15):
+
+        * Various fixes for minor bugs (like E_NOTICE warnings).
+	
+	* Added template based UI. The interface is now easilly customized
+	  by modifying the standard.ui and popup.ui templates and optionally
+	  the CSS file.
+
+Version 0.3.2 (2007-12-05):
+
+	* Added option for running multiple jobs in parallell. Controlled
+	  by BATCH_LIMIT in conf/config.inc
+	  
+Version 0.3.1 (2007-11-30):
+
+	* Ported to run using PHP 4
+
+Version 0.3.0 (2007-??-??):
+
+	* Too many changes to even try to mention some. 
+	

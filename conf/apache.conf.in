@@ -1,0 +1,41 @@
+# Apache webserver configuration file.
+# 
+# Include this file in your main apache conf (usually /etc/apache/httpd.conf) as: 
+# Include /var/lib/http/localhost/apps/batchelor/conf/apache.conf
+#
+# If you got an /etc/apache2/webapps.d,then simply create a symbolic link:
+# ln -s /var/lib/http/localhost/apps/batchelor/conf/apache.conf \
+#       /etc/apache2/webapps.d/batchelor.conf
+#
+# Restart the webserver.
+
+Alias /batchelor/ /var/lib/http/localhost/apps/batchelor/source/
+
+<DirectoryMatch ".*/\.svn/">
+    Order allow,deny
+    Deny from all
+</DirectoryMatch>
+	
+<Directory /var/lib/http/localhost/apps/batchelor/source/>
+    Order deny,allow
+    Deny from all
+    # Allow from localhost (ipv4/ipv6) by default:
+    Allow from 127.0.0.1 ::1
+    Options Indexes FollowSymLinks MultiViews
+    # Files that should not be readable as plain text by world.
+    # For Apache version < 1.3:
+    #   <Files ~ "\.(inc|js)$">
+    #       Order allow,deny
+    #       Deny from all
+    #   </Files>
+    # For Apache version >= 1.3:
+    #   <FilesMatch "\.(inc|bak|*~)$">
+    #       Order allow,deny
+    #       Deny from all
+    #   </FilesMatch>
+    # For Apache version >= 2.0.x:
+    <FilesMatch "\.(inc|bak|conf|.*~)$">
+        Order allow,deny
+	Deny from all
+    </FilesMatch>
+</Directory>

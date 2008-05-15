@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+	<TITLE>About ChemGPS-NP</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+	<TABLE CELLSPACING=5 VALIGN="TOP">
+		<TR>
+			<TD COLSPAN=3>
+				<FONT FACE="Verdana, Verdana, Arial, Helvetica, sans-serif" COLOR="#000099">
+				<H2>ChemGPS-NP
+				</FONT>
+			</TD>
+		</TR>
+		<TR>
+			<TD VALIGN=TOP><FONT FACE="Arial, Helvetica, sans-serif" COLOR="FFFFFF"><B></B></FONT></TD>
+			<TD VALIGN=TOP COLSPAN=2><FONT FACE="Arial, helvetica, sans-serif" SIZE=-1>
+
+			<B>Instructions for using the ChemGPS-NP web tool:</B>
+			<P>
+			Upload a correct SMILES-file with a maximum of 500 compounds using the browse button and then submit by clicking  send file.<BR>
+			You can alternatively paste your SMILES in the process data drop box and submit by clicking send data.
+			<P>
+			To obtain the resulting ChemGPS-NP 8D coordinates go to show job queue in the left menu and download the file by selecting it.<BR>
+			The coordinates can then be plotted using appropriate software.
+						<P>
+			If you use this application please cite the original publication:<
+			<P>
+			<B>Larsson J, Gottfries J, Muresan S, Backlund A. </B><BR>
+			ChemGPS-NP: tuned for navigation in biologically relevant chemical space. <I>J Nat Prod. 2007;70(5):789-794.</I>
+
+		</TR>
+	</TABLE>
+</BODY>
+</HTML>
+
+
+
+
