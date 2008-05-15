@@ -233,7 +233,9 @@ function process_jobdir_metadata($jobdir, $ipaddr, $hostid, $options)
 	if(file_exists($dbdir)) {
 	    die(sprintf("%s: no %s in job directory %s\n", basename($dbfile), $dbdir));
 	}
-	printf("debug: dbmap %s don't exists (job directory deleted bu user)\n", $dbfile);
+	if($options->debug) {
+	    printf("debug: dbmap %s don't exists (job directory deleted bu user)\n", $dbfile);
+	}
 	return;
     }
     
