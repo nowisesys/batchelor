@@ -86,7 +86,7 @@ function print_html($what)
 
 if($mode == "www") {
     include "../include/ui.inc";
-    include "../template/popup.ui";
+    load_ui_template("popup");
 }
 else {
     run_all_tests();

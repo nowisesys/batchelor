@@ -140,6 +140,6 @@ if(!file_exists($jobdir)) {
     die("The job directory is missing");
 }
 
-include "../template/popup.ui";
+load_ui_template("popup");
 
 ?>

@@ -123,6 +123,6 @@ function print_html($what)
     }
 }
 
-include "../template/popup.ui";
+load_ui_template("popup");
 
 ?>

@@ -26,8 +26,8 @@
 
    Since version 0.3.3 its possible to easy change the "look-and-feel" of
    batchelor. All scripts that outputs HTML uses the templates from inside the
-   template directory. Open them in an editor, change the layout and possible
-   the CSS.
+   template directory. Copy *.ui.in to *.ui and open *.ui in an editor, change 
+   the layout and possible the CSS.
 
 ** STATISTICS:
 
@@ -56,6 +56,15 @@
    If you like to use job control and is *not* running GNU/Linux, then you
    have to modify the signal values or disaster (and angry users) will 
    follow! 
+   
+** UPDATE & CONFIG PROTECTION:
+
+   All files ending with *.in are config templates. You are not supposed to edit
+   any config templates directly, instead create a copy of the config template 
+   with the same name except for the .in extension (like file.inc.in -> file.inc).
+   
+   A new release will never contain any file.* who has an file.*.in counterpart, 
+   thus all file.* are protected when updating.
    
 ** ITS ALL FREE, BUT...:
 

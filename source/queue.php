@@ -477,7 +477,7 @@ function show_page($error = null)
 	}
     }
     
-    include "../template/standard.ui";
+    load_ui_template("standard");
 }
 
 // 

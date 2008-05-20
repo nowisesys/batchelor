@@ -147,3 +147,12 @@ function print_common_html($what)
 	break;
     }
 }
+
+function load_ui_template($type)
+{
+    if(file_exists("../template/$type.ui")) {
+	include "../template/$type.ui";
+    } else if(file_exists("../template/$type.ui.in")) {
+	include "../template/$type.ui.in";
+    }
+}
