@@ -35,10 +35,20 @@
 # qsignal($state, $msg) function to communicate state to batchelor.
 #
 # NOTES:
+#
 # 1. Solaris 8 (and later?)
 #    a) You need to compile date.c because the system date don't support -u '%s'
 #    b) Change first line in this script from /bin/sh to /usr/bin/bash becaue
 #       /bin/sh don't understand function xxx() syntax.
+#
+# 2. Job control:
+#    This script support job control by default thru the bgexec() function. If you 
+#    don't want job control, then switch to using the fgexec() function instead.
+#    Job control must also be enabled in the file conf/config.inc.
+#
+#    If a complete job is split into several sub-processes, then remember to update
+#    the pid-file after each step.
+#
 
 ##
 ## Required parameters:
@@ -46,7 +56,12 @@
 jobdir="$1"
 indata="$2"
 resdir="$3"
-      
+
+##
+## Exit status of last command:
+##
+status=0
+
 ##
 ## Use this function to communicate the state to batchelor.
 ##
@@ -67,12 +82,40 @@ function qsignal()
       ;;
     fatal)
       # This is *really* bad:
-      errorcode="$?"
       date -u +"%s" > $jobdir/finished
       echo "$msg"   > $jobdir/fatal
-      exit $errorcode
+      exit $status
       ;;
   esac
+}
+
+##
+## This function runs the job with support for job control.
+##
+function bgexec()
+{
+  ##
+  ## Put the command to run here with stdout and stderr redirected.
+  ## The command must be in PATH or being an absolute path.
+  ##
+  $(dirname $0)/simula -i $indata -r $resdir 1> $jobdir/stdout 2> $jobdir/stderr &
+  pid="$!"
+  echo $pid > $jobdir/pid
+  wait $pid
+  status="$?"
+}
+
+##
+## This function runs the job without support for job control.
+##
+function fgexec()
+{
+  ##
+  ## Put the command to run here with stdout and stderr redirected.
+  ## The command must be in PATH or being an absolute path.
+  ##
+  $(dirname $0)/simula -i $indata -r $resdir 1> $jobdir/stdout 2> $jobdir/stderr
+  status="$?"
 }
 
 ##
@@ -98,15 +141,14 @@ fi
 qsignal "started"
 
 ##
-## Put the command to run here with stdout and stderr redirected.
-## The command must be in PATH or being an absolute path.
+## Start running the job:
 ##
-$(dirname $0)/simula -s warning -i $indata -r $resdir 1> $jobdir/stdout 2> $jobdir/stderr
+bgexec
 
 ##
 ## Signal finished to batchelor:
 ##
-if [ "$?" == "0" ]; then
+if [ "$status" == "0" ]; then
   qsignal "finished"
 else
   qsignal "fatal" "The command exited with error state"

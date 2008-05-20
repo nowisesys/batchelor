@@ -1,3 +1,8 @@
+Version 0.6.7 (2008-05-20):
+
+	* Adding job control allowing terminate, stop, resume, kill of
+	  running jobs. Configured in conf/config.inc. Disabled by default.
+	  
 Version 0.6.6 (2008-05-14):
 
 	* Works together with batch queue not using numeric job ID's.

@@ -48,6 +48,15 @@
    the find command, as cache.php has internal knowledge about how the cache 
    is organized.
 
+** JOB CONTROL:
+
+   Since version 0.6.7 it's possible to control running jobs thru the job
+   queue viewer. Job control is enabled in conf/config.inc (off by default).
+   
+   If you like to use job control and is *not* running GNU/Linux, then you
+   have to modify the signal values or disaster (and angry users) will 
+   follow! 
+   
 ** ITS ALL FREE, BUT...:
 
    This software is licensed under GNU Public License (GPL). You are free to
