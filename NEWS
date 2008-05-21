@@ -1,3 +1,10 @@
+Version 0.x.y (2008-mm-dd):
+
+	* Context help visible on right side of the body in same style as
+	  the left hand menu. The verbosity is configurable in conf/config.inc 
+	  and can be extended by the context_help_hook() function defined in
+	  include/hooks.inc
+
 Version 0.6.7 (2008-05-20):
 
 	* Adding job control allowing terminate, stop, resume, kill of
