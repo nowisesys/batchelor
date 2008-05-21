@@ -173,7 +173,8 @@ function show_jobs_table_icons(&$jobs)
 	}
 	if(ENABLE_JOB_CONTROL != "off" && $job['state'] == "running") {
 	    if(ENABLE_JOB_CONTROL == "simple") {
-		printf("<td nowrap><a href=\"jobcontrol.php?jobid=%s&result=%s&signal=%s\" title=\"signal job\"><img src=\"icons/nuvola/delete.png\" alt=\"signal\"></a></td></tr>", $job['jobid'], $jobdir, JOB_CONTROL_ACTION);
+		printf("<td nowrap><a href=\"jobcontrol.php?jobid=%s&result=%s&signal=%s\" title=\"send job the %s signal\"><img src=\"icons/nuvola/delete.png\" alt=\"signal\"></a></td></tr>", 
+		       $job['jobid'], $jobdir, JOB_CONTROL_ACTION, JOB_CONTROL_ACTION);
 	    } else {
 		global $signals;
 
