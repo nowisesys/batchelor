@@ -25,6 +25,10 @@ include "../conf/config.inc";
 include "../include/common.inc";
 include "../include/ui.inc";
 
+if(file_exists("../include/hooks.inc")) {
+    include("../include/hooks.inc");
+}
+
 // 
 // The error handler.
 // 
@@ -49,42 +53,88 @@ function print_title()
 function print_body()
 {
     if(isset($GLOBALS['indata'])) {
-	printf("<h3>Data for Job ID %s</h3><hr>\n", $GLOBALS['jobid']);
-	$content = file(sprintf("%s/indata", $GLOBALS['jobdir']));
-	// 
-	// Single line input data must be wrapped by browser, or
-	// the output may look like empty space on the page.
-	// 
-	if(count($content) == 1) {
-	    printf("<p>%s</p>\n", $content[0]);
+	printf("<h2><img src=\"icons/nuvola/info.png\"> Data for Job ID %s</h2>\n", $GLOBALS['jobid']);
+	$indata = sprintf("%s/indata", $GLOBALS['jobdir']);
+	
+	if(function_exists("show_indata_hook")) {
+	    show_indata_hook($indata);
 	} else {
-	    printf("<p><pre>%s</pre></p>\n", implode("\n", $content));
+	    printf("<span id=\"secthead\">Uploaded data:</span>\n");
+
+	    // 
+	    // Single line input data must be wrapped by browser, or
+	    // the output may look like empty space on the page.
+	    // 
+	    $content = file(sprintf("%s/indata", $GLOBALS['jobdir']));
+	    if(count($content) == 1) {
+		printf("<p>%s</p>\n", $content[0]);
+	    } else {
+		printf("<p><pre>%s</pre></p>\n", implode("\n", $content));
+	    }
 	}
     }
     else {
-	printf("<h3>Details for Job ID %s</h3><hr>\n", $GLOBALS['jobid']);
+	printf("<h2><img src=\"icons/nuvola/info.png\"> Details for Job ID %s</h2>\n", $GLOBALS['jobid']);
 	$cwd = getcwd();
 	chdir($GLOBALS['jobdir']);
+	
+	$started  = null;
+	$finished = null;
+	
+	$stdout = null;
+	$stderr = null;
+	
+	if(file_exists("started")) {
+	    $started  = trim(file_get_contents("started"));
+	}
+	if(file_exists("finished")) {
+	    $finished = trim(file_get_contents("finished"));
+	}
+
+	if(file_exists("stdout") && filesize("stdout") > 0) {
+	    $stdout = file_get_contents("stdout");
+	}
+	if(file_exists("stderr") && filesize("stderr") > 0) {
+	    $stderr = file_get_contents("stderr");
+	}
+	
 	// 
 	// Display job details.
 	// 
-	print "<p><table>";
-	if(file_exists("started")) {
-	    printf("<tr><td><b>Started:</b></td><td>%s</td></tr>\n", format_timestamp(trim(file_get_contents("started"))));
-	}
-	if(file_exists("finished")) {
-	    printf("<tr><td><b>Finished:</b></td><td>%s</td></tr>\n", format_timestamp(trim(file_get_contents("finished"))));
-	}
-	print "</table></p>\n";
-	if(file_exists("stdout") && filesize("stdout") > 0) {
-	    printf("<p><b>Output:</b><br><pre>%s</pre></p>\n", file_get_contents("stdout"));
-	}
-	if(file_exists("stderr") && filesize("stderr") > 0) {
-	    printf("<p><b>Error:</b><br><pre>%s</pre></p>\n", file_get_contents("stderr"));
-	}
 	
+	if(function_exists("show_result_hook")) {
+	    show_result_hook($started, $finished, $stdout, $stderr);
+	} else {
+	    $proctime = 0;
+	    if(isset($started) && isset($finished)) {
+		$proctime = $finished - $started;
+	    } 
+	    printf("<span id=\"secthead\">Process time:</span>\n");
+	    printf("<p>\n");
+	    printf("<b>Started:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($started));
+	    printf("<b>Finished:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($finished));
+	    printf("<b>Total job time:</b> %s\n", seconds_to_string($proctime));
+	    printf("</p><br>\n");
+	    
+	    if(isset($stdout)) {
+		printf("<span id=\"secthead\">Output from job:</span>\n");
+		printf("<p>%s</p>\n", preg_replace(array('/\n/', 
+							 '/(using|options|defaults|created|exiting)/i'
+							 ), 
+						   array('<br>', 
+							 '<b>$1</b>'
+							 ), 
+						   $stdout));
+	    }
+	    if(isset($stderr)) {
+		printf("<span id=\"secthead\">Error log:</span>\n");
+		printf("<p>%s</p>\n", $stderr);
+	    }
+	}
+	printf("<span id=\"secthead\">More information:</span>\n");
 	printf("<p><a href=\"details.php?jobid=%s&result=%s&data=1\" target=\"_blank\">View indata...</a></p>", 
 	       $_REQUEST['jobid'], $_REQUEST['result']);
+	
 	chdir($cwd);
     }
 }

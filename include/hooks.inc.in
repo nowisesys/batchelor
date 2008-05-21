@@ -103,4 +103,19 @@
 //     }
 // }
 
+// 
+// Use this function to override how result gets presented by details.php.
+// 
+// function show_result_hook($started, $finished, &$stdout, &$stderr)
+// { 
+// }
+
+// 
+// Use this function to override how indata gets presented by details.php.
+// The indata parameter is the complete path to uploaded data (indata).
+// 
+// function show_indata_hook($indata)
+// {
+// }
+
 ?>

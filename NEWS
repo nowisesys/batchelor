@@ -1,9 +1,12 @@
-Version 0.x.y (2008-mm-dd):
+Version 0.6.8 (2008-05-21):
 
-	* Context help visible on right side of the body in same style as
-	  the left hand menu. The verbosity is configurable in conf/config.inc 
-	  and can be extended by the context_help_hook() function defined in
-	  include/hooks.inc
+	* Context help is now visible on right side of the body in the same
+	  style as the the left hand menu. The verbosity is configurable in 
+	  conf/config.inc and can be extended by the context_help_hook() 
+	  function defined in include/hooks.inc
+	  
+	* Hook functions show_indata_hook() and show_result_hook() has been
+	  added to let the user modify the formatting of result and indata.
 
 Version 0.6.7 (2008-05-20):
 

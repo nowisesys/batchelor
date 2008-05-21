@@ -29,6 +29,20 @@
    template directory. Copy *.ui.in to *.ui and open *.ui in an editor, change 
    the layout and possible the CSS.
 
+** HOOKS:
+
+   The file include/hooks.inc contains callback functions that lets users
+   tailor batchelor to there needs. Among things that can be adopted are:
+   indata validation, custom statistics, context help, presentation of result.
+   
+   The hooks in pair with flexible template UI gives an easy to setup
+   solution for allmost everyone. The name (hooks) comes from the fact that
+   these functions hooks into the workflow to modify the behavour.
+   
+   In the default configuration theres no hook functions defined, these must
+   be explicit enabled by copying include/hooks.inc.in to include/hooks.inc
+   and enabling wanted functions.
+   
 ** STATISTICS:
 
    Since version 0.6.0 a statistics module has been included. If you like to use
