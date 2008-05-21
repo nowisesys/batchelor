@@ -476,33 +476,64 @@ function seconds_to_string($original)
     // 
     // Save original value to avoid error propagation.
     // 
-    $current = $original;
+    $current  = $original;
+    $reminder = 0;
     
-    $timestr = "$current sec";
-    $divide  = 60;
-    $current = floor($original / $divide);
+    $timestr  = "$current sec";
+    $divide   = 60;
+    $current  = floor($original / $divide);
+    $reminder = floor($original % $divide);
     if($current >= 2) {
-	$timestr = "$current min";
-	$divide *= 60;
-	$current = floor($original / $divide);
+	if($reminder != 0) {
+	    $timestr  = "$current min $reminder sec";
+	} else {
+	    $timestr  = "$current min";
+	}
+	$divide  *= 60;
+	$current  = floor($original / $divide);
+	$reminder = floor($original % $divide);
 	if($current >= 2) {
-	    $timestr = "$current hours";
-	    $divide *= 24;
-	    $current = floor($original / $divide);
+	    if($reminder != 0) {
+		$timestr  = "$current hours $reminder min";
+	    } else {
+		$timestr  = "$current hours";
+	    }
+	    $divide  *= 24;
+	    $current  = floor($original / $divide);
+	    $reminder = floor($original % $divide);
 	    if($current >= 4) {
-		$timestr = "$current days";
-		$divide *= 7;
-		$current = floor($original / $divide);
+		if($reminder != 0) {		    
+		    $timestr  = "$current days $reminder $hours";
+		} else {
+		    $timestr  = "$current days";
+		}
+		$divide  *= 7;
+		$current  = floor($original / $divide);
+		$reminder = floor($original % $divide);
 		if($current >= 4) {
-		    $timestr = "$current weeks";
-		    $divide *= 4;
-		    $current = floor($original / $divide);
+		    if($reminder != 0) {
+			$timestr  = "$current weeks $reminder days";
+		    } else {
+			$timestr  = "$current weeks";
+		    }
+		    $divide  *= 4;
+		    $current  = floor($original / $divide);
+		    $reminder = floor($original % $divide);
 		    if($current > 3) {
-			$timestr = "$current months";
-			$divide *= 12;
-			$current = floor($original / $divide);
+			if($reminder != 0) {
+			    $timestr  = "$current months $reminder weeks";
+			} else {
+			    $timestr  = "$current months";
+			}
+			$divide  *= 12;
+			$current  = floor($original / $divide);
+			$reminder = floor($original % $divide);
 			if($current >= 3) {
-			    $timestr = "$current years";
+			    if($reminder != 0) {
+				$timestr = "$current years $reminder months";
+			    } else {
+				$timestr = "$current years";
+			    }
 			}
 		    }
 		}
