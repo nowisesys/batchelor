@@ -277,4 +277,20 @@ $signals = array(
 		  "usr2" => array( "value" => SIGUSR2, "desc" => "User Defined #2", "action" => "none" ),
 		  );
 
+// 
+// Configure the help style. Use either "graphic" or "text".
+// 
+define ("HELP_STYLE", "graphic");
+
+// 
+// Define "verbosity" level for builtin help. Value is between 0 and 3 where
+// 0 is completely silent.
+// 
+define ("HELP_LEVEL", 2);
+
+// 
+// Show description about icons used in queue viewer.
+//
+define ("HELP_ICON_INFO", true);
+
 ?>

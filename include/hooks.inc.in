@@ -80,4 +80,27 @@
 // {
 // }
 
+// 
+// This function gets called to print context help.
+// 
+// function context_help_hook($what)
+// {
+//     // 
+//     // Output system default help:
+//     // 
+//     context_help_system($what);
+//    
+//     switch($what) {
+//      case "submit":
+// 	print "<p>Extra info about submit</p>\n";
+// 	break;
+//      case "queue":
+// 	print "<p>Extra info about queue viewer</p>\n";
+// 	break;
+//      case "stats":
+// 	print "<p>Extra info about statistics</p>\n";
+// 	break;
+//     }
+// }
+
 ?>

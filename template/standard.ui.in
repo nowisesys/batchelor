@@ -12,7 +12,7 @@
 <body>
 <!--
      A simple page layout showing a page banner, a left-side meny,
-     the page body and address links at bottom.
+     the page body, context help at right and address links at bottom.
      -->
   <table>
     <tr>
@@ -21,10 +21,11 @@
     </tr>
   </table>
   <div class="top"></div>
-  <table width="800">
+  <table width="960">
     <tr>
       <td class="menu"><?php print_html("menu"); ?></td>
       <td class="body"><?php print_html("body"); ?></td>
+      <td class="help"><?php print_html("help"); ?></td>
     </tr>
   </table>
   <br>

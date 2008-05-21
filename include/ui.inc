@@ -133,6 +133,129 @@ function print_footer()
     print  "</table>\n";
 }
 
+// 
+// Print context help.
+// 
+function print_context_help()
+{
+    switch(basename($_SERVER['PHP_SELF'])) {
+     case "queue.php":
+	if(isset($_REQUEST['show']) && $_REQUEST['show'] == "queue") {
+	    $what = "queue";
+	} else {
+	    $what = "submit";
+	}
+	break;
+     case "statistics.php":
+	$what = "stats";
+	break;
+    }
+    
+    if(function_exists("context_help_hook")) {
+	context_help_hook($what);
+    } else {
+	context_help_system($what);
+    }
+}
+
+// 
+// The function that actually prints context help.
+// 
+function context_help_system($what)
+{
+    if(HELP_LEVEL == 0) {
+	return;
+    }
+    
+    switch($what) {
+     case "submit":
+	if(HELP_LEVEL > 2) {
+	    print "<p>Browse and upload a file or copy and paste the data into the 'process data field'.</p>\n";
+	}
+	if(HELP_LEVEL > 0) {
+	    if(UPLOAD_MIN_FILESIZE != 0 && UPLOAD_MAX_FILESIZE != 0) {
+		printf("<p>Uploaded data must be <b>between %s and %s.</b></p>\n", 
+		       bytes_to_string(UPLOAD_MIN_FILESIZE), 
+		       bytes_to_string(UPLOAD_MAX_FILESIZE));
+	    } else if(UPLOAD_MIN_FILESIZE != 0) {
+		printf("<p>Uploaded data must be <b>at least %s.</b></p>\n", 
+		       bytes_to_string(UPLOAD_MIN_FILESIZE));
+	    } else if(UPLOAD_MAX_FILESIZE != 0) {
+		printf("<p><b>Maximum accepted size</b> of uploaded data is %s.</p>\n", 
+		       bytes_to_string(UPLOAD_MAX_FILESIZE));
+	    }
+	}
+	if(HELP_LEVEL > 1) {
+	    print "<p>The uploaded job gets queued for execution and can be monitored in the <a href=\"queue.php?show=queue\">job queue</a> viewer.</p>\n";
+	}
+	break;
+     case "queue":
+	if(HELP_LEVEL > 1) {
+	    print "<p>Use the <b>'sort on'</b> and <b>'show'</b> droplist to filter jobs in queue.</p>\n"; 
+	}
+	if(HELP_LEVEL > 0) {
+	    print "<p>Pressing the <b>'delete jobs'</b> button will delete all jobs that are currently shown.</p>\n";
+	}
+	if(HELP_LEVEL > 2) {
+	    print "<p>Only result for jobs finished with <b>success</b> or <b>warning</b> status can be downloaded.</p>\n";
+	    print "<p>Delete individual jobs by pressing its <b>'thrash bin'</b> icon.</p>\n";
+	}
+	if(HELP_LEVEL > 0) {
+	    if(defined("ENABLE_JOB_CONTROL")) {
+		if(ENABLE_JOB_CONTROL == "simple") {
+		    printf("<p>Simplified job control is enabled. Clicking the 'trash bin' icon on a running job will send the <b>'%s' signal</b> to the job.</p>\n", JOB_CONTROL_ACTION);
+		} else if(ENABLE_JOB_CONTROL) {
+		    print "<p>Advanced job control is enabled. Running jobs can be <b>controlled</b> by sending <b>signals</b>. Stopped jobs can only be <b>resumed</b> (continue) or <b>killed</b>.</p>\n";
+		}
+	    }
+	}
+	if(HELP_LEVEL > 2) {
+	    print "<p>Click on the job ID link to view <b>details</b> and <b>uploaded data</b> for that specific job.</p>\n";
+	}
+	if(HELP_ICON_INFO) {
+	    if(HELP_LEVEL > 0) {
+		print "<p><u>Description of exit status icons:</u>\n";
+		print "<ul>\n";
+		print "  <li><img src=\"icons/nuvola/finished.png\" alt=\"finished icon\"> = Finished successful</li>";
+		print "  <li><img src=\"icons/nuvola/warning.png\"  alt=\"warning icon\"> = Finished with warnings</li>";
+		print "  <li><img src=\"icons/nuvola/error.png\"    alt=\"error icon\"> = Finished with errors</li>";
+		print "  <li><img src=\"icons/nuvola/crashed.png\" alt=\"crashed icon\"> = Job terminated abnormal</li>";
+		print "</ul></p>\n";
+	    }
+	    if(HELP_LEVEL > 1) {
+		print "<p><u>Description of queue status icons:</u>\n";
+		print "<ul>\n";
+		print "  <li><img src=\"icons/nuvola/pending.png\" alt=\"pending icon\"> = Job is queued but not running</li>";
+		print "  <li><img src=\"icons/nuvola/running.png\"  alt=\"running icon\"> = Job has been started</li>";
+		print "</ul></p>\n";
+	    }
+	}
+	break;
+     case "stats":
+	if(HELP_LEVEL > 0) {
+	    print "<p>The <b>system</b> statistics is collected from all users of this system.</p>\n";
+	    print "<p>The <b>personal</b> statistics is individual for each each user and/or host.</p>\n";
+	}
+	if(HELP_LEVEL > 2) {
+	    print "<p>The statistics is organized as an hierarchic, browsable tree structure.</p>\n";
+	}
+	if(HELP_LEVEL > 1) {
+	    switch(STATISTICS_EXPOSED) {
+	     case "public":
+		print "<p>The statistics is <b>public</b> and accessable/browsable by anyone.</p>\n";
+		break;
+	     case "hidden":
+		print "<p>The statistics is <b>hidden</b> meaning that the link is not exposed but statistics is still accessable.</p>\n";
+		break;
+	     case "locked":
+		printf("<p>The statstics is <b>locked</b> and only <b>trusted hosts</b> can access it. These hosts counts as trusted: <b>%s</b></p>\n",
+		       implode(', ', explode(':', STATISTICS_TRUSTED)));	    
+		break;
+	    }
+	}
+    }
+}
+
 function print_common_html($what)
 {
     switch($what) {
@@ -144,6 +267,12 @@ function print_common_html($what)
 	break;
      case "footer":
 	print_footer();
+	break;
+     case "help":
+	if(HELP_STYLE == "graphic") {
+	    echo "<div class=\"menuhead\"><img src=\"icons/nuvola/help.png\">&nbsp;&nbsp;Help</div>\n";
+	}
+	print_context_help();
 	break;
     }
 }
