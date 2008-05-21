@@ -183,6 +183,9 @@ function context_help_system($what)
 	    } else if(UPLOAD_MAX_FILESIZE != 0) {
 		printf("<p><b>Maximum accepted size</b> of uploaded data is %s.</p>\n", 
 		       bytes_to_string(UPLOAD_MAX_FILESIZE));
+	    } else {
+		printf("<p>Theres no min/max size defined for uploaded data except for PHP limit on %s</p>\n",
+		       ini_get("upload_max_filesize"));
 	    }
 	}
 	if(HELP_LEVEL > 1) {
