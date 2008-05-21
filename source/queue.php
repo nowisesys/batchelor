@@ -87,6 +87,7 @@ function show_jobs_table(&$jobs)
     printf("<br>\n");
     printf("<form action=\"delete.php\" method=\"GET\">\n");
     printf("  <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+    printf("  <input type=\"hidden\" name=\"sort\" value=\"%s\">\n", $_REQUEST['sort']);
     printf("  <input type=\"submit\" name=\"multiple\" value=\"Delete Jobs\" title=\"Delete all jobs showed in this list\" />\n");
     printf("</form>\n");
 }
@@ -169,12 +170,13 @@ function show_jobs_table_icons(&$jobs)
 	    printf("<td>&nbsp;</td>\n");
 	}
 	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
-	    printf("<td nowrap><a href=\"delete.php?jobid=%s&result=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td></tr>", $job['jobid'], $jobdir);
+	    printf("<td nowrap><a href=\"delete.php?jobid=%s&result=%s&sort=%s&filter=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td></tr>", 
+		   $job['jobid'], $jobdir, $_REQUEST['sort'], $_REQUEST['filter']);
 	}
 	if(ENABLE_JOB_CONTROL != "off" && $job['state'] == "running") {
 	    if(ENABLE_JOB_CONTROL == "simple") {
-		printf("<td nowrap><a href=\"jobcontrol.php?jobid=%s&result=%s&signal=%s\" title=\"send job the %s signal\"><img src=\"icons/nuvola/delete.png\" alt=\"signal\"></a></td></tr>", 
-		       $job['jobid'], $jobdir, JOB_CONTROL_ACTION, JOB_CONTROL_ACTION);
+		printf("<td nowrap><a href=\"jobcontrol.php?jobid=%s&result=%s&sort=%s&filter=%s&signal=%s\" title=\"send job the %s signal\"><img src=\"icons/nuvola/delete.png\" alt=\"signal\"></a></td></tr>", 
+		       $job['jobid'], $jobdir, $_REQUEST['sort'], $_REQUEST['filter'], JOB_CONTROL_ACTION, JOB_CONTROL_ACTION);
 	    } else {
 		global $signals;
 
@@ -186,6 +188,9 @@ function show_jobs_table_icons(&$jobs)
 		printf("<td nowrap>&nbsp;</td><td><form action=\"jobcontrol.php\" method=\"GET\">\n");
 		printf("  <input type=\"hidden\" name=\"jobid\" value=\"%s\">\n", $job['jobid']);
 		printf("  <input type=\"hidden\" name=\"result\" value=\"%s\">\n", $jobdir);
+		printf("  <input type=\"hidden\" name=\"sort\" value=\"%s\">\n", $_REQUEST['sort']);
+		printf("  <input type=\"hidden\" name=\"filter\" value=\"%s\">\n", $_REQUEST['filter']);
+		
 		printf("  <select name=\"signal\">\n");
 		foreach($signals as $name => $arr) {
 		    // 
@@ -293,9 +298,11 @@ function show_jobs_table_plain(&$jobs)
 	
 	// 
 	// Links column
+	// 
 	$links = array();
 	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
-	    array_push($links, sprintf("<a href=\"delete.php?jobid=%s&result=%s\">delete</a>", $job['jobid'], $jobdir));
+	    array_push($links, sprintf("<a href=\"delete.php?jobid=%s&result=%s&sort=%s&filter=%s\">delete</a>", 
+				       $job['jobid'], $jobdir, $_REQUEST['sort'], $_REQUEST['filter']));
 	}
 	if($job['state'] == "finished") {
 	    array_push($links, sprintf("<a href=\"download.php?jobid=%s&result=%s\">download</a>", $job['jobid'], $jobdir));
