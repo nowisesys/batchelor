@@ -1,3 +1,9 @@
+Version 0.6.9 (2008-05-21):
+	
+	* A maintenance release fixing some small bugs like missing PHP
+	  upload limit in context help and preservation of sort and filter
+	  options when deliting jobs or doing jobcontrol.
+	  
 Version 0.6.8 (2008-05-21):
 
 	* Context help is now visible on right side of the body in the same
