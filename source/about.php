@@ -32,7 +32,7 @@ include "../conf/config.inc";
 // 
 function print_about_batchelor()
 {
-    print "<span id=\"secthead\">About batchelor</span>\n";
+    print "<span id=\"secthead\">About Batchelor</span>\n";
     print "<p>This web application is powered by Batchelor, a batch job queue manager written in PHP.</p>\n";
     print "<p>Using a batch queue manager allows jobs with long run times ";
     print "to be submitted to the web server and scheduled for later ";
@@ -199,7 +199,7 @@ function print_about()
     //   1. Add an function in this file (like for batchelor).
     //   2. Add an external page (like the app example).
     //
-    $tabmenu = array( "appname"   => array( "desc" => "The Application",
+    $tabmenu = array( "appname"   => array( "desc" => "ChemGPS-NP",
 					    "func" => null,
 					    "page" => "about_app.html",
 					    "show" => true ),
