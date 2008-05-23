@@ -193,4 +193,103 @@ define ("FOOTER_SHOW_COPYING", false);
 // 
 define ("HTML_PAGE_TITLE", "ChemGPS-NP");
 
+
+// 
+// Enable job control thru queue viewer. This option affects the possibility 
+// to control running jobs (already started by the batch queue).
+// Possible values are: "off", "simple" or "advanced".
+// 
+define ("ENABLE_JOB_CONTROL", "off");
+
+// 
+// Define the pre-selected or default option for job control. This will be 
+// the action performed on running job when using the "simple" job control. 
+// Possible values: "kill", "term", "hup", "usr1", "usr2", "stop" or "cont".
+// 
+// Using "stop" or "cont" is pointless unless job control is "advanced".
+// 
+define ("JOB_CONTROL_ACTION", "term");
+
+// 
+// You must define the signal values used in $signals. Run 'kill -l' or use the 
+// utility script utils/signals.php. These defines are for GNU/Linux.
+// 
+define ("SIGHUP", 1);
+define ("SIGINT", 2);
+define ("SIGQUIT", 3);
+define ("SIGILL", 4);
+define ("SIGTRAP", 5);
+define ("SIGABRT", 6);
+define ("SIGIOT", 6);
+define ("SIGBUS", 7);
+define ("SIGFPE", 8);
+define ("SIGKILL", 9);
+define ("SIGUSR1", 10);
+define ("SIGSEGV", 11);
+define ("SIGUSR2", 12);
+define ("SIGPIPE", 13);
+define ("SIGALRM", 14);
+define ("SIGTERM", 15);
+define ("SIGSTKFLT", 16);
+define ("SIGCHLD", 17);
+define ("SIGCONT", 18);
+define ("SIGSTOP", 19);
+define ("SIGTSTP", 20);
+define ("SIGTTIN", 21);
+define ("SIGTTOU", 22);
+define ("SIGURG", 23);
+define ("SIGXCPU", 24);
+define ("SIGXFSZ", 25);
+define ("SIGVTALRM", 26);
+define ("SIGPROF", 27);
+define ("SIGWINCH", 28);
+define ("SIGIO", 29);
+define ("SIGLOST", 29);
+define ("SIGPWR", 30);
+define ("SIGSYS", 31);
+define ("SIGUNUSED", 31);
+define ("SIGRTMIN", 32);
+define ("SIGSTKSZ", 8192);
+
+// 
+// The array of accepted signals. The action defines optional actions to 
+// perform after successful sending the signal to the process:
+// 
+//   none:  do nothing more than sending the signal.
+//   flag:  create a file containing the signal sent.
+//   clear: wipe out the job directory.
+//   
+$signals = array( 
+		  "term" => array( "value" => SIGTERM, "desc" => "Terminate Process", "action" => "clear" ),
+		  "stop" => array( "value" => SIGSTOP, "desc" => "Stop (Pause)", "action" => "flag" ),
+		  "cont" => array( "value" => SIGCONT, "desc" => "Continue (Resume)", "action" => "flag" ),
+		  "kill" => array( "value" => SIGKILL, "desc" => "Kill Process", "action" => "clear" ),
+		  "hup"  => array( "value" => SIGHUP,  "desc" => "Signal Hangup", "action" => "flag" ),
+		  "usr1" => array( "value" => SIGUSR1, "desc" => "User Defined #1", "action" => "none" ),
+		  "usr2" => array( "value" => SIGUSR2, "desc" => "User Defined #2", "action" => "none" ),
+		  );
+
+// 
+// Configure the help style. Use either "graphic" or "text".
+// 
+define ("HELP_STYLE", "graphic");
+
+// 
+// Define "verbosity" level for builtin help. Value is between 0 and 3 where
+// 0 is completely silent.
+// 
+define ("HELP_LEVEL", 2);
+
+// 
+// Show description about icons used in queue viewer.
+//
+define ("HELP_ICON_INFO", true);
+
+//
+// OK, done configuring? Great! Now just set configured to true and define
+// default start page. Start page is either one of "submit", "queue" or "stats".
+//
+define ("BATCHELOR_CONFIGURED", true);
+define ("BATCHELOR_START_PAGE", "submit");
+
 ?>
