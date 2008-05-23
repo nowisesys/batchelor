@@ -173,13 +173,13 @@ fi
 ##
 ## Append result file to stdout:
 ##
-if [ -e $resdir/chemgps.txt ]; then
-  echo >> $jobdir/stdout
-  echo "<p><b>Result:</b><br>" >> $jobdir/stdout
-  cat $resdir/chemgps.txt >> $jobdir/stdout
-  # echo "<p><b>Indata:</b><br>" >> $jobdir/stdout
-  # cat $indata >> $jobdir/stdout
-fi
+# if [ -e $resdir/chemgps.txt ]; then
+#   echo >> $jobdir/stdout
+#   echo "<p><b>Result:</b><br>" >> $jobdir/stdout
+#   cat $resdir/chemgps.txt >> $jobdir/stdout
+#   # echo "<p><b>Indata:</b><br>" >> $jobdir/stdout
+#   # cat $indata >> $jobdir/stdout
+# fi
 
 ##
 ## Signal finished to batchelor:

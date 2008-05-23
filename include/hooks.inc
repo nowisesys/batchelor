@@ -591,9 +591,69 @@ function context_help_hook($what)
 // 
 // Use this function to override how result gets presented by details.php.
 // 
-// function show_result_hook($started, $finished, &$stdout, &$stderr)
-// { 
-// }
+function show_result_hook($started, $finished, &$stdout, &$stderr)
+{ 
+    $proctime = 0;
+    if(isset($started) && isset($finished)) {
+	$proctime = $finished - $started;
+    } 
+    printf("<span id=\"secthead\">Process time:</span>\n");
+    printf("<p>\n");
+    printf("<b>Started:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($started));
+    printf("<b>Finished:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($finished));
+    printf("<b>Total job time:</b> %s\n", seconds_to_string($proctime));
+    printf("</p><br>\n");
+    
+    $result = sprintf("%s/jobs/%s/%s/result/chemgps.txt", 
+		      CACHE_DIRECTORY, $_COOKIE['hostid'], $_REQUEST['result']);
+    if(file_exists($result)) {
+	printf("<span id=\"secthead\">Predicted scores:</span>\n");
+	
+	$fs = fopen($result, "r");
+	if($fs) {
+	    $str = fgets($fs);
+	    $match = explode("\t", trim($str));
+	    if(count($match) == 9) {
+		print "<table class=\"result\">\n";
+		
+		print "<tr>";
+		for($i = 0; $i < 9; ++$i) {
+		    printf("<th>%s</th>", $match[$i]);
+		}
+		print "</tr>\n";
+		
+		while(($str = fgets($fs))) {
+		    $match = explode("\t", trim($str));
+		    print "<tr>";
+		    for($i = 0; $i < 9; ++$i) {
+			printf("<td>%s</td>", $match[$i]);
+		    }
+		    print "</tr>\n";			
+		}
+		
+		print "</table>\n<br>\n";
+	    }
+	    fclose($fs);
+	}
+    }
+    
+    if(isset($stdout)) {
+	printf("<span id=\"secthead\">Output from job:</span>\n");
+	printf("<p>%s</p>\n", preg_replace(array('/\n/', 
+						 '/(using|options|defaults|created|exiting)/i'
+						 ), 
+					   array('<br>', 
+						 '<b>$1</b>'
+						 ), 
+					   $stdout));
+    }
+    
+    if(isset($stderr)) {
+	printf("<span id=\"secthead\">Error log:</span>\n");
+	printf("<p>%s</p>\n", $stderr);
+    }
+    
+}
 
 // 
 // Use this function to override how indata gets presented by details.php.
