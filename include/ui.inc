@@ -207,7 +207,7 @@ function context_help_system($what)
 	    if(defined("ENABLE_JOB_CONTROL")) {
 		if(ENABLE_JOB_CONTROL == "simple") {
 		    printf("<p>Simplified job control is enabled. Clicking the 'trash bin' icon on a running job will send the <b>'%s' signal</b> to the job.</p>\n", JOB_CONTROL_ACTION);
-		} else if(ENABLE_JOB_CONTROL) {
+		} else if(ENABLE_JOB_CONTROL == "advanced") {
 		    print "<p>Advanced job control is enabled. Running jobs can be <b>controlled</b> by sending <b>signals</b>. Stopped jobs can only be <b>resumed</b> (continue) or <b>killed</b>.</p>\n";
 		}
 	    }
