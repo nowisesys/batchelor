@@ -1,3 +1,24 @@
+Version 0.6.9 (2008-05-21):
+	
+	* A maintenance release fixing some small bugs like missing PHP
+	  upload limit in context help and preservation of sort and filter
+	  options when deliting jobs or doing jobcontrol.
+	  
+Version 0.6.8 (2008-05-21):
+
+	* Context help is now visible on right side of the body in the same
+	  style as the the left hand menu. The verbosity is configurable in 
+	  conf/config.inc and can be extended by the context_help_hook() 
+	  function defined in include/hooks.inc
+	  
+	* Hook functions show_indata_hook() and show_result_hook() has been
+	  added to let the user modify the formatting of result and indata.
+
+Version 0.6.7 (2008-05-20):
+
+	* Adding job control allowing terminate, stop, resume, kill of
+	  running jobs. Configured in conf/config.inc. Disabled by default.
+	  
 Version 0.6.6 (2008-05-14):
 
 	* Works together with batch queue not using numeric job ID's.

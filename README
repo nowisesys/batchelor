@@ -26,9 +26,23 @@
 
    Since version 0.3.3 its possible to easy change the "look-and-feel" of
    batchelor. All scripts that outputs HTML uses the templates from inside the
-   template directory. Open them in an editor, change the layout and possible
-   the CSS.
+   template directory. Copy *.ui.in to *.ui and open *.ui in an editor, change 
+   the layout and possible the CSS.
 
+** HOOKS:
+
+   The file include/hooks.inc contains callback functions that lets users
+   tailor batchelor to there needs. Among things that can be adopted are:
+   indata validation, custom statistics, context help, presentation of result.
+   
+   The hooks in pair with flexible template UI gives an easy to setup
+   solution for allmost everyone. The name (hooks) comes from the fact that
+   these functions hooks into the workflow to modify the behavour.
+   
+   In the default configuration theres no hook functions defined, these must
+   be explicit enabled by copying include/hooks.inc.in to include/hooks.inc
+   and enabling wanted functions.
+   
 ** STATISTICS:
 
    Since version 0.6.0 a statistics module has been included. If you like to use
@@ -48,6 +62,24 @@
    the find command, as cache.php has internal knowledge about how the cache 
    is organized.
 
+** JOB CONTROL:
+
+   Since version 0.6.7 it's possible to control running jobs thru the job
+   queue viewer. Job control is enabled in conf/config.inc (off by default).
+   
+   If you like to use job control and is *not* running GNU/Linux, then you
+   have to modify the signal values or disaster (and angry users) will 
+   follow! 
+   
+** UPDATE & CONFIG PROTECTION:
+
+   All files ending with *.in are config templates. You are not supposed to edit
+   any config templates directly, instead create a copy of the config template 
+   with the same name except for the .in extension (like file.inc.in -> file.inc).
+   
+   A new release will never contain any file.* who has an file.*.in counterpart, 
+   thus all file.* are protected when updating.
+   
 ** ITS ALL FREE, BUT...:
 
    This software is licensed under GNU Public License (GPL). You are free to
