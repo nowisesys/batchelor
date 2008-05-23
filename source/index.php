@@ -123,6 +123,24 @@ function print_html($what)
     }
 }
 
+// 
+// Redirect to real start page if batchelor has been configured.
+// 
+if(defined("BATCHELOR_CONFIGURED") && defined("BATCHELOR_START_PAGE")) {
+    if(BATCHELOR_CONFIGURED) {
+	if(BATCHELOR_START_PAGE == "submit") {
+	    header("Location: queue.php?show=submit");
+	} else if(BATCHELOR_START_PAGE == "queue") {
+	    header("Location: queue.php?show=queue");
+	} else if(BATCHELOR_START_PAGE == "stats") {
+	    header("Location: statistics.php");
+	}
+    }
+}
+
+// 
+// Show getting started help.
+// 
 load_ui_template("popup");
 
 ?>

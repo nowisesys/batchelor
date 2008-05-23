@@ -293,4 +293,11 @@ define ("HELP_LEVEL", 2);
 //
 define ("HELP_ICON_INFO", true);
 
+// 
+// OK, done configuring? Great! Now just set configured to true and define 
+// default start page. Start page is either one of "submit", "queue" or "stats".
+// 
+define ("BATCHELOR_CONFIGURED", false);
+define ("BATCHELOR_START_PAGE", "submit");
+
 ?>
