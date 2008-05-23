@@ -567,4 +567,40 @@ function show_data_hook($data, $statdir, $subsect)
     printf("</p>\n");
 }
 
+// 
+// This function gets called to print context help.
+// 
+function context_help_hook($what)
+{
+    // 
+    // Output system default help:
+    // 
+    context_help_system($what);
+   
+    switch($what) {
+     case "submit":
+	printf("<p>Maximum number of uploaded <b>molecules per job</b> is %d, see <a href=\"help.php\">help</a> for further information.</p>\n", MAX_SMILES_MOLECULES);
+	break;
+     case "queue":
+	break;
+     case "stats":
+	break;
+    }
+}
+
+// 
+// Use this function to override how result gets presented by details.php.
+// 
+// function show_result_hook($started, $finished, &$stdout, &$stderr)
+// { 
+// }
+
+// 
+// Use this function to override how indata gets presented by details.php.
+// The indata parameter is the complete path to uploaded data (indata).
+// 
+// function show_indata_hook($indata)
+// {
+// }
+
 ?>
