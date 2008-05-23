@@ -80,4 +80,42 @@
 // {
 // }
 
+// 
+// This function gets called to print context help.
+// 
+// function context_help_hook($what)
+// {
+//     // 
+//     // Output system default help:
+//     // 
+//     context_help_system($what);
+//    
+//     switch($what) {
+//      case "submit":
+// 	print "<p>Extra info about submit</p>\n";
+// 	break;
+//      case "queue":
+// 	print "<p>Extra info about queue viewer</p>\n";
+// 	break;
+//      case "stats":
+// 	print "<p>Extra info about statistics</p>\n";
+// 	break;
+//     }
+// }
+
+// 
+// Use this function to override how result gets presented by details.php.
+// 
+// function show_result_hook($started, $finished, &$stdout, &$stderr)
+// { 
+// }
+
+// 
+// Use this function to override how indata gets presented by details.php.
+// The indata parameter is the complete path to uploaded data (indata).
+// 
+// function show_indata_hook($indata)
+// {
+// }
+
 ?>

@@ -87,6 +87,7 @@ function show_jobs_table(&$jobs)
     printf("<br>\n");
     printf("<form action=\"delete.php\" method=\"GET\">\n");
     printf("  <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+    printf("  <input type=\"hidden\" name=\"sort\" value=\"%s\">\n", $_REQUEST['sort']);
     printf("  <input type=\"submit\" name=\"multiple\" value=\"Delete Jobs\" title=\"Delete all jobs showed in this list\" />\n");
     printf("</form>\n");
 }
@@ -96,7 +97,11 @@ function show_jobs_table(&$jobs)
 // 
 function show_jobs_table_icons(&$jobs)
 {
-    print "<div class=\"indent\"><table width=\"50%\"><tr><th>Queued</th><th>Finished</th><th>Started</th><th>Job</th><th>Download</th><th>Delete</th></tr>\n";
+    if(ENABLE_JOB_CONTROL == "advanced") {
+	print "<div class=\"indent\"><table width=\"50%\"><tr><th>Queued</th><th>Finished</th><th>Started</th><th>Job</th><th>Download</th><th>Delete</th><th>Job control</th></tr>\n";
+    } else {
+	print "<div class=\"indent\"><table width=\"50%\"><tr><th>Queued</th><th>Finished</th><th>Started</th><th>Job</th><th>Download</th><th>Delete</th></tr>\n";
+    }
     foreach($jobs as $jobdir => $job) {	    
 	// $label = sprintf("(%s)", $job['state']);
 	switch($job['state']) {
@@ -165,7 +170,58 @@ function show_jobs_table_icons(&$jobs)
 	    printf("<td>&nbsp;</td>\n");
 	}
 	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
-	    printf("<td nowrap><a href=\"delete.php?jobid=%s&result=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td></tr>", $job['jobid'], $jobdir);
+	    printf("<td nowrap><a href=\"delete.php?jobid=%s&result=%s&sort=%s&filter=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td></tr>", 
+		   $job['jobid'], $jobdir, $_REQUEST['sort'], $_REQUEST['filter']);
+	}
+	if(ENABLE_JOB_CONTROL != "off" && $job['state'] == "running") {
+	    if(ENABLE_JOB_CONTROL == "simple") {
+		printf("<td nowrap><a href=\"jobcontrol.php?jobid=%s&result=%s&sort=%s&filter=%s&signal=%s\" title=\"send job the %s signal\"><img src=\"icons/nuvola/delete.png\" alt=\"signal\"></a></td></tr>", 
+		       $job['jobid'], $jobdir, $_REQUEST['sort'], $_REQUEST['filter'], JOB_CONTROL_ACTION, JOB_CONTROL_ACTION);
+	    } else {
+		global $signals;
+
+		$sigfile = sprintf("%s/jobs/%s/%s/signal", CACHE_DIRECTORY, $_COOKIE['hostid'], $jobdir);
+		if(file_exists($sigfile)) {
+		    $signal = file_get_contents($sigfile);
+		}
+		
+		printf("<td nowrap>&nbsp;</td><td><form action=\"jobcontrol.php\" method=\"GET\">\n");
+		printf("  <input type=\"hidden\" name=\"jobid\" value=\"%s\">\n", $job['jobid']);
+		printf("  <input type=\"hidden\" name=\"result\" value=\"%s\">\n", $jobdir);
+		printf("  <input type=\"hidden\" name=\"sort\" value=\"%s\">\n", $_REQUEST['sort']);
+		printf("  <input type=\"hidden\" name=\"filter\" value=\"%s\">\n", $_REQUEST['filter']);
+		
+		printf("  <select name=\"signal\">\n");
+		foreach($signals as $name => $arr) {
+		    // 
+		    // Stopped processes can only be resumed (cont) or killed (kill).
+		    // Don't show continue for non-stopped processes.
+		    // 
+		    if(isset($signal)) {
+			if($signal == "stop") {
+			    if($name != "cont" && $name != "kill") {
+				continue;
+			    }
+			}
+			if($name == "stop" && $signal == "stop") {
+			    continue;
+			}
+			if($name == "cont" && $signal != "stop") {
+			    continue;
+			}
+		    } else if($name == "cont") {
+			    continue;
+		    }
+		    if(JOB_CONTROL_ACTION == $name) {
+			printf("  <option value=\"%s\" selected=\"selected\">%s</option>\n", $name, $arr['desc']);
+		    } else {
+			printf("  <option value=\"%s\">%s</option>\n", $name, $arr['desc']);
+		    }
+		}
+		printf("  </select>\n");
+		printf("  <input type=\"submit\" value=\"Send\">\n");
+		printf("</form></td>\n");
+	    }
 	}
     }
     print "</table></div>\n";
@@ -242,9 +298,11 @@ function show_jobs_table_plain(&$jobs)
 	
 	// 
 	// Links column
+	// 
 	$links = array();
 	if(SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
-	    array_push($links, sprintf("<a href=\"delete.php?jobid=%s&result=%s\">delete</a>", $job['jobid'], $jobdir));
+	    array_push($links, sprintf("<a href=\"delete.php?jobid=%s&result=%s&sort=%s&filter=%s\">delete</a>", 
+				       $job['jobid'], $jobdir, $_REQUEST['sort'], $_REQUEST['filter']));
 	}
 	if($job['state'] == "finished") {
 	    array_push($links, sprintf("<a href=\"download.php?jobid=%s&result=%s\">download</a>", $job['jobid'], $jobdir));
@@ -338,6 +396,21 @@ function print_body()
 	     case "resdir":
 		print_message_box("error", "The result directory is missing");
 		break;
+	     case "pid":
+		if(isset($_REQUEST['reason'])) {
+		    switch($_REQUEST['reason']) {
+		     case "type":
+			print_message_box("error", "Missing or invalid signal type for job control.");
+			break;
+		     case "file":
+			print_message_box("error", "A matching process for the running job was not found.");
+			break;
+		     case "perm":
+			print_message_box("error", "Failed control running job.");
+			break;
+		    }
+		}
+		break;
 	    }
 	} 
 	else {
@@ -348,7 +421,7 @@ function print_body()
 	print_message_box("error", $GLOBALS['error']);
     }
     if(isset($_REQUEST['queued'])) {
-	print_message_box("info", "The submitted job has been queued.<br>Click on <a href=\"queue.php?show=queue\">Show Queue</a> to view its status and download the result.");
+	print_message_box("info", "The submitted job has been queued.<br>Click on <a href=\"queue.php?show=queue\">View Result</a> to monitor the job status and download the result.");
     }
 }
 
@@ -412,7 +485,7 @@ function show_page($error = null)
 	}
     }
     
-    include "../template/standard.ui";
+    load_ui_template("standard");
 }
 
 // 

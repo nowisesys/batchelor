@@ -21,7 +21,7 @@
 // 
 // List of hosts allowed to run this script from a web browser.
 // 
-$trusted_hosts = array( "127.0.0.1", "::1", "130.238.39.209" );
+$trusted_hosts = array( "127.0.0.1", "::1" );
 
 //
 // Sanity check:
@@ -86,7 +86,7 @@ function print_html($what)
 
 if($mode == "www") {
     include "../include/ui.inc";
-    include "../template/popup.ui";
+    load_ui_template("popup");
 }
 else {
     run_all_tests();

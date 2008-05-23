@@ -32,7 +32,7 @@ include "../conf/config.inc";
 // 
 function print_about_batchelor()
 {
-    print "<span id=\"secthead\">About Batchelor</span>\n";
+    print "<span id=\"secthead\">About batchelor</span>\n";
     print "<p>This web application is powered by Batchelor, a batch job queue manager written in PHP.</p>\n";
     print "<p>Using a batch queue manager allows jobs with long run times ";
     print "to be submitted to the web server and scheduled for later ";
@@ -199,9 +199,9 @@ function print_about()
     //   1. Add an function in this file (like for batchelor).
     //   2. Add an external page (like the app example).
     //
-    $tabmenu = array( "appname"   => array( "desc" => "ChemGPS-NP",
+    $tabmenu = array( "appname"   => array( "desc" => "The Application",
 					    "func" => null,
-					    "page" => "about_chemgps-np.html",
+					    "page" => "about_app.html",
 					    "show" => true ),
 		      "batchelor" => array( "desc" => "Batchelor",
 					    "func" => "print_about_batchelor",
@@ -218,7 +218,7 @@ function print_about()
     }
     
     printf("<h2><img src=\"icons/nuvola/info.png\"> About %s</h2>\n", $tabmenu[$selected]['desc']);
-    printf("<hr>\n");
+    // printf("<hr>\n");
     
     // 
     // Print tab menu:
@@ -256,6 +256,6 @@ function print_html($what)
     }
 }
 
-include "../template/popup.ui";
+load_ui_template("popup");
 
 ?>

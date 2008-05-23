@@ -141,6 +141,12 @@ function split_batch_output($str)
 	    $date  = strftime("%G-%m-%d", $stamp);
 	    return array( "jobid" => $match[1], "date" => $date, "time" => $time, "stamp" => $stamp);
 	}
+	else if(preg_match('/job (.*?) at (.*)/', $row, $match)) {
+	    $stamp = strtotime($match[2]);
+	    $time  = strftime("%H:%M", $stamp);
+	    $date  = strftime("%G-%m-%d", $stamp);
+	    return array( "jobid" => $match[1], "date" => $date, "time" => $time, "stamp" => $stamp);
+	}	   
     }
     
     return null;
@@ -351,7 +357,11 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
 	else {
 	    if(isset($job['jobid'])) {
 		if(!isset($queued[$job['jobid']])) {
-		    $job['state'] = "crashed";
+		    if(defined("BATCH_START_DEQUEUES") && BATCH_START_DEQUEUES == 1) {
+		        $job['state'] = "running";
+		    } else {
+		        $job['state'] = "crashed";
+		    }
 		}
 		else {
 		    $job['state'] = $queued[$job['jobid']];
@@ -396,36 +406,56 @@ function get_queued_jobs()
     // The result array.
     // 
     $jobs = array();
-    
+        
     if($handle = popen(BATCH_LISTING, "r")) {
 	while($str = fgets($handle)) {
+		
 	    // 
-	    // Split batch jobs output. The output format differs between Linux and BDS/Mac OS X.
+	    // Split batch jobs output. The output format differs between Linux, BDS/Mac OS X
+	    // and Solaris 8 (and later?).
 	    // 
-	    // Exempel1 (Linux): 
-	    // '25      2007-11-05 02:54 b apache'   // pending
-	    // '24      2007-11-05 02:54 = apache'   // running
-	    // 
-	    // Exempel2 (Mac OS X):
-	    // '1       Thu Mar  6 09:38:00 2008'
-	    // '2       Thu Mar  6 09:39:00 2008'
-	    // 
+	    
 	    $match = array();
+	    
+	    // 
+	    // Linux format: 
+	    //   '25      2007-11-05 02:54 b apache'   // pending
+	    //   '24      2007-11-05 02:54 = apache'   // running
+	    // 
 	    if(preg_match("/(\d+)\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\s+([0-9]{2}:[0-9]{2})\s+([b=]{1})\s+(.*)/", $str, $match)) {
 		$jobs[$match[1]] = ($match[4] == "=") ? "running" : "pending";
 	    }
-	    else if(preg_match("/(\d+)\s+(.*)/", $str, $match)) {
-		// 
-		// Simply flag job as pending because information is missing.
-		// 
+	    // 
+	    // Solaris 8 (and later?) format:
+	    //   'user = root     1210583160.a    Mon May 12 11:06:00 2008'
+	    //   'user = root     1210583160.a    Mon May 12 11:06:00 2008'
+	    // 
+	    // NOTE: Listing as non-root user don't show user = xxx.
+	    // 	    
+	    else if(preg_match('/([0-9]*\.[ab]{1})\t(.*)/', $str, $match)) {
+		$jobs[$match[1]] = "pending";
+	    }
+	    // 
+	    // Mac OS X format:
+	    //   '1       Thu Mar  6 09:38:00 2008'
+	    //   '2       Thu Mar  6 09:39:00 2008'
+	    // 
+	    // NOTE: Simply flag job as pending because information is missing.
+	    // 
+	    else if(preg_match("/(\d+)\s+(.*)/", $str, $match)) { 
 		$jobs[$match[1]] = "pending";
 	    } 
-	    else {
-		error_exit("Failed parse batch queue output.");
+	    // 
+	    // No regexp matched. We better give up and let someone fix this.
+	    // 
+	    else {	    
+	        error_exit("Failed parse batch queue output.");
 	    }
 	}
 	pclose($handle);
-    }
+    } else {
+        error_exit("Failed read jobs in batch queue.");
+    }		   
     
     return $jobs;
 }
@@ -446,33 +476,64 @@ function seconds_to_string($original)
     // 
     // Save original value to avoid error propagation.
     // 
-    $current = $original;
+    $current  = $original;
+    $reminder = 0;
     
-    $timestr = "$current sec";
-    $divide  = 60;
-    $current = floor($original / $divide);
+    $timestr  = "$current sec";
+    $divide   = 60;
+    $current  = floor($original / $divide);
+    $reminder = floor($original % $divide);
     if($current >= 2) {
-	$timestr = "$current min";
-	$divide *= 60;
-	$current = floor($original / $divide);
+	if($reminder != 0) {
+	    $timestr  = "$current min $reminder sec";
+	} else {
+	    $timestr  = "$current min";
+	}
+	$divide  *= 60;
+	$current  = floor($original / $divide);
+	$reminder = floor($original % $divide);
 	if($current >= 2) {
-	    $timestr = "$current hours";
-	    $divide *= 24;
-	    $current = floor($original / $divide);
+	    if($reminder != 0) {
+		$timestr  = "$current hours $reminder min";
+	    } else {
+		$timestr  = "$current hours";
+	    }
+	    $divide  *= 24;
+	    $current  = floor($original / $divide);
+	    $reminder = floor($original % $divide);
 	    if($current >= 4) {
-		$timestr = "$current days";
-		$divide *= 7;
-		$current = floor($original / $divide);
+		if($reminder != 0) {		    
+		    $timestr  = "$current days $reminder $hours";
+		} else {
+		    $timestr  = "$current days";
+		}
+		$divide  *= 7;
+		$current  = floor($original / $divide);
+		$reminder = floor($original % $divide);
 		if($current >= 4) {
-		    $timestr = "$current weeks";
-		    $divide *= 4;
-		    $current = floor($original / $divide);
+		    if($reminder != 0) {
+			$timestr  = "$current weeks $reminder days";
+		    } else {
+			$timestr  = "$current weeks";
+		    }
+		    $divide  *= 4;
+		    $current  = floor($original / $divide);
+		    $reminder = floor($original % $divide);
 		    if($current > 3) {
-			$timestr = "$current months";
-			$divide *= 12;
-			$current = floor($original / $divide);
+			if($reminder != 0) {
+			    $timestr  = "$current months $reminder weeks";
+			} else {
+			    $timestr  = "$current months";
+			}
+			$divide  *= 12;
+			$current  = floor($original / $divide);
+			$reminder = floor($original % $divide);
 			if($current >= 3) {
-			    $timestr = "$current years";
+			    if($reminder != 0) {
+				$timestr = "$current years $reminder months";
+			    } else {
+				$timestr = "$current years";
+			    }
 			}
 		    }
 		}

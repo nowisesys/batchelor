@@ -50,7 +50,7 @@ function check_request_param($name, $pattern)
 function error_exit($msg)
 {
     $GLOBALS['error'] = $msg;
-    include "../template/standard.ui";
+    load_ui_template("standard");
     exit(1);
 }
 
@@ -604,6 +604,6 @@ else {
     $GLOBALS['sect'] = $GLOBALS['hostid'];
 }
 
-include "../template/standard.ui";
+load_ui_template("standard");
 
 ?>

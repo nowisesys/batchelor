@@ -157,6 +157,9 @@ function graph_data_hook($graphdir, $hostid, $options, $datetime, $data, $type)
 	$title = sprintf("Queued jobs per host %s", date('Y-m-d', $datetime));
 	break;
     }
+    if(HOOKS_ADD_BOGUS_IPADDR) {
+	$title .= " (using bogus ip-addresses)";
+    }
     $subtitle = sprintf("total %d queued jobs counted, grouped on %d hosts IP-address", $total, $hosts);
 
     if($options->debug) {

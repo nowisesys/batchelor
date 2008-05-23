@@ -31,7 +31,7 @@ include "../conf/config.inc";
 function print_help()
 {
     printf("<h2><img src=\"icons/nuvola/help.png\"> Help contents</h2>\n");
-    printf("<hr>\n");
+    // printf("<hr>\n");
     
     printf("<span id=\"secthead\">General</span>\n");
     printf("<p>You see this page because no installation specific help has been written (yet). ");
@@ -53,6 +53,7 @@ function print_body()
 	$help = file_get_contents("help.html");
 	$matches = array();
 	if(preg_match("/<body.*?>((.*?|[ \n]*)*)<\/body>/mi", $help, $matches)) {
+	    print "<br>\n";
 	    print $matches[1];
 	}
 	else {
@@ -80,6 +81,6 @@ function print_html($what)
     }
 }
 
-include "../template/popup.ui";
+load_ui_template("popup");
 
 ?>

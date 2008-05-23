@@ -309,7 +309,7 @@ function check_builtin_functions(&$failed)
 		       "stream_get_contents", "fclose", "proc_close", "preg_match",
 		       "strtotime", "filemtime", "error_log", "rename", "array_shift",
 		       "array_unshift", "basename", "posix_getpwuid", "posix_getuid",
-		       "posix_geteuid");
+		       "posix_geteuid", "posix_kill");
     sort($functions);
     
     foreach($functions as $func) {
