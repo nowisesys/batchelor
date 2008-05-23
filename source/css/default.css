@@ -2,6 +2,15 @@
  * Format as -*- c++ -*- source.
  */
 
+body {
+	font-family: arial, helvetica, sans-serif;
+	font-size: 90%;
+}
+
+input {
+	font-size: 85%;
+}
+
 a {
 	color: #000099;
 }
@@ -151,7 +160,7 @@ ul.menu {
 
 #tabmenu a:hover {
         background: #cccccc;
-}0123456789a
+}
 	
 #tabmenu #selected {
 }
