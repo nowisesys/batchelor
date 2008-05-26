@@ -29,7 +29,10 @@
 // If the file should be rejected, then set error to an string describing the
 // cause and return false.
 // 
-// function pre_enqueue_hook($file, $jobdir, &$error)
+// By passing the file argument by reference its possible to rename the indata
+// file depending on its content.
+// 
+// function pre_enqueue_hook(&$file, $jobdir, &$error)
 // {
 //     return true;
 // }
