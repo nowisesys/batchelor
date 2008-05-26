@@ -307,7 +307,7 @@ define ("FILES_PHP_ENABLED", false);
 define ("FILES_PHP_HOSTID_SOURCE", "auto");
 
 // 
-// Define the base directory relative the job directory, i.e. jobdir/result
+// Define the base directory relative the job directory, i.e. "result/set1"
 // 
 define ("FILES_PHP_BASE_DIRECTORY", null);
 
@@ -320,7 +320,7 @@ define ("FILES_PHP_SEND_ERROR_BODY", false);
 // Define to true is additional HTTP headers should be sent, like file size
 // and MIME type (for the moment).
 // 
-define ("FILES_PHP_SEND_FILE_PROPS", false);
+define ("FILES_PHP_SEND_FILE_PROPS", true);
 
 // 
 // OK, done configuring? Great! Now just set configured to true and define 
