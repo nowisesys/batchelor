@@ -294,6 +294,33 @@ define ("HELP_LEVEL", 2);
 define ("HELP_ICON_INFO", true);
 
 // 
+// Define to true to allow third party applications to access files inside
+// the job directory thru the script files.php
+// 
+define ("FILES_PHP_ENABLED", false);
+
+// 
+// Define to true if client sends hostid as a cookie.
+// 
+define ("FILES_PHP_USE_HOSTID_COOKIE", false);
+
+// 
+// Define to true if we should automatic set the hostid cookie (this might
+// confuse some programs, so we allows it to be disabled).
+// 
+define ("FILES_PHP_SET_HOSTID_COOKIE", true);
+
+// 
+// Define the base directory relative the job directory, i.e. jobdir/result
+// 
+define ("FILES_PHP_USE_BASE_SUBDIR", null);
+
+// 
+// Send error body also if true (for debug).
+// 
+define ("FILES_PHP_SEND_ERROR_BODY", false);
+
+// 
 // OK, done configuring? Great! Now just set configured to true and define 
 // default start page. Start page is either one of "submit", "queue" or "stats".
 // 
