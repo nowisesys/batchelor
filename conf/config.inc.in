@@ -309,7 +309,7 @@ define ("FILES_PHP_HOSTID_SOURCE", "auto");
 // 
 // Define the base directory relative the job directory, i.e. jobdir/result
 // 
-define ("FILES_PHP_USE_BASE_SUBDIR", null);
+define ("FILES_PHP_BASE_DIRECTORY", null);
 
 // 
 // Send error body also if true (for debug).
