@@ -300,15 +300,11 @@ define ("HELP_ICON_INFO", true);
 define ("FILES_PHP_ENABLED", false);
 
 // 
-// Define to true if client sends hostid as a cookie.
+// Define the source for the hostid value. Possible values are "cookie",
+// "param" or "auto". Using "auto" tells the script to use the same method 
+// as source/queue.php
 // 
-define ("FILES_PHP_USE_HOSTID_COOKIE", false);
-
-// 
-// Define to true if we should automatic set the hostid cookie (this might
-// confuse some programs, so we allows it to be disabled).
-// 
-define ("FILES_PHP_SET_HOSTID_COOKIE", true);
+define ("FILES_PHP_HOSTID_SOURCE", "auto");
 
 // 
 // Define the base directory relative the job directory, i.e. jobdir/result
@@ -319,6 +315,12 @@ define ("FILES_PHP_USE_BASE_SUBDIR", null);
 // Send error body also if true (for debug).
 // 
 define ("FILES_PHP_SEND_ERROR_BODY", false);
+
+// 
+// Define to true is additional HTTP headers should be sent, like file size
+// and MIME type (for the moment).
+// 
+define ("FILES_PHP_SEND_FILE_PROPS", false);
 
 // 
 // OK, done configuring? Great! Now just set configured to true and define 
