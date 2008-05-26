@@ -19,6 +19,25 @@
 // is *not* expected to be called from a browser, but from third party 
 // tools who need access to files inside the job directory.
 // 
+// Files are accessed as:
+// 
+//   http://localhost/batchelor/files.php?file=started&jobid=1211547173
+// 
+// A third parameter (hostid) might be required depending on configuration,
+// see the FILES_PHP_XXX options in conf/config.inc
+// 
+// The following HTTP error codes are explicit used:
+// 
+//   400 - Wrong or missing parameters.
+//   403 - Access is forbidden. The reason might be that the requested file is
+//         outside job directory or the script is disabled by configuration.
+//   404 - The file do not exist.
+//   500 - Programming errors.
+// 
+// The HTTP version of stat(2) are to use HEAD instead of GET:
+// 
+//   HEAD /batchelor/files.php?file=stdout&jobid=1211547173 HTTP/1.0
+// 
 
 //
 // Get configuration.
