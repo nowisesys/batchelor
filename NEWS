@@ -1,6 +1,12 @@
-Version 0.x.y (yyyy-mm-dd):
+Version 0.6.10 (2008-05-30):
 
 	* Allow access to job directory files thru the source/files.php script.
+	
+	* Use arial as default font. Downscaled as google does (looks better
+	  in all browsers).
+	  
+	* The "getting started" is now by-passed when batchelor is
+	  configured (see bottom of conf/config.inc for details).
 
 Version 0.6.9 (2008-05-21):
 	
