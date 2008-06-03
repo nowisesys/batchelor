@@ -228,7 +228,8 @@ function show_jobs_table_icons(&$jobs)
 	// 
 	if(isset($job['name'])) {
 	    if(defined("QUEUE_SHOW_NAMES") && QUEUE_SHOW_NAMES) {
-		printf("<tr><td colspan=\"2\">&nbsp;</td><td colspan=\"4\" class=\"name\">%s</td></tr>\n", $job['name']);
+		$span = ENABLE_JOB_CONTROL == "advanced" ? 5 : 4;
+		printf("<tr><td colspan=\"2\">&nbsp;</td><td colspan=\"%d\" class=\"name\">%s</td></tr>\n", $span, $job['name']);
 	    }
 	}
     }
