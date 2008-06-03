@@ -22,7 +22,7 @@
 // 
 // Maximum number of molecules accepted in each uploaded smiles file:
 // 
-define ("MAX_SMILES_MOLECULES", 500);
+define ("MAX_SMILES_MOLECULES", 5000);
 
 // 
 // Validate molecules in indata:
@@ -96,25 +96,6 @@ function validate_molecule_smiles($str, &$error)
 }
 
 // 
-// Validate molecule names (the string may contain space separated names).
-// We don't allow names matching a float point number as they will be
-// feeded to Simca-QP and cause a "too many variables" exception.
-// 
-function validate_molecule_names($str, &$error)
-{
-    $names = explode(' ', $str);
-    array_shift($names);           // skip [d+]
-    
-    foreach($names as $name) {
-	if(preg_match('/^[0-9]+(\.[0-9]+)$/', $name)) {
-	    $error = "molecule name can't be a float point number";
-	    return false;
-	}
-    }
-    return true;
-}
-
-// 
 // This function gets called prior to a job being added to the job queue. This 
 // allows submitted data and files (in $file) to be validated and rejected if
 // its invalid. This function should return true if the file should be accepted. 
@@ -167,10 +148,6 @@ function pre_enqueue_hook($file, $jobdir, &$error)
 	    if(VALIDATE_MOLECULES) {
 		if(!validate_molecule_smiles($match[1], $error)) {
 		    $error = sprintf("Failed validate molecule on line %d (%s)", $index, $error);
-		    return false;
-		}
-		if(!validate_molecule_names($match[2], $error)) {
-		    $error = sprintf("The molecule name on line %d is invalid (%s)", $index, $error);
 		    return false;
 		}
 	    }
@@ -589,6 +566,20 @@ function context_help_hook($what)
 }
 
 // 
+// Format stdout or stderr output.
+//
+function show_result_hook_formatter(&$str)
+{
+    printf("<p>%s</p>\n", preg_replace(array('/\n/', 
+					     '/(using|options|defaults|created|exiting|warning:|error:)/i'
+					     ), 
+				       array('<br>', 
+					     '<b>$1</b>',
+					     ), 
+				       $str));
+}
+
+// 
 // Use this function to override how result gets presented by details.php.
 // 
 function show_result_hook($started, $finished, &$stdout, &$stderr)
@@ -639,18 +630,12 @@ function show_result_hook($started, $finished, &$stdout, &$stderr)
     
     if(isset($stdout)) {
 	printf("<span id=\"secthead\">Output from job:</span>\n");
-	printf("<p>%s</p>\n", preg_replace(array('/\n/', 
-						 '/(using|options|defaults|created|exiting)/i'
-						 ), 
-					   array('<br>', 
-						 '<b>$1</b>'
-						 ), 
-					   $stdout));
+	show_result_hook_formatter($stdout);
     }
     
     if(isset($stderr)) {
 	printf("<span id=\"secthead\">Error log:</span>\n");
-	printf("<p>%s</p>\n", $stderr);
+	show_result_hook_formatter($stderr);
     }
     
 }
