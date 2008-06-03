@@ -191,7 +191,7 @@ define ("FOOTER_SHOW_COPYING", false);
 // 
 // Define the string used in the title for each page.
 // 
-define ("HTML_PAGE_TITLE", "ChemGPS-NP");
+define ("HTML_PAGE_TITLE", "ChemGPS-NP Web");
 
 
 // 
