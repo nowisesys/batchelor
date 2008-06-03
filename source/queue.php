@@ -223,6 +223,14 @@ function show_jobs_table_icons(&$jobs)
 		printf("</form></td>\n");
 	    }
 	}
+	// 
+	// Job name (below and indented)
+	// 
+	if(isset($job['name'])) {
+	    if(defined("QUEUE_SHOW_NAMES") && QUEUE_SHOW_NAMES) {
+		printf("<tr><td colspan=\"2\">&nbsp;</td><td colspan=\"4\" class=\"name\">%s</td></tr>\n", $job['name']);
+	    }
+	}
     }
     print "</table></div>\n";
 }

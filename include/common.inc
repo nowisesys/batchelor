@@ -306,6 +306,25 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
 				     case "fatal":
 					$job[$file] = filemtime($file);
 					break;
+				     case "name":
+					if(defined("QUEUE_SHOW_NAMES") && QUEUE_SHOW_NAMES) {
+					    $name = trim(file_get_contents($file));
+					    if(strlen($name) > QUEUE_MAX_NAME_LENGHT) {
+						if(QUEUE_TRUNCATE_NAME == "head") {
+						    $part = QUEUE_MAX_NAME_LENGHT - 3;
+						    $name = sprintf("...%s", substr($name, -$part, $part));
+						}
+						else if(QUEUE_TRUNCATE_NAME == "middle") {
+						    $part = QUEUE_MAX_NAME_LENGHT / 2 - 1;
+						    $name = sprintf("%s...%s", 
+								    substr($name, 0, $part), 
+								    substr($name, -$part, $part));
+						} else if(QUEUE_TRUNCATE_NAME == "tail") {
+						    $name = sprintf("%s...", substr($name, 0, QUEUE_MAX_NAME_LENGHT - 3));
+						}
+					    }
+					    $job[$file] = $name;
+					}
 				    }
 				}
 			    }

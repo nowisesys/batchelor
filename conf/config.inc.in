@@ -160,6 +160,15 @@ define ("ZIP_FILE_COMMAND", "7z a %s %s -tzip");
 define ("USE_ICONIZED_QUEUE", true);
 
 // 
+// Configures whether to show job name in queue (see README), their max length 
+// and how to truncate names of they exceed max length. The truncate option is 
+// either "head", "middle" or "tail".
+// 
+define ("QUEUE_SHOW_NAMES", true);
+define ("QUEUE_MAX_NAME_LENGHT", 35);
+define ("QUEUE_TRUNCATE_NAME", "middle");
+
+// 
 // Configure the menu style. Use either "graphic", "text" or "compact".
 // 
 define ("MENU_STYLE", "graphic");

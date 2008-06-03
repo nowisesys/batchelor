@@ -1,3 +1,9 @@
+Version 0.x.y (yyyy-mm-dd):
+
+	* Its now possible to name (tag) jobs by creating a file with the 
+	  name 'name' inside the jobdirectory whose content is used as the
+	  job description (see README).
+	  
 Version 0.6.10 (2008-05-30):
 
 	* Allow access to job directory files thru the source/files.php script.

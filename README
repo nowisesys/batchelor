@@ -37,11 +37,16 @@
    
    The hooks in pair with flexible template UI gives an easy to setup
    solution for allmost everyone. The name (hooks) comes from the fact that
-   these functions hooks into the workflow to modify the behavour.
+   these functions hooks into the workflow to modify how the system behaves.
    
    In the default configuration theres no hook functions defined, these must
    be explicit enabled by copying include/hooks.inc.in to include/hooks.inc
-   and enabling wanted functions.
+   and defining the functions of interest.
+   
+   If the job directory contains a file named 'name', then its content is used
+   as the job description in the queue viewer and allows the users to "tag" 
+   their jobs. You can i.e. use pre_enqueue_hook() or post_enqueue_hook() to
+   set the content of 'name' based on uploaded filename or its data.
    
 ** STATISTICS:
 

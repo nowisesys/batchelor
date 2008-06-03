@@ -69,6 +69,10 @@ td.help {
 	white-space: normal;
 }
 
+td.name {
+	border: 1px solid #e0e0e0;
+}
+
 td.body, div.body {
 	vertical-align: top;
 	border: 2px solid #eeeeee;
