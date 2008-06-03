@@ -165,7 +165,7 @@ define ("USE_ICONIZED_QUEUE", true);
 // either "head", "middle" or "tail".
 // 
 define ("QUEUE_SHOW_NAMES", true);
-define ("QUEUE_MAX_NAME_LENGHT", 35);
+define ("QUEUE_MAX_NAME_LENGHT", 65);
 define ("QUEUE_TRUNCATE_NAME", "middle");
 
 // 
