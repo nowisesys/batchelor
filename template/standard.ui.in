@@ -31,7 +31,7 @@
   </table>
   <br>
   <hr>
-  <table width="800">
+  <table width="960">
     <tr>
       <td class="footer"><?php print_html("footer"); ?></td>
     </tr>
