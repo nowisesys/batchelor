@@ -1,3 +1,8 @@
+Version 0.x.y (yyyy-mm-dd):
+
+	* The line break behavour of the textarea (process data) can now be set in
+	  conf/config.inc
+	  
 Version 0.6.11 (2008-06-04):
 
 	* The job can be "tagged" by creating a file with name 'name' inside 
