@@ -95,6 +95,14 @@ define ("UPLOAD_MAX_FILESIZE", 0);
 define ("UPLOAD_PRESERVE_FILENAME", false);
 
 // 
+// Define the wrapping mode for the textarea. Possible values are:
+//   "physical" - all visual line breaks are submitted as newlines
+//   "logical"  - show visual line breaks but only submit"hardtyped".
+//   "off"      - no visual linebreak, instead show scrollbars.
+// 
+define ("UPLOAD_TEXTAREA_WRAPPING", "off");
+
+// 
 // The number of seconds between reload of the page waiting for
 // running jobs to finish (in seconds). Set to 0 to disable automatic
 // page refresh. Note that some browsers don't handle meta refresh

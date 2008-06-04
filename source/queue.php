@@ -44,6 +44,10 @@ if(!defined("QUEUE_SORT_ORDER")) {
 }
 $GLOBALS['order'] = QUEUE_SORT_ORDER;
 
+if(!defined("UPLOAD_TEXTAREA_WRAPPING")) {
+    define ("UPLOAD_TEXTAREA_WRAPPING", "off");
+}
+
 function print_select($label, $name, $values)
 {
     if(isset($_REQUEST[$name])) {
@@ -403,7 +407,7 @@ function print_body()
 	// 
 	print "<tr><td>Process data:</td><td>\n";	
 	print "<form action=\"queue.php\" method=\"POST\">\n";
-	print "   <textarea name=\"data\" cols=\"50\" rows=\"8\"></textarea>\n";
+	printf("   <textarea name=\"data\" cols=\"50\" rows=\"8\" wrap=\"%s\"></textarea>\n", UPLOAD_TEXTAREA_WRAPPING);
 	print "   <input type=\"submit\" value=\"Send Data\" />\n";
 	if(isset($_REQUEST['sort'])) {
 	    printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);

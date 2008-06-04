@@ -11,6 +11,11 @@ input {
 	font-size: 85%;
 }
 
+textarea {
+        width: 350px;
+        height: 150px;
+}
+
 a {
 	color: #000099;
 }
