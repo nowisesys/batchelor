@@ -58,6 +58,23 @@ indata="$2"
 resdir="$3"
 
 ##
+## Export environment variables for script.inc
+## 
+QUEUE_JOBDIR="$jobdir"
+QUEUE_INDATA="$indata"
+QUEUE_RESDIR="$resdir"
+QUEUE_STDOUT="$jobdir/stdout"
+QUEUE_STDERR="$jobdir/stderr"
+QUEUE_PIDFILE="$jobdir/pid"
+
+export QUEUE_JOBDIR QUEUE_INDATA QUEUE_RESDIR QUEUE_STDOUT QUEUE_STDERR QUEUE_PIDFILE
+
+##
+## The meta data gets saved in the root directory of all job directories:
+##
+metadir="$(dirname $jobdir)"
+
+##
 ## Exit status of last command:
 ##
 status=0
@@ -69,6 +86,12 @@ function qsignal()
 {
   state="$1"
   msg="$2"
+
+  # Job state has changed and its job status needs to be refreshed:
+  $jobid="$(basename $jobdir)"
+  if [ -z "`grep $jobid $metadir/status.log`" ]; then
+    echo $jobid >> $metadir/status.log
+  fi
   
   case "$state" in 
     started)
@@ -83,39 +106,11 @@ function qsignal()
     fatal)
       # This is *really* bad:
       date -u +"%s" > $jobdir/finished
-      echo "$msg"   > $jobdir/fatal
+      echo "$msg"  >> $jobdir/stderr
+      touch $jobdir/fatal
       exit $status
       ;;
   esac
-}
-
-##
-## This function runs the job with support for job control.
-##
-function bgexec()
-{
-  ##
-  ## Put the command to run here with stdout and stderr redirected.
-  ## The command must be in PATH or being an absolute path.
-  ##
-  $(dirname $0)/simula -i $indata -r $resdir 1> $jobdir/stdout 2> $jobdir/stderr &
-  pid="$!"
-  echo $pid > $jobdir/pid
-  wait $pid
-  status="$?"
-}
-
-##
-## This function runs the job without support for job control.
-##
-function fgexec()
-{
-  ##
-  ## Put the command to run here with stdout and stderr redirected.
-  ## The command must be in PATH or being an absolute path.
-  ##
-  $(dirname $0)/simula -i $indata -r $resdir 1> $jobdir/stdout 2> $jobdir/stderr
-  status="$?"
 }
 
 ##
@@ -143,7 +138,14 @@ qsignal "started"
 ##
 ## Start running the job:
 ##
-bgexec
+scriptinc="$(dirname $0)/script.inc"
+if ! [ -e $scriptinc ]; then
+  qsignal "fatal" "The user defined job execution script (script.inc) do not exist"
+  exit $status
+else 
+  source $scriptinc
+  jobexec
+fi
 
 ##
 ## Signal finished to batchelor:

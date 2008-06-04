@@ -1,0 +1,105 @@
+#!/bin/sh
+#
+# User defined job execution. This file is sourced by script.sh (called from
+# the queue handler) that calls the function jobexec() defined here. 
+# 
+# Author: Anders Lövgren
+# Date:   2008-06-05
+#
+# 1. ENVIRONMENT:
+# 
+#    The following environment variables are exported by script.sh:
+#
+#    *) QUEUE_JOBDIR:  The absolute path to this jobs working directory.
+#    *) QUEUE_INDATA:  Path to uploaded indata (absolute).
+#    *) QUEUE_RESDIR:  Directory where to save the results.
+#
+#    *) QUEUE_STDOUT:  Destination file for stdout.
+#    *) QUEUE_STDERR:  Destination file for stderr.
+#
+#    *) QUEUE_PIDFILE: Path to PID file used for job control.
+#
+#    More environment variables might be available depending on operating
+#    system and the batch queue used.
+#
+# 2. SIGNALS:
+#
+#    This script should communicate with batchelor thru the function qsignal()
+#    that is defined in script.sh. It accepts two arguments: the status and
+#    an message string. The status is either "started", "finished" or "fatal".
+#
+#    Theres no need to call qsignal() with any other status than "fatal" from 
+#    here, because script.sh already calls qsignal() with "started" and "finished".
+#
+#    # Example: this will terminate the script:
+#    qsignal "fatal" "Something screwed up really bad!"
+#
+# 3. EXIT STATUS:
+#
+#    The shell variable status can be set to the exit status from any command 
+#    runned and is used by script.sh and batchelor to determine if the command
+#    completed successful (exit status zero) or finished with errors (non-zero).
+#    
+# 4. REDIRECT OF STDOUT AND STDERR:
+#
+#    Append stdout and stderr from your command to QUEUE_STDOUT resp. QUEUE_STDERR.
+#    Anything appended to QUEUE_STDOUT will show up in job details under
+#    "Job output" and anything appended to QUEUE_STDERR will show up under
+#    "Error Log"
+#
+# 5. JOB CONTROL:
+#
+#    If you are going to use job control, then the jobexec() function defined
+#    here should call the bgexec() function. This is required as job control
+#    must know the PID of the current command.
+#
+#    If you run multiple commands per job (in a "pipeline"), then make sure to
+#    update update the QUEUE_PIDFILE between each step.
+#
+
+##
+## This function runs the job with support for job control.
+##
+function bgexec()
+{
+  ##
+  ## Put the command to run here with stdout and stderr redirected.
+  ## The command must be in PATH or being an absolute path.
+  ##
+  $(dirname $0)/simula -i ${QUEUE_INDATA} -r ${QUEUE_RESDIR} 1> ${QUEUE_STDOUT} 2> ${QUEUE_STDERR} &
+  pid="$!"
+  echo $pid > ${QUEUE_PIDFILE}
+  wait $pid
+  status="$?"
+}
+
+##
+## This function runs the job without support for job control.
+##
+function fgexec()
+{
+  ##
+  ## Put the command to run here with stdout and stderr redirected.
+  ## The command must be in PATH or being an absolute path.
+  ##
+  $(dirname $0)/simula -i ${QUEUE_INDATA} -r ${QUEUE_RESDIR} 1> ${QUEUE_STDOUT} 2> ${QUEUE_STDERR}
+  status="$?"
+}
+ 
+##
+## This function gets called from script.sh
+##
+function jobexec()
+{
+  ##
+  ## Call either bgexec() or fgexec() from here:
+  ##
+  
+  ##
+  ## Remove these lines when done:
+  ## 
+  echo "Neither bgexec() or fgexec() is called from jobexec() in script.inc" >> ${QUEUE_STDERR}
+  echo "Can't continue unless one of these are defined and called from obexec()" >> ${QUEUE_STDERR}
+  
+  qsignal "fatal" "The user defined script script.inc is not yet configured"
+}
