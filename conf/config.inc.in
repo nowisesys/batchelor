@@ -169,6 +169,11 @@ define ("QUEUE_MAX_NAME_LENGHT", 65);
 define ("QUEUE_TRUNCATE_NAME", "middle");
 
 // 
+// Display the queue in a more compact format.
+// 
+define ("QUEUE_FORMAT_COMPACT", false);
+
+// 
 // Configure the menu style. Use either "graphic", "text" or "compact".
 // 
 define ("MENU_STYLE", "graphic");

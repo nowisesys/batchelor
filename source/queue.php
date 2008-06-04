@@ -97,13 +97,24 @@ function show_jobs_table(&$jobs)
 // 
 function show_jobs_table_icons(&$jobs)
 {
-    if(ENABLE_JOB_CONTROL == "advanced") {
-	print "<div class=\"indent\"><table width=\"50%\"><tr><th>Queued</th><th>Finished</th><th>Started</th><th>Job</th><th>Download</th><th>Delete</th><th>Job control</th></tr>\n";
+    if(QUEUE_FORMAT_COMPACT) {
+	$headers = array("Q", "F", "Started", "Job", "D", "X");
+	if(ENABLE_JOB_CONTROL == "advanced") {
+	    array_push($headers, "Job Ctrl");
+	}
     } else {
-	print "<div class=\"indent\"><table width=\"50%\"><tr><th>Queued</th><th>Finished</th><th>Started</th><th>Job</th><th>Download</th><th>Delete</th></tr>\n";
+	$headers = array("Queued", "Finished", "Started", "Job", "Download", "Delete");
+	if(ENABLE_JOB_CONTROL == "advanced") {
+	    array_push($headers, "Job Control");
+	}
     }
+    print "<div class=\"indent\"><table width=\"50%\"><tr>";
+    foreach($headers as $header) {
+	printf("<th>%s</th>", $header);
+    }
+    print "<tr>\n";
+    
     foreach($jobs as $jobdir => $job) {	    
-	// $label = sprintf("(%s)", $job['state']);
 	switch($job['state']) {
 	 case "pending":
 	    $title = sprintf("queued %s, \nwaiting in queue", 
