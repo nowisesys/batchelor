@@ -196,16 +196,16 @@ function save_hostid_mapping($mapdir, $hostid, $peer)
 // on value of global variable 'sort' (request paramter).
 // 
 function sort_jobs($a, $b)
-{
+{    
     // 
     // If jobs is pending then we can't sort on started i.e.
     // 
     if(isset($GLOBALS['sort'])) {
 	if(!isset($a[$GLOBALS['sort']])) {
-	    return false;
+	    return true;
 	}
 	if(!isset($b[$GLOBALS['sort']])) {
-	    return true;
+	    return false;
 	}	
     }
     

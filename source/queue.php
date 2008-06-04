@@ -39,6 +39,10 @@ if(!defined("QUEUE_FORMAT_COMPACT")) {
 if(!defined("QUEUE_SHOW_NAMES")) {
     define ("QUEUE_SHOW_NAMES", true);
 }
+if(!defined("QUEUE_SORT_ORDER")) {
+    define ("QUEUE_SORT_ORDER", "desc");
+}
+$GLOBALS['order'] = QUEUE_SORT_ORDER;
 
 function print_select($label, $name, $values)
 {
@@ -508,7 +512,7 @@ function show_page($error = null)
 	// 
 	// Get array of all running and finished jobs for peer identified
 	// by the hostid superglobal variable.
-	// 
+	// 	
 	$jobs = get_jobs($GLOBALS['hostid'], $_REQUEST['sort'], $_REQUEST['filter']);
 	
 	if(PAGE_REFRESH_RATE > 0) {
