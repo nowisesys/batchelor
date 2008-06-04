@@ -47,6 +47,12 @@ $GLOBALS['order'] = QUEUE_SORT_ORDER;
 if(!defined("UPLOAD_TEXTAREA_WRAPPING")) {
     define ("UPLOAD_TEXTAREA_WRAPPING", "off");
 }
+if(!defined("UPLOAD_MIN_FILESIZE")) {
+    define ("UPLOAD_MIN_FILESIZE", 0);
+}
+if(!defined("UPLOAD_MAX_FILESIZE")) {
+    define ("UPLOAD_MAX_FILESIZE", 0);
+}
 
 function print_select($label, $name, $values)
 {
@@ -686,7 +692,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 		    // 
 		    // Value: 2; The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. 
 		    //
-		    error_exit("The uploaded file exceeds forms maximum allowed filesize");
+		    error_exit("The uploaded file exceeds the maximum allowed filesize.");
 		    break;
 		 case UPLOAD_ERR_PARTIAL:
 		    //
@@ -733,9 +739,15 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // 
     if(filesize($indata) < UPLOAD_MIN_FILESIZE) {
 	cleanup_jobdir($jobdir, $indata);
-	error_exit(sprintf("Uploaded file is too small (requires filesize >= %d bytes)", UPLOAD_MIN_FILESIZE));
+	error_exit(sprintf("Uploaded file is too small (requires filesize >= %s)", 
+			   bytes_to_string(UPLOAD_MIN_FILESIZE)));
     }
-
+    if(UPLOAD_MAX_FILESIZE != 0 && filesize($indata) > UPLOAD_MAX_FILESIZE) {
+	cleanup_jobdir($jobdir, $indata);
+	error_exit(sprintf("Uploaded file is too big (accepts filesize < %s)", 
+			   bytes_to_string(UPLOAD_MAX_FILESIZE)));
+    }
+    
     //
     // Call pre enqueue hook if function is defined.
     // 
