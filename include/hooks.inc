@@ -592,7 +592,11 @@ function show_result_hook($started, $finished, &$stdout, &$stderr)
     printf("<p>\n");
     printf("<b>Started:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($started));
     printf("<b>Finished:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($finished));
-    printf("<b>Total job time:</b> %s\n", seconds_to_string($proctime));
+    if($proctime) {
+	printf("<b>Total job time:</b> %s\n", seconds_to_string($proctime));
+    } else {
+	print "<b>Total job time:</b> < 1 sec\n";
+    }
     printf("</p><br>\n");
     
     $result = sprintf("%s/jobs/%s/%s/result/chemgps.txt", 
