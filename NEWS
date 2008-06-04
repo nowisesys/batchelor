@@ -1,8 +1,10 @@
-Version 0.x.y (yyyy-mm-dd):
+Version 0.6.11 (2008-06-04):
 
 	* The job can be "tagged" by creating a file with name 'name' inside 
 	  the job directory whose content is used as the job description in the 
 	  queue (see README).
+	  
+	* The job queue listing can now be defined in ascending or descending order.
 	  
 Version 0.6.10 (2008-05-30):
 
