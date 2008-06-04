@@ -70,7 +70,9 @@ td.help {
 }
 
 td.name {
-	border: 1px solid #e0e0e0;
+	border-bottom: 1px solid #d0d0e0;
+	border-left: 1px solid #d0d0e0;
+	color: #6666ff;
 }
 
 td.body, div.body {
