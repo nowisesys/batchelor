@@ -349,7 +349,7 @@ function print_body()
 	}
 	
 	print "   <!-- Name of input element determines name in \$_FILES array -->\n";
-	print "   <input name=\"file\" type=\"file\" />\n";
+	print "   <input name=\"file\" type=\"file\" class=\"file\" size=\"51\" />\n";
 	print "   <input type=\"submit\" value=\"Send File\" />\n";
 	print "</form>\n";
 	print "</td></tr>\n";
@@ -359,7 +359,7 @@ function print_body()
 	// 
 	print "<tr><td>Process data:</td><td>\n";	
 	print "<form action=\"queue.php\" method=\"POST\">\n";
-	print "   <textarea name=\"data\" cols=\"50\" rows=\"8\"></textarea>\n";
+	print "   <textarea name=\"data\" cols=\"45\" rows=\"10\" wrap=\"off\"></textarea>\n";
 	print "   <input type=\"submit\" value=\"Send Data\" />\n";
 	if(isset($_REQUEST['sort'])) {
 	    printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);

@@ -4,7 +4,7 @@
 
 body {
 	font-family: arial,helvetica,sans-serif;
-	font-size: 90%;
+	font-size: 85%;
 }
 
 input {
@@ -33,6 +33,14 @@ h3 {
 	padding-left: 2px;
 	margin-top: 10px;
 	margin-left: 0px;
+}
+
+#tophead {
+        color: #000099;
+	font-size: 1.4em;
+	font-weight: bold;
+	margin-bottom: 8px;
+	white-space: nowrap;
 }
 
 td {
@@ -147,12 +155,14 @@ div.menuhead {
 	border: 1px solid #cccccc;
 	margin-left: 5px;
 	margin-top: 10px;
+	white-space: nowrap;
 }
 
 ul.menu {
 	position: relative;
 	list-style-type: none;
 	left: -20px;
+	white-space: nowrap;
 }
 
 /*
@@ -198,4 +208,13 @@ table.result {
 
 table.result td {
 	padding-left: 15px;
+}
+
+textarea {
+        width: 350px;
+        height: 150px;
+}
+
+input.file {
+	width: 350px;
 }

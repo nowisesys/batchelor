@@ -17,11 +17,7 @@
      to fit purposes for ChemGPS-NP website.
      -->
      
-  <font face="arial, helvetica, sans-serif" color="#000099" size="+2">
-    <b>ChemGPS-NP Web - A tool tuned for navigation in biologically relevant chemical space</b>
-  </font>
-  <br>
-  <br>  
+  <div id="tophead">ChemGPS-NP Web - A tool tuned for navigation in biologically relevant chemical space</div>  
   <div class="top"></div>
       
   <table width="960">
