@@ -33,10 +33,12 @@ if(file_exists("../include/hooks.inc")) {
     include("../include/hooks.inc");
 }
 
-// 
-// The array of pending and running jobs.
-// 
-// $jobs = null;
+if(!defined("QUEUE_FORMAT_COMPACT")) {
+    define ("QUEUE_FORMAT_COMPACT", false);
+}
+if(!defined("QUEUE_SHOW_NAMES")) {
+    define ("QUEUE_SHOW_NAMES", true);
+}
 
 function print_select($label, $name, $values)
 {
@@ -61,16 +63,34 @@ function print_select($label, $name, $values)
 // 
 function show_jobs_table(&$jobs)
 {
+    $sort   = array( "None"    => "none", 
+		     "Started" => "started", 
+		     "Job ID"  => "jobid", 
+		     "Status"  => "state" );
+    
+    $filter = array( "All"      => "all", 
+		     "Unfinished" => "waiting", 
+		     "Pending"  => "pending", 
+		     "Running"  => "running", 
+		     "Finished" => "finished", 
+		     "Warning"  => "warning", 
+		     "Error"    => "error", 
+		     "Crashed"  => "crashed" );
+
+    // 
+    // Provide sort on names too.
+    // 
+    if(QUEUE_SHOW_NAMES) {
+	$sort["Name"] = "name";
+    }
+    
     print "<h2><img src=\"icons/nuvola/services.png\"> Job Queue:</h2>\n";
     print "<table><tr><td align=\"left\"><span id=\"secthead\">Filter Options:</span></td>\n";
     print "<td><form action=\"queue.php\" method=\"get\">\n";
     print "<input type=\"hidden\" name=\"show\" value=\"queue\" />\n";
     print "<table><tr>\n";
-    print_select("Sort on", "sort", array( "None" => "none", "Started" => "started", 
-					   "Job ID" => "jobid", "Status" => "state" )); 
-    print_select("Show", "filter",  array( "All" => "all", "Unfinished" => "waiting", "Pending" => "pending", 
-					   "Running" => "running", "Finished" => "finished", 
-					   "Warning" => "warning", "Error" => "error", "Crashed" => "crashed" ));
+    print_select("Sort on", "sort", $sort);
+    print_select("Show", "filter",  $filter);
     print "<td><input type=\"submit\" value=\"Refresh\"></td>\n";
     print "</tr></table></form></td></tr></table>\n";
     if(count($jobs)) {	
@@ -238,7 +258,7 @@ function show_jobs_table_icons(&$jobs)
 	// Job name (below and indented)
 	// 
 	if(isset($job['name'])) {
-	    if(defined("QUEUE_SHOW_NAMES") && QUEUE_SHOW_NAMES) {
+	    if(QUEUE_SHOW_NAMES) {
 		$span = ENABLE_JOB_CONTROL == "advanced" ? 5 : 4;
 		printf("<tr><td colspan=\"2\">&nbsp;</td><td colspan=\"%d\" class=\"name\">%s</td></tr>\n", $span, $job['name']);
 	    }
@@ -760,7 +780,7 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 // Validate request parameters.
 // 
 if(isset($_REQUEST['sort'])) {
-    check_request_param("sort", array( "none", "started", "jobid", "state" ));
+    check_request_param("sort", array( "none", "started", "jobid", "state", "name" ));
 } 
 else {
     $_REQUEST['sort'] = "none";
