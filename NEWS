@@ -1,8 +1,8 @@
 Version 0.x.y (yyyy-mm-dd):
 
-	* Its now possible to name (tag) jobs by creating a file with the 
-	  name 'name' inside the jobdirectory whose content is used as the
-	  job description (see README).
+	* The job can be "tagged" by creating a file with name 'name' inside 
+	  the job directory whose content is used as the job description in the 
+	  queue (see README).
 	  
 Version 0.6.10 (2008-05-30):
 
