@@ -22,7 +22,7 @@
 // 
 // Maximum number of molecules accepted in each uploaded smiles file:
 // 
-define ("MAX_SMILES_MOLECULES", 5000);
+define ("MAX_SMILES_MOLECULES", 8000);
 
 // 
 // Validate molecules in indata:
@@ -548,14 +548,10 @@ function show_data_hook($data, $statdir, $subsect)
 // This function gets called to print context help.
 // 
 function context_help_hook($what)
-{
-    // 
-    // Output system default help:
-    // 
-    context_help_system($what);
-   
+{   
     switch($what) {
      case "submit":
+	printf("<p><b>Usage contract:</b><br>Uploaded molecules might be <u>used or published later</u> by the system owner.</p>\n");
 	printf("<p>Maximum number of uploaded <b>molecules per job</b> is %d, see <a href=\"help.php\">help</a> for further information.</p>\n", MAX_SMILES_MOLECULES);
 	break;
      case "queue":
@@ -563,6 +559,10 @@ function context_help_hook($what)
      case "stats":
 	break;
     }
+    // 
+    // Output system default help:
+    // 
+    context_help_system($what);
 }
 
 // 
