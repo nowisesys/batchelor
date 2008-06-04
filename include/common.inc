@@ -279,68 +279,70 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
 	if($dirs = opendir(".")) {
 	    while(false !== ($dir = readdir($dirs))) {
 		if($dir != "." && $dir != "..") {
-		    if(chdir($dir)) {
-			if($files = opendir(".")) {
-			    $job = array();
-			    while(false !== ($file = readdir($files))) {
-				if($file != "." && $file != "..") {
-				    // 
-				    // Process all files inside $root/$dir
-				    //
-				    switch($file) {
-				     case "indata":
-					// ignore
-					break;
-				     case "jobid":
-				     case "queued":
-				     case "started":
-				     case "finished":
-					$job[$file] = trim(file_get_contents($file));
-					break;
-				     case "stdout":
-				     case "stderr":
-					if(filesize($file)) {
-					    $job[$file] = filemtime($file);   // save timestamp if filesize > 0 bytes
-					}
-					break;
-				     case "fatal":
-					$job[$file] = filemtime($file);
-					break;
-				     case "name":
-					if(defined("QUEUE_SHOW_NAMES") && QUEUE_SHOW_NAMES) {
-					    $name = trim(file_get_contents($file));
-					    if(strlen($name) > QUEUE_MAX_NAME_LENGHT) {
-						if(QUEUE_TRUNCATE_NAME == "head") {
-						    $part = QUEUE_MAX_NAME_LENGHT - 3;
-						    $name = sprintf("...%s", substr($name, -$part, $part));
-						}
-						else if(QUEUE_TRUNCATE_NAME == "middle") {
-						    $part = QUEUE_MAX_NAME_LENGHT / 2 - 1;
-						    $name = sprintf("%s...%s", 
-								    substr($name, 0, $part), 
-								    substr($name, -$part, $part));
-						} else if(QUEUE_TRUNCATE_NAME == "tail") {
-						    $name = sprintf("%s...", substr($name, 0, QUEUE_MAX_NAME_LENGHT - 3));
-						}
+		    if(is_dir($dir)) {
+			if(chdir($dir)) {
+			    if($files = opendir(".")) {
+				$job = array();
+				while(false !== ($file = readdir($files))) {
+				    if($file != "." && $file != "..") {
+					// 
+					// Process all files inside $root/$dir
+					//
+					switch($file) {
+					 case "indata":
+					    // ignore
+					    break;
+					 case "jobid":
+					 case "queued":
+					 case "started":
+					 case "finished":
+					    $job[$file] = trim(file_get_contents($file));
+					    break;
+					 case "stdout":
+					 case "stderr":
+					    if(filesize($file)) {
+						$job[$file] = filemtime($file);   // save timestamp if filesize > 0 bytes
 					    }
-					    $job[$file] = $name;
+					    break;
+					 case "fatal":
+					    $job[$file] = filemtime($file);
+					    break;
+					 case "name":
+					    if(defined("QUEUE_SHOW_NAMES") && QUEUE_SHOW_NAMES) {
+						$name = trim(file_get_contents($file));
+						if(strlen($name) > QUEUE_MAX_NAME_LENGHT) {
+						    if(QUEUE_TRUNCATE_NAME == "head") {
+							$part = QUEUE_MAX_NAME_LENGHT - 3;
+							$name = sprintf("...%s", substr($name, -$part, $part));
+						    }
+						    else if(QUEUE_TRUNCATE_NAME == "middle") {
+							$part = QUEUE_MAX_NAME_LENGHT / 2 - 1;
+							$name = sprintf("%s...%s", 
+									substr($name, 0, $part), 
+									substr($name, -$part, $part));
+						    } else if(QUEUE_TRUNCATE_NAME == "tail") {
+							$name = sprintf("%s...", substr($name, 0, QUEUE_MAX_NAME_LENGHT - 3));
+						    }
+						}
+						$job[$file] = $name;
+					    }
 					}
 				    }
 				}
 			    }
+			    else {
+				error_log(sprintf("Failed open result directory '%s/%s'", $root, $dir));
+			    }
 			}
 			else {
-			    error_log(sprintf("Failed open result directory '%s/%s'", $root, $dir));
+			    error_log(sprintf("Failed change to result directory '%s/%s'", $root, $dir));
 			}
+			// 
+			// Push job onto jobs array and pop directory.
+			// 
+			$jobs[$dir] = $job;
+			chdir("..");
 		    }
-		    else {
-			error_log(sprintf("Failed change to result directory '%s/%s'", $root, $dir));
-		    }
-		    // 
-		    // Push job onto jobs array and pop directory.
-		    // 
-		    $jobs[$dir] = $job;
-		    chdir("..");
 		}
 	    }
 	}
