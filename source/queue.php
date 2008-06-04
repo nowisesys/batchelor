@@ -397,7 +397,7 @@ function print_body()
 	}
 	
 	print "   <!-- Name of input element determines name in \$_FILES array -->\n";
-	print "   <input name=\"file\" type=\"file\" />\n";
+	print "   <input name=\"file\" type=\"file\" class=\"file\" size=\"50\" />\n";
 	print "   <input type=\"submit\" value=\"Send File\" />\n";
 	print "</form>\n";
 	print "</td></tr>\n";

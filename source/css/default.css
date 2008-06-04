@@ -11,6 +11,10 @@ input {
 	font-size: 85%;
 }
 
+input.file {
+	width: 350px;
+}
+
 textarea {
         width: 350px;
         height: 150px;
