@@ -1,8 +1,11 @@
-Version 0.x.y (yyyy-mm-dd):
+Version 0.6.12 (2008-06-05):
 
-	* The line break behavour of the textarea (process data) can now be set in
-	  conf/config.inc
+	* The line break mode of the textarea (process data) can now be customized 
+	  in conf/config.inc. This also affects whether scrollbars are showed.
 	  
+	* Serializing of the queue has been added to speed up queue view
+	  when many jobs exists. As a bonus it reduces disk access to a minimum.
+	
 Version 0.6.11 (2008-06-04):
 
 	* The job can be "tagged" by creating a file with name 'name' inside 
