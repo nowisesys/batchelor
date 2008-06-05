@@ -790,6 +790,12 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     }
         
     // 
+    // Append job to status update log.
+    // 
+    file_put_contents(sprintf("%s/status.log", dirname($jobdir)),
+		      sprintf("%s\n", basename($jobdir)), FILE_APPEND);
+    
+    // 
     // Redirect the browser to an empty queue.php to prevent page
     // update to submit the same data or file twice or more.
     // 
