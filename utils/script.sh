@@ -88,7 +88,8 @@ function qsignal()
   msg="$2"
 
   # Job state has changed and its job status needs to be refreshed:
-  $jobid="$(basename $jobdir)"
+  jobid="$(basename $jobdir)"
+  touch "$metadir/status.log"
   if [ -z "`grep $jobid $metadir/status.log`" ]; then
     echo $jobid >> $metadir/status.log
   fi
