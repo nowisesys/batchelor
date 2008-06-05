@@ -47,6 +47,17 @@ function delete_directory($root)
 // 
 function delete_single_job($hostid, $resdir, $jobid)
 {
+    //
+    // Record all deleted job directories to the queue cache
+    // will be properly updated.
+    //
+    $status = sprintf("%s/jobs/%s/status.log", CACHE_DIRECTORY, $hostid);
+
+    // 
+    // The resdir argument is actually the name of the jobdir.
+    // 
+    $jobdir = $resdir;
+    
     // 
     // Build path to result directory:
     // 
@@ -82,6 +93,11 @@ function delete_single_job($hostid, $resdir, $jobid)
 	    delete_directory($resdir);
 	}
     }
+    
+    // 
+    // Append deleted job to status log:
+    // 
+    file_put_contents($status, sprintf("%s\n", $jobdir), FILE_APPEND);
 }
 
 // 

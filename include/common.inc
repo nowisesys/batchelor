@@ -294,10 +294,25 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
 	    }
 	}
 	if(count($jobs) == 0 || isset($update)) {
+	    if(isset($update)) {
+		// 
+		// Process deleted job directories:
+		// 
+		foreach($update as $dir) {
+		    if(!file_exists($dir) && isset($jobs[$dir])) {
+			unset($jobs[$dir]);
+		    }
+		}
+	    }
+			
 	    if($dirs = opendir(".")) {
 		while(false !== ($dir = readdir($dirs))) {
 		    if($dir != "." && $dir != "..") {
 			if(is_dir($dir)) {
+			    // 
+			    // Only process job directories thats in the update
+			    // array, all others have to status change.
+			    // 
 			    if(isset($update)) {
 				if(!in_array($dir, $update)) {
 				    continue;      // no status change
