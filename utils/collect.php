@@ -477,7 +477,7 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 	    printf("debug: processing job directories for host ID %s\n", $hostid);
 	}
 	while(($file = readdir($handle)) !== false) {
-	    if($file != "." && $file != "..") {
+	    if($file != "." && $file != ".." && is_dir($file)) {
 		$jobdir = sprintf("%s/%s", $hiddir, $file);		
 		// 
 		// Should this directory be collected?
