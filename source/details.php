@@ -112,7 +112,7 @@ function print_body()
 	    printf("<span id=\"secthead\">Process time:</span>\n");
 	    printf("<p>\n");
 	    printf("<b>Started:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($started));
-	    printf("<b>Finished:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($finished));
+	    printf("<b>Finished:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", $finished != 0 ? format_timestamp($finished) : "---");
 	    printf("<b>Total job time:</b> %s\n", seconds_to_string($proctime));
 	    printf("</p><br>\n");
 	    
