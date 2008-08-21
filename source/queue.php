@@ -337,7 +337,10 @@ function print_body()
 	// 
 	print "<tr><td>Process file:</td><td>\n";
 	print "<form enctype=\"multipart/form-data\" action=\"queue.php\" method=\"POST\">\n";
-	if(UPLOAD_MAX_FILESIZE > 0) {
+	// 
+	// Don't impose max file size limit on trusted hosts.
+	// 
+	if(UPLOAD_MAX_FILESIZE > 0 && !trusted_host($_SERVER['REMOTE_ADDR'])) {
 	    print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
 	    printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", UPLOAD_MAX_FILESIZE);
 	}

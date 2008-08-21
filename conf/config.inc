@@ -70,6 +70,12 @@ define ("BATCH_LISTING", "at -l");
 define ("BATCH_REMOVE", "atrm %d");
 
 // 
+// Trusted host are allowed to by-pass limits on i.e. max upload file size.
+// Note that PHP itself also impose limits that needs to be adjusted. The 
+// value is a colon separated list of ip-addresses.
+// 
+define ("TRUSTED_HOSTS", "130.238.34.10:130.238.39.209");
+
 // 
 // The minimum/maximum file size accepted (in bytes). Set to 0 to 
 // disable minimum/maximum file size check. The maximum is affected

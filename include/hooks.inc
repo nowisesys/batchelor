@@ -112,14 +112,16 @@ function pre_enqueue_hook($file, $jobdir, &$error)
 	$error = sprintf("Uploaded file is %s. Only plain text files are accepted.", $mime);
 	return false;
     }
-    
-    // 
-    // Make sure number of molecules in smiles file is < max allowed;
-    // 
-    $str = file_get_contents($file);
-    if(substr_count($str, "\n") > MAX_SMILES_MOLECULES) {
-	$error = sprintf("The maximum number of molecules that can be uploaded in an smiles file are %d", MAX_SMILES_MOLECULES);
-	return false;
+
+    if(!trusted_host($_SERVER['REMOTE_ADDR'])) {
+	// 
+	// Make sure number of molecules in smiles file is < max allowed;
+	// 
+	$str = file_get_contents($file);
+	if(substr_count($str, "\n") > MAX_SMILES_MOLECULES) {
+	    $error = sprintf("The maximum number of molecules that can be uploaded in an smiles file are %d", MAX_SMILES_MOLECULES);
+	    return false;
+	}
     }
     
     // 
@@ -145,22 +147,26 @@ function pre_enqueue_hook($file, $jobdir, &$error)
     while($str = fgets($fsi)) {
     	$match = array();
     	if(preg_match('/^(.*?)\s+(.*)/', trim($str), $match)) {
-	    if(VALIDATE_MOLECULES) {
-		if(!validate_molecule_smiles($match[1], $error)) {
-		    $error = sprintf("Failed validate molecule on line %d (%s)", $index, $error);
-		    return false;
+	    if(!trusted_host($_SERVER['REMOTE_ADDR'])) {
+		if(VALIDATE_MOLECULES) {
+		    if(!validate_molecule_smiles($match[1], $error)) {
+			$error = sprintf("Failed validate molecule on line %d (%s)", $index, $error);
+			return false;
+		    }
 		}
 	    }
-    	    fwrite($fso, sprintf("%s\t[%d] %s\n", $match[1], $index++, $match[2]));
+	    fwrite($fso, sprintf("%s\t[%d] %s\n", $match[1], $index++, $match[2]));
     	}
     	else { 
-	    if(VALIDATE_MOLECULES) {
-		if(!validate_molecule_smiles(trim($str), $error)) {
-		    $error = sprintf("Failed validate molecule on line %d (%s)", $index, $error);
-		    return false;
+	    if(!trusted_host($_SERVER['REMOTE_ADDR'])) {
+		if(VALIDATE_MOLECULES) {
+		    if(!validate_molecule_smiles(trim($str), $error)) {
+			$error = sprintf("Failed validate molecule on line %d (%s)", $index, $error);
+			return false;
+		    }
 		}
 	    }
-    	    fwrite($fso, sprintf("%s\t[%d] ???\n", trim($str), $index++));
+	    fwrite($fso, sprintf("%s\t[%d] ???\n", trim($str), $index++));
     	}
     }
     fclose($fsi);
