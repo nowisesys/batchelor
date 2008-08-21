@@ -45,6 +45,14 @@ indata="$2"
 resdir="$3"
 bindir="/usr/local/chemgps/bin"
 
+##
+## Options for splitting indata to per subjob data:
+## 
+split_opts="-l 10000 -d -a 7"
+
+##
+## Current stage:
+## 
 stage=1
 
 ##
@@ -95,10 +103,10 @@ function next_step()
   fi
     
   # Save stdout and stderr from each stage:
-  for f in stdout stderr; do
-    if [ -e $jobdir/$f.stage${stage} ]; then
-      cat $jobdir/$f.stage${stage} >> $jobdir/$f
-      rm -f $jobdir/$f.stage${stage}
+  for stream in stdout stderr; do
+    if [ -e $jobdir/$stream.stage${stage} ]; then
+      cat $jobdir/$stream.stage${stage} >> $jobdir/$stream
+      rm -f $jobdir/$stream.stage${stage}
     fi
   done
 
@@ -108,7 +116,7 @@ function next_step()
   fi
     
   # Continue with next stage:
-  echo "Finished $message" >> $jobdir/stdout
+  echo "$message" >> $jobdir/stdout
   let stage=$stage+1
 }
 
@@ -140,28 +148,62 @@ qsignal "started"
 ##
 
 ##
-## Run dragonX (produces $jobdir/chemgps.output):
+## Transform smiles-file before running dragonX:
 ##
-debug "Running $bindir/chemgps-np-compute.pl $indata $jobdir"
-$bindir/chemgps-np-compute.pl $indata $jobdir 1> $jobdir/stdout.stage${stage} 2> $jobdir/stderr.stage${stage}
-next_step "running dragonX"
+debug "Transforming smiles-file:"
+$bindir/nonisosmi.pl $indata 1> $indata.noniso 2> $jobdir/stderr.stage${stage}
+next_step "Finished process indata"
 
 ##
-## Validate output from running dragonX (strip lines with error molecules):
-##
-debug "Running $bindir/chemgps-sqp-prepare.pl $jobdir/chemgps.output $jobdir"
-$bindir/chemgps-sqp-prepare.pl $jobdir/chemgps.output $jobdir 1> $jobdir/stdout.stage${stage} 2> $jobdir/stderr.stage${stage}
-next_step "prepare for Simca-QP"
-
-##
-## Run Simca-QP on dragonX output (using chemgps-sqp):
-##
-debug "Running $bindir/chemgps-sqp-run.pl $jobdir/chemgps.prepared $jobdir $resdir"
-$bindir/chemgps-sqp-run.pl $jobdir/chemgps.prepared $jobdir $resdir 1> $jobdir/stdout.stage${stage} 2> $jobdir/stderr.stage${stage}
-next_step "running Simca-QP"
-
-## Cleanup temporary files:
-## rm -f $jobdir/dragonx*
+## We need to split the large input file into max 10000 lines chunks and
+## process each of these smaller files as a subjob.
+## 
+( mkdir -p $jobdir/workset
+  cd $jobdir/workset
+  split ${split_opts} $indata.noniso ws
+  
+  steps="$(ls -1 ws* | wc -l)"
+  let steps*=3
+  
+  for ws in ws*; do 
+    mkdir $jobdir/workset/${ws}d && mv $jobdir/workset/${ws} $jobdir/workset/${ws}d && (
+      wsdir="$jobdir/workset/${ws}d"
+      wsfile="$jobdir/workset/${ws}d/${ws}"
+      
+      ##
+      ## Run dragonX (produces $jobdir/chemgps.output):
+      ##
+      debug "Running $bindir/chemgps-np-compute.pl $wsfile $wsdir"
+      $bindir/chemgps-np-compute.pl $wsfile $wsdir 1> $jobdir/stdout.stage${stage} 2> $jobdir/stderr.stage${stage}
+      next_step "${ws}: finished running dragonX ($stage/$steps)"
+      
+      ##
+      ## Validate output from running dragonX (strip lines with error molecules):
+      ##
+      debug "Running $bindir/chemgps-sqp-prepare.pl $wsdir/chemgps.output $wsdir"
+      $bindir/chemgps-sqp-prepare.pl $wsdir/chemgps.output $wsdir 1> $jobdir/stdout.stage${stage} 2> $jobdir/stderr.stage${stage}
+      next_step "${ws}: finished prepare for Simca-QP ($stage/$steps)"
+      
+      ##
+      ## Run Simca-QP on dragonX output (using chemgps-sqp):
+      ##
+      debug "Running $bindir/chemgps-sqp-run.pl $wsdir/chemgps.prepared $wsdir $wsdir"
+      $bindir/chemgps-sqp-run.pl $wsdir/chemgps.prepared $wsdir $wsdir 1> $jobdir/stdout.stage${stage} 2> $jobdir/stderr.stage${stage}
+      next_step "${ws}: finished running Simca-QP ($stage/$steps)"
+      
+      ## 
+      ## Move result to real result directory:
+      ## 
+      if [ -e $wsdir/chemgps.txt ]; then
+        mv $wsdir/chemgps.txt $resdir/chemgps_${ws}.txt
+      fi
+      
+      ## 
+      ## Do next step:
+      ##
+      let step=$step+1
+    )
+  done )
 
 ##
 ## Check for fatal errors:
@@ -185,3 +227,33 @@ fi
 ## Signal finished to batchelor:
 ##
 qsignal "finished"
+
+## 
+## Finalize:
+## 
+( cd $jobdir
+  # Insert a hint file for locating result in the workset result:
+cat << EOF >> $resdir/README.txt
+The input data was split into smaller pieces to support processing of large
+number of molecules. Each chemgps_ws0000XXX.txt file in the result contains
+the predicted scores for up to 10000 molecules:
+
+result/
+  +-- chemgps_ws0000000.txt    // first 10000 molecules in indata
+  +-- chemgps_ws0000001.txt    // next 10000 molecules in indata
+ ...
+  +-- chemgps_ws0000NNN.txt    // the remaining up to NNN * 10^4 molecules
+  
+Unnamed molecules is prefixed (MOLID) with their line number as they where 
+read from the input data (indata).
+
+If you have any questions about the format, send them by email to: 
+ChemGPS <chemgps@bmc.uu.se>
+EOF
+  # Save workset data for debug:
+  if [ -d workset ]; then
+    tar cfvz workset.tar.gz workset
+    rm -rf workset
+  fi
+  # Cleanup temporary files:
+  rm -f indata.noniso )
