@@ -170,7 +170,9 @@ next_step "Finished process indata (1)"
   for ws in ws*; do 
     mkdir $jobdir/workset/${ws}d && mv $jobdir/workset/${ws} $jobdir/workset/${ws}d && (
       wsdir="$jobdir/workset/${ws}d"
-      wsfile="$jobdir/workset/${ws}d/${ws}"
+      wsfile="$wsdir/${ws}"
+      
+      ( cd $wsdir; ln -sf $wsfile indata )
       
       ##
       ## Run dragonX (produces $jobdir/chemgps.output):
