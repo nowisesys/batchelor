@@ -77,7 +77,6 @@ function qsignal()
     finished)
       # Save finished timestamp:
       date -u +"%s" > $jobdir/finished
-      exit 0
       ;;
     fatal)
       # This is *really* bad:
@@ -85,6 +84,9 @@ function qsignal()
       date -u +"%s" > $jobdir/finished
       echo "$msg"   > $jobdir/fatal
       exit $errorcode
+      ;;
+    success)
+      exit 0
       ;;
   esac
 }
@@ -152,7 +154,7 @@ qsignal "started"
 ##
 debug "Transforming smiles-file:"
 $bindir/nonisosmi.pl $indata 1> $indata.noniso 2> $jobdir/stderr.stage${stage}
-next_step "Finished process indata"
+next_step "Finished process indata (1)"
 
 ##
 ## We need to split the large input file into max 10000 lines chunks and
@@ -161,10 +163,10 @@ next_step "Finished process indata"
 ( mkdir -p $jobdir/workset
   cd $jobdir/workset
   split ${split_opts} $indata.noniso ws
-  
+
   steps="$(ls -1 ws* | wc -l)"
-  let steps*=3
-  
+  let steps=$steps*3+1
+
   for ws in ws*; do 
     mkdir $jobdir/workset/${ws}d && mv $jobdir/workset/${ws} $jobdir/workset/${ws}d && (
       wsdir="$jobdir/workset/${ws}d"
@@ -197,11 +199,6 @@ next_step "Finished process indata"
       if [ -e $wsdir/chemgps.txt ]; then
         mv $wsdir/chemgps.txt $resdir/chemgps_${ws}.txt
       fi
-      
-      ## 
-      ## Do next step:
-      ##
-      let step=$step+1
     )
   done )
 
@@ -211,17 +208,6 @@ next_step "Finished process indata"
 if [ "$(grep 'chemgps-sqp: error:' $jobdir/stderr)" != "" ]; then
   qsignal "fatal" "Failed running Simca-QP"
 fi
-
-##
-## Append result file to stdout:
-##
-# if [ -e $resdir/chemgps.txt ]; then
-#   echo >> $jobdir/stdout
-#   echo "<p><b>Result:</b><br>" >> $jobdir/stdout
-#   cat $resdir/chemgps.txt >> $jobdir/stdout
-#   # echo "<p><b>Indata:</b><br>" >> $jobdir/stdout
-#   # cat $indata >> $jobdir/stdout
-# fi
 
 ##
 ## Signal finished to batchelor:
@@ -234,18 +220,22 @@ qsignal "finished"
 ( cd $jobdir
   # Insert a hint file for locating result in the workset result:
 cat << EOF >> $resdir/README.txt
-The input data was split into smaller pieces to support processing of large
-number of molecules. Each chemgps_ws0000XXX.txt file in the result contains
-the predicted scores for up to 10000 molecules:
+The input data is split into smaller pieces if the number of molecules
+exceeds 10000, and each chunk of data is processed by its own subprocess.
+
+Each subprocess is started as needed in a FIFO manner and creates their own 
+result file where the index in the filename denotes the subprocess:
 
 result/
-  +-- chemgps_ws0000000.txt    // first 10000 molecules in indata
-  +-- chemgps_ws0000001.txt    // next 10000 molecules in indata
+  +-- chemgps_ws0000000.txt    // first 10000 molecules in indata (subproc 1)
+  +-- chemgps_ws0000001.txt    // next 10000 molecules in indata  (subproc 2)
  ...
   +-- chemgps_ws0000NNN.txt    // the remaining up to NNN * 10^4 molecules
   
-Unnamed molecules is prefixed (MOLID) with their line number as they where 
-read from the input data (indata).
+Unnamed molecules in indata gets prefixed (in the MOLID column) with their 
+line number as they where read from the input data (indata). While there 
+exists an mapping between subprocesses and lines in input data, theres 
+typical no ordering of lines within each chemgps_ws0000NNN.txt.
 
 If you have any questions about the format, send them by email to: 
 ChemGPS <chemgps@bmc.uu.se>
@@ -257,3 +247,8 @@ EOF
   fi
   # Cleanup temporary files:
   rm -f indata.noniso )
+
+##
+## Signal (exit) success to batchelor:
+##
+qsignal "success"
