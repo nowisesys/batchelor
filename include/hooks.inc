@@ -225,14 +225,13 @@ function post_enqueue_hook($file, $jobdir)
 }
 
 // 
-// This function gets called during collection of statistics data. The data is
-// later saved to the directory structure under cache/stat. The hostid argument
-// is either "all" or a unique ID of submitter. The jobdir is the directory
-// to harvest statistics from. The year, month, day and hour is the time when
-// this job got queued (submitted).
+// This is a helper function for collect_data_hook() because we need to support
+// collecting statistics from both single job directories and directiries using
+// split jobs (workset data). The latter will have a subdirectory named workset
+// under its jobdir.
 // 
-function collect_data_hook($hostid, &$data, $jobdir, $year, $month, $day, $hour)
-{
+function collect_data_helper_hook($hostid, &$data, $jobdir, $year, $month, $day, $hour)
+{    
     // 
     // The file to collect and the section name we save under.
     // 
@@ -274,6 +273,33 @@ function collect_data_hook($hostid, &$data, $jobdir, $year, $month, $day, $hour)
 	    $data[$hostid][$year][$month][$day][$sect][$name] += $dragonx[$name];
 	    $data[$hostid][$year][$month][$day][$hour][$sect][$name] += $dragonx[$name];
 	}
+    }
+}
+
+// 
+// This function gets called during collection of statistics data. The data is
+// later saved to the directory structure under cache/stat. The hostid argument
+// is either "all" or a unique ID of submitter. The jobdir is the directory
+// to harvest statistics from. The year, month, day and hour is the time when
+// this job got queued (submitted).
+// 
+function collect_data_hook($hostid, &$data, $jobdir, $year, $month, $day, $hour)
+{
+    $workset = sprintf("%s/workset", $jobdir);
+    if(file_exists($workset)) {
+	$handle = opendir($workset);
+	if($handle) {
+	    while(($subdir = readdir($handle)) !== false) {
+		if($subdir == "." || $subdir == "..") {
+		    continue;
+		}
+		$wsdir = sprintf("%s/%s", $workset, $subdir);
+		collect_data_helper_hook($hostid, $data, $wsdir, $year, $month, $day, $hour);
+	    }
+	    closedir($handle);
+	}
+    } else {
+	collect_data_helper_hook($hostid, $data, $jobdir, $year, $month, $day, $hour);
     }
 }
 
