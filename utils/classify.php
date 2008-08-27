@@ -23,7 +23,7 @@
 //   from in the spool file cache/incoming/hostidXX
 // * chemgps-sqp-prepare.pl:
 //   This script adds the classification of dragonX output to the file
-//   cache/jobs/.../dragonx.dbmap
+//   cache/jobs/xxx/yyy/dragonx.dbmap
 // 
 // Here we do reverse mapping of molecule names in indata against dragonX 
 // output (these are *not* in order). The molecules are then appended to the
@@ -184,7 +184,7 @@ function process_spool_file($spool, $hostid, $options)
     if($handle) {
 	while($str = fgets($handle)) {
 	    list($jobdir, $ipaddr) = explode("\t", $str);
-	    process_jobdir_metadata($jobdir, trim($ipaddr), $hostid, $options);
+	    process_jobdir($jobdir, trim($ipaddr), $hostid, $options);
 	}
 	fclose($handle);
 	if(!$options->keep) {
@@ -199,12 +199,49 @@ function process_spool_file($spool, $hostid, $options)
 // 
 // Process the job directory.
 // 
-function process_jobdir_metadata($jobdir, $ipaddr, $hostid, $options)
+function process_jobdir($jobdir, $ipaddr, $hostid, $options)
 {
     if($options->debug) {
 	printf("debug: processing job directory %s\n", basename($jobdir));
     }
 
+    // 
+    // We now support splitting jobs into a workset (a collection of subjobs).
+    // As a result of this, files like dragon.*, chemgps.* and simcaq.* are
+    // now in its own subdirectory under workset.
+    // 
+    $workset = sprintf("%s/workset", $jobdir);
+    if(file_exists($workset)) {
+	if($handle = opendir($workset)) {
+	    while(($dir = readdir($handle)) !== false) {
+		if($dir == "." || $dir == "..") {
+		    continue;
+		}
+		process_jobdir_metadata(sprintf("%s/%s", $workset, $dir), $ipaddr, $hostid, $options);
+	    }
+	    closedir($handle);
+	} else {
+	    die(sprintf("%s: failed open workset directory %s\n", $options->prog, $workset));
+	}
+    } else {
+	// 
+	// Old behavour with work data mixed with other files under jobdir.
+	// 
+	process_jobdir_metadata($jobdir, $ipaddr, $hostid, $options);
+    }
+}
+
+function process_jobdir_metadata($jobdir, $ipaddr, $hostid, $options)
+{    
+    // 
+    // Relative path used in debug and error messages:
+    // 
+    $topdir = str_replace(sprintf("%s/jobs/", CACHE_DIRECTORY), "", $jobdir);
+    
+    if($options->debug) {
+	printf("debug: processing meta data in %s\n", $topdir);
+    }
+    
     // 
     // Destination directories of classified molecules.
     // 
@@ -212,26 +249,26 @@ function process_jobdir_metadata($jobdir, $ipaddr, $hostid, $options)
     $filerej = sprintf("%s/db/rejected", CACHE_DIRECTORY);
     
     if(!file_exists($fileacc)) {
-	die(sprintf("%s: directory for accepted molecules do not exist\n", $options->prog));
+	die(sprintf("%s: directory for accepted molecules do not exist (in %s)\n", $options->prog, $topdir));
     }
     if(!file_exists($filerej)) {
-	die(sprintf("%s: directory for rejected molecules do not exist\n", $options->prog));
+	die(sprintf("%s: directory for rejected molecules do not exist (in %s)\n", $options->prog, $topdir));
     }
-    
+        
     // 
     // Read classification map of dragonX output. The *.dbmap file may not exists if
     // its job directory has been deleted by the user.
     // 
     $dbfile = sprintf("%s/dragonx.dbmap", $jobdir);
     if(file_exists($dbfile)) {
-	$dbmap = file_get_contents($dbfile);
+	$dbmap = trim(file_get_contents($dbfile));
 	if(strlen($dbmap) == 0) {
-	    die(sprintf("%s: failed read dbmap\n", $options->prog));
+	    die(sprintf("%s: failed read dbmap (in %s)\n", $options->prog, $topdir));
 	}
     } else {
 	$dbdir = dirname($dbfile);
 	if(file_exists($dbdir)) {
-	    die(sprintf("%s: no %s in job directory %s\n", basename($dbfile), $dbdir));
+	    die(sprintf("%s: no %s in job directory %s\n", $options->prog, basename($dbfile), $topdir));
 	}
 	if($options->debug) {
 	    printf("debug: dbmap %s don't exists (job directory deleted bu user)\n", $dbfile);
@@ -309,7 +346,7 @@ function process_jobdir_metadata($jobdir, $ipaddr, $hostid, $options)
 		    break;
 		 default:
 		    die(sprintf("%s: unknown classification %c\n", 
-				$options->prog, $dbmap[$idmap[$index]]));
+		    		$options->prog, $dbmap[$idmap[$index]]));
 		}
 	    }
 	    ++$index;
