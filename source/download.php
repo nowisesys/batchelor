@@ -15,7 +15,7 @@
 // -------------------------------------------------------------------------------
 
 // 
-// Script for downloading job result.
+// Script for downloading job result or indata.
 // 
 
 //
@@ -68,54 +68,95 @@ if(!file_exists($resdir)) {
 }
 
 // 
-// Now create the result zip if missing.
-//
-$zipdir  = "result";
-$zipfile = "result.zip";
-
-chdir($resdir);
-if(!file_exists("result.zip")) {
+// Send result in zip-file.
+// 
+function download_result($resdir)
+{
     // 
-    // Use bundled PECL zip extention if available.
+    // Now create the result zip if missing.
     //
-    if(extension_loaded("zip") && version_compare(phpversion(), "5.2.0", ">=")) {
+    $zipdir  = "result";
+    $zipfile = "result.zip";
+
+    chdir($resdir);
+    if(!file_exists("result.zip")) {
 	// 
-	// This is a workaround because the PHP4 compiler will die
-	// on enums (like ZipArchive::CREATE).
-	// 
-	$zipinc = realpath(sprintf("%s/../include/zip5.inc", dirname(__FILE__)));
-	include $zipinc;
-	if(!create_zipfile($zipfile, $zipdir)) {
-	    error_handler("zip");
+	// Use bundled PECL zip extention if available.
+	//
+	if(extension_loaded("zip") && version_compare(phpversion(), "5.2.0", ">=")) {
+	    // 
+	    // This is a workaround because the PHP4 compiler will die
+	    // on enums (like ZipArchive::CREATE).
+	    // 
+	    $zipinc = realpath(sprintf("%s/../include/zip5.inc", dirname(__FILE__)));
+	    include $zipinc;
+	    if(!create_zipfile($zipfile, $zipdir)) {
+		error_handler("zip");
+	    }
+	}
+	else {
+	    // 
+	    // Fallback on external command.
+	    //
+	    $handle = popen(sprintf(ZIP_FILE_COMMAND, $zipfile, $zipdir), "r");
+	    pclose($handle);
 	}
     }
-    else {
-	// 
-	// Fallback on external command.
+    
+    // 
+    // Make sure the archive where created:
+    //
+    if(file_exists($zipfile)) {
 	//
-	$handle = popen(sprintf(ZIP_FILE_COMMAND, $zipfile, $zipdir), "r");
-	pclose($handle);
+	// Hint browser about filename to use for "save as..."
+	// 
+	header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("result-job-%s.zip", $jobid)));
+	header(sprintf("Content-Type: %s", "application/zip"));
+	header(sprintf("Content-Length: %d", filesize($zipfile)));
+	
+	// 
+	// Now send the file:
+	// 
+	readfile($zipfile);
+    }
+    else {
+	error_handler("zip");
     }
 }
 
 // 
-// Make sure the archive where created:
-//
-if(file_exists($zipfile)) {
-    //
-    // Hint browser about filename to use for "save as..."
-    // 
-    header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("result-job-%s.zip", $jobid)));
-    header(sprintf("Content-Type: %s", "application/zip"));
-    header(sprintf("Content-Length: %d", filesize($zipfile)));
+// Download indata.
+// 
+function download_indata($resdir)
+{
+    $indata = sprintf("%s/indata", $resdir);
     
     // 
-    // Now send the file:
+    // Make sure that indata exists.
     // 
-    readfile($zipfile);
+    if(file_exists($indata)) {
+	//
+	// Hint browser about filename to use for "save as..."
+	// 
+	header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("indata.txt", $indata)));
+	header(sprintf("Content-Type: %s", "text/plain"));
+	header(sprintf("Content-Length: %d", filesize($indata)));
+	
+	// 
+	// Now send the file:
+	// 
+	readfile($indata);
+    }
 }
-else {
-    error_handler("zip");
+
+if(isset($_REQUEST['what'])) {
+    if($_REQUEST['what'] == "indata") {
+	download_indata($resdir);
+    } else if($_REQUEST['what'] == "result") {
+	download_result($resdir);
+    }
+} else {
+    download_result($resdir);
 }
 
 ?>

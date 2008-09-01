@@ -708,8 +708,27 @@ function show_result_hook($started, $finished, &$stdout, &$stderr)
 // Use this function to override how indata gets presented by details.php.
 // The indata parameter is the complete path to uploaded data (indata).
 // 
-// function show_indata_hook($indata)
-// {
-// }
+function show_indata_hook($indata)
+{
+    printf("<span id=\"secthead\">Uploaded data:</span>\n");
+
+    $stat = stat($indata);
+    if($stat['size'] > UPLOAD_MAX_FILESIZE) {
+	printf("<p>The size of the input data file is <b>too big to view online</b>. ");
+	printf("Please use the <a href=\"download.php?jobid=%s&result=%s&what=indata\">download link</a> instead.",
+	       $_REQUEST['jobid'], $_REQUEST['result']);
+    } else {
+	// 
+	// Single line input data must be wrapped by browser, or
+	// the output may look like empty space on the page.
+	// 
+	$content = file(sprintf("%s/indata", $GLOBALS['jobdir']));
+	if(count($content) == 1) {
+	    printf("<p>%s</p>\n", $content[0]);
+	} else {
+	    printf("<p><pre>%s</pre></p>\n", implode("", $content));
+	}
+    }
+}
 
 ?>
