@@ -634,38 +634,62 @@ function show_result_hook($started, $finished, &$stdout, &$stderr)
 	}
     }
     printf("</p><br>\n");
-    
+
+    // 
+    // First check if old style result is used. If not, then check if the result 
+    // set uses more than one result file (chemgps_ws0000NNN.txt). If so, then
+    // simply tell the user to download the result-zip. They don't want to try
+    // opening >= MAX_SMILES_MOLECULES in a HTML table anyway ;-)
+    // 
     $result = sprintf("%s/jobs/%s/%s/result/chemgps.txt", 
 		      CACHE_DIRECTORY, $_COOKIE['hostid'], $_REQUEST['result']);
-    if(file_exists($result)) {
-	printf("<span id=\"secthead\">Predicted scores:</span>\n");
+    if(!file_exists($result)) {
+	$result = sprintf("%s/jobs/%s/%s/result/chemgps_ws0000001.txt", 
+			  CACHE_DIRECTORY, $_COOKIE['hostid'], $_REQUEST['result']);
+	if(file_exists($result)) {
+	    $result = null;      // We got more than MAX_SMILES_MOLECULES
+	} else {
+	    $result = sprintf("%s/jobs/%s/%s/result/chemgps_ws0000000.txt", 
+			      CACHE_DIRECTORY, $_COOKIE['hostid'], $_REQUEST['result']);
+	}
+    }
+    printf("<span id=\"secthead\">Predicted scores:</span>\n");
+    if(isset($result)) {
+	if(file_exists($result)) {
 	
-	$fs = fopen($result, "r");
-	if($fs) {
-	    $str = fgets($fs);
-	    $match = explode("\t", trim($str));
-	    if(count($match) == 9) {
-		print "<table class=\"result\">\n";
-		
-		print "<tr>";
-		for($i = 0; $i < 9; ++$i) {
-		    printf("<th>%s</th>", $match[$i]);
-		}
-		print "</tr>\n";
-		
-		while(($str = fgets($fs))) {
-		    $match = explode("\t", trim($str));
+	    $fs = fopen($result, "r");
+	    if($fs) {
+		$str = fgets($fs);
+		$match = explode("\t", trim($str));
+		if(count($match) == 9) {
+		    print "<table class=\"result\">\n";
+		    
 		    print "<tr>";
 		    for($i = 0; $i < 9; ++$i) {
-			printf("<td>%s</td>", $match[$i]);
+			printf("<th>%s</th>", $match[$i]);
 		    }
-		    print "</tr>\n";			
-		}
+		    print "</tr>\n";
 		
-		print "</table>\n<br>\n";
+		    while(($str = fgets($fs))) {
+			$match = explode("\t", trim($str));
+			print "<tr>";
+			for($i = 0; $i < 9; ++$i) {
+			    printf("<td>%s</td>", $match[$i]);
+			}
+			print "</tr>\n";			
+		    }
+		    
+		    print "</table>\n<br>\n";
+		}
+		fclose($fs);
 	    }
-	    fclose($fs);
+	} else {
+	    printf("<p>Strange, the result file %s don't exists any longer!</p>", basename($result));
 	}
+    } else {
+	printf("<p>The result contains <b>more</b> than %d predicted molecules. ", MAX_SMILES_MOLECULES);
+	printf("Use the <a href=\"download.php?jobid=%s&result=%s\">download link</a> instead if you like to view the result.</p>", 
+	       $_REQUEST['jobid'], $_REQUEST['result']);
     }
     
     if(isset($stdout)) {
