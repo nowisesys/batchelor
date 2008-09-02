@@ -74,7 +74,7 @@ define ("BATCH_REMOVE", "atrm %d");
 // Note that PHP itself also impose limits that needs to be adjusted. The 
 // value is a colon separated list of ip-addresses.
 // 
-define ("TRUSTED_HOSTS", "130.238.34.10:130.238.39.209");
+define ("TRUSTED_HOSTS", "130.238.34.10");
 
 // 
 // The minimum/maximum file size accepted (in bytes). Set to 0 to 
