@@ -37,6 +37,9 @@ define ("VALIDATE_MOLECULES", true);
 function validate_molecule_smiles($str, &$error)
 {   
     $atoms = array(
+		   // 
+		   // The peridoc table:
+		   // 
 		   "H"   =>   1, "He"  =>   2,
 		   
 		   "Li"  =>   3, "Be"  =>   4, "B"   =>   5, "C"   =>   6, "N"   =>   7,
@@ -71,11 +74,14 @@ function validate_molecule_smiles($str, &$error)
 		   "Uub" => 112, "Uut" => 113, "Uuq" => 114, "Uup" => 115, "Uuh" => 116,
 		   "Uus" => 117, "Uuo" => 118,
 		   
+		   // 
+		   // Lower case is also valid for single letter atoms:
+		   // 
 		   "h" =>  1, "b" =>  5, "c" =>  6, "n" =>  7, "o" =>  8, "f" =>  9, 
 		   "p" => 15, "s" => 16, "k" => 19, "v" => 23, "y" => 39, "i" => 53, 
 		   "w" => 74, "u" => 92,
 		   );
-    
+
     $match = array();
     $pattern = '/[A-Z][a-z][a-z]|[A-Z][a-z]|[A-Z]|[a-z]/';
     if(preg_match_all($pattern, $str, $match)) {
@@ -83,8 +89,16 @@ function validate_molecule_smiles($str, &$error)
     	    if(isset($atoms[$key])) {
     		continue;
     	    } else {
-    		$error = "invalid atom $key";
-		return false;
+		// 
+		// This could be a false positive. For example the smiles string
+		// 'Nc' (NH=C) is one such case. We need to check every single atom. 
+		// 
+		for($i = 0; $i < strlen($key); ++$i) {
+		    if(!isset($atoms[$key[$i]])) {
+			$error = "invalid atom $key";
+			return false;
+		    }
+		}
 	    }
 	}
     } else {
