@@ -32,10 +32,17 @@
   <div class="bottom"></div>
   <table width="960">
     <tr>
-      <font face="arial, helvetica, sans-serif"  color="#000099" size="+1"><b>In co-operation with...</b></font>
-      <p>
-      <a href="http://www.fkog.uu.se/research/selection.html" border=0 target="_new"><img src="uulogo.jpg"></a>&nbsp;&nbsp;&nbsp;&nbsp;<img src="astrazeneca.jpg">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="talete.jpg"><img src="talete_title.jpg">&nbsp;&nbsp;<img src="umetrics.jpg">&nbsp;<a href="http://www.bmc.uu.se/node151" border=0 target="_new"><img src="bmc.jpg"></a>
-      <p>
+      <td>
+        <font face="arial, helvetica, sans-serif"  color="#000099" size="+1"><b>In co-operation with...</b></font>
+        <p>
+	  <a href="http://www.fkog.uu.se/research/selection.html" border=0 target="_new"><img src="uulogo.jpg"></a>&nbsp;&nbsp;&nbsp;&nbsp;<img src="astrazeneca.jpg">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="talete.jpg"><img src="talete_title.jpg">&nbsp;&nbsp;<img src="umetrics.jpg">&nbsp;<a href="http://www.bmc.uu.se/node151" border=0 target="_new"><img src="bmc.jpg"></a>
+	</p>
+      </td>
+      <td class="cite">
+	If you use this application in a publication, please cite: Larsson J,<br>
+	Gottfries J, Muresan S, Backlund A. J Nat Prod. 2007;70(5):789-794, and<br>
+	Ros&eacute;n J, L&ouml;vgren A, Gottfries J, Backlund A. EMBnet.news 2008;14(2):6-9.
+      </td>
     </tr>
   </table>
   <hr>
