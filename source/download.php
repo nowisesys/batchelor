@@ -70,7 +70,7 @@ if(!file_exists($resdir)) {
 // 
 // Send result in zip-file.
 // 
-function download_result($resdir)
+function download_result($resdir, $jobid)
 {
     // 
     // Now create the result zip if missing.
@@ -156,7 +156,7 @@ if(isset($_REQUEST['what'])) {
 	download_result($resdir);
     }
 } else {
-    download_result($resdir);
+    download_result($resdir, $jobid);
 }
 
 ?>
