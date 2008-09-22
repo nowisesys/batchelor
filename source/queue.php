@@ -587,14 +587,15 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // We got job data submitted. Enqueue job, display error message
     // and exit if enqueuing fails. 
     // 
-    if(!enqueue_job(isset($_REQUEST['data']) ? $_REQUEST['data'] : null)) {
+    $job = null;
+    if(!enqueue_job(isset($_REQUEST['data']) ? $_REQUEST['data'] : null, $job)) {
 	error_exit(get_last_error());
     }
     // 
     // Redirect the browser to an empty queue.php to prevent page
     // update to submit the same data or file twice or more.
     // 
-    header("Location: queue.php?queued=yes");
+    header(sprintf("Location: queue.php?queued=yes&pid=%s", $job['jobid']));
 }
 
 // 

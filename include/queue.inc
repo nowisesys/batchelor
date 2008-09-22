@@ -367,9 +367,9 @@ function get_queued_jobs(&$jobs)
 // 
 // The $formdata parameter should be set to submitted data (or indata payload if 
 // called from XML-RPC code). If its unset, then its assumed that a file was
-// uploaded instead.
+// uploaded instead. Data for the newly enqueued job is stored in the $job variable.
 // 
-function enqueue_job($formdata)
+function enqueue_job($formdata, &$job)
 {
     // 
     // Create output and job spool directories.
@@ -547,7 +547,9 @@ function enqueue_job($formdata)
     }
     $script = realpath(dirname(__FILE__) . "/../utils/script.sh");
     $command = sprintf("%s %s %s %s", $script, $jobdir, $indata, $resdir);
-    $job = run_process($command, $jobdir);
+    if(!run_process($command, $jobdir, $job)) { 
+	return false;
+    }
     
     // 
     // Save jobid and queued time to file in result dir.
