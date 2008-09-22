@@ -468,7 +468,8 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
     // updated for each hostid directory.
     // 
     if($options->qmode == LIST_QUEUE_PER_HOSTID) {
-	$jobqueue = get_queued_jobs();
+	$jobqueue = array();
+	get_queued_jobs($jobqueue);
     }
     
     $handle = @opendir($hiddir);
@@ -497,7 +498,8 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 		// Fetch queued jobs in each loop?
 		// 
 		if($options->qmode == LIST_QUEUE_PER_JOBDIR) {
-		    $jobqueue = get_queued_jobs();
+		    $jobqueue = array();
+		    get_queued_jobs($jobqueue);
 		}
 		
 		// 
@@ -2044,7 +2046,8 @@ function collect_statistics($jobsdir, $statdir, $options)
 
     $queued = null;
     if($options->qmode == LIST_QUEUE_ONCE) {
-	$queued = get_queued_jobs();
+	$queued = array();
+	get_queued_jobs($queued);
     }
     
     if(!is_dir($jobsdir) && !is_link($jobsdir)) {
