@@ -32,9 +32,15 @@ include "../include/delete.inc";
 function error_handler($type)
 {
     // 
+    // Log any error messages to web server log.
+    // 
+    log_errors();
+    
+    // 
     // Redirect caller back to queue.php and let it report an error.
     // 
     header("Location: queue.php?error=delete&type=$type");
+    exit(0);
 }
 
 // 
@@ -54,8 +60,10 @@ if(isset($_REQUEST['multiple'])) {
     if(!isset($_REQUEST['filter'])) {
 	error_handler("params");
     }
-    
-    delete_multiple_jobs($_COOKIE['hostid'], $_REQUEST['filter']);
+
+    if(!delete_multiple_jobs($_COOKIE['hostid'], $_REQUEST['filter'])) {
+	error_handler("delete");
+    }
 }
 else {
     // 
@@ -65,7 +73,9 @@ else {
 	error_handler("params");
     }
 
-    delete_single_job($_COOKIE['hostid'], $_REQUEST['result'], $_REQUEST['jobid']);
+    if(!delete_single_job($_COOKIE['hostid'], $_REQUEST['result'], $_REQUEST['jobid'])) {
+	error_handler("delete");
+    }
 }
 
 // 

@@ -36,10 +36,12 @@ function delete_directory($root)
 	    closedir($handle);
 	}
 	else {
-	    die("Failed read directory");
+	    put_error("Failed open directory");
+	    return false;
 	}
 	rmdir($root);
     }
+    return true;
 }
 
 // 
@@ -70,7 +72,8 @@ function delete_single_job($hostid, $resdir, $jobid)
 	$jobfile = sprintf("%s/jobid", $resdir);
 	if(file_exists($jobfile)) {
 	    if(file_get_contents($jobfile) != $jobid) {
-		die("Job ID don't match recorded Job ID");
+		put_error("Job ID don't match recorded Job ID");
+		return false;
 	    }
 	    
 	    // 
@@ -84,13 +87,17 @@ function delete_single_job($hostid, $resdir, $jobid)
 	    // 
 	    // Recursive delete the job directory.
 	    // 
-	    delete_directory($resdir);
+	    if(!delete_directory($resdir)) {
+		return false;
+	    }
 	}
 	else if($jobid == 0) {
 	    // 
 	    // This is a job directory crashed due to missconfiguration.
 	    // 
-	    delete_directory($resdir);
+	    if(!delete_directory($resdir)) {
+		return false;
+	    }
 	}
     }
     
@@ -98,6 +105,7 @@ function delete_single_job($hostid, $resdir, $jobid)
     // Append deleted job to status log:
     // 
     file_put_contents($status, sprintf("%s\n", $jobdir), FILE_APPEND);
+    return true;
 }
 
 // 
@@ -108,9 +116,12 @@ function delete_multiple_jobs($hostid, $filter)
     $jobs = get_jobs($hostid, "none", $filter);
     foreach($jobs as $jobdir => $job) {
 	if($job['state'] != "running") {
-	    delete_single_job($hostid, $jobdir, $job['jobid']);
+	    if(!delete_single_job($hostid, $jobdir, $job['jobid'])) {
+		return false;
+	    }
 	}
     }
+    return true;
 }
 
 ?>
