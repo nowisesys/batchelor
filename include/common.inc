@@ -32,7 +32,7 @@ if(!function_exists("stream_get_contents") &&
 // Runs a batch job. Returns associative array with jobid, date, 
 // time and unix timestamp for started job.
 // 
-function run_process($cmd, $dir)
+function run_process($cmd, $dir, &$batch)
 {
     //
     // The "pipe" key can be changed to "file":
@@ -54,7 +54,8 @@ function run_process($cmd, $dir)
     
     $running = exec(BATCH_RUNNING);
     if(!is_numeric($running)) {
-	error_exit("Failed get number of running jobs");
+	put_error("Failed get number of running jobs");
+	return false;
     }
     
     if($running < BATCH_LIMIT) {
@@ -89,7 +90,8 @@ function run_process($cmd, $dir)
 	// Check exit status of process.
 	// 
 	if($result != 0) {
-	    error_exit("Failed run batch job");
+	    put_error("Failed run batch job");
+	    return false;
 	}
 	
 	// 
@@ -103,18 +105,15 @@ function run_process($cmd, $dir)
 	// 
 	$batch = split_batch_output($stderr);
 	if(!isset($batch)) {
-	    error_exit(sprintf("Failed process output of batch job"));
-	}
-	else {
-	    // 
-	    // Return job properties array.
-	    // 
-	    return $batch;
+	    put_error(sprintf("Failed process output of batch job"));
+	    return false;
 	}
     }
     else {
-	error_exit("Failed run batch jobb $cmd");
+	put_error("Failed run batch jobb $cmd");
+	return false;
     }
+    return true;
 }
 
 // 
