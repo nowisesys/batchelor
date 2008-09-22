@@ -324,7 +324,7 @@ function collect_state_count($hostid, &$data, $state)
 
 // 
 // Helper function for counting floating avarage (arithmetric mean value):
-// fn(x) = 1/n * ((n - 1) * x(n) + x(n + 1)), x >= 1
+// fn(x) : R -> R x(n - 1) = 1/n * ((n - 1) * x(n) + x(n + 1)), n >= 1
 // 
 function floating_mean_value($count, $acc, $last)
 {
