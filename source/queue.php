@@ -28,6 +28,7 @@
 // 
 include "../conf/config.inc";
 include "../include/common.inc";
+include "../include/queue.inc";
 include "../include/ui.inc";
 if(file_exists("../include/hooks.inc")) {
     include("../include/hooks.inc");
@@ -449,7 +450,7 @@ function print_body()
 		break;
 	     case "resdir":
 		print_message_box("error", "The result directory is missing");
-		break;
+		break;		
 	     case "pid":
 		if(isset($_REQUEST['reason'])) {
 		    switch($_REQUEST['reason']) {
@@ -464,6 +465,9 @@ function print_body()
 			break;
 		    }
 		}
+		break;
+	     case "delete":
+		print_message_box("error", "Failed delete the job directory.");
 		break;
 	    }
 	} 
@@ -524,6 +528,10 @@ function show_page($error = null)
 	// by the hostid superglobal variable.
 	// 	
 	$jobs = get_jobs($GLOBALS['hostid'], $_REQUEST['sort'], $_REQUEST['filter']);
+	if(!$jobs) {
+	    log_errors();
+	    die("HERE");
+	}
 	
 	if(PAGE_REFRESH_RATE > 0) {
 	    // 
@@ -554,43 +562,6 @@ function error_exit($str)
 }
 
 // 
-// This function should be called prior to error_exit() to
-// clean the job directory on failure.
-// 
-function cleanup_jobdir($root, $indata = null)
-{
-    if(isset($indata)) {
-	if(file_exists($indata)) {
-	    if(!unlink($indata)) {
-		error_exit("Failed cleanup job directory");
-	    }
-	}
-    }
-    
-    if(file_exists($root)) {
-	$handle = opendir($root);
-	if($handle) {
-	    while(false !== ($file = readdir($handle))) {
-		if($file != "." && $file != "..") {
-		    $path = sprintf("%s/%s", $root, $file);
-		    if(is_dir($path)) {
-			cleanup_jobdir($path);
-		    }
-		    if(is_file($path) || is_link($path)) {
-			unlink($path);
-		    }
-		}
-	    }
-	    closedir($handle);
-	}
-	else {
-	    error_exit("Failed read job directory");
-	}
-	rmdir($root);
-    }
-}
-
-// 
 // Validate request parameter.
 // 
 function check_request_param($name, $accepted)
@@ -613,188 +584,12 @@ update_hostid_cookie();
 
 if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // 
-    // Create output and job spool directories.
+    // We got job data submitted. Enqueue job, display error message
+    // and exit if enqueuing fails. 
     // 
-    $jobdir = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $GLOBALS["hostid"]);
-    if(!file_exists($jobdir)) {
-	if(!create_directory($jobdir, CACHE_PERMISSION, true)) {
-	    error_exit("Failed create output directory");
-	}
+    if(!enqueue_job(isset($_REQUEST['data']) ? $_REQUEST['data'] : null)) {
+	error_exit(get_last_error());
     }
-    
-    $jobdir = sprintf("%s/%d", $jobdir, time());
-    if(!create_directory($jobdir, CACHE_PERMISSION, true)) {
-	error_exit("Failed create output directory");
-    }
-    
-    // 
-    // Save peer <=> hostid mapping?
-    //
-    if(SAVE_HOSTID_MAPPING) {
-	$mapdir = sprintf("%s/map", CACHE_DIRECTORY);
-	save_hostid_mapping($mapdir, $GLOBALS['hostid'], $_SERVER['REMOTE_ADDR']);
-    }
-    
-    // 
-    // Create path to indata file.
-    // 
-    if(UPLOAD_PRESERVE_FILENAME && isset($_FILES['file']['name'])) {
-	$indata = sprintf("%s/%s", $jobdir, $_FILES['file']['name']);
-    }
-    else {
-	$indata = sprintf("%s/indata", $jobdir);
-    }
-    
-    // 
-    // Process request parameters.
-    // 
-    if(isset($_REQUEST['data'])) {
-	// 
-	// Save the data to file.
-	// 
-	if(!file_put_contents($indata, $_REQUEST['data'])) {
-	    cleanup_jobdir($jobdir, $indata);
-	    if(strlen($_REQUEST['data']) == 0) {
-		error_exit("No job data was submitted");
-	    }
-	    else {
-		error_exit("Failed save data to file");
-	    }
-	}
-    }
-    else {
-	// 
-	// Make sure the uploaded file is posted file and not an
-	// system file, i.e. /etc/passwd
-	// 
-	if(is_uploaded_file($_FILES['file']['tmp_name'])) {
-	    if(!rename($_FILES['file']['tmp_name'], $indata)) {
-		cleanup_jobdir($jobdir, $_FILES['file']['tmp_name']);
-		error_exit("Failed move uploaded file");
-	    }
-	    if(UPLOAD_PRESERVE_FILENAME) {
-		if(!symlink($indata, sprintf("%s/indata", $jobdir))) {
-		    error_exit("Failed symlink uploaded file");
-		}
-	    }
-	}
-	else {
-	    rmdir($jobdir);
-	    if(isset($_FILES['file']['error'])) {
-		switch($_FILES['file']['error']) {
-		 case UPLOAD_ERR_INI_SIZE:
-		    // 
-		    // Value: 1; The uploaded file exceeds the upload_max_filesize directive in php.ini. 
-		    //
-		    error_exit("The uploaded file exceeds PHP's maximum allowed filesize");
-		    break;
-		 case UPLOAD_ERR_FORM_SIZE:
-		    // 
-		    // Value: 2; The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. 
-		    //
-		    error_exit("The uploaded file exceeds the maximum allowed filesize.");
-		    break;
-		 case UPLOAD_ERR_PARTIAL:
-		    //
-		    // Value: 3; The uploaded file was only partially uploaded. 
-		    //
-		    error_exit("The uploaded file was only partially uploaded");
-		    break;
-		 case UPLOAD_ERR_NO_FILE:
-		    //
-		    // Value: 4; No file was uploaded. 
-		    // 
-		    error_exit("No file was uploaded");
-		    break;
-		 case UPLOAD_ERR_NO_TMP_DIR:
-		    // 
-		    // Value: 6; Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3. 
-		    // 
-		    error_exit(sprintf("Missing a temporary folder, contact %s", CONTACT_STRING));
-		    break;
-		 case UPLOAD_ERR_CANT_WRITE:
-		    // 
-		    // Value: 7; Failed to write file to disk. Introduced in PHP 5.1.0. 
-		    //
-		    error_exit(sprintf("Failed to write file to disk, contact %s", CONTACT_STRING));
-		    break;
-		 case UPLOAD_ERR_EXTENSION:
-		    // 
-		    // Value: 8; File upload stopped by extension. Introduced in PHP 5.2.0.
-		    //
-		    error_exit("File upload stopped by extension");
-		    break;
-		}
-	    }
-	    else {
-		error_exit("No uploaded file");
-	    }
-	}
-    }
-      
-    // 
-    // The filesize test on uploaded data applies to both HTTP uploaded file
-    // and data saved from request parameter data. Both gets saved to file
-    // pointed to by $indata.
-    // 
-    if(filesize($indata) < UPLOAD_MIN_FILESIZE) {
-	cleanup_jobdir($jobdir, $indata);
-	error_exit(sprintf("Uploaded file is too small (requires filesize >= %s)", 
-			   bytes_to_string(UPLOAD_MIN_FILESIZE)));
-    }
-    if(UPLOAD_MAX_FILESIZE != 0 && filesize($indata) > UPLOAD_MAX_FILESIZE) {
-	cleanup_jobdir($jobdir, $indata);
-	error_exit(sprintf("Uploaded file is too big (accepts filesize < %s)", 
-			   bytes_to_string(UPLOAD_MAX_FILESIZE)));
-    }
-    
-    //
-    // Call pre enqueue hook if function is defined.
-    // 
-    if(function_exists("pre_enqueue_hook")) {
-	$error = "";
-	if(!pre_enqueue_hook($indata, $jobdir, $error)) {
-	    cleanup_jobdir($jobdir, $indata);
-	    error_exit($error);
-	}
-    }
-    
-    // 
-    // File uploaded or created. Now we just has to start the batch
-    // job. The path to the wrapper script path must be absolute.
-    // 
-    $resdir = sprintf("%s/result", $jobdir);
-    if(!create_directory($resdir, CACHE_PERMISSION, true)) {
-	cleanup_jobdir($jobdir, $indata);
-	error_exit("Failed create result directory");
-    }
-    $script = realpath(dirname(__FILE__) . "/../utils/script.sh");
-    $command = sprintf("%s %s %s %s", $script, $jobdir, $indata, $resdir);
-    $job = run_process($command, $jobdir);
-    
-    // 
-    // Save jobid and queued time to file in result dir.
-    // 
-    if(!file_put_contents(sprintf("%s/jobid", $jobdir), $job['jobid'])) {
-	error_exit("Failed save jobid");
-    }
-    if(!file_put_contents(sprintf("%s/queued", $jobdir), time())) {
-	error_exit("Failed save job enqueue time");
-    }
-
-    //
-    // Call post enqueue hook if function is defined.
-    // 
-    if(function_exists("post_enqueue_hook")) {
-	post_enqueue_hook($indata, $jobdir);
-    }
-        
-    // 
-    // Append job to status update log.
-    // 
-    file_put_contents(sprintf("%s/status.log", dirname($jobdir)),
-		      sprintf("%s\n", basename($jobdir)), FILE_APPEND);
-    
     // 
     // Redirect the browser to an empty queue.php to prevent page
     // update to submit the same data or file twice or more.

@@ -191,339 +191,6 @@ function save_hostid_mapping($mapdir, $hostid, $peer)
     }
 }
 
-//
-// This callback is used by get_jobs() to sort the jobs array based
-// on value of global variable 'sort' (request paramter).
-// 
-function sort_jobs($a, $b)
-{    
-    // 
-    // If jobs is pending then we can't sort on started i.e.
-    // 
-    if(isset($GLOBALS['sort'])) {
-	if(!isset($a[$GLOBALS['sort']])) {
-	    return true;
-	}
-	if(!isset($b[$GLOBALS['sort']])) {
-	    return false;
-	}	
-    }
-    
-    if(isset($GLOBALS['order']) && $GLOBALS['order'] == "desc") {
-	return $a[$GLOBALS['sort']] < $b[$GLOBALS['sort']];
-    }
-    else {
-	return $a[$GLOBALS['sort']] > $b[$GLOBALS['sort']];
-    }
-}
-
-// 
-// This callback is used by get_jobs() to filter out values based
-// on value of the global variable 'filter' (request parameter).
-//
-function filter_jobs($a)
-{
-    if($GLOBALS['filter'] == "waiting") {
-	return $a['state'] == "pending" || $a['state'] == "running";
-    } 
-    return $a['state'] == $GLOBALS['filter'];
-}
-
-// 
-// Get jobs for peer associated by the hostid variable.
-// 
-// The job can be in one of the following states:
-// 1. Running  - no finished timestamp and jobid is in queue.
-// 2. Finished - finished timestamp exists.
-// 3. Crashed  - no finished timestamp and jobid is missing in queue.
-// 4. Warning  - finished with non-empty error output.
-// 5. Error    - same as Warning, but also has an fatal exit message file.
-// 
-// The $sort parameter defines the ordering between elements in result
-// array. Possible values for $sort is none, started, jobid or state. 
-// The sorting can be further finetuned by defining the global variable 
-// order to either asc or desc.
-// 
-// The $filter parameter defines which elements should be inserted
-// in the result array. Possible values are all, pending, running, finished, 
-// warning, error or crashed.
-// 
-function get_jobs($hostid, $sort = "none", $filter = "all")
-{
-    // 
-    // The result array.
-    // 
-    $jobs = array();
-
-    // 
-    // Save current working directory.
-    // 
-    $cwd = getcwd();
-
-    // 
-    // Build path to directory containing all job directories for this hostid.
-    // 
-    $root = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $hostid);
-    
-    // 
-    // Prevent error when updating job list without any submitted job.
-    // 
-    if(!file_exists($root)) {
-	return $jobs;
-    }
-    
-    // 
-    // Loop thru all subdirectories.
-    // 
-    if(chdir($root)) {
-	// 
-	// Read serialized queue data if it exist. Then look if status update
-	// log exists. If serialized queue exist, but no status update then we
-	// are done. If serialized queue exist and we got status updates, then
-	// only process these directories. If no serialized queue or status
-	// update exist, the process all sub directories.
-	//
-	if(file_exists("queue.ser")) {
-	    $jobs = unserialize(file_get_contents("queue.ser"));
-	}
-	$update = null;
-	if(file_exists("status.log")) {
-	    $update = explode("\n", file_get_contents("status.log"));
-	    if(!unlink("status.log")) {
-	    	error_log("Failed unlink status.log");
-	    }
-	}
-	if(count($jobs) == 0 || isset($update)) {
-	    if(isset($update)) {
-		// 
-		// Process deleted job directories:
-		// 
-		foreach($update as $dir) {
-		    if(!file_exists($dir) && isset($jobs[$dir])) {
-			unset($jobs[$dir]);
-		    }
-		}
-	    }
-			
-	    if($dirs = opendir(".")) {
-		while(false !== ($dir = readdir($dirs))) {
-		    if($dir != "." && $dir != "..") {
-			if(is_dir($dir)) {
-			    // 
-			    // Only process job directories thats in the update
-			    // array, all others have to status change.
-			    // 
-			    if(isset($update)) {
-				if(!in_array($dir, $update)) {
-				    continue;      // no status change
-				}
-			    }
-			    if(chdir($dir)) {
-				if($files = opendir(".")) {
-				    $job = array();
-				    while(false !== ($file = readdir($files))) {
-					if($file != "." && $file != "..") {
-					    // 
-					    // Process all files inside $root/$dir
-					    //
-					    switch($file) {
-					     case "indata":
-						// ignore
-						break;
-					     case "jobid":
-					     case "queued":
-					     case "started":
-					     case "finished":
-						$job[$file] = trim(file_get_contents($file));
-						break;
-					     case "stdout":
-					     case "stderr":
-						if(filesize($file)) {
-						    $job[$file] = filemtime($file);   // save timestamp if filesize > 0 bytes
-						}
-						break;
-					     case "fatal":
-						$job[$file] = filemtime($file);
-						break;
-					     case "name":
-						if(defined("QUEUE_SHOW_NAMES") && QUEUE_SHOW_NAMES) {
-						    $name = trim(file_get_contents($file));
-						    if(strlen($name) > QUEUE_MAX_NAME_LENGHT) {
-							if(QUEUE_TRUNCATE_NAME == "head") {
-							    $part = QUEUE_MAX_NAME_LENGHT - 3;
-							    $name = sprintf("...%s", substr($name, -$part, $part));
-							}
-							else if(QUEUE_TRUNCATE_NAME == "middle") {
-							    $part = QUEUE_MAX_NAME_LENGHT / 2 - 1;
-							    $name = sprintf("%s...%s", 
-									    substr($name, 0, $part), 
-									    substr($name, -$part, $part));
-							} else if(QUEUE_TRUNCATE_NAME == "tail") {
-							    $name = sprintf("%s...", substr($name, 0, QUEUE_MAX_NAME_LENGHT - 3));
-							}
-						    }
-						    $job[$file] = $name;
-						}
-					    }
-					}
-				    }
-				}
-				else {
-				    error_log(sprintf("Failed open result directory '%s/%s'", $root, $dir));
-				}
-			    }
-			    else {
-				error_log(sprintf("Failed change to result directory '%s/%s'", $root, $dir));
-			    }
-			    // 
-			    // Push job onto jobs array and pop directory.
-			    // 
-			    $jobs[$dir] = $job;
-			    chdir("..");
-			}
-		    }
-		}
-	    }
-	    else {
-		error_log(sprintf("Failed open cache directory '%s'", $root));
-	    }
-	    // 
-	    // Queue has been modified.
-	    // 
-	    file_put_contents("queue.ser", serialize($jobs));
-	}
-	chdir($cwd);
-    }
-    else {
-	error_log(sprintf("Failed change path to cache directory '%s'", $root));
-    }
-    
-    // 
-    // Now classify all jobs as either running, finished, warning, error or crashed.
-    // 
-    $queued = get_queued_jobs();
-    $result = array();
-    
-    foreach($jobs as $key => $job) {
-	if(isset($job['finished'])) {
-	    if(isset($job['stderr'])) {
-		if(isset($job['fatal'])) {
-		    $job['state'] = "error";
-		}
-		else {
-		    $job['state'] = "warning";
-		}
-	    }
-	    else {
-		$job['state'] = "finished";
-	    }
-	}
-	else {
-	    if(isset($job['jobid'])) {
-		if(!isset($queued[$job['jobid']])) {
-		    if(defined("BATCH_START_DEQUEUES") && BATCH_START_DEQUEUES == 1) {
-		        $job['state'] = "running";
-		    } else {
-		        $job['state'] = "crashed";
-		    }
-		}
-		else {
-		    $job['state'] = $queued[$job['jobid']];
-		}
-	    }
-	    else {
-		// 
-		// No jobid (0)? This must be a crashed job.
-		// 
-		$job['state'] = "crashed";
-	    }
-	}
-	$result[$key] = $job;
-    }
-
-    // 
-    // Apply filter if requested.
-    // 
-    if($filter != "all") {
-	$GLOBALS['filter'] = $filter;
-	$result = array_filter($result, "filter_jobs");
-    }
-    
-    // 
-    // Apply sorting if requested.
-    // 
-    if($sort != "none") {
-	$GLOBALS['sort'] = $sort;
-	uasort($result, "sort_jobs");
-    }
-    
-    return $result;
-}
-
-// 
-// Return array of all pending and running jobs. The result
-// array is using jobid as key and state as value.
-// 
-function get_queued_jobs()
-{
-    // 
-    // The result array.
-    // 
-    $jobs = array();
-        
-    if($handle = popen(BATCH_LISTING, "r")) {
-	while($str = fgets($handle)) {
-		
-	    // 
-	    // Split batch jobs output. The output format differs between Linux, BDS/Mac OS X
-	    // and Solaris 8 (and later?).
-	    // 
-	    
-	    $match = array();
-	    
-	    // 
-	    // Linux format: 
-	    //   '25      2007-11-05 02:54 b apache'   // pending
-	    //   '24      2007-11-05 02:54 = apache'   // running
-	    // 
-	    if(preg_match("/(\d+)\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\s+([0-9]{2}:[0-9]{2})\s+([b=]{1})\s+(.*)/", $str, $match)) {
-		$jobs[$match[1]] = ($match[4] == "=") ? "running" : "pending";
-	    }
-	    // 
-	    // Solaris 8 (and later?) format:
-	    //   'user = root     1210583160.a    Mon May 12 11:06:00 2008'
-	    //   'user = root     1210583160.a    Mon May 12 11:06:00 2008'
-	    // 
-	    // NOTE: Listing as non-root user don't show user = xxx.
-	    // 	    
-	    else if(preg_match('/([0-9]*\.[ab]{1})\t(.*)/', $str, $match)) {
-		$jobs[$match[1]] = "pending";
-	    }
-	    // 
-	    // Mac OS X format:
-	    //   '1       Thu Mar  6 09:38:00 2008'
-	    //   '2       Thu Mar  6 09:39:00 2008'
-	    // 
-	    // NOTE: Simply flag job as pending because information is missing.
-	    // 
-	    else if(preg_match("/(\d+)\s+(.*)/", $str, $match)) { 
-		$jobs[$match[1]] = "pending";
-	    } 
-	    // 
-	    // No regexp matched. We better give up and let someone fix this.
-	    // 
-	    else {	    
-	        error_exit("Failed parse batch queue output.");
-	    }
-	}
-	pclose($handle);
-    } else {
-        error_exit("Failed read jobs in batch queue.");
-    }		   
-    
-    return $jobs;
-}
-
 // 
 // Returns formatted UNIX timestamp as string.
 // 
@@ -702,6 +369,65 @@ function print_message_box($type, $msg)
 	$type = "warning";
     }
     print "<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/big/$type.png\"></td><td valign=\"top\">$msg</td></tr></table></div>";
+}
+
+// 
+// Put an error message to error message list.
+// 
+function put_error($str)
+{
+    $GLOBALS['error'][] = $str;
+}
+
+// 
+// Get array of error messages.
+// 
+function get_errors()
+{
+    return $GLOBALS['error'];
+}
+
+// 
+// Test if any error message is set.
+// 
+function has_errors()
+{
+    return isset($GLOBALS['error']);
+}
+
+// 
+// Clear any errors in list.
+// 
+function clear_errors()
+{
+    $GLOBALS['error'] = null;
+}
+
+// 
+// Log any errors to web server log and flush error buffer 
+// if flush is true.
+//
+function log_errors($flush = true)
+{
+    if(has_errors()) {
+	foreach(get_errors() as $error) {
+	    error_log($error);
+	}
+	if($flush) {
+	    clear_errors();
+	}
+    }
+}
+
+// 
+// Get last logged error message.
+// 
+function get_last_error()
+{
+    if(has_errors()) {
+	$last = count($GLOBALS['error']) - 1;			       
+	return $GLOBALS['error'][$last];
+    }
 }
 
 ?>
