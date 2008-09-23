@@ -171,7 +171,7 @@ function check_arg($key, $val, $required, $prog)
 // 
 // Parse command line options.
 // 
-function parse_options(&$argv, $argc, &$options)
+function parse_options(&$argc, $argv, &$options)
 {
     // 
     // Get command line options.
@@ -2125,7 +2125,7 @@ function collect_statistics($jobsdir, $statdir, $options)
 // 
 // The main function.
 //
-function main(&$argv, $argc)
+function main(&$argc, $argv)
 {
     $prog = basename(array_shift($argv));
     $vers = trim(file_get_contents("../VERSION"));
@@ -2144,7 +2144,7 @@ function main(&$argv, $argc)
     // Fill $options with command line options.
     // 
     $options = (object)$options;
-    parse_options($argv, $argc, $options);
+    parse_options($argc, $argv, $options);
 
     // 
     // Dump options:
@@ -2164,6 +2164,6 @@ function main(&$argv, $argc)
 // 
 // Start normal script execution.
 // 
-main($_SERVER['argv'], $_SERVER['argc']);
+main($_SERVER['argc'], $_SERVER['argv']);
 
 ?>
