@@ -19,59 +19,16 @@
 // http://www.xmlrpc.com/spec
 //
 
-include "../../../include/common.inc";
-include "../../../include/queue.inc";
-include "../../../include/ws.inc";
+ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../");
 
+include "include/common.inc";
+include "include/queue.inc";
+include "include/ws.inc";
+
+//
+// Get configuration.
 // 
-// Request broker. This structure list all XML-RPC functions (public and 
-// internal and their parameter types.
-// 
-$functions = array( "batchelor.listFuncAPI"       => array( "func" => "api",
-							    "desc" => "List XML-RPC function API",
-							    "params" => array( "name" => "string" )
-							    ),
-		    "batchelor.suspendRunningJob" => array( "func" => "suspend",
-							    "desc" => "Suspend a running job",
-							    "params" => array( "resdir" => "string", 
-									       "jobid"  => "string" )
-							    ),
-		    "batchelor.resumePausedJob"   => array( "func" => "resume",
-							   "desc" => "Resume a paused/stopped job",
-							   "params" => array( "resdir" => "string",
-									      "jobid"  => "string")
-							   ),
-		    "batchelor.addNewJob"         => array( "func" => "enqueue",
-							    "desc" => "Start a new job",
-							    "params" => array( "indata" => "base64",
-									       "job" => "struct" )
-							    ),
-		    "batchelor.deleteJob"         => array( "func" => "dequeue",
-							    "desc" => "Delete an running or finished job",
-							    "params" => array( "resdir" => "string", 
-									       "jobid" => "string" )
-							    ),
-		    "batchelor.listQueuedJobs"    => array( "func" => "queue",
-							    "desc" => "List queued and finished jobs",
-							    "params" => array( "sort" => "string",
-									       "filter" => "string" )
-							    ),
-		    "batchelor.listResultDirs"    => array( "func" => "result",
-							    "desc" => "List result directories",
-							    "params" => array()
-							    ),
-		    "batchelor.listResultFiles"   => array( "func" => "result",
-							    "desc" => "List files in result directory",
-							    "params" => array( "resdir" => "string",
-									       "jobid"  => "string" )
-							    ),
-		    "batchelor.listResultFile"    => array( "func" => "result",
-							    "desc" => "Get content of result file",
-							    "params" => array( "resdir" => "string",
-									       "jobid"  => "string",
-									       "file"   => "string" )
-							    )
-		    );
+include "conf/config.inc";
 
 
 ?>		
