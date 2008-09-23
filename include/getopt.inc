@@ -128,11 +128,19 @@ function get_opt($argv, $argc, &$opts)
     $argv = $args;
     $args = array();
     foreach($argv as $arg) {
+	print "arg: $arg\n";
 	if(preg_match("/^\-\-.*$/", $arg)) {
 	    // 
 	    // Matched long option --xxx{=yyy}
 	    // 
-	    list($key, $val) = explode("=", $arg);
+	    $pos = strpos($arg, "=");
+	    if($pos) {
+		$key = substr($arg, 0, $pos);
+		$val = substr($arg, $pos + 1);
+	    } else {
+		$key = $arg;
+		$val = null;
+	    }
 	    array_push($args, $key);
 	    if(isset($val)) {
 		array_push($args, $val);
