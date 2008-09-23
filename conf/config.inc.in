@@ -321,33 +321,43 @@ define ("HELP_LEVEL", 2);
 define ("HELP_ICON_INFO", true);
 
 // 
-// Define to true to allow third party applications to access files inside
-// the job directory thru the script files.php
+// Define which web services interfaces that should be allowed. All other
+// settings starting with WS_XXX is web service specific. If an setting only
+// applies to a specific web service interface, then its prefixed like e.g.
+// WS_HTTP_XXX.
 // 
-define ("FILES_PHP_ENABLED", false);
+define ("WS_ENABLE_HTTP",   false);
+define ("WS_ENABLE_XMLRPC", false);
 
 // 
 // Define the source for the hostid value. Possible values are "cookie",
 // "param" or "auto". Using "auto" tells the script to use the same method 
-// as source/queue.php
+// as source/queue.php (for web service only)
 // 
-define ("FILES_PHP_HOSTID_SOURCE", "auto");
+define ("WS_HOSTID_SOURCE", "auto");
+// 
+// This allowes the above settings to be configured individual for each
+// web service interface. These settings overrides WS_HOSTID_SOURCE.
+// 
+// define ("WS_HTTP_HOSTID_SOURCE", "auto");
+// define ("WS_XMLRPC_HOSTID_SOURCE", "auto");
 
 // 
 // Define the base directory relative the job directory, i.e. "result/set1"
 // 
-define ("FILES_PHP_BASE_DIRECTORY", null);
+define ("WS_BASE_DIRECTORY", null);
 
 // 
-// Send error body also if true (for debug).
+// Send error body also if true (for debug). For XML-RPC the error message
+// is always encoded in the message body.
 // 
-define ("FILES_PHP_SEND_ERROR_BODY", false);
+define ("WS_HTTP_SEND_ERROR_BODY", false);
 
 // 
 // Define to true is additional HTTP headers should be sent, like file size
 // and MIME type (for the moment).
 // 
-define ("FILES_PHP_SEND_FILE_PROPS", true);
+define ("WS_HTTP_SEND_FILE_PROPS", true);
 
 // 
 // OK, done configuring? Great! Now just set configured to true and define 
