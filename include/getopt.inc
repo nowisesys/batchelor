@@ -128,7 +128,6 @@ function get_opt($argv, $argc, &$opts)
     $argv = $args;
     $args = array();
     foreach($argv as $arg) {
-	print "arg: $arg\n";
 	if(preg_match("/^\-\-.*$/", $arg)) {
 	    // 
 	    // Matched long option --xxx{=yyy}
