@@ -37,14 +37,6 @@ include "conf/config.inc";
 ws_http_session_setup();
 
 // 
-// Check that output buffering exists.
-// 
-if(!function_exists("ob_start") || !function_exists("ob_end_flush")) {
-    error_log("Missing support for output buffering using ob_start() and ob_end_flush()");
-    ws_http_error_handler(500, "No support for output buffering (see web server log)");
-}
-
-// 
 // Print function list in XML.
 // 
 function print_info_xml()
@@ -382,7 +374,8 @@ if($GLOBALS['name'] == "info") {
     }
 } else if($GLOBALS['name'] == "func") {
     if(!isset($_REQUEST['name'])) {
-	ws_http_error_handler(400, "Missing parameter name");
+	put_error("Missing parameter name");
+	ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
     }
     $entry = ws_get_rpc_method_by_name($_REQUEST['name']);
     switch($GLOBALS['format']) {
@@ -401,12 +394,14 @@ if($GLOBALS['name'] == "info") {
     }
 } else if($GLOBALS['name'] == "docs") {
     if($GLOBALS['format'] != "html") {
-	ws_http_error_handler(400, "The API documentation requires HTML format");
+	put_error("The API documentation requires HTML format");
+	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
     } else {
 	print_html_page();
     }
 } else {
-    ws_http_error_handler(500, sprintf("Unexpected RPC method %s", $GLOBALS['name']));
+    put_error(sprintf("Unexpected RPC method %s", $GLOBALS['name']);
+    ws_http_error_handler(500, WS_ERROR_UNEXPECTED_METHOD);
 }
 
 header(sprintf("Content-Type: %s; charset=%s", ws_get_mime_type(), "UTF-8"));

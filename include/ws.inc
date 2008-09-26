@@ -22,16 +22,32 @@
 // message by calling put_error().
 // 
 
-define ("WS_RPC_METHOD_INFO", 0);
-define ("WS_RPC_METHOD_FUNC", 1);
-define ("WS_RPC_METHOD_SUSPEND", 2);
-define ("WS_RPC_METHOD_RESUME", 3);
-define ("WS_RPC_METHOD_ENQUEUE", 4);
-define ("WS_RPC_METHOD_DEQUEUE", 5);
-define ("WS_RPC_METHOD_QUEUE",   6);
-define ("WS_RPC_METHOD_OPENDIR", 7);
-define ("WS_RPC_METHOD_READDIR", 8);
-define ("WS_RPC_METHOD_FOPEN",   9);
+// 
+// RPC method indexes:
+// 
+define ("WS_RPC_METHOD_INFO",    0);
+define ("WS_RPC_METHOD_FUNC",    1);
+define ("WS_RPC_METHOD_DOCS",    2);
+define ("WS_RPC_METHOD_SUSPEND", 3);
+define ("WS_RPC_METHOD_RESUME",  4);
+define ("WS_RPC_METHOD_ENQUEUE", 5);
+define ("WS_RPC_METHOD_DEQUEUE", 6);
+define ("WS_RPC_METHOD_QUEUE",   7);
+define ("WS_RPC_METHOD_OPENDIR", 8);
+define ("WS_RPC_METHOD_READDIR", 9);
+define ("WS_RPC_METHOD_FOPEN",  10);
+
+// 
+// Error codes (encoded in HTTP header):
+// 
+define ("WS_ERROR_MISSING_PARAMETER",  1);     // Missing parameter for script.
+define ("WS_ERROR_INVALID_FORMAT",     2);     // Invalid or unsupported format.
+define ("WS_ERROR_UNEXPECTED_METHOD",  3);     // No such method.
+define ("WS_ERROR_MISSING_EXTENSION",  4);     // Can't continue due to server problem.
+define ("WS_ERROR_REQUEST_BROKER",     5);     // Failed map logical name to script.
+define ("WS_ERROR_FAILED_CALL_METHOD", 6);     // Failed call function ws_xxx().
+define ("WS_ERROR_CONFIG_PROBLEM",     7);     // Server is not configured.
+define ("WS_ERROR_DISALLOWED",         8);     // Calling RPC interface is not allowed.
 
 // 
 // Returns the method entry based on its logical name.
@@ -256,7 +272,7 @@ function ws_result($result, $jobid, $file, &$result)
 // 
 // The error handler for the HTTP web service.
 // 
-function ws_http_error_handler($code, $hint)
+function ws_http_error_handler($code, $error)
 {    
     $head = null;
     
@@ -284,14 +300,15 @@ function ws_http_error_handler($code, $hint)
     // encode the error string in the HTTP header.
     // 
     header($head);
-    // if(has_errors()) {
-    // 	header(sprintf("Reason: %s", get_last_error()));
-    // }
+    header(sprintf("X-RPC-Error: %d", $error));
     header("Connection: close");
-
+    
+    if(!has_errors()) {
+	put_error("Unknown error (no error message set)");
+    }
     if(defined("WS_HTTP_SEND_ERROR_BODY") && WS_HTTP_SEND_ERROR_BODY) {
 	printf("<html><head><title>HTTP Error %d</title></head><body><h2>%s</h2><hr>%s</body></html>\n", 
-	       $code, $head, $hint);
+	       $code, $head, get_last_error());
     }
     exit(1);
 }
@@ -311,7 +328,7 @@ function ws_get_mime_type($path = null)
     } else {
 	if($GLOBALS['format'] == "xml") {
 	    return "text/xml";
-	} else if($GLOBALS['format'] == "csv") {
+	} else if($GLOBALS['format'] == "foa") {
 	    return "text/x-csv";
 	} else if($GLOBALS['format'] == "html") {
 	    return "text/html";
@@ -331,19 +348,31 @@ function ws_http_session_setup($params = null)
     // Make sure this script is allowed to be runned:
     // 
     if(!defined("WS_ENABLE_HTTP")) {
-	ws_http_error_handler(403, "This script is not configured (see conf/config.inc)");
+	put_error("This script is not configured (see conf/config.inc)");
+	ws_http_error_handler(403, WS_ERROR_CONFIG_PROBLEM);
     }
     if(!WS_ENABLE_HTTP) {
-	ws_http_error_handler(403, "This script is disallowed by the configuration (see conf/config.inc)");
+	put_error("This script is disallowed by the configuration (see conf/config.inc)");
+	ws_http_error_handler(403, WS_ERROR_CONFIG_PROBLEM);
     }
 
+    // 
+    // Check that output buffering exists.
+    // 
+    if(!function_exists("ob_start") || !function_exists("ob_end_flush")) {
+	error_log("Missing support for output buffering using ob_start() and ob_end_flush()");
+	put_error("No support for output buffering (see web server log)");
+	ws_http_error_handler(500, WS_ERROR_MISSING_EXTENSION);
+    }
+    
     // 
     // Check required parameters.
     // 
     if(isset($params)) {
 	foreach($params as $param) {
 	    if(!isset($_REQUEST[$param])) {
-		ws_http_error_handler(400, sprintf("The <u>%s</u> parameter is missing", $param));
+		put_error(sprintf("The <u>%s</u> parameter is missing", $param));
+		ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
 	    }
 	}
     }
@@ -356,7 +385,8 @@ function ws_http_session_setup($params = null)
     } else if(defined("WS_HOSTID_SOURCE")) {
 	$source = WS_HOSTID_SOURCE;
     } else {
-	ws_http_error_handler(500, "No hostid source defined in configuration (see conf/config.inc)");
+	put_error("No hostid source defined in configuration (see conf/config.inc)");
+	ws_http_error_handler(500, WS_ERROR_CONFIG_PROBLEM);
     }
     
     switch($source) {
@@ -365,7 +395,8 @@ function ws_http_session_setup($params = null)
 	break;
      case "cookie":                          // use cookie
 	if(!isset($_COOKIES['hostid'])) {
-	    ws_http_error_handler(400, "The <u>hostid</u> cookie is unset");
+	    put_error("The <u>hostid</u> cookie is unset");
+	    ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
 	}
 	$GLOBALS['hostid'] = $_COOKIES['hostid'];
 	break;
@@ -374,14 +405,15 @@ function ws_http_session_setup($params = null)
 	break;
     }
     if(!isset($GLOBALS['hostid'])) {
-	ws_http_error_handler(400, "The <u>hostid</u> variable is missing");
+	put_error("The <u>hostid</u> variable is missing");
+	ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
     }
     
     if(defined("WS_HTTP_OUTPUT_FORMAT")) {
 	$GLOBALS['format'] = WS_HTTP_OUTPUT_FORMAT;
     }
     if(isset($_REQUEST['format'])) {
-	if($_REQUEST['format'] == "xml" || $_REQUEST['format'] == "csv") {
+	if($_REQUEST['format'] == "xml" || $_REQUEST['format'] == "foa") {
 	    $GLOBALS['format'] = $_REQUEST['format'];
 	} else if($_REQUEST['format'] == "plain" || $_REQUEST['format'] == "human") {
 	    $GLOBALS['format'] = "human";
@@ -390,7 +422,7 @@ function ws_http_session_setup($params = null)
 	}
     }
     if(!isset($GLOBALS['format'])) {
-	$GLOBALS['format'] = "csv";
+	$GLOBALS['format'] = "foa";
     }
 }
 
