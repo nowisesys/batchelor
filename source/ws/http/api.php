@@ -200,6 +200,32 @@ function print_info_html()
     print "<h4>Return value description:</h4>\n";
     print "<p>The above object would be described as this return value in the method information:<div class=\"code\"></pre>object=(string,string,string,string,array=[object=(string,string)])</pre></div></p>\n";
     print "<p>Or even more compact as:<div class=\"code\"></pre>(string,string,string,string,[(string,string)])</pre></div></p>\n";
+    
+    print "<h3>Test client:</h3>\n";
+    print "<p>An ordinary web browser is a bad test tool for web services, especial HTTP RPC as it uses HTTP status codes \n";
+    print "that might confuse the browser. Even telnet is a better tool than a web browser.</p>\n";
+    print "<h4>The utils/ws.php debug client:</h4\n";
+    print "<p>Theres an utility script named utils/ws.php that can be used to debug the HTTP \n";
+    print "RPC and XML-RPC interfaces. It also dumps the HTTP headers to aid in protocol tracing.</p>\n";
+    
+    print "<p>An example request using ws.php might look like this:</p>\n";
+    print "<p><div class=\"code\"><pre>\n";
+    print "andlov@darkstar$ php ws.php --func=suspend --params='result=1234&jobid=99'\n";
+    print "\n";
+    print "HTTP/1.0 409 Conflict\n";
+    print "Date: Fri, 26 Sep 2008 15:30:21 GMT\n";
+    print "Server: Apache\n";
+    print "X-Powered-By: PHP/5.2.6-pl6-gentoo\n";
+    print "Set-Cookie: hostid=f528764d624db129b32c21fbca0cb8d6; expires=Fri, 03-Oct-2008 15:30:21 GMT\n";
+    print "X-RPC-Error: 6\n";
+    print "Connection: close\n";
+    print "Content-Length: 133\n";
+    print "Content-Type: text/html\n";
+    print "\n";
+    print "false\n";
+    print "</pre></div></p>\n";
+    print "<p>This shows a failed request to suspend job 99, probably because the server is not configured \n";
+    print "to allow job control at all.</p>\n";
 }
 
 // 
