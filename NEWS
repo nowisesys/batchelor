@@ -1,3 +1,11 @@
+Version 0.7.0  (2008-mm-dd):
+
+	* Removed the source/files.php script. This access method has been
+	  obsoleted by the new web service interface.
+	  
+	* The HTTP RPC web service API is now browsable by a web browser
+	  thru the address ws/http/docs?format=html.
+	  
 Version 0.6.12 (2008-06-05):
 
 	* The line break mode of the textarea (process data) can now be customized 
