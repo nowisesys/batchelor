@@ -114,7 +114,7 @@ function print_info_html()
     print "<p><b>Listing result files thru direct access:</b><br>\n";
     print "<div class=\"code\"><code>result.php?result=1234&jobid=99</code></div></p>\n";
     
-    print "<h3>Internal HTTP RPC methods:</h3>\n";
+    print "<h3>Internal &amp; Meta data HTTP RPC methods:</h3>\n";
     print "<div class=\"indent\">\n";
     foreach($entries as $entry) {
 	if(!isset($entry['func'])) {
@@ -133,8 +133,10 @@ function print_info_html()
 	}
     }
     print "</div>\n";
-    print "<p>The internal methods don't interact with Batchelor itself, instead they are used \n";
+    print "<p>The internal methods (info, func and docs) don't interact with Batchelor itself, instead they are used \n";
     print "to get information to learn about the HTTP RPC web service itself.</p>\n";
+    print "<p>The two methods errors and errmsg can be used to map the error code returned from a failed method call. \n";
+    print "For example, use <code>errmsg?code=3</code> to get the error message for error code 3.</p>\n";
     print "</div>\n";
     
     print "<h3>Complete HTTP RPC API:</h3>\n";
