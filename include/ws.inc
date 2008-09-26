@@ -48,13 +48,40 @@ define ("WS_ERROR_REQUEST_BROKER",     5);     // Failed map logical name to scr
 define ("WS_ERROR_FAILED_CALL_METHOD", 6);     // Failed call function ws_xxx().
 define ("WS_ERROR_CONFIG_PROBLEM",     7);     // Server is not configured.
 define ("WS_ERROR_DISALLOWED",         8);     // Calling RPC interface is not allowed.
+define ("WS_ERROR_INVALID_REQUEST",    9);     // Missmatch between script/method name and/or parameters.
+
+// 
+// Return all error messages or a specific error message.
+// 
+function get_error($code = null)
+{
+    $errors = array( "Missing parameter for script",
+		     "Invalid or unsupported format",
+		     "No such method",
+		     "Can't continue due to server problem",
+		     "Failed map logical name to script",
+		     "Failed call function associated function",
+		     "Server is not configured",
+		     "Calling this RPC interface is not allowed",
+		     "Missmatch between script/method name and/or parameters" );
+    
+    if(isset($code)) {
+	if($code >= 1 && $code <= count($errors)) {
+	    return $errors[$code - 1];        // error codes starts at 1
+	} else {
+	    return null;
+	}
+    } else {
+	return $errors;
+    }
+}
 
 // 
 // Returns the method entry based on its logical name.
 // 
 function ws_get_rpc_method_by_name($name) 
 {
-    $names = array( "info", "func", "docs", "suspend", "resume", "enqueue", "dequeue", "queue", "opendir", "readdir", "fopen" );
+    $names = array( "info", "func", "docs", "errors", "errmsg", "suspend", "resume", "enqueue", "dequeue", "queue", "opendir", "readdir", "fopen" );
     for($i = 0; $i < count($names); $i++) {
 	if($names[$i] == $name) {
 	    return ws_get_rpc_method_by_index($i);
@@ -95,11 +122,29 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => null,
 			       "name" => "docs",
-			       "long" => "Batchelor.ShowAPIDocument",
+			       "long" => "Batchelor.ShowManual",
 			       "desc" => "Show the HTTP RPC method API as manual. This method can only be used with HTML format.",
 			       "params" => null,
 			       "return" => null,
 			       "script" => "api.php"
+			       ),
+			array( 
+			       "func" => null,
+			       "name" => "errors",
+			       "long" => "Batchelor.GetErrorCollection",
+			       "desc" => "Return an collection of all errors defined (codes and messages).",
+			       "params" => null,
+			       "return" => "array=[object(integer,string)]",
+			       "script" => "error.php"
+			       ),
+			array( 
+			       "func" => null,
+			       "name" => "errmsg",
+			       "long" => "Batchelor.GetErrorMessage",
+			       "desc" => "Return error message string for an given error code.",
+			       "params" => array( "code" => "integer" ),
+			       "return" => "string",
+			       "script" => "error.php"
 			       ),
 			array( 
 			       "func" => "ws_suspend",
