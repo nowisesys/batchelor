@@ -33,7 +33,7 @@ include "include/ws.inc";
 // 
 $GLOBALS['name'] = basename($_SERVER['SCRIPT_NAME']);
 
-foreach(ws_get_rpc_method() as $entry) {
+foreach(ws_get_rpc_method_by_index() as $entry) {
     if($entry['name'] == $name) {
 	$GLOBALS['script'] = $entry['script'];
 	unset($entry);
