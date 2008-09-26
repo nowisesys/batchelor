@@ -34,10 +34,24 @@ define ("WS_RPC_METHOD_READDIR", 8);
 define ("WS_RPC_METHOD_FOPEN",   9);
 
 // 
+// Returns the method entry based on its logical name.
+// 
+function ws_get_rpc_method_by_name($name) 
+{
+    $names = array( "info", "func", "docs", "suspend", "resume", "enqueue", "dequeue", "queue", "opendir", "readdir", "fopen" );
+    for($i = 0; $i < count($names); $i++) {
+	if($names[$i] == $name) {
+	    return ws_get_rpc_method_by_index($i);
+	}
+    }
+    return null;
+}
+
+// 
 // Returns the method entry based on its index number. Returns the whole
 // array if called without an argument.
 // 
-function ws_get_rpc_method($index = -1)
+function ws_get_rpc_method_by_index($index = -1)
 {
     // 
     // RPC-method list for request broker. This structure list all RPC 
@@ -48,87 +62,106 @@ function ws_get_rpc_method($index = -1)
 			       "func" => null,
 			       "name" => "info",
 			       "long" => "Batchelor.ShowAPI",
-			       "desc" => "Show RPC method API",
+			       "desc" => "List all methods thats part of the API. This method returns an array of strings.",
 			       "params" => null,
+			       "return" => "array=[string]",
 			       "script" => "api.php"
 			       ),
 			array( 
 			       "func" => null,
 			       "name" => "func",
 			       "long" => "batchelor.ShowFunction",
-			       "desc" => "Show RPC method", 
+			       "desc" => "Show detailed information about a single RPC method. This method returns an object (with mixed values) describing the method.", 
 			       "params" => array( "name" => "string" ),
+			       "return" => "object=()",
+			       "script" => "api.php"
+			       ),
+			array( 
+			       "func" => null,
+			       "name" => "docs",
+			       "long" => "Batchelor.ShowAPIDocument",
+			       "desc" => "Show the HTTP RPC method API as manual. This method can only be used with HTML format.",
+			       "params" => null,
+			       "return" => null,
 			       "script" => "api.php"
 			       ),
 			array( 
 			       "func" => "ws_suspend",
 			       "name" => "suspend",
 			       "long" => "Batchelor.SuspendRunningJob",
-			       "desc" => "Suspend an already running job",
+			       "desc" => "Suspend an already running job. Returns true on success and false on failure.",
 			       "params" => array( "result" => "string", 
 						  "jobid"  => "string" ),
+			       "return" => "boolean",
 			       "script" => "suspend.php"
 			       ),
 			array( 
 			       "func" => "ws_resume",
 			       "name" => "resume",
 			       "long" => "Batchelor.ResumePausedJob",
-			       "desc" => "Resume a job thats in paused or stopped state",
+			       "desc" => "Resume a job thats in paused or stopped state. Returns true on success and false on failure.",
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string"),
+			       "return" => "boolean",
 			       "script" => "resume.php"
 			       ),
 			array( 
 			       "func" => "ws_enqueue",
 			       "name" => "enqueue",
 			       "long" => "Batchelor.StartNewJob", 
-			       "desc" => "Enqueue and start new job",
-			       "params" => array( "indata" => "base64" ),
+			       "desc" => "Enqueue and start new job. Returns array of job ID:s for the newly started jobs.",
+			       "params" => array( "indata" => "string" ),
+			       "return" => "array=[integer]",
 			       "script" => "enqueue.php"
 			       ),
 			array( 
 			       "func" => "ws_dequeue",
 			       "name" => "dequeue",
 			       "long" => "Batchelor.DeleteJob",
-			       "desc" => "Delete an running or finished job",
+			       "desc" => "Delete an running or finished job. Returns true on success and false on failure.",
 			       "params" => array( "result" => "string", 
 						  "jobid" => "string" ),
+			       "return" => "boolean",
 			       "script" => "dequeue.php"
 			   ),
 			array( 
 			       "func" => "ws_queue",
 			       "name" => "queue",
 			       "long" => "Batchelor.ListQueuedJobs",
-			       "desc" => "List queued and finished jobs",
+			       "desc" => "List queued and finished jobs. Returns an array of objects describing the jobs and their state.",
 			       "params" => array( "sort" => "string",
 						  "filter" => "string" ),
+			       "return" => "array=[object]",
 			       "script" => "queue.php"
 			       ),
 			array( 
 			       "func" => "ws_result",
 			       "name" => "opendir",
 			       "long" => "Batchelor.ListResultDirs",
-			       "desc" => "List result directories",
+			       "desc" => "List result directories. Returns an list of directory names.",
 			       "params" => null,
+			       "return" => "array=[string]",
 			       "script" => "result.php"
 			       ),
 			array( 
 			       "func" => "ws_result",
 			       "name" => "readdir",
 			       "long" => "Batchelor.ListResultFiles",
-			       "desc" => "List files in result directory",
+			       "desc" => "List files in a specific result directory.",
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string" ),
+			       "return" => "array=[string]",
 			       "script" => "result.php"
 			       ),
 			array( 
 			       "func" => "ws_result",
 			       "name" => "fopen",
 			       "long" => "Batchelor.GetResultFile",
-			       "desc" => "Get content of result file",
+			       "desc" => "Get content of an result file. The content is returned with MIME-type application/octet-stream (binary format).",
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string",
 						  "file"   => "string" ),
+			       "return" => "string",
 			       "script" => "result.php"
 			       )
 			);
@@ -266,11 +299,26 @@ function ws_http_error_handler($code, $hint)
 //
 // Get MIME type of file pointed to by path. At the moment its just a 
 // stub for future extension (the application/octet-stream MIME type means 
-// unknonw filetype).
+// unknonw filetype). 
 // 
-function ws_get_mime_type($path)
+// If path is null, then the mime-type is determined from the global format
+// parameter that is influenced by the request parameter with same name.
+// 
+function ws_get_mime_type($path = null)
 {
-    return "application/octet-stream";
+    if(isset($path)) {
+	return "application/octet-stream";
+    } else {
+	if($GLOBALS['format'] == "xml") {
+	    return "text/xml";
+	} else if($GLOBALS['format'] == "csv") {
+	    return "text/x-csv";
+	} else if($GLOBALS['format'] == "html") {
+	    return "text/html";
+	} else if($GLOBALS['format'] == "human") {
+	    return "text/plain";
+	}
+    }
 }
 
 //
@@ -327,6 +375,22 @@ function ws_http_session_setup($params = null)
     }
     if(!isset($GLOBALS['hostid'])) {
 	ws_http_error_handler(400, "The <u>hostid</u> variable is missing");
+    }
+    
+    if(defined("WS_HTTP_OUTPUT_FORMAT")) {
+	$GLOBALS['format'] = WS_HTTP_OUTPUT_FORMAT;
+    }
+    if(isset($_REQUEST['format'])) {
+	if($_REQUEST['format'] == "xml" || $_REQUEST['format'] == "csv") {
+	    $GLOBALS['format'] = $_REQUEST['format'];
+	} else if($_REQUEST['format'] == "plain" || $_REQUEST['format'] == "human") {
+	    $GLOBALS['format'] = "human";
+	} else if($_REQUEST['format'] == "html") {
+	    $GLOBALS['format'] = "html";
+	}
+    }
+    if(!isset($GLOBALS['format'])) {
+	$GLOBALS['format'] = "csv";
     }
 }
 
