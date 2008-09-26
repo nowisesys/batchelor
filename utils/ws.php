@@ -32,6 +32,7 @@ include "../include/getopt.inc";
 // 
 function get_rpc_response($options)
 {
+    echo "\n";
     if($options->type == "http") {
 	$url = sprintf("%s/%s", $options->baseurl, $options->type);
 	if(isset($options->func)) {
