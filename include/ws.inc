@@ -277,7 +277,7 @@ function ws_http_error_handler($code, $error)
     $head = null;
     
     switch($code) {
-     case 304:
+     case 304:            // Should no longer be used by the HTTP RPC code
 	$head = "HTTP/1.0 304 Not Modified (failed)";
 	break;
      case 400:
@@ -288,6 +288,9 @@ function ws_http_error_handler($code, $error)
 	break;
      case 404:
 	$head = "HTTP/1.0 404 Not Found";
+	break;
+     case 409:            // Used for signal failure to clients.
+	$head = "HTTP/1.0 409 Conflict";
 	break;
      default:
 	$head = "HTTP/1.0 500 Internal Server Error";
