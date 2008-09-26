@@ -179,10 +179,14 @@ function print_info_html()
     print "<p>Errors are signaled to clients by HTTP status codes. A successful method request gets HTTP 200 (OK) back, \n";
     print "while any other problem is reported with code 3xx, 4xx or 5xx.</p>\n";
     print "<h4>HTTP status codes</h4>\n";
-    print "<p>For example will some methods send HTTP 304 (Not Modified) if the method call fails, this include failed to \n";
-    print "delete jobs etc. If wrong parameters are passed, then the client will receive HTTP 400 (Bad Request).</p>\n";
+    print "<p>If a method fails, then HTTP 409 (Conflict) will be sent. A typical reason can be that the called method \n";
+    print "failed to delete a job. If wrong parameters are passed, then the client will receive HTTP 400 (Bad Request).</p>\n";
+    print "<p>If a method compares the state of the queue and it has not changed, then HTTP 304 (Not Modified) will be sent back. \n";
+    print "Note that an response with HTTP 304 will <u>never</u> contain any body, this is explicit prevented by the HTTP protocol \n";
+    print "specification (RFC 2616).</p>\n";
     print "<h4>Messages:</h4>\n";
-    print "<p>The reason for the error is set in the HTTP header using a custom <code>reason: message</code> header.</p>\n";
+    print "<p>The reason for an failed method call is passed in the HTTP header using the custom header entity <code>X-RPC-Error: NN</code>, \n";
+    print "where NN is a number between 1 and 8. The error codes can be mapped to messages by a calling <code>error?format=foa</code> from the client.</p>\n";
     
     print "<h3>Method description:</h3>\n";
     print "<p>Quering for <code>func?format=foa&name=queue</code> will return this:</p>\n";
@@ -400,7 +404,7 @@ if($GLOBALS['name'] == "info") {
 	print_html_page();
     }
 } else {
-    put_error(sprintf("Unexpected RPC method %s", $GLOBALS['name']);
+    put_error(sprintf("Unexpected RPC method %s", $GLOBALS['name']));
     ws_http_error_handler(500, WS_ERROR_UNEXPECTED_METHOD);
 }
 
