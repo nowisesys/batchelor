@@ -16,7 +16,7 @@
 
 // 
 // This script is part of the lightweight HTTP web service interface. This script
-// implements the RPC-function suspend().
+// implements the RPC method suspend.
 // 
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR . "../");
