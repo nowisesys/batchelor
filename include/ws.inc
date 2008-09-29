@@ -170,9 +170,9 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "func" => "ws_enqueue",
 			       "name" => "enqueue",
 			       "long" => "Batchelor.StartNewJob", 
-			       "desc" => "Enqueue and start new job. Returns array of job ID:s for the newly started jobs.",
+			       "desc" => "Enqueue and start new job. Returns a job objects for the newly started jobs.",
 			       "params" => array( "indata" => "string" ),
-			       "return" => "array=[integer]",
+			       "return" => "(jobid=integer,date=string,time=string,stamp=integer)",
 			       "script" => "enqueue.php"
 			       ),
 			array( 
