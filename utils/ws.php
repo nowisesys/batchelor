@@ -53,7 +53,9 @@ function get_rpc_response($options)
 	if($curl) {
 	    curl_setopt($curl, CURLOPT_URL, $url);
 	    curl_setopt($curl, CURLOPT_HEADER, 1);	    
-	    curl_exec($curl);	    
+	    if(!curl_exec($curl)) {
+		echo "error: failed connect to server\n";
+	    }
 	    curl_close($curl);
 	}
     } else {
@@ -80,7 +82,9 @@ function get_rpc_response($options)
 	    curl_setopt($curl, CURLOPT_POST, 1);
 	    curl_setopt($curl, CURLOPT_POSTFIELDS, $result);
 	    curl_setopt($curl, CURLOPT_HEADER, 1);
-	    curl_exec($curl);
+	    if(!curl_exec($curl)) {
+		echo "error: failed connect to server\n";
+	    }
 	    curl_close($curl);
 	}
     }
@@ -95,8 +99,8 @@ function usage($prog, $defaults)
     print "\n";      
     print "Usage: $prog options...\n";
     print "Options:\n";
-    printf("  --base=url:      The base URL to web services (%s)\n", $defaults->baseurl);
-    printf("  --type=str:      The web service interface, either http or xmlrpc (%s)\n", $defaults->type);
+    printf("  --base=url:      The base URL to web services [%s]\n", $defaults->baseurl);
+    printf("  --type=str:      The web service interface, either http or xmlrpc [%s]\n", $defaults->type);
     printf("  --func=name:     Execute the named function (see --func=info)\n");
     printf("  --params=str:    URL-encoded function parameters (e.g. result=1234&id=99)\n"); 
     printf("  --format=str:    Output format, either foa, xml, html or human.\n");
