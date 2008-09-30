@@ -29,6 +29,79 @@ if(!function_exists("stream_get_contents") &&
 }
 
 // 
+// Enables process (job) control thru sending signals to a running or
+// stopped/paused process. This function might have side-effects, e.g. 
+// sending certain signals might cause the "clear" or "flag" action to 
+// be performed (see details in conf/config.inc).
+// 
+function process_control($hostid, $result, $jobid, $signal, &$error)
+{
+    global $signals;     // Defined in conf/config.inc
+    
+    // 
+    // Build path to result directory:
+    // 
+    $resdir = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $result);
+    
+    // 
+    // If result directory is missing, the show an error message.
+    // 
+    if(!file_exists($resdir)) {
+	$error = array( "where" => "resdir", "reason" => null );
+	return false;
+    }
+    
+    // 
+    // Check that pid-file exists:
+    // 
+    $pidfile = sprintf("%s/pid", $resdir);
+    if(!file_exists($pidfile)) {
+	$error = array( "where" => "pid", "reason" => "file" );
+	return false;
+    }
+    
+    $sigval = $signals[$signal]['value'];
+    $sigact = $signals[$signal]['action'];
+    
+    // 
+    // Try send signal to process:
+    // 
+    $pid = intval(file_get_contents($pidfile));
+    if(!posix_kill($pid, 0)) {
+	// 
+	// No process running or signaling not permitted.
+	// 
+	$error = array( "where" => "pid", "reason" => "proc" );
+	return false;
+    } else {
+	if(!posix_kill($pid, $sigval)) {
+	    // 
+	    // Failed send signal to process.
+	    // 
+	    $error = array( "where" => "pid", "reason" => "perm" );
+	    return false;
+	}
+    }
+    
+    // 
+    // Perform additional tasks associated with sending the signal:
+    // 
+    switch($sigact) {
+     case "clear":
+	delete_single_job($hostid, $result, $jobid);
+	break;
+     case "flag":
+	file_put_contents(sprintf("%s/signal", $resdir), $signal);
+	break;
+     case "none":
+     default:
+	break;
+    }
+    
+    return true;
+}
+
+// 
 // Runs a batch job. Returns associative array with jobid, date, 
 // time and unix timestamp for started job.
 // 

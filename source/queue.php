@@ -463,6 +463,9 @@ function print_body()
 		     case "perm":
 			print_message_box("error", "Failed control running job.");
 			break;
+		     case "proc":
+			print_message_box("error", "The process was not found.");
+			break;
 		    }
 		}
 		break;

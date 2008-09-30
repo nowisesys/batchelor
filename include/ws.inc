@@ -240,13 +240,46 @@ function ws_get_rpc_method_by_index($index = -1)
 }
 
 // 
+// Helper function for process control.
+// 
+function ws_signal_process($result, $jobid, $signal)
+{
+    $error = null;
+    if(!process_control($GLOBALS['hostid'], $result, $jobid, $signal, &$error)) {
+	switch($error['where']) {
+	 case "resdir":
+	    if(!isset($error['reason'])) {
+		put_error("The result directory don't exist");
+	    } else {
+		put_error("Unknown error related to result directory");
+	    }
+	    break;
+	 case "pid":
+	    if($error['reason'] == "file") {
+		put_error("The process identifier file is missing or invalid");
+	    } else if($error['reason'] == "perm") {
+		put_error("Failed suspend process (permission problem)");
+	    } else if($error['reason'] == "proc") {
+		put_error("The process was not found.");
+	    } else {
+		put_error("Unknown error when sending $signal signal to process");
+	    }
+	    break;
+	 default:
+	    put_error("Unhandled error occured in process control code.");
+	}
+	return false;
+    }
+    return true;
+}
+
+// 
 // Suspend (pause) the job. Requires job control to be enabled in the
 // system configuration (conf/config.inc).
 // 
 function ws_suspend($result, $jobid)
 {
-    put_error("Not yet implemented");
-    return false;
+    return ws_signal_process($result, $jobid, "stop");
 }
 
 // 
@@ -255,8 +288,7 @@ function ws_suspend($result, $jobid)
 // 
 function ws_resume($result, $jobid)
 {
-    put_error("Not yet implemented");
-    return false;
+    return ws_signal_process($result, $jobid, "cont");
 }
 
 // 

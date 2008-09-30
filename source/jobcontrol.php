@@ -59,70 +59,11 @@ if(!isset($_REQUEST['signal'])) {
 }
 
 // 
-// Get request parameters.
+// Perform job control.
 // 
-$jobid  = $_REQUEST['jobid'];    // Job ID
-$resdir = $_REQUEST['result'];   // Job directory.
-
-// 
-// Get hostid from cookie.
-// 
-$hostid = $_COOKIE['hostid'];
-
-// 
-// Build path to result directory:
-// 
-$resdir = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $resdir);
-
-// 
-// If result directory is missing, the show an error message.
-// 
-if(!file_exists($resdir)) {
-    error_handler("resdir");
-}
-
-// 
-// Check that pid-file exists:
-// 
-$pidfile = sprintf("%s/pid", $resdir);
-if(!file_exists($pidfile)) {
-    error_handler("pid", "file");
-}
-
-$signal = $signals[$_REQUEST['signal']]['value'];
-$action = $signals[$_REQUEST['signal']]['action'];
-
-// 
-// Try send signal to process:
-// 
-$pid = intval(file_get_contents($pidfile));
-if(!posix_kill($pid, 0)) {
-    // 
-    // No process running or signaling not permitted.
-    // 
-    error_handler("pid", "file");
-} else {
-    if(!posix_kill($pid, $signal)) {
-	// 
-	// Failed send signal to process.
-	// 
-	error_handler("pid", "perm");
-    }
-}
-
-// 
-// Perform additional tasks associated with sending the signal:
-// 
-switch($action) {    
- case "clear":
-    delete_single_job($_COOKIE['hostid'], $_REQUEST['result'], $_REQUEST['jobid']);
-    break;
- case "flag":
-    file_put_contents(sprintf("%s/signal", $resdir), $_REQUEST['signal']);
-    break;
- case "none":
- default:
-    break;
+$error = null;
+if(!process_control($_COOKIE['hostid'], $_REQUEST['result'], $_REQUEST['jobid'], $error)) {
+    error_handle($error['where'], $error['reason']);
 }
 
 // 

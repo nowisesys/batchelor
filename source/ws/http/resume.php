@@ -81,7 +81,6 @@ ob_start();
 // 
 if(!ws_resume($_REQUEST['result'], $_REQUEST['jobid'])) {
     send_result(false);
-    put_error("Failed call ws_resume()");
     ws_http_error_handler(409, WS_ERROR_FAILED_CALL_METHOD);
 }
 send_result(true);
