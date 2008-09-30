@@ -85,6 +85,12 @@
    A new release will never contain any file.* who has an file.*.in counterpart, 
    thus all file.* are protected when updating.
    
+** WEB SERVICES:
+
+   Web service interfaces where added from version 7.0.x. It supports HTTP
+   RCP and XML-RPC (and when you read this, maybe a few more, like SOAP).
+   The file README.WEBSERVICES contains more info.
+   
 ** ITS ALL FREE, BUT...:
 
    This software is licensed under GNU Public License (GPL). You are free to
