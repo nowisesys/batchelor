@@ -15,7 +15,7 @@
 // -------------------------------------------------------------------------------
 
 // 
-// This is the XML-RPC web service implementing the Apache org specification:
+// This is the XML-RPC web service implementing the UserLand Sotware's specification:
 // http://www.xmlrpc.com/spec
 //
 
