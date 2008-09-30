@@ -297,20 +297,104 @@ function ws_queue(&$jobs, $sort = "none", $filter = "all")
 }
 
 // 
-// Provides access to the result directory. If $jobid is null, then a list
-// of all job directories is returned. If $jobid is not null, then all files
-// from that job directory is returned. If $file is set, then $result is
-// set to the absolute path of the file (this allowes caller e.g. to use the 
-// fast readfile() for pipelining the file content).
+// Return an accossiative array of job directories where the key is the
+// name of the directory (result) and the value is the jobid.
 // 
-// The result is returned in the $result parameter.
-// 
-// result(null, null, null, $result)        : get all job directories
-// result($result, $jobid, null, $result)   : get content of this job directory
-// result($result, $jobid, $file, $result)  : absolute path of file.
-// 
-function ws_result($result, $jobid, $file, &$result)
+function ws_opendir(&$out)
 {
+    $jobs = get_jobs($GLOBALS['hostid']);
+    if($jobs == false) {
+	return false;
+    }
+    foreach($jobs as $result => $job) {
+	$out[$result] = $job['jobid'];
+    }
+    return true;
+}
+
+// 
+// Helper function for ws_readdir.
+// 
+function readdir_add_files(&$out, $subdir)
+{
+    $handle = opendir($subdir);
+    if($handle) {
+	while(false !== ($file = readdir($handle))) {
+	    if($file != "." && $file != "..") {
+		$path = sprintf("%s/%s", $subdir, $file);
+		if(is_dir($path)) {
+		    if(!readdir_add_files(&$out, $path)) {
+			return false;
+		    }
+		}
+		else {
+		    $out[] = substr($path, 2);   // Discard leading "./" in path
+		}
+	    }
+	}
+	closedir($handle);
+    }
+    return true;
+}
+
+// 
+// Return all files from result directory.
+// 
+function ws_readdir($result, $jobid, &$out)
+{
+    if(!isset($result)) {
+	put_error("Required argument result is unset");
+	return false;
+    }
+    if(!isset($jobid)) {
+	put_error("Required argument jobid is unset");
+	return false;
+    }
+    
+    $jobdir = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $GLOBALS['hostid'], $result);
+    if(!file_exists($jobdir)) {
+	put_error("The job directory %s don't exists", $result);
+	return false;
+    }
+    $cwd = getcwd();
+    if($cwd) {
+	if(chdir($jobdir)) {
+	    if(!readdir_add_files($out, ".")) {
+		put_error("Failed read content of job directory");
+		return false;
+	    }
+	} else {
+	    put_error("Failed change working directory to job directory");
+	    return false;
+	}
+	chdir($cwd);
+    } else {
+	put_error("Failed get path of current working directory");
+	return false;
+    }
+    return true;
+}
+
+function ws_fopen($result, $jobid, $file, &$out)
+{
+    if(!isset($result)) {
+	put_error("Required argument result is unset");
+	return false;
+    }
+    if(!isset($jobid)) {
+	put_error("Required argument jobid is unset");
+	return false;
+    }
+    if(!isset($file)) {
+	put_error("Required argument file is unset");
+	return false;
+    }
+    $path = sprintf("%s/jobs/%s/%s/%s", CACHE_DIRECTORY, $GLOBALS['hostid'], $result, $file);
+    if(!file_exists($path)) {
+	put_error("The requested file don't exists", $result);
+	return false;
+    }
+    $out = $path;
     return true;
 }
 
