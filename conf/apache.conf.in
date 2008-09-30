@@ -1,22 +1,32 @@
 # Apache webserver configuration file.
 # 
 # Include this file in your main apache conf (usually /etc/apache/httpd.conf) as: 
-# Include /var/lib/http/localhost/apps/batchelor/conf/apache.conf
+# Include /var/www/localhost/apps/batchelor/conf/apache.conf
 #
 # If you got an /etc/apache2/webapps.d,then simply create a symbolic link:
-# ln -s /var/lib/http/localhost/apps/batchelor/conf/apache.conf \
+# ln -s /var/www/localhost/apps/batchelor/conf/apache.conf \
 #       /etc/apache2/webapps.d/batchelor.conf
 #
-# Restart the webserver.
+# Enable the web service interfaces by appending -D WEB_SERVICE to the command 
+# line argument for Apache. On Gentoo this is done /etc/conf.d/apache2. Make 
+# sure to set access permissions on respective web service interface below.
+#
+# Restart the webserver for changes to take effect.
+# 
 
-Alias /batchelor/ /var/lib/http/localhost/apps/batchelor/source/
+<IfDefine WEB_SERVICE>
+  # WEB SERVICE: Transform xxx/?yyy into broker.php?name=xxx&yyy:
+  AliasMatch ^/batchelor/ws/http/(.*) /var/www/localhost/apps/batchelor/source/ws/http/broker.php
+</IfDefine>
+
+Alias /batchelor/ /var/www/localhost/apps/batchelor/source/
 
 <DirectoryMatch ".*/\.svn/">
     Order allow,deny
     Deny from all
 </DirectoryMatch>
 	
-<Directory /var/lib/http/localhost/apps/batchelor/source/>
+<Directory /var/www/localhost/apps/batchelor/source/>
     Order deny,allow
     Deny from all
     # Allow from localhost (ipv4/ipv6) by default:
@@ -39,3 +49,27 @@ Alias /batchelor/ /var/lib/http/localhost/apps/batchelor/source/
 	Deny from all
     </FilesMatch>
 </Directory>
+
+<IfDefine WEB_SERVICE>
+    # Directory for the XML-RPC protocol:
+    <Directory /var/www/localhost/apps/batchelor/source/ws/xmlrpc/>
+        Order deny,allow
+    	Deny from all
+    	Allow from 127.0.0.1 ::1
+    	Options Indexes FollowSymLinks MultiViews
+    </Directory>
+
+    # Directory for the HTTP RPC protocol:
+    <Directory /var/www/localhost/apps/batchelor/source/ws/http/>
+        Order deny,allow
+    	Deny from all
+    	Allow from 127.0.0.1 ::1
+    	Options Indexes FollowSymLinks MultiViews
+    </Directory>
+</IfDefine>
+
+<IfDefine !WEB_SERVICE>
+    <Directory /var/www/localhost/apps/batchelor/source/ws/>
+    	Deny from all
+    </Directory>
+</IfDefine>
