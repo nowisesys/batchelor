@@ -21,9 +21,9 @@
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR . "../");
 
-include "include/common.inc";
-include "include/queue.inc";
+include_once "include/common.inc";
 include_once "include/ws.inc";
+include "include/queue.inc";
 include "include/delete.inc";
 
 //

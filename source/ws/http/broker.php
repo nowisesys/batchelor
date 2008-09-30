@@ -26,6 +26,7 @@
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../");
 
 include "include/ws.inc";
+include "include/common.inc";
 
 // 
 // Find out how we was called. The last component of SCRIPT_NAME should
