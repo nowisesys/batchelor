@@ -16,7 +16,7 @@
 
 // 
 // This script is part of the lightweight HTTP web service interface. This script
-// implements the RPC method result.
+// implements the RPC methods opendir, readdir and fopen.
 // 
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR . "../");
@@ -166,10 +166,10 @@ function process_fopen()
     header("Content-Type: application/octet-stream");
     header("Connection: close");
 
-    ob_end_flush();    
-    readfile($data);
+    ob_end_flush();    // Flush headers before we send data
+    readfile($data);   // Send content of file
     
-    exit(0);   // Stop further script execution.
+    exit(0);           // Stop further script execution.
 }
 
 // 
