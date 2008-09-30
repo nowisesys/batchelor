@@ -134,7 +134,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "long" => "Batchelor.GetErrorCollection",
 			       "desc" => "Return an collection of all errors defined (codes and messages).",
 			       "params" => null,
-			       "return" => "array=[object(integer,string)]",
+			       "return" => "array=[object=(integer,string)]",
 			       "script" => "error.php"
 			       ),
 			array( 
@@ -172,7 +172,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "long" => "Batchelor.StartNewJob", 
 			       "desc" => "Enqueue and start new job. Returns a job objects for the newly started jobs.",
 			       "params" => array( "indata" => "string" ),
-			       "return" => "(jobid=integer,date=string,time=string,stamp=integer)",
+			       "return" => "object=(jobid=integer,date=string,time=string,stamp=integer)",
 			       "script" => "enqueue.php"
 			       ),
 			array( 
@@ -192,23 +192,23 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "desc" => "List queued and finished jobs. Returns an array of objects describing the jobs and their state.",
 			       "params" => array( "sort" => "string",
 						  "filter" => "string" ),
-			       "return" => "array=[object]",
+			       "return" => "array=[object=()]",
 			       "script" => "queue.php"
 			       ),
 			array( 
 			       "func" => "ws_result",
 			       "name" => "opendir",
 			       "long" => "Batchelor.ListResultDirs",
-			       "desc" => "List result directories. Returns an list of directory names.",
+			       "desc" => "List result directories. Returns an list of directory objects that can be used when calling the readdir method.",
 			       "params" => null,
-			       "return" => "array=[string]",
+			       "return" => "array=[object=(result=string,jobid=string)]",
 			       "script" => "result.php"
 			       ),
 			array( 
 			       "func" => "ws_result",
 			       "name" => "readdir",
 			       "long" => "Batchelor.ListResultFiles",
-			       "desc" => "List files in a specific result directory.",
+			       "desc" => "List files in a specific result directory. Returns an list of all files in the specific result directory pointed out by the method parameters (result and jobid). Also see the opendir and fopen method",
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string" ),
 			       "return" => "array=[string]",
@@ -218,7 +218,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "func" => "ws_result",
 			       "name" => "fopen",
 			       "long" => "Batchelor.GetResultFile",
-			       "desc" => "Get content of an result file. The content is returned with MIME-type application/octet-stream (binary format).",
+			       "desc" => "Get content of an result file. The content is returned with MIME-type application/octet-stream (binary format). Call the opendir method to obtain values for the result and jobid parameters.",
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string",
 						  "file"   => "string" ),
@@ -277,7 +277,7 @@ function ws_enqueue(&$indata, &$job)
 // 
 function ws_dequeue($result, $jobid)
 {
-    if(!delete_single_job($hostid, $result, $jobid)) {
+    if(!delete_single_job($GLOBALS['hostid'], $result, $jobid)) {
 	return false;
     }
     return true;
@@ -289,7 +289,7 @@ function ws_dequeue($result, $jobid)
 // 
 function ws_queue(&$jobs, $sort = "none", $filter = "all")
 {
-    $jobs = get_jobs($sort, $filter);
+    $jobs = get_jobs($GLOBALS['hostid'], $sort, $filter);
     if($jobs == false) {
 	return false;
     }
