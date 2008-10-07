@@ -32,7 +32,6 @@ include "../include/getopt.inc";
 // 
 function get_rpc_response($options)
 {
-    echo "\n";
     if($options->type == "http") {
 	$url = sprintf("%s/%s", $options->baseurl, $options->type);
 	if(isset($options->func)) {
@@ -48,44 +47,75 @@ function get_rpc_response($options)
 		$url .= sprintf("?format=%s", $options->format);
 	    }
 	}
+	if($options->debug) {
+	    printf("debug: using url %s\n", $url);
+	}
 	
 	$curl = curl_init();	
 	if($curl) {
+	    if($options->verbose) {
+		print "info: curl initilized\n";
+	    }
 	    curl_setopt($curl, CURLOPT_URL, $url);
 	    curl_setopt($curl, CURLOPT_HEADER, 1);	    
+	    if($options->verbose) {
+		print "info: calling remote method\n";
+	    }
+	    echo "\n";
 	    if(!curl_exec($curl)) {
 		echo "error: failed connect to server\n";
 	    }
 	    curl_close($curl);
+	} else {
+	    echo "error: failed initilize curl\n";
 	}
-    } else {
+    } else if($options->type == "xmlrpc") {
 	$url = sprintf("%s/%s/", $options->baseurl, $options->type);
 	
 	// 
 	// We need to split the parameters into its part and generate the 
 	// XML payload for XML-RPC request.
 	// 
-	$params = explode("&", $options->params);
-	$result = "";
-	foreach($params as $param) {
-	    list($pk, $pv) = explode("=", $param);
-	    if(is_numeric($pv)) {
-		$result .= sprintf("<value><name>%s</name><integer>%d</integer></value>\n", $pk, $pv);
-	    } else if(is_string($pv)) {
-		$result .= sprintf("<value><name>%s</name><string>%d</string></value>\n", $pk, $pv);
+	$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+	$xml .= "<methodCall>\n";
+	$xml .= sprintf("  <methodName>%s</methodName>\n", $options->func);
+	if(isset($options->params)) {
+	    $params = explode("&", $options->params);
+	    $xml .= "  <params>\n";
+	    foreach($params as $param) {
+		list($pk, $pv) = explode("=", $param);
+		if(is_numeric($pv)) {
+		    $xml .= sprintf("    <param><int>%d</int></param>\n", $pv);
+		} else if(is_string($pv)) {
+		    $xml .= sprintf("    <param><string>%s</string></param>\n", $pv);
+		}
 	    }
+	    $xml .= "  </params>\n";
+	}
+	$xml .= "</methodCall>\n";
+	if($options->debug) {
+	    printf("debug: xml message to send:\n'%s'\n", $xml);
 	}
 	
 	$curl = curl_init();	
 	if($curl) {
+	    if($options->verbose) {
+		print "info: curl initilized\n";
+	    }
 	    curl_setopt($curl, CURLOPT_URL, $url);
 	    curl_setopt($curl, CURLOPT_POST, 1);
-	    curl_setopt($curl, CURLOPT_POSTFIELDS, $result);
+	    curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
 	    curl_setopt($curl, CURLOPT_HEADER, 1);
+	    if($options->verbose) {
+		print "info: calling remote method\n";
+	    }
+	    echo "\n";
 	    if(!curl_exec($curl)) {
 		echo "error: failed connect to server\n";
 	    }
 	    curl_close($curl);
+	} else {
+	    echo "error: failed initilize curl\n";
 	}
     }
 }
@@ -95,7 +125,7 @@ function get_rpc_response($options)
 //
 function usage($prog, $defaults)
 {    
-    print "$prog - web service test tool\n";
+    print "$prog - test utility for web services\n";
     print "\n";      
     print "Usage: $prog options...\n";
     print "Options:\n";
@@ -108,6 +138,8 @@ function usage($prog, $defaults)
     printf("  -v,--verbose:    Be more verbose.\n");
     printf("  -h,--help:       This help.\n");
     printf("  -V,--version:    Show version info.\n");
+    print "\n";
+    print "Example:  php ws.php --func=enqueue --type=xmlrpc --params='indata=test'\n";
 }
 
 //
@@ -217,8 +249,22 @@ function main(&$argc, $argv)
     // 
     // Dump options:
     //
-    if($options->debug) {
+    if($options->debug && $options->verbose) {
 	var_dump($options);
+    }
+
+    // 
+    // Call info method by default.
+    // 
+    if(!isset($options->func)) {
+	if($options->type == "http") {
+	    $options->func = "info";
+	} else {
+	    $options->func = "Batchelor.ShowAPI";
+	}
+	if($options->debug) {
+	    printf("debug: using %s as default method\n", $options->func);
+	}
     }
     
     get_rpc_response($options);
