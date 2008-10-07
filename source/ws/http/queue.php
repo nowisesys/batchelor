@@ -21,15 +21,15 @@
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR . "../");
 
+//
+// Get configuration.
+// 
+include_once "conf/config.inc";
+
 include_once "include/common.inc";
 include_once "include/ws.inc";
 include "include/queue.inc";
 include "include/delete.inc";
-
-//
-// Get configuration.
-// 
-include "conf/config.inc";
 
 // 
 // Fill optional request values with defaults.
@@ -40,11 +40,6 @@ if(!isset($_REQUEST['sort'])) {
 if(!isset($_REQUEST['filter'])) {
     $_REQUEST['filter'] = "all";
 }
-// foreach(array( "sort", "filter" ) as $key) {
-//     if(!isset($_REQUEST[$key])) {
-// 	$_REQUEST[$key] = null;
-//     }
-// }
 
 // 
 // Setup HTTP web service session. This will terminate the script if any 

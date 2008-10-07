@@ -25,6 +25,11 @@
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../");
 
+//
+// Get configuration.
+// 
+include "conf/config.inc";
+
 include "include/ws.inc";
 include "include/common.inc";
 

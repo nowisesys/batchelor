@@ -21,14 +21,14 @@
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR . "../");
 
-include_once "include/common.inc";
-include_once "include/ws.inc";
-include "include/queue.inc";
-
 //
 // Get configuration.
 // 
-include "conf/config.inc";
+include_once "conf/config.inc";
+
+include_once "include/common.inc";
+include_once "include/ws.inc";
+include "include/queue.inc";
 
 // 
 // Setup HTTP web service session. This will terminate the script if any 
