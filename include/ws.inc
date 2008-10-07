@@ -437,7 +437,7 @@ function ws_readdir($result, $jobid, &$out)
     
     $jobdir = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $GLOBALS['hostid'], $result);
     if(!file_exists($jobdir)) {
-	put_error("The job directory %s don't exists", $result);
+	put_error(sprintf("The job directory %s don't exists", $result));
 	return false;
     }
     $cwd = getcwd();
