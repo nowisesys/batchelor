@@ -21,15 +21,15 @@
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR . "../");
 
+//
+// Get configuration.
+// 
+include_once "conf/config.inc";
+
 include_once "include/common.inc";
 include_once "include/ws.inc";
 include "include/queue.inc";
 include "include/delete.inc";
-
-//
-// Get configuration.
-// 
-include "conf/config.inc";
 
 // 
 // Setup HTTP web service session. This will terminate the script if any 
@@ -167,7 +167,11 @@ function process_fopen()
     header("Connection: close");
 
     ob_end_flush();    // Flush headers before we send data
-    readfile($data);   // Send content of file
+    if(WS_FOPEN_RETURN_FORMAT == "base64") {
+	printf("%s", base64_encode(file_get_contents($data)))
+    } else {
+	readfile($data);   // Send content of file
+    }
     
     exit(0);           // Stop further script execution.
 }
