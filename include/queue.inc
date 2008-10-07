@@ -99,9 +99,10 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
     // Prevent error when updating job list without any submitted job.
     // 
     if(!file_exists($root)) {
+	put_error("The root directory don't exists");
 	return $jobs;
     }
-    
+
     // 
     // Loop thru all subdirectories.
     // 
