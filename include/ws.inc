@@ -23,6 +23,44 @@
 // 
 
 // 
+// Determine the type of web service we provide:
+// 
+if(strstr($_SERVER['REQUEST_URI'], "ws/xmlrpc")) {
+    define("WS_XMLRPC", 1);
+} elseif(strstr($_SERVER['REQUEST_URI'], "ws/http")) {
+    define("WS_HTTP", 1);
+}
+
+// 
+// Set format for the fopen method (send file content)
+// 
+if(defined("WS_XMLRPC")) {
+    if(!defined("WS_XMLRPC_FOPEN_BASE64_ENCODE")) {
+	if(defined("WS_FOPEN_BASE64_ENCODE")) {
+	    define("WS_XMLRPC_FOPEN_BASE64_ENCODE", WS_FOPEN_BASE64_ENCODE);
+	} else {
+	    define("WS_XMLRPC_FOPEN_BASE64_ENCODE", false);
+	}
+    }
+    define("FOPEN_BASE64_ENCODE", WS_XMLRPC_FOPEN_BASE64_ENCODE);
+}
+elseif(defined("WS_HTTP")) {
+    if(!defined("WS_HTTP_FOPEN_BASE64_ENCODE")) {
+	if(defined("WS_FOPEN_BASE64_ENCODE")) {
+	    define("WS_HTTP_FOPEN_BASE64_ENCODE", WS_FOPEN_BASE64_ENCODE);
+	} else {
+	    define("WS_HTTP_FOPEN_BASE64_ENCODE", false);
+	}
+    }
+    define("FOPEN_BASE64_ENCODE", WS_HTTP_FOPEN_BASE64_ENCODE);
+}
+if(FOPEN_BASE64_ENCODE) {
+    define("WS_FOPEN_RETURN_FORMAT", "base64");
+} else {
+    define("WS_FOPEN_RETURN_FORMAT", "string");
+}
+
+// 
 // RPC method indexes:
 // 
 define ("WS_RPC_METHOD_INFO",    0);
@@ -77,7 +115,7 @@ function get_error($code = null)
 }
 
 // 
-// Returns the method entry based on its logical name.
+// Returns the method entry based on its logical name (short).
 // 
 function ws_get_rpc_method_by_name($name) 
 {
@@ -85,6 +123,20 @@ function ws_get_rpc_method_by_name($name)
     for($i = 0; $i < count($names); $i++) {
 	if($names[$i] == $name) {
 	    return ws_get_rpc_method_by_index($i);
+	}
+    }
+    return null;
+}
+
+// 
+// Returns the method entry based on its logical name (long).
+// 
+function ws_get_rpc_method_by_long($name) 
+{
+    $entries = ws_get_rpc_method_by_index();
+    for($i = 0; $i < count($entries); $i++) {
+	if($entries[$i]['long'] == $name) {
+	    return $entries[$i];
 	}
     }
     return null;
@@ -222,7 +274,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string",
 						  "file"   => "string" ),
-			       "return" => "string",
+			       "return" => WS_FOPEN_RETURN_FORMAT,
 			       "script" => "result.php"
 			       )
 			);
@@ -588,6 +640,57 @@ function ws_http_session_setup($params = null)
     if(!isset($GLOBALS['format'])) {
 	$GLOBALS['format'] = "foa";
     }
+}
+
+//
+// This function should be called from all XML-RPC web service scripts
+// before calling
+// 
+function ws_xmlrpc_session_setup($hostid = null)
+{
+    // 
+    // Make sure this script is allowed to be runned:
+    // 
+    if(!defined("WS_ENABLE_XMLRPC")) {
+	put_error("This script is not configured (see conf/config.inc)");
+	ws_http_error_handler(403, WS_ERROR_CONFIG_PROBLEM);
+    }
+    if(!WS_ENABLE_XMLRPC) {
+	put_error("This script is disallowed by the configuration (see conf/config.inc)");
+	ws_http_error_handler(403, WS_ERROR_CONFIG_PROBLEM);
+    }
+    
+    // 
+    // Handle hostid
+    // 
+    if(defined("WS_XMLRPC_HOSTID_SOURCE")) {
+	$source = WS_XMLRPC_HOSTID_SOURCE;
+    } else if(defined("WS_HOSTID_SOURCE")) {
+	$source = WS_HOSTID_SOURCE;
+    } else {
+	put_error("No hostid source defined in configuration (see conf/config.inc)");
+	ws_http_error_handler(500, WS_ERROR_CONFIG_PROBLEM);
+    }
+    
+    switch($source) {
+     case "param":                           // request param
+	$GLOBALS['hostid'] = $hostid;      
+	break;
+     case "cookie":                          // use cookie
+	if(!isset($_COOKIES['hostid'])) {
+	    put_error("The hostid cookie is unset");
+	    ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
+	}
+	$GLOBALS['hostid'] = $_COOKIES['hostid'];
+	break;
+     case "auto":                            // set cookie
+	update_hostid_cookie();
+	break;
+    }
+    if(!isset($GLOBALS['hostid'])) {
+	put_error("The hostid variable is missing");
+	ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
+    }    
 }
 
 ?>
