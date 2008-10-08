@@ -156,7 +156,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => null,
 			       "name" => "info",
-			       "long" => "Batchelor.ShowAPI",
+			       "long" => "batchelor.info",
 			       "desc" => "List all methods thats part of the API. This method returns an array of strings.",
 			       "params" => null,
 			       "return" => "array=[string]",
@@ -165,7 +165,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => null,
 			       "name" => "func",
-			       "long" => "batchelor.ShowFunction",
+			       "long" => "batchelor.func",
 			       "desc" => "Show detailed information about a single RPC method. This method returns an object (with mixed values) describing the method.", 
 			       "params" => array( "name" => "string" ),
 			       "return" => "object=()",
@@ -174,7 +174,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => null,
 			       "name" => "docs",
-			       "long" => "Batchelor.ShowManual",
+			       "long" => "batchelor.docs",
 			       "desc" => "Show the HTTP RPC method API as manual. This method can only be used with HTML format.",
 			       "params" => null,
 			       "return" => null,
@@ -183,7 +183,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => null,
 			       "name" => "errors",
-			       "long" => "Batchelor.GetErrorCollection",
+			       "long" => "batchelor.errors",
 			       "desc" => "Return an collection of all errors defined (codes and messages).",
 			       "params" => null,
 			       "return" => "array=[object=(integer,string)]",
@@ -192,7 +192,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => null,
 			       "name" => "errmsg",
-			       "long" => "Batchelor.GetErrorMessage",
+			       "long" => "batchelor.errmsg",
 			       "desc" => "Return error message string for an given error code.",
 			       "params" => array( "code" => "integer" ),
 			       "return" => "string",
@@ -201,7 +201,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => "ws_suspend",
 			       "name" => "suspend",
-			       "long" => "Batchelor.SuspendRunningJob",
+			       "long" => "batchelor.suspend",
 			       "desc" => "Suspend an already running job. Returns true on success and false on failure.",
 			       "params" => array( "result" => "string", 
 						  "jobid"  => "string" ),
@@ -211,7 +211,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => "ws_resume",
 			       "name" => "resume",
-			       "long" => "Batchelor.ResumePausedJob",
+			       "long" => "batchelor.resume",
 			       "desc" => "Resume a job thats in paused or stopped state. Returns true on success and false on failure.",
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string"),
@@ -221,7 +221,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => "ws_enqueue",
 			       "name" => "enqueue",
-			       "long" => "Batchelor.StartNewJob", 
+			       "long" => "batchelor.enqueue", 
 			       "desc" => "Enqueue and start new job. Returns a job objects for the newly started jobs.",
 			       "params" => array( "indata" => "string" ),
 			       "return" => "object=(jobid=integer,date=string,time=string,stamp=integer)",
@@ -230,7 +230,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => "ws_dequeue",
 			       "name" => "dequeue",
-			       "long" => "Batchelor.DeleteJob",
+			       "long" => "batchelor.dequeue",
 			       "desc" => "Delete an running or finished job. Returns true on success and false on failure.",
 			       "params" => array( "result" => "string", 
 						  "jobid" => "string" ),
@@ -240,7 +240,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => "ws_queue",
 			       "name" => "queue",
-			       "long" => "Batchelor.ListQueuedJobs",
+			       "long" => "batchelor.queue",
 			       "desc" => "List queued and finished jobs. Returns an array of objects describing the jobs and their state.",
 			       "params" => array( "sort" => "string",
 						  "filter" => "string" ),
@@ -250,7 +250,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => "ws_result",
 			       "name" => "opendir",
-			       "long" => "Batchelor.ListResultDirs",
+			       "long" => "batchelor.opendir",
 			       "desc" => "List result directories. Returns an list of directory objects that can be used when calling the readdir method.",
 			       "params" => null,
 			       "return" => "array=[object=(result=string,jobid=string)]",
@@ -259,7 +259,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => "ws_result",
 			       "name" => "readdir",
-			       "long" => "Batchelor.ListResultFiles",
+			       "long" => "batchelor.readdir",
 			       "desc" => "List files in a specific result directory. Returns an list of all files in the specific result directory pointed out by the method parameters (result and jobid). Also see the opendir and fopen method",
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string" ),
@@ -269,7 +269,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			array( 
 			       "func" => "ws_result",
 			       "name" => "fopen",
-			       "long" => "Batchelor.GetResultFile",
+			       "long" => "batchelor.fopen",
 			       "desc" => "Get content of an result file. The content is returned with MIME-type application/octet-stream (binary format). Call the opendir method to obtain values for the result and jobid parameters.",
 			       "params" => array( "result" => "string",
 						  "jobid"  => "string",

@@ -260,7 +260,7 @@ function main(&$argc, $argv)
 	if($options->type == "http") {
 	    $options->func = "info";
 	} else {
-	    $options->func = "Batchelor.ShowAPI";
+	    $options->func = "batchelor.info";
 	}
 	if($options->debug) {
 	    printf("debug: using %s as default method\n", $options->func);
