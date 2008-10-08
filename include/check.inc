@@ -143,17 +143,17 @@ function check_utility_files(&$failed)
     // 
     // The script.sh file is required.
     // 
-    output("Checking if script.sh exists: ");
-    if(file_exists("../utils/script.sh")) {
-	if(filemtime("../utils/script.sh.in") < filemtime("../utils/script.sh")) {
+    output("Checking if script.inc exists: ");
+    if(file_exists("../utils/script.inc")) {
+	if(filemtime("../utils/script.inc.in") < filemtime("../utils/script.inc")) {
 	    success("OK");
 	}
 	else {
-	    warning("File exists but 'utils/script.sh.in' is newer than 'utils/script.sh' (possibly updated)");
+	    warning("File exists but 'utils/script.inc.in' is newer than 'utils/script.inc' (possibly updated)");
 	}
     }
     else {
-	failed("No, copy 'utils/script.sh.in' to 'utils/script.sh' and edit the file, then rerun the test");
+	failed("No, copy 'utils/script.inc.in' to 'utils/script.inc' and edit the file, then run the test again.");
 	$failed = true;
     }
 
