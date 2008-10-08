@@ -15,7 +15,9 @@
 # 
 
 <IfDefine WEB_SERVICE>
-  # WEB SERVICE: Transform xxx/?yyy into broker.php?name=xxx&yyy:
+  # Prevent mapping script to request broker:
+  AliasMatch ^/batchelor/ws/http/(.*).php /var/www/localhost/apps/batchelor/source/ws/http/$1.php
+  # Transform xxx/?yyy into broker.php?name=xxx&yyy:
   AliasMatch ^/batchelor/ws/http/(.*) /var/www/localhost/apps/batchelor/source/ws/http/broker.php
 </IfDefine>
 
