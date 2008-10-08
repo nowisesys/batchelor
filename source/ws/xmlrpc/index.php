@@ -556,13 +556,15 @@ function send_response($request)
 	if(isset($request['params'])) {
 	    if(isset($request['params'][0])) {
 		if(isset($request['params'][1])) {
-		    if(($status = ws_queue($result, $request['params'][0], $request['params'][1]))) {
+		    if(($status = ws_queue($result, 
+					   get_request_param($request, 0), 
+					   get_request_param($request, 1)))) {
 			send_params_start();
 			send_queue_response($result);
 			send_params_end();
 		    }
 		} else {
-		    if(($status = ws_queue($result, $request['params'][0]))) {
+		    if(($status = ws_queue($result, get_request_param($request, 0)))) {
 			send_params_start();
 			send_queue_response($result);
 			send_params_end();
