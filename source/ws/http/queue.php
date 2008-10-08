@@ -111,7 +111,6 @@ $jobs = array();
 if(!ws_queue($jobs, $_REQUEST['sort'], $_REQUEST['filter'])) {
     ws_http_error_handler(409, WS_ERROR_FAILED_CALL_METHOD);
 }
-// print_r($jobs);
 send_result($jobs);
 
 // 
