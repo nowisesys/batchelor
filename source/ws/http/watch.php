@@ -47,6 +47,9 @@ function send_result_xml($jobs)
 	print "  <job>\n";
 	printf("    <result>%s</result>\n", $result);
 	foreach($job as $key => $val) {
+	    if($key == "name") {
+		$val = htmlentities($val, ENT_QUOTES, "ISO-8859-1");
+	    }
 	    printf("    <%s>%s</%s>\n", $key, $val, $key);
 	}
 	print "  </job>\n";
@@ -63,6 +66,13 @@ function send_result_foa($jobs)
     foreach($jobs as $result => $job) {
 	printf("(\nresult=%s\n", $result);
 	foreach($job as $key => $val) {
+	    if($key == "name") {
+		if(strpbrk($val, "[]()\n")) {
+		    $spec = array("[", "]", "(", ")", "\\");
+		    $repl = array("%5B", "%5D", "%28", "%29", "%5C");
+		    $val = str_replace($spec, $repl, $val);
+		}
+	    }
 	    printf("%s=%s\n", $key, $val);
 	}
 	print ")\n";
@@ -91,6 +101,9 @@ function send_result_json(&$jobs)
     $arr = array();
     foreach($jobs as $result => $job) {
 	$job['result'] = $result;
+	if(isset($job['name'])) {
+	    $job['name'] = utf8_encode($job['name']);
+	}
 	$arr[] = (object)$job;
     }
     printf("%s", json_encode($arr));
