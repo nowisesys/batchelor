@@ -1,4 +1,4 @@
-Version 0.7.0  (2008-mm-dd):
+Version 0.7.0  (2008-10-08):
 
 	* Removed the source/files.php script. This access method has been
 	  obsoleted by the new web service interface.
@@ -8,6 +8,9 @@ Version 0.7.0  (2008-mm-dd):
 	  
 	* Implemented the HTTP RPC web service protocol/interface (including
 	  full support for the XML and FOA result format).
+	  
+	* Implemented the XML-RPC web service protocol/interface. See spec
+	  from http://www.xmlrpc.com/spec
 	  
 Version 0.6.12 (2008-06-05):
 
