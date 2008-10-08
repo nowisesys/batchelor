@@ -132,7 +132,7 @@ function check_params(&$request, &$entry)
 {
     if(isset($entry['params'])) {
 	if(!isset($request['params'])) {
-	    send_error(WS_ERROR_MISSING_PARAMETER, sprintf("This method requires %d parameters", count($entry['params'])));
+	    send_error(WS_ERROR_MISSING_PARAMETER, sprintf("This method requires %d parameters", count($entry['params'])), true);
 	    return false;
 	}
 	if(count($request['params']) < count($entry['params'])) {
@@ -175,27 +175,29 @@ function send_queue_response(&$jobs)
 {
     print "      <array>\n";
     print "        <data>\n";
-    foreach($jobs as $result => $job) {
-	print "          <struct>\n";
-	print "            <member>\n";
-	print "              <name>result</name>\n";
-	print "              <value><int>$result</int></value>\n";
-	print "            </member>\n";
-	foreach($job as $key => $val) {
-	    $type = "string";
-	    if(is_bool($val)) {
-		$type = "boolean";
-	    } elseif(is_float($val)) {
-		$type = "double";
-	    } elseif(is_numeric($val)) {
-		$type = "int";
-	    }
+    if(isset($jobs)) {
+	foreach($jobs as $result => $job) {
+	    print "          <struct>\n";
 	    print "            <member>\n";
-	    printf("              <name>%s</name>\n", $key);
-	    printf("              <value><%s>%s</%s></value>\n", $type, $val, $type);
+	    print "              <name>result</name>\n";
+	    print "              <value><int>$result</int></value>\n";
 	    print "            </member>\n";
+	    foreach($job as $key => $val) {
+		$type = "string";
+		if(is_bool($val)) {
+		    $type = "boolean";
+		} elseif(is_float($val)) {
+		    $type = "double";
+		} elseif(is_numeric($val)) {
+		    $type = "int";
+		}
+		print "            <member>\n";
+		printf("              <name>%s</name>\n", $key);
+		printf("              <value><%s>%s</%s></value>\n", $type, $val, $type);
+		print "            </member>\n";
+	    }
+	    print "          </struct>\n";
 	}
-	print "          </struct>\n";
     }
     print "        </data>\n";
     print "      </array>\n";
@@ -412,6 +414,7 @@ function send_method_descr($name)
 	    send_enqueue_response($result);
 	    break;
 	 case "queue":
+	 case "watch":
 	    $result = array("" => array("jobid" => ""));
 	    send_queue_response($result);
 	    break;
@@ -572,6 +575,17 @@ function send_response($request)
 		send_queue_response($result);
 		send_params_end();
 	    }
+	}
+	break;
+     case "watch":
+	if(check_params($request, $entry)) {
+	    if(($status = ws_watch($result, get_request_param($request, 0)))) {
+		send_params_start();
+		send_queue_response($result);
+		send_params_end();
+	    } 
+	} else {
+	    $status = true;        // handled
 	}
 	break;
      case "opendir":

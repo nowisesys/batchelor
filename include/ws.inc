@@ -241,11 +241,20 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "func" => "ws_queue",
 			       "name" => "queue",
 			       "long" => "batchelor.queue",
-			       "desc" => "List queued and finished jobs. Returns an array of objects describing the jobs and their state.",
+			       "desc" => "List pending, running and finished jobs. Returns an array of objects describing the jobs and their state.",
 			       "params" => array( "sort" => "string",
 						  "filter" => "string" ),
 			       "return" => "array=[object=()]",
 			       "script" => "queue.php"
+			       ),
+			array( 
+			       "func" => "ws_watch",
+			       "name" => "watch",
+			       "long" => "batchelor.watch",
+			       "desc" => "This method returns a list of jobs that has finished execute since last called by this method (the stamp parameter).",
+			       "params" => array( "stamp" => "integer" ),
+			       "return" => "array=[object=()]",
+			       "script" => "watch.php"
 			       ),
 			array( 
 			       "func" => "ws_result",
@@ -380,6 +389,24 @@ function ws_queue(&$jobs, $sort = "none", $filter = "all")
     return true;
 }
 
+// 
+// List jobs that has finished execute since stamp. This function can be
+// used to implement watch and monitor services.
+// 
+function ws_watch(&$out, $stamp) 
+{
+    $jobs = get_jobs($GLOBALS['hostid']);
+    if($jobs == false) {
+	return false;
+    }
+    foreach($jobs as $result => $job) {
+	if(isset($job['finished']) && $job['finished'] >= $stamp) {
+	    $out[$result] = $job;
+	}
+    }
+    return true;
+}
+  
 // 
 // Return an accossiative array of job directories where the key is the
 // name of the directory (result) and the value is the jobid.
