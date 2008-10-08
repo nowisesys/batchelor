@@ -533,7 +533,6 @@ function show_page($error = null)
 	$jobs = get_jobs($GLOBALS['hostid'], $_REQUEST['sort'], $_REQUEST['filter']);
 	if(!$jobs) {
 	    log_errors();
-	    die("HERE");
 	}
 	
 	if(PAGE_REFRESH_RATE > 0) {
