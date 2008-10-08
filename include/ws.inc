@@ -222,7 +222,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "func" => "ws_enqueue",
 			       "name" => "enqueue",
 			       "long" => "batchelor.enqueue", 
-			       "desc" => "Enqueue and start new job. Returns a job objects for the newly started jobs.",
+			       "desc" => "Enqueue and start new job. Returns a job objects for the newly started jobs. The indata parameter is optional. If its missing, then its assumed that job data where uploaded thru HTTP POST (multipart/form-data).",
 			       "params" => array( "indata" => "string" ),
 			       "return" => "object=(jobid=integer,date=string,time=string,stamp=integer)",
 			       "script" => "enqueue.php"
@@ -241,7 +241,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "func" => "ws_queue",
 			       "name" => "queue",
 			       "long" => "batchelor.queue",
-			       "desc" => "List pending, running and finished jobs. Returns an array of objects describing the jobs and their state.",
+			       "desc" => "List pending, running and finished jobs. Returns an array of objects describing the jobs and their state. The sort and filer parameter is optional. Possible parameter values are the same as used in the queue viewer (in the web interface).",
 			       "params" => array( "sort" => "string",
 						  "filter" => "string" ),
 			       "return" => "array=[object=()]",
