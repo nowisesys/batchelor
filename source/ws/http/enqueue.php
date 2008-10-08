@@ -73,6 +73,15 @@ function send_result_foa($job)
 }
 
 // 
+// Send result in PHP format.
+// 
+function send_result_php($job)
+{
+    $res = array_values($job);
+    printf("%s", serialize($res));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -83,6 +92,9 @@ function send_result($result)
 	break;
      case "foa":
      	send_result_foa($result);
+     	break;
+     case "php":
+     	send_result_php($result);
      	break;
      default:
 	put_error(sprintf("Method enqueue don't implements format %s", $GLOBALS['format']));

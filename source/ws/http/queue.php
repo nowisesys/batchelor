@@ -82,6 +82,19 @@ function send_result_foa(&$jobs)
 }
 
 // 
+// Send result in PHP format.
+// 
+function send_result_php(&$jobs)
+{
+    $arr = array();
+    foreach($jobs as $result => $job) {
+	$job['result'] = $result;
+	$arr[] = (object)$job;
+    }
+    printf("%s", serialize($arr));
+}
+
+// 
 // Send result to client.
 // 
 function send_result(&$jobs)
@@ -92,6 +105,9 @@ function send_result(&$jobs)
 	break;
      case "foa":
      	send_result_foa($jobs);
+     	break;
+     case "php":
+     	send_result_php($jobs);
      	break;
      default:
 	put_error(sprintf("Method queue don't implements format %s", $GLOBALS['format']));

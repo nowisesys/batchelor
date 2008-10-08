@@ -54,6 +54,14 @@ function send_result_foa($result)
 }
 
 // 
+// Send result in PHP format.
+// 
+function send_result_php($result)
+{
+    printf("%s", serialize($result));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -64,6 +72,9 @@ function send_result($result)
 	break;
      case "foa":
      	send_result_foa($result);
+     	break;
+     case "php":
+     	send_result_php($result);
      	break;
      default:
 	put_error(sprintf("Method resume don't implements format %s", $GLOBALS['format']));

@@ -64,6 +64,19 @@ function print_info_foa()
 }
 
 // 
+// Print function list in PHP format.
+// 
+function print_info_php()
+{
+    $entries = ws_get_rpc_method_by_index();
+    $names = array();
+    foreach($entries as $entry) {
+	$names[] = $entry['name'];
+    }
+    printf("%s", serialize($names));
+}
+
+// 
 // Print function list in human readable format.
 // 
 function print_info_human()
@@ -150,9 +163,17 @@ function print_info_html()
     print "up to each installation to select its default format (using either xml or foa is recommended).</p>\n";
     
     print "<h3>Reading the method result</h3>\n";
-    print "<p>The HTTP RPC service supports a number of different output formats. Its own format is FOA, that \n";
-    print "stands for Fast Object and Array encoding, and is designed to be lightweight and easy to scan/parse \n";
-    print "by a computer.</p>\n";
+    print "<p>The HTTP RPC service supports a number of different output formats that can be selected by append \n";
+    print "a <code>format=name</code> parameter in the method call (request URI). Currently supported output \n";
+    print "formats are:\n";
+    print "<ul>\n";
+    print "<li>XML   : XML document using a minimal set of tags.</li>\n";
+    print "<li>FOA   : Fast Object and Array encoding (described in the manual).</li>\n";
+    print "<li>PHP   : Serialized data using PHP serialize() function.</li>\n";
+    print "</ul>\n";
+    print "</p>\n";
+    print "<p>The native format is FOA, that stands for Fast Object and Array encoding, and is designed to be lightweight \n";
+    print "and easy to scan/parse by a computer.</p>\n";
     
     print "<h4>Return values (FOA):</h4>\n";
     print "<p>The XML format of return values should be fairly easy to understand, so this section \n";
@@ -177,7 +198,7 @@ function print_info_html()
     print "<p>An example object returned by a method looks like this:\n";
     print "<div class=\"code\"><pre>person=(\n\tfname=Albert\n\tlname=Einstein\n\tiq=160+\n)</pre></div></p>\n";
     
-    print "<h3>Error handling:</h3>\n";
+    print "<h3>Detecting errors:</h3>\n";
     print "<p>Errors are signaled to clients by HTTP status codes. A successful method request gets HTTP 200 (OK) back, \n";
     print "while any other problem is reported with code 3xx, 4xx or 5xx.</p>\n";
     print "<h4>HTTP status codes</h4>\n";
@@ -186,6 +207,7 @@ function print_info_html()
     print "<p>If a method compares the state of the queue and it has not changed, then HTTP 304 (Not Modified) will be sent back. \n";
     print "Note that an response with HTTP 304 will <u>never</u> contain any body, this is explicit prevented by the HTTP protocol \n";
     print "specification (RFC 2616).</p>\n";
+    print "<p>Using HTTP status code gives the client a fast way to detect errors without needing to decoding the response body.\n";
     print "<h4>Messages:</h4>\n";
     print "<p>The reason for an failed method call is passed in the HTTP header using the custom header entity <code>X-RPC-Error: NN</code>, \n";
     print "where NN is a number between 1 and 8. The error codes can be mapped to messages by a calling <code>error?format=foa</code> from the client.</p>\n";
@@ -273,6 +295,14 @@ function print_func_foa($entry)
 	print "\t]\n";
     }
     print ")\n";
+}
+
+// 
+// Print function info in PHP format.
+// 
+function print_func_php($entry)
+{
+    printf("%s", serialize($entry));
 }
 
 // 
@@ -397,7 +427,10 @@ if($GLOBALS['name'] == "info") {
      case "foa":
 	print_info_foa();
 	break;
-     case "html":
+     case "php":
+	print_info_php();
+	break;
+     case "html":	
 	print_html_page();
 	break;
      case "human":
@@ -416,6 +449,9 @@ if($GLOBALS['name'] == "info") {
 	break;
      case "foa":
 	print_func_foa($entry);
+	break;
+     case "php":
+	print_func_php($entry);
 	break;
      case "html":
 	print_html_page();

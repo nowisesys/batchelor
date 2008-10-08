@@ -39,10 +39,11 @@
    This is a lightweight protocol that uses URI encoded requests sent either 
    to the request broker or direct to the script thru HTTP. The output (response)
    format is configurable on the server and can also be selected by the
-   caller (the client). The output formats are:
+   caller (the client). The output formats that can be selected are:
    
      * XML   : Uses a minimal set of tags.
      * FOA   : Fast Object and Array encoding (described in the manual).
+     * PHP   : Serialized data using PHP serialize() function. 
 
    The default format is FOA.
    

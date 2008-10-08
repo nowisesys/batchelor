@@ -55,6 +55,14 @@ function send_result_foa($result)
 }
 
 // 
+// Send result in PHP format.
+// 
+function send_result_php($result)
+{
+    printf("%s", serialize($result));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -66,6 +74,9 @@ function send_result($result)
      case "foa":
      	send_result_foa($result);
      	break;
+     case "php":
+	send_result_php($result);
+	break;
      default:
 	put_error(sprintf("Method dequeue don't implements format %s", $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);

@@ -85,6 +85,15 @@ function send_collection_foa()
 }
 
 // 
+// Send collection in PHP format.
+// 
+function send_collection_php()
+{
+    $errors = get_error();
+    printf("%s", serialize($errors));
+}
+
+// 
 // Send error message in XML format.
 // 
 function send_error_message_xml($code)
@@ -102,6 +111,14 @@ function send_error_message_foa($code)
 }
 
 // 
+// Send error message in PHP format.
+// 
+function send_error_message_php($code)
+{
+    printf("%s", serialize(get_error($code)));
+}
+
+// 
 // Start output buffering.
 // 
 ob_start();
@@ -114,6 +131,9 @@ if(isset($_REQUEST['code'])) {
      case "foa":
      	send_error_message_foa($_REQUEST['code']);
      	break;
+     case "php":
+     	send_error_message_php($_REQUEST['code']);
+     	break;
      default:
 	put_error(sprintf("Method %s don't implements format %s", $GLOBALS['name'], $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
@@ -125,6 +145,9 @@ if(isset($_REQUEST['code'])) {
 	break;
      case "foa":
      	send_collection_foa();
+     	break;
+     case "php":
+     	send_collection_php();
      	break;
      default:
 	put_error(sprintf("Method %s don't implements format %s", $GLOBALS['name'], $GLOBALS['format']));

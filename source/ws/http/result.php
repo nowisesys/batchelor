@@ -68,6 +68,14 @@ function print_opendir_foa(&$data)
     print "]\n";
 }
 
+//
+// Send directory list in PHP format.
+// 
+function print_opendir_php(&$data)
+{
+    printf("%s", serialize($data));
+}
+
 // 
 // Process opendir request.
 // 
@@ -85,6 +93,9 @@ function process_opendir()
      case "foa":
      	print_opendir_foa($data);
      	break;
+     case "php":
+	print_opendir_php($data);
+     	break;	
      default:
 	put_error(sprintf("Method opendir don't implements format %s", $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
@@ -116,6 +127,14 @@ function print_readdir_foa(&$data)
     print "]\n";
 }
 
+//
+// Send files list in PHP format.
+// 
+function print_readdir_php(&$data)
+{
+    printf("%s", serialize($data));
+}
+
 // 
 // Process readdir request.
 // 
@@ -139,8 +158,11 @@ function process_readdir()
      case "foa":
      	print_readdir_foa($data);
      	break;
+     case "php":
+     	print_readdir_php($data);
+     	break;
      default:
-	put_error(sprintf("Method opendir don't implements format %s", $GLOBALS['format']));
+	put_error(sprintf("Method readdir don't implements format %s", $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
     }
 }
@@ -168,7 +190,7 @@ function process_fopen()
 
     ob_end_flush();    // Flush headers before we send data
     if(WS_FOPEN_RETURN_FORMAT == "base64") {
-	printf("%s", base64_encode(file_get_contents($data)))
+	printf("%s", base64_encode(file_get_contents($data)));
     } else {
 	readfile($data);   // Send content of file
     }

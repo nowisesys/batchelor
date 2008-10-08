@@ -71,6 +71,19 @@ function send_result_foa($jobs)
 }
 
 // 
+// Send result in PHP format.
+// 
+function send_result_php(&$jobs)
+{
+    $arr = array();
+    foreach($jobs as $result => $job) {
+	$job['result'] = $result;
+	$arr[] = (object)$job;
+    }
+    printf("%s", serialize($arr));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -81,6 +94,9 @@ function send_result($result)
 	break;
      case "foa":
      	send_result_foa($result);
+     	break;
+     case "php":
+     	send_result_php($result);
      	break;
      default:
 	put_error(sprintf("Method watch don't implements format %s", $GLOBALS['format']));

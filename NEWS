@@ -1,4 +1,9 @@
-Version 0.7.0  (2008-10-08):
+Version 0.7.1 (2008-mm-dd):
+
+	* Append format=php to request URI (HTTP RPC) to get response as PHP
+	  serialized data.
+
+Version 0.7.0 (2008-10-08):
 
 	* Removed the source/files.php script. This access method has been
 	  obsoleted by the new web service interface.

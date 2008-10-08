@@ -360,6 +360,14 @@ define ("WS_HTTP_SEND_ERROR_BODY", false);
 define ("WS_HTTP_SEND_FILE_PROPS", true);
 
 // 
+// Default format of output from HTTP RCP methods. Possible values are "xml",
+// "foa", "php", "plain" (alias "human") and "html". The "plain", "human" and 
+// "html" formats are intended only for debug and development and (might) not 
+// be implemented for all methods.
+// 
+define ("WS_HTTP_OUTPUT_FORMAT", "foa");
+
+// 
 // Should file content sent by the fopen method be base64 encoded?
 // 
 // define ("WS_FOPEN_BASE64_ENCODE", false);

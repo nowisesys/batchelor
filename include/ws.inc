@@ -656,11 +656,11 @@ function ws_http_session_setup($params = null)
 	$GLOBALS['format'] = WS_HTTP_OUTPUT_FORMAT;
     }
     if(isset($_REQUEST['format'])) {
-	if($_REQUEST['format'] == "xml" || $_REQUEST['format'] == "foa") {
+	if($_REQUEST['format'] == "xml" || $_REQUEST['format'] == "foa" || $_REQUEST['format'] == "php") {
 	    $GLOBALS['format'] = $_REQUEST['format'];
-	} else if($_REQUEST['format'] == "plain" || $_REQUEST['format'] == "human") {
+	} elseif($_REQUEST['format'] == "plain" || $_REQUEST['format'] == "human") {
 	    $GLOBALS['format'] = "human";
-	} else if($_REQUEST['format'] == "html") {
+	} elseif($_REQUEST['format'] == "html") {
 	    $GLOBALS['format'] = "html";
 	}
     }
