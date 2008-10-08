@@ -658,6 +658,12 @@ function ws_http_session_setup($params = null)
     if(isset($_REQUEST['format'])) {
 	if($_REQUEST['format'] == "xml" || $_REQUEST['format'] == "foa" || $_REQUEST['format'] == "php") {
 	    $GLOBALS['format'] = $_REQUEST['format'];
+	} elseif($_REQUEST['format'] == "json") {
+	    if(!extension_loaded("json")) {
+		put_error("The json format can't be used due to missing extension");
+		ws_http_error_handler(500, WS_ERROR_MISSING_EXTENSION);
+	    }
+	    $GLOBALS['format'] = "json";
 	} elseif($_REQUEST['format'] == "plain" || $_REQUEST['format'] == "human") {
 	    $GLOBALS['format'] = "human";
 	} elseif($_REQUEST['format'] == "html") {

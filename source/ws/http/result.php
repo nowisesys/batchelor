@@ -76,6 +76,14 @@ function print_opendir_php(&$data)
     printf("%s", serialize($data));
 }
 
+//
+// Send directory list in JSON format.
+// 
+function print_opendir_json(&$data)
+{
+    printf("%s", json_encode($data));
+}
+
 // 
 // Process opendir request.
 // 
@@ -95,6 +103,9 @@ function process_opendir()
      	break;
      case "php":
 	print_opendir_php($data);
+     	break;	
+     case "json":
+	print_opendir_json($data);
      	break;	
      default:
 	put_error(sprintf("Method opendir don't implements format %s", $GLOBALS['format']));
@@ -135,6 +146,14 @@ function print_readdir_php(&$data)
     printf("%s", serialize($data));
 }
 
+//
+// Send files list in JSON format.
+// 
+function print_readdir_json(&$data)
+{
+    printf("%s", json_encode($data));
+}
+
 // 
 // Process readdir request.
 // 
@@ -160,6 +179,9 @@ function process_readdir()
      	break;
      case "php":
      	print_readdir_php($data);
+     	break;
+     case "json":
+     	print_readdir_json($data);
      	break;
      default:
 	put_error(sprintf("Method readdir don't implements format %s", $GLOBALS['format']));

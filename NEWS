@@ -1,7 +1,11 @@
-Version 0.7.1 (2008-mm-dd):
+Version 0.7.1 (2008-10-08):
 
-	* Append format=php to request URI (HTTP RPC) to get response as PHP
-	  serialized data.
+	* Append format=php to request URI (HTTP RPC) to get the result from
+	  the method call as PHP serialized data.
+
+	* Append format=json to request URI (HTTP RPC) to get the result from 
+	  the method call in JavaScript Object Notation (JSON) data-interchange 
+	  format.
 
 Version 0.7.0 (2008-10-08):
 

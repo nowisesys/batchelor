@@ -41,9 +41,10 @@
    format is configurable on the server and can also be selected by the
    caller (the client). The output formats that can be selected are:
    
-     * XML   : Uses a minimal set of tags.
+     * XML   : XML format using a minimal set of tags.
      * FOA   : Fast Object and Array encoding (described in the manual).
      * PHP   : Serialized data using PHP serialize() function. 
+     * JSON  : JavaScript Object Notation (JSON) data-interchange format.
 
    The default format is FOA.
    

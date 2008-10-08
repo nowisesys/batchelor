@@ -82,6 +82,15 @@ function send_result_php($job)
 }
 
 // 
+// Send result in JSON format.
+// 
+function send_result_json($job)
+{
+    $res = array_values($job);
+    printf("%s", json_encode($res));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -95,6 +104,9 @@ function send_result($result)
      	break;
      case "php":
      	send_result_php($result);
+     	break;
+     case "json":
+     	send_result_json($result);
      	break;
      default:
 	put_error(sprintf("Method enqueue don't implements format %s", $GLOBALS['format']));

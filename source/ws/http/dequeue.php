@@ -63,6 +63,14 @@ function send_result_php($result)
 }
 
 // 
+// Send result in JSON format.
+// 
+function send_result_json($result)
+{
+    printf("%s", json_encode($result));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -76,6 +84,9 @@ function send_result($result)
      	break;
      case "php":
 	send_result_php($result);
+	break;
+     case "json":
+	send_result_json($result);
 	break;
      default:
 	put_error(sprintf("Method dequeue don't implements format %s", $GLOBALS['format']));

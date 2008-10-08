@@ -94,6 +94,15 @@ function send_collection_php()
 }
 
 // 
+// Send collection in JSON format.
+// 
+function send_collection_json()
+{
+    $errors = get_error();
+    printf("%s", json_encode($errors));
+}
+
+// 
 // Send error message in XML format.
 // 
 function send_error_message_xml($code)
@@ -119,6 +128,14 @@ function send_error_message_php($code)
 }
 
 // 
+// Send error message in JSON format.
+// 
+function send_error_message_json($code)
+{
+    printf("%s", json_encode(get_error($code)));
+}
+
+// 
 // Start output buffering.
 // 
 ob_start();
@@ -134,6 +151,9 @@ if(isset($_REQUEST['code'])) {
      case "php":
      	send_error_message_php($_REQUEST['code']);
      	break;
+     case "json":
+     	send_error_message_json($_REQUEST['code']);
+     	break;
      default:
 	put_error(sprintf("Method %s don't implements format %s", $GLOBALS['name'], $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
@@ -148,6 +168,9 @@ if(isset($_REQUEST['code'])) {
      	break;
      case "php":
      	send_collection_php();
+     	break;
+     case "json":
+     	send_collection_json();
      	break;
      default:
 	put_error(sprintf("Method %s don't implements format %s", $GLOBALS['name'], $GLOBALS['format']));

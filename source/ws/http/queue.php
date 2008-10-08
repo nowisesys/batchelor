@@ -95,6 +95,22 @@ function send_result_php(&$jobs)
 }
 
 // 
+// Send result in JSON format.
+// 
+function send_result_json(&$jobs)
+{
+    $arr = array();
+    foreach($jobs as $result => $job) {
+	$job['result'] = $result;
+	if(isset($job['name'])) {
+	    $job['name'] = utf8_encode($job['name']);
+	}
+	$arr[] = (object)$job;
+    }
+    printf("%s", json_encode($arr));
+}
+
+// 
 // Send result to client.
 // 
 function send_result(&$jobs)
@@ -108,6 +124,9 @@ function send_result(&$jobs)
      	break;
      case "php":
      	send_result_php($jobs);
+     	break;
+     case "json":
+     	send_result_json($jobs);
      	break;
      default:
 	put_error(sprintf("Method queue don't implements format %s", $GLOBALS['format']));

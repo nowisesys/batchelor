@@ -84,6 +84,19 @@ function send_result_php(&$jobs)
 }
 
 // 
+// Send result in JSON format.
+// 
+function send_result_json(&$jobs)
+{
+    $arr = array();
+    foreach($jobs as $result => $job) {
+	$job['result'] = $result;
+	$arr[] = (object)$job;
+    }
+    printf("%s", json_encode($arr));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -97,6 +110,9 @@ function send_result($result)
      	break;
      case "php":
      	send_result_php($result);
+     	break;
+     case "json":
+     	send_result_json($result);
      	break;
      default:
 	put_error(sprintf("Method watch don't implements format %s", $GLOBALS['format']));

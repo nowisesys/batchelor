@@ -361,9 +361,9 @@ define ("WS_HTTP_SEND_FILE_PROPS", true);
 
 // 
 // Default format of output from HTTP RCP methods. Possible values are "xml",
-// "foa", "php", "plain" (alias "human") and "html". The "plain", "human" and 
-// "html" formats are intended only for debug and development and (might) not 
-// be implemented for all methods.
+// "foa", "php" or "json". The "plain" (alias "human") and "html" are also
+// valid, but they are intended only for debug and development and are not 
+// be implemented by all methods.
 // 
 define ("WS_HTTP_OUTPUT_FORMAT", "foa");
 

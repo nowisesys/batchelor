@@ -77,6 +77,19 @@ function print_info_php()
 }
 
 // 
+// Print function list in JSON format.
+// 
+function print_info_json()
+{
+    $entries = ws_get_rpc_method_by_index();
+    $names = array();
+    foreach($entries as $entry) {
+	$names[] = $entry['name'];
+    }
+    printf("%s", json_encode($names));
+}
+
+// 
 // Print function list in human readable format.
 // 
 function print_info_human()
@@ -170,6 +183,7 @@ function print_info_html()
     print "<li>XML   : XML document using a minimal set of tags.</li>\n";
     print "<li>FOA   : Fast Object and Array encoding (described in the manual).</li>\n";
     print "<li>PHP   : Serialized data using PHP serialize() function.</li>\n";
+    print "<li>JSON  : JavaScript Object Notation (JSON) data-interchange format.</li>\n";
     print "</ul>\n";
     print "</p>\n";
     print "<p>The native format is FOA, that stands for Fast Object and Array encoding, and is designed to be lightweight \n";
@@ -306,6 +320,14 @@ function print_func_php($entry)
 }
 
 // 
+// Print function info in JSON format.
+// 
+function print_func_json($entry)
+{
+    printf("%s", json_encode($entry));
+}
+
+// 
 // Print function info in human readable format.
 // 
 function print_func_human($entry)
@@ -430,6 +452,9 @@ if($GLOBALS['name'] == "info") {
      case "php":
 	print_info_php();
 	break;
+     case "json":
+	print_info_json();
+	break;
      case "html":	
 	print_html_page();
 	break;
@@ -452,6 +477,9 @@ if($GLOBALS['name'] == "info") {
 	break;
      case "php":
 	print_func_php($entry);
+	break;
+     case "json":
+	print_func_json($entry);
 	break;
      case "html":
 	print_html_page();
