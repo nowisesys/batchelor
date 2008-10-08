@@ -119,7 +119,7 @@ function get_error($code = null)
 // 
 function ws_get_rpc_method_by_name($name) 
 {
-    $names = array( "info", "func", "docs", "errors", "errmsg", "suspend", "resume", "enqueue", "dequeue", "queue", "opendir", "readdir", "fopen" );
+    $names = array( "info", "func", "docs", "errors", "errmsg", "suspend", "resume", "enqueue", "dequeue", "queue", "watch", "opendir", "readdir", "fopen" );
     for($i = 0; $i < count($names); $i++) {
 	if($names[$i] == $name) {
 	    return ws_get_rpc_method_by_index($i);
