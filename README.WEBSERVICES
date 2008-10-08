@@ -36,12 +36,16 @@
 
 ** HTTP RPC:
 
-   This protocol uses URI encoded requests sent either to the request broker
-   or direct to the script. 
-      
-   The response encoding is configurable by the
-   caller and is either XML or FOA (Fast Object and Array encoding).
+   This is a lightweight protocol that uses URI encoded requests sent either 
+   to the request broker or direct to the script thru HTTP. The output (response)
+   format is configurable on the server and can also be selected by the
+   caller (the client). The output formats are:
+   
+     * XML   : Uses a minimal set of tags.
+     * FOA   : Fast Object and Array encoding (described in the manual).
 
+   The default format is FOA.
+   
    ** Manual:
    ------------------------------------------
    
@@ -78,6 +82,7 @@
      enqueue   : Enqueue and start new job.
      dequeue   : Delete an running or finished job.
      queue     : List queued and finished jobs.
+     watch     : Monitor queue for finished jobs.
      opendir   : List result directories.
      readdir   : List files in a specific result directory. 
      fopen     : Get content of an result file. 
