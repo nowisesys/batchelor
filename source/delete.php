@@ -23,6 +23,7 @@
 // Get configuration.
 // 
 include "../conf/config.inc";
+include "../include/queue.inc";
 include "../include/common.inc";
 include "../include/delete.inc";
 
