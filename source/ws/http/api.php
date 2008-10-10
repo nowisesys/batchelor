@@ -171,9 +171,10 @@ function print_info_html()
     print "<h3>Sending method requests</h3>\n";
     print "<h4>Parameter format:</h4>\n";
     print "<p>Parameters for methods are always submitted using standard HTTP GET or POST. \n";
-    print "An additional parameter format={foa|xml} can be passed to select the format of returned data.</p>\n";
+    print "An additional parameter format={foa|xml|php|json} can be passed to select the format of returned data.</p>\n";
     printf("<p>The standard format used if the format parameter is missing is %s, but its \n", WS_HTTP_OUTPUT_FORMAT);
-    print "up to each installation to select its default format (using either xml or foa is recommended).</p>\n";
+    print "up to each installation to select the default format in its configuration. No format is prefered over the others, \n";
+    print "it depends on the language you use for the client side.</p>\n";
     
     print "<h3>Reading the method result</h3>\n";
     print "<p>The HTTP RPC service supports a number of different output formats that can be selected by append \n";
