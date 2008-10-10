@@ -383,6 +383,9 @@ function ws_dequeue($result, $jobid)
 function ws_queue(&$jobs, $sort = "none", $filter = "all")
 {
     $jobs = get_jobs($GLOBALS['hostid'], $sort, $filter);
+    if(is_array($jobs) && count($jobs) == 0) {
+	return true;
+    }
     if($jobs == false) {
 	return false;
     }
@@ -396,6 +399,9 @@ function ws_queue(&$jobs, $sort = "none", $filter = "all")
 function ws_watch(&$out, $stamp) 
 {
     $jobs = get_jobs($GLOBALS['hostid']);
+    if(is_array($jobs) && count($jobs) == 0) {
+	return true;
+    }
     if($jobs == false) {
 	return false;
     }
@@ -414,6 +420,9 @@ function ws_watch(&$out, $stamp)
 function ws_opendir(&$out)
 {
     $jobs = get_jobs($GLOBALS['hostid']);
+    if(is_array($jobs) && count($jobs) == 0) {
+	return true;
+    }
     if($jobs == false) {
 	return false;
     }

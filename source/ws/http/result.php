@@ -44,11 +44,13 @@ function print_opendir_xml(&$data)
 {
     print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
     print "<dirs>\n";
-    foreach($data as $result => $jobid) {
-	print "  <dir>\n";
-	printf("    <result>%s</result>\n", $result);
-	printf("    <jobid>%s</jobid>\n", $jobid);
-	print "  </dir>\n";
+    if(count($data) != 0) {
+	foreach($data as $result => $jobid) {
+	    print "  <dir>\n";
+	    printf("    <result>%s</result>\n", $result);
+	    printf("    <jobid>%s</jobid>\n", $jobid);
+	    print "  </dir>\n";
+	}
     }
     print "</dirs>\n";
 }
@@ -59,11 +61,13 @@ function print_opendir_xml(&$data)
 function print_opendir_foa(&$data)
 {
     print "[\n";
-    foreach($data as $result => $jobid) {
-	print "(\n";
-	printf("%s\n", $result);
-	printf("%s\n", $jobid);
-	print ")\n";
+    if(count($data) != 0) {
+	foreach($data as $result => $jobid) {
+	    print "(\n";
+	    printf("%s\n", $result);
+	    printf("%s\n", $jobid);
+	    print ")\n";
+	}
     }
     print "]\n";
 }
@@ -210,14 +214,14 @@ function process_fopen()
     header("Content-Type: application/octet-stream");
     header("Connection: close");
 
-    ob_end_flush();    // Flush headers before we send data
+    ob_end_flush();        // Flush headers before we send data
     if(WS_FOPEN_RETURN_FORMAT == "base64") {
 	printf("%s", base64_encode(file_get_contents($data)));
     } else {
 	readfile($data);   // Send content of file
     }
     
-    exit(0);           // Stop further script execution.
+    exit(0);               // Stop further script execution.
 }
 
 // 
