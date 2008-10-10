@@ -39,7 +39,7 @@ define ("HOOKS_ADD_BOGUS_IPADDR", false);
 // 
 // Validate peer against array of hosts allowed to submit jobs.
 // 
-function pre_enqueue_hook($file, $jobdir, &$error)
+function pre_enqueue_hook(&$file, $jobdir, &$error, &$handled, &$jobs)
 {
     $allowed = array( "127.0.0.1", "192.168.45.8" );
     
