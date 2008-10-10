@@ -222,9 +222,9 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "func" => "ws_enqueue",
 			       "name" => "enqueue",
 			       "long" => "batchelor.enqueue", 
-			       "desc" => "Enqueue and start new job. Returns a job objects for the newly started jobs. The indata parameter is optional. If its missing, then its assumed that job data where uploaded thru HTTP POST (multipart/form-data).",
+			       "desc" => "Enqueue (start) new job(s). Returns a job objects for the newly started jobs. The indata parameter is optional. If its missing, then its assumed that job data where uploaded thru HTTP POST (multipart/form-data). The result may contain multiple jobs.",
 			       "params" => array( "indata" => "string" ),
-			       "return" => "object=(jobid=integer,date=string,time=string,stamp=integer)",
+			       "return" => "array=[object=(jobid=integer,date=string,time=string,stamp=integer)]",
 			       "script" => "enqueue.php"
 			       ),
 			array( 
@@ -353,13 +353,13 @@ function ws_resume($result, $jobid)
 }
 
 // 
-// Enqueue (starts) a new job. If indata is null, then its assumed that
-// indata comes from an uploaded file (set in $_FILES). The $job variable
-// gets filled with data about the newly enqueued job.
+// Enqueue (starts) new job(s). If indata is null, then its assumed that
+// indata comes from an uploaded file (set in $_FILES). The $jobs variable
+// gets filled with data about the newly enqueued job(s).
 // 
-function ws_enqueue(&$indata, &$job)
+function ws_enqueue(&$indata, &$jobs)
 {
-    if(!enqueue_job($indata, $job)) {
+    if(!enqueue_job($indata, $jobs)) {
 	return false;
     }
     return true;

@@ -27,12 +27,6 @@
 // Include configuration and libs.
 // 
 include "../conf/config.inc";
-include "../include/common.inc";
-include "../include/queue.inc";
-include "../include/ui.inc";
-if(file_exists("../include/hooks.inc")) {
-    include("../include/hooks.inc");
-}
 
 if(!defined("QUEUE_FORMAT_COMPACT")) {
     define ("QUEUE_FORMAT_COMPACT", false);
@@ -53,6 +47,16 @@ if(!defined("UPLOAD_MIN_FILESIZE")) {
 }
 if(!defined("UPLOAD_MAX_FILESIZE")) {
     define ("UPLOAD_MAX_FILESIZE", 0);
+}
+if(!defined("UPLOAD_SUBJOB_LIMIT")) {
+    define ("UPLOAD_SUBJOB_LIMIT", 5);
+}
+
+include "../include/common.inc";
+include "../include/queue.inc";
+include "../include/ui.inc";
+if(file_exists("../include/hooks.inc")) {
+    include("../include/hooks.inc");
 }
 
 function print_select($label, $name, $values)
@@ -589,15 +593,15 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     // We got job data submitted. Enqueue job, display error message
     // and exit if enqueuing fails. 
     // 
-    $job = null;
-    if(!enqueue_job(isset($_REQUEST['data']) ? $_REQUEST['data'] : null, $job)) {
+    $jobs = null;
+    if(!enqueue_job(isset($_REQUEST['data']) ? $_REQUEST['data'] : null, $jobs)) {
 	error_exit(get_last_error());
     }
     // 
     // Redirect the browser to an empty queue.php to prevent page
     // update to submit the same data or file twice or more.
     // 
-    header(sprintf("Location: queue.php?queued=yes&pid=%s", $job['jobid']));
+    header(sprintf("Location: queue.php?queued=yes&jobs=%d", count($jobs)));
 }
 
 // 

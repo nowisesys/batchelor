@@ -103,6 +103,12 @@ define ("UPLOAD_PRESERVE_FILENAME", false);
 define ("UPLOAD_TEXTAREA_WRAPPING", "off");
 
 // 
+// The maximum number of subjobs accepted from a single submit. Use this 
+// in pre_enqueue_hook() to enforce a limit (defaults to 10).
+// 
+define ("UPLOAD_SUBJOB_LIMIT", 5);
+
+// 
 // The number of seconds between reload of the page waiting for
 // running jobs to finish (in seconds). Set to 0 to disable automatic
 // page refresh. Note that some browsers don't handle meta refresh

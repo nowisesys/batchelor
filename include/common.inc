@@ -378,6 +378,23 @@ function bytes_to_string($original)
 }
 
 // 
+// Count number of digits in num.
+// 
+function number_to_digits($num)
+{
+    if($num <= 0) {
+	return 1;
+    }
+    
+    $digits = 0;
+    while($num >= 1) {
+	$num = $num / 10;
+	$digits++;
+    }
+    return $digits;
+}
+
+// 
 // A portable mkdir() replacement.
 //
 function create_directory($path, $mode, $recursive)

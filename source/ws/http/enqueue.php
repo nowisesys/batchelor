@@ -49,45 +49,52 @@ if(!isset($_REQUEST['indata'])) {
 // 
 // Send result in XML format.
 // 
-function send_result_xml($job)
+function send_result_xml($jobs)
 {
     print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
-    print "<job>\n";
-    foreach($job as $key => $val) {
-	printf("  <%s>%s</%s>\n", $key, $val, $key);
+    print "<jobs>\n";
+    foreach($jobs as $job) {
+	print "  <job>\n";
+	foreach($job as $key => $val) {
+	    printf("    <%s>%s</%s>\n", $key, $val, $key);
+	}
+	print "  </job>\n";
     }
-    print "</job>\n";
+    print "</jobs>\n";
 }
 
 // 
 // Send result in FOA format.
 // 
-function send_result_foa($job)
+function send_result_foa($jobs)
 {
-    $res = array_values($job);
-    print "(\n";    
-    for($i = 0; $i < count($res); $i++) {
-	printf("%s\n", $res[$i]);
+    print "[\n";
+    foreach($jobs as $job) {
+	$res = array_values($job);
+	print "(\n";    
+	for($i = 0; $i < count($res); $i++) {
+	    printf("%s\n", $res[$i]);
+	}
+	print ")\n";
     }
-    print ")\n";
+    print "]\n";
 }
 
 // 
 // Send result in PHP format.
 // 
-function send_result_php($job)
+function send_result_php($jobs)
 {
-    $res = array_values($job);
-    printf("%s", serialize($res));
+    printf("%s", serialize($jobs));
 }
 
 // 
 // Send result in JSON format.
 // 
-function send_result_json($job)
+function send_result_json($jobs)
 {
-    $res = array_values($job);
-    printf("%s", json_encode($res));
+    // $res = array_values($job);
+    printf("%s", json_encode($jobs));
 }
 
 // 

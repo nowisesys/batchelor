@@ -271,24 +271,30 @@ function send_boolean_response($value)
 // 
 // Send result from enqueue job method.
 // 
-function send_enqueue_response(&$job)
+function send_enqueue_response(&$jobs)
 {
-    print "      <struct>\n";
-    foreach($job as $key => $val) {
-	$type = "string";
-	if(is_bool($val)) {
-	    $type = "boolean";
-	} elseif(is_float($val)) {
-	    $type = "double";
-	} elseif(is_numeric($val)) {
-	    $type = "int";
+    print "      <array>\n";
+    print "        <data>\n";
+    foreach($jobs as $job) {
+	print "          <struct>\n";
+	foreach($job as $key => $val) {
+	    $type = "string";
+	    if(is_bool($val)) {
+		$type = "boolean";
+	    } elseif(is_float($val)) {
+		$type = "double";
+	    } elseif(is_numeric($val)) {
+		$type = "int";
+	    }
+	    print "            <member>\n";
+	    printf("              <name>%s</name>\n", $key);
+	    printf("              <value><%s>%s</%s></value>\n", $type, $val, $type);
+	    print "            </member>\n";
 	}
-	print "        <member>\n";
-	printf("          <name>%s</name>\n", $key);
-	printf("          <value><%s>%s</%s></value>\n", $type, $val, $type);
-	print "        </member>\n";
+	print "          </struct>\n";
     }
-    print "      </struct>\n";
+    print "        <data>\n";
+    print "      <array>\n";
 }
 
 // 

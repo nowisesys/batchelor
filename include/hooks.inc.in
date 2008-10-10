@@ -32,7 +32,10 @@
 // By passing the file argument by reference its possible to rename the indata
 // file depending on its content.
 // 
-// function pre_enqueue_hook(&$file, $jobdir, &$error)
+// See hooks.inc.ex-multijob for an example on how to enqueue multiple jobs
+// from an single submit from this function.
+// 
+// function pre_enqueue_hook(&$file, $jobdir, &$error, &$handled, &$jobs)
 // {
 //     return true;
 // }

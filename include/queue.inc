@@ -368,9 +368,10 @@ function get_queued_jobs(&$jobs)
 // 
 // The $formdata parameter should be set to submitted data (or indata payload if 
 // called from XML-RPC code). If its unset, then its assumed that a file was
-// uploaded instead. Data for the newly enqueued job is stored in the $job variable.
+// uploaded instead. Data for the newly enqueued job(s) are stored in the $jobs 
+// variable (might contain multiple jobs).
 // 
-function enqueue_job($formdata, &$job)
+function enqueue_job($formdata, &$jobs)
 {
     // 
     // Create output and job spool directories.
@@ -406,7 +407,7 @@ function enqueue_job($formdata, &$job)
     else {
 	$indata = sprintf("%s/indata", $jobdir);
     }
-    
+        
     // 
     // Process request parameters.
     // 
@@ -415,7 +416,9 @@ function enqueue_job($formdata, &$job)
 	// Save the data to file.
 	// 
 	if(!file_put_contents($indata, $formdata)) {
-	    cleanup_jobdir($jobdir, $indata);
+	    if(!cleanup_jobdir($jobdir, $indata)) {
+		return false;
+	    }
 	    if(strlen($formdata) == 0) {
 		put_error("No job data was submitted");
 		return false;
@@ -433,7 +436,9 @@ function enqueue_job($formdata, &$job)
 	// 
 	if(is_uploaded_file($_FILES['file']['tmp_name'])) {
 	    if(!rename($_FILES['file']['tmp_name'], $indata)) {
-		cleanup_jobdir($jobdir, $_FILES['file']['tmp_name']);
+		if(!cleanup_jobdir($jobdir, $_FILES['file']['tmp_name'])) {
+		    return false;
+		}
 		put_error("Failed move uploaded file");
 		return false;
 	    }
@@ -512,26 +517,94 @@ function enqueue_job($formdata, &$job)
     // pointed to by $indata.
     // 
     if(filesize($indata) < UPLOAD_MIN_FILESIZE) {
-	cleanup_jobdir($jobdir, $indata);
+	if(!cleanup_jobdir($jobdir, $indata)) {
+	    return false;
+	}
 	put_error(sprintf("Uploaded file is too small (requires filesize >= %s)", 
 			   bytes_to_string(UPLOAD_MIN_FILESIZE)));
 	return false;
     }
     if(UPLOAD_MAX_FILESIZE != 0 && filesize($indata) > UPLOAD_MAX_FILESIZE) {
-	cleanup_jobdir($jobdir, $indata);
+	if(!cleanup_jobdir($jobdir, $indata)) {
+	    return false;
+	}
 	put_error(sprintf("Uploaded file is too big (accepts filesize < %s)", 
 			   bytes_to_string(UPLOAD_MAX_FILESIZE)));
 	return false;
     }
-    
+
     //
     // Call pre enqueue hook if function is defined.
     // 
+    $handled = false;
     if(function_exists("pre_enqueue_hook")) {
 	$error = "";
-	if(!pre_enqueue_hook($indata, $jobdir, $error)) {
-	    cleanup_jobdir($jobdir, $indata);
+	if(!pre_enqueue_hook($indata, $jobdir, $error, $handled, $jobs)) {
+	    if(!cleanup_jobdir($jobdir, $indata)) {
+		return false;
+	    }
 	    put_error($error);
+	    return false;
+	}
+	if($handled) {
+	    if(!cleanup_jobdir($jobdir)) {
+		return false;
+	    }
+	}
+    }
+    
+    if(!$handled) {
+	$job = array();
+	if(!enqueue_single_job($indata, $jobdir, $job)) {
+	    return false;
+	}
+	$jobs[] = $job;
+    }
+    return true;
+}
+
+// 
+// This function will enqueue a single job.
+// 
+function enqueue_single_job($indata, $jobdir, &$job, $index = 0)
+{
+    // 
+    // Create new job directory if enqueuing multiple jobs from a single 
+    // submit. This might be the case if enqueue_single_job() where called 
+    // from pre_enqueue_hook().
+    // 
+    if($index != 0) {
+	if($index > UPLOAD_SUBJOB_LIMIT) {
+	    put_error(sprintf("Limit of maximum %d subjobs reached, no further jobs will be enqueued", UPLOAD_SUBJOB_LIMIT));
+	    return false;
+	}
+	
+	$fmt = sprintf("%%s/%%d%%0%dd", number_to_digits(UPLOAD_SUBJOB_LIMIT));
+	
+	$jobdir = sprintf($fmt, dirname($jobdir), time(), $index);
+	if(!create_directory($jobdir, CACHE_PERMISSION, true)) {
+	    put_error("Failed create output directory");
+	    return false;
+	}
+	$subdata = "";
+	if(UPLOAD_PRESERVE_FILENAME) {
+	    $subdata = sprintf("%s/%s", $jobdir, basename($indata));
+	} else {
+	    $subdata = sprintf("%s/indata", $jobdir);
+	}
+	if(!rename($indata, $subdata)) {
+	    put_error("Failed move indata to output directory");
+	    return false;
+	}
+	$indata = $subdata;
+    }
+    
+    // 
+    // Make sure indata is linked as indata.
+    // 
+    if(basename($indata) != "indata") {
+	if(!symlink($indata, sprintf("%s/indata", $jobdir))) {
+	    put_error("Failed symlink uploaded file");
 	    return false;
 	}
     }
@@ -542,7 +615,9 @@ function enqueue_job($formdata, &$job)
     // 
     $resdir = sprintf("%s/result", $jobdir);
     if(!create_directory($resdir, CACHE_PERMISSION, true)) {
-	cleanup_jobdir($jobdir, $indata);
+	if(!cleanup_jobdir($jobdir, $indata)) {
+	    return false;
+	}
 	put_error("Failed create result directory");
 	return false;
     }
