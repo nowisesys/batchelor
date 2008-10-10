@@ -42,6 +42,7 @@ function print_about_batchelor()
     print "<p><b>Features of Batchelor:</b>\n";
     print "<ul><li>Easy to install, extend and customize.</li>\n";
     print "    <li>Template system for changing the user interface.</li>\n";
+    print "    <li>Web service interface (HTTP RPC and XML-RPC)</li>\n";
     print "    <li>No database is required.</li>";
     print "    <li>Works with all browsers, even text-based (no javascript required).</li>\n";
     print "    <li>Supports system wide and personal statistics.</li>\n";
@@ -119,9 +120,9 @@ function print_about_batchelor()
     }
     
     print "<span id=\"secthead\">Download</span>\n";
-    print "<p>The latest version of Batchelor can be downloaded from <a href=\"http://rosalie.bmc.uu.se/batchelor/\">http://rosalie.bmc.uu.se/batchelor/</a></p>\n";
+    print "<p>The latest version of Batchelor can be downloaded from <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor/\">http://it.bmc.uu.se/andlov/proj/batchelor/</a></p>\n";
     
-    print "<span id=\"secthead\">Bug reports</span>\n";    
+    print "<span id=\"secthead\">Bug reports</span>\n";
     print "<p>If you think you have found a bug in the batch queue manager (batchelor), ";
     print "please send a bug report to Anders L&ouml;vgren &lt;<a href=\"mailto:lespaul@algonet.se\">lespaul@algonet.se</a>&gt;. ";
     print "Include any error message, all relevant lines from the Apache error log and the output ";
