@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007 Anders Lövgren
+//  Copyright (C) 2007-2008 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -15,8 +15,9 @@
 // -------------------------------------------------------------------------------
 
 // 
-// This is the index page. Installers or integrators should add source/index.html
-// to change the index content.
+// This is the index page. Installers or integrators should either add an 
+// source/index.html to change the index content or define the start page 
+// inside conf/config.inc
 // 
 
 // 
@@ -31,7 +32,7 @@ include "../conf/config.inc";
 function print_welcome()
 {
     if(strcasecmp(HTML_PAGE_TITLE, "batchelor") == 0) {
-	printf("<h1>Welcome to batchelor!</h1>\n");
+	printf("<h1>Welcome to Batchelor!</h1>\n");
     }
     else {
 	printf("<h1>Welcome to %s, powered by Batchelor!</h1>\n", HTML_PAGE_TITLE);
@@ -44,13 +45,13 @@ function print_welcome()
     
     printf("<span id=\"secthead\">The first steps</span>\n");
     printf("<p>The first step is to read README and INSTALL (if not already done). Then continue ");
-    printf("by <a href=\"check.php\">checking your installation</a>. Correct any errors found ");
-    printf("before continue.</p>\n");
-    printf("<p>Now you should continue by customize your installation. The first thing to do ");
-    printf("is probably to replace the content of this welcome page. Do so by putting a file ");
-    printf("named <b>index.html</b> next to index.php in the source directory. You can also replace ");
-    printf("the content of about.php and help.php by adding <b>about.html</b> and <b>help.html</b> ");
-    printf("inside the source directory.</p>\n");
+    printf("by <a href=\"check.php\">checking your installation</a> and correct any errors found ");
+    printf("before continue.</p>\n"); 
+    printf("<p>This start page is replaced by either create an <b>index.html</b> in the source ");
+    printf("directory or by selecting the start page in conf/config.inc. This page will always ");
+    printf("be showed as the start page until BATCHELOR_CONFIGURED is set to true in conf/config.inc.</p>\n");
+    printf("<p>You should also create the files <b>about.html</b> (containing a short introduction ");
+    printf("to your application) and <b>help.html</b> (a longer tutorial) inside the source directory.</p>\n");
     
     printf("<span id=\"secthead\">Modify the User Interface</span>\n");
     printf("<p>The interface of Batchelor can be customized by editing the <b>template/standard.ui</b> ");
@@ -63,26 +64,19 @@ function print_welcome()
     
     printf("<span id=\"secthead\">Running jobs</span>\n");
     printf("<p>Before you can start submitting jobs, you need to modify the command to run. This ");
-    printf("is done by editing the command wrapper script (named <b>utils/script.sh</b>). Just ");
-    printf("open it in an editor and modify the command to run. This script gets called with three ");
-    printf("arguments:\n");
-    printf("<ul>\n");
-    printf("  <li>jobdir: the directory where job meta data should be saved</li>\n");
-    printf("  <li>indata: the indata file to process</li>\n");
-    printf("  <li>resdir: the result directory where output files should go</li>\n");
-    printf("</ul></p>\n");
-    printf("<p>Most stuff inside utils/script.sh should be left as is. The only thing to change is ");
-    printf("the line that reads:</p>\n");
+    printf("is done by editing the command wrapper script (named <b>utils/script.inc</b>). The ");
+    printf("default command to run is simula, a queue test program. See INSTALL for build instructions.</p>\n");
+    printf("<p>Most people only needs to modify the command to run, this is done by changing the line ");
+    printf("that reads:</p>\n");
     printf("<p><code>\n");
-    printf("'command' \$indata \$resdir 1> \$jobdir/stdout 2> \$jobdir/stderr\n");
+    printf("\$(dirname \$0)/simula -i \${QUEUE_INDATA} -r \${QUEUE_RESDIR} 1> \${QUEUE_STDOUT} 2> \${QUEUE_STDERR}\n");
     printf("</code></p>\n");
-    printf("<p>Replace 'command' with your command and make sure the result of it gets saved into the ");
-    printf("directory \$resdir (created automatic). If the command to run works as a filter (reads from ");
-    printf(" stdin and writes to stdout), then you can replace the command with something like this:</p>\n");
+    printf("<p>Replace 'simula' with your command and make sure the result of it gets saved into the ");
+    printf("directory \${QUEUE_RESDIR} (created automatic). If the command to run works as a filter (reads from ");
+    printf(" stdin and writes to stdout), then replace the command string with something like this:</p>\n");
     printf("<p><code>\n");
-    printf("cat \$indata | 'command' 1> \$resdir\output 2> \$jobdir/stderr; touch \$jobdir/stdout\n");
-    printf("</code></p>\n");    
-    printf("<p>The default command to run is simula, a queue test program. See INSTALL for build instructions.</p>\n");
+    printf("cat \${QUEUE_INDATA} | command 1> \${QUEUE_RESDIR}/result 2> \${QUEUE_STDERR}; touch \${QUEUE_STDOUT}\n");
+    printf("</code></p>\n");
     
     printf("<span id=\"secthead\">Try it out!</span>\n");
     printf("<p>You can try it out by visiting <a href=\"queue.php?show=submit\">the submit page</a>.</p>\n");
@@ -101,7 +95,11 @@ function print_welcome()
 function print_body()
 {
     if(file_exists("index.html")) {
-	include "index.html";
+	if(BATCHELOR_CONFIGURED) {
+	    include "index.html";
+	} else {
+	    print_welcome();
+	}
     }
     else {
 	print_welcome();
