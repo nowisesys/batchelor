@@ -62,7 +62,8 @@ if(!isset($_REQUEST['signal'])) {
 // Perform job control.
 // 
 $error = null;
-if(!process_control($_COOKIE['hostid'], $_REQUEST['result'], $_REQUEST['jobid'], $error)) {
+if(!process_control($_COOKIE['hostid'], $_REQUEST['result'], 
+		    $_REQUEST['jobid'], $_REQUEST['signal'], $error)) {
     error_handle($error['where'], $error['reason']);
 }
 
