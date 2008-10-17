@@ -1,6 +1,7 @@
-Version 0.7.x (2008-mm-dd):
+Version 0.7.4 (2008-10-17):
 
-	*
+	* A bug fix release that adds Apache configuration options for REST,
+	  SOAP and WSDL.
 	
 Version 0.7.3 (2008-10-17):
 
