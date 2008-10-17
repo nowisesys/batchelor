@@ -57,13 +57,13 @@ function get_http_rpc_response($options)
     $curl = curl_init();	
     if($curl) {
 	if($options->verbose) {
+	    print "(i) info: curl initilized\n";
+	    curl_setopt($curl, CURLOPT_HEADER, 1);
 	    if($options->debug) {
 		curl_setopt($curl, CURLOPT_VERBOSE, 1);
 	    }
-	    print "(i) info: curl initilized\n";
 	}
 	curl_setopt($curl, CURLOPT_URL, $url);
-	curl_setopt($curl, CURLOPT_HEADER, 1);
 	if($options->file) {
 	    // 
 	    // Simulate file form upload:
@@ -126,15 +126,15 @@ function get_xmlrpc_response($options)
     $curl = curl_init();	
     if($curl) {
 	if($options->verbose) {
+	    print "(i) info: curl initilized\n";
+	    curl_setopt($curl, CURLOPT_HEADER, 1);
 	    if($options->debug) {
 		curl_setopt($curl, CURLOPT_VERBOSE, 1);
 	    }
-	    print "(i) info: curl initilized\n";
 	}
 	curl_setopt($curl, CURLOPT_URL, $url);
 	curl_setopt($curl, CURLOPT_POST, 1);
 	curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
-	curl_setopt($curl, CURLOPT_HEADER, 1);
 	if($options->verbose) {
 	    print "(i) info: calling remote method\n";
 	}
@@ -171,13 +171,13 @@ function get_rest_response($options)
     $curl = curl_init();	
     if($curl) {
 	if($options->verbose) {
+	    print "(i) info: curl initilized\n";
+	    curl_setopt($curl, CURLOPT_HEADER, 1);
 	    if($options->debug) {
 		curl_setopt($curl, CURLOPT_VERBOSE, 1);
 	    }
-	    print "(i) info: curl initilized\n";
 	}
 	curl_setopt($curl, CURLOPT_URL, $url);
-	curl_setopt($curl, CURLOPT_HEADER, 1);
 	if($options->action == "post" ||
 	   $options->action == "put") {
 	    if(!isset($options->file)) {
