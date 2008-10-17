@@ -99,6 +99,9 @@ function delete_single_job($hostid, $resdir, $jobid)
 		return false;
 	    }
 	}
+    } else {
+	put_error("The job directory don't exists");
+	return false;
     }
     
     // 
