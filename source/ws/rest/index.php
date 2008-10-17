@@ -670,7 +670,7 @@ function send_queue($request)
 	    if(count($jobs) > 1) {
 		send_status(sprintf("Successful enqueued %d jobs", count($jobs)));
 	    } else {
-		send_status("Successful enqueued new job");
+		send_status(sprintf("Successful enqueued new job (%d)", $jobs[0]['jobid']));
 	    }
 	    send_end_tag();
 	} else {
