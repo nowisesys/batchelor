@@ -87,9 +87,9 @@
    
 ** WEB SERVICES:
 
-   Web service interfaces where added from version 7.0.x. It supports HTTP
-   RCP and XML-RPC (and when you read this, maybe a few more, like SOAP).
-   The file README.WEBSERVICES contains more info.
+   Web service interfaces where added from version 7.0.x. It supports REST, 
+   HTTP RCP and XML-RPC (SOAP is planned and in development). See the file 
+   README.WEBSERVICES for more info.
    
 ** ITS ALL FREE, BUT...:
 
