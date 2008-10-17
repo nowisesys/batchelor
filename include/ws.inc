@@ -29,6 +29,8 @@ if(strstr($_SERVER['REQUEST_URI'], "ws/xmlrpc")) {
     define("WS_XMLRPC", 1);
 } elseif(strstr($_SERVER['REQUEST_URI'], "ws/http")) {
     define("WS_HTTP", 1);
+} elseif(strstr($_SERVER['REQUEST_URI'], "ws/rest")) {
+    define("WS_REST", 1);
 }
 
 // 
@@ -43,8 +45,7 @@ if(defined("WS_XMLRPC")) {
 	}
     }
     define("FOPEN_BASE64_ENCODE", WS_XMLRPC_FOPEN_BASE64_ENCODE);
-}
-elseif(defined("WS_HTTP")) {
+} elseif(defined("WS_HTTP")) {
     if(!defined("WS_HTTP_FOPEN_BASE64_ENCODE")) {
 	if(defined("WS_FOPEN_BASE64_ENCODE")) {
 	    define("WS_HTTP_FOPEN_BASE64_ENCODE", WS_FOPEN_BASE64_ENCODE);
@@ -53,6 +54,15 @@ elseif(defined("WS_HTTP")) {
 	}
     }
     define("FOPEN_BASE64_ENCODE", WS_HTTP_FOPEN_BASE64_ENCODE);
+} elseif(defined("WS_REST")) {
+    if(!defined("WS_REST_FOPEN_BASE64_ENCODE")) {
+	if(defined("WS_FOPEN_BASE64_ENCODE")) {
+	    define("WS_REST_FOPEN_BASE64_ENCODE", WS_FOPEN_BASE64_ENCODE);
+	} else {
+	    define("WS_REST_FOPEN_BASE64_ENCODE", false);
+	}
+    }
+    define("FOPEN_BASE64_ENCODE", WS_REST_FOPEN_BASE64_ENCODE);
 }
 if(FOPEN_BASE64_ENCODE) {
     define("WS_FOPEN_RETURN_FORMAT", "base64");
@@ -87,6 +97,7 @@ define ("WS_ERROR_FAILED_CALL_METHOD", 6);     // Failed call function ws_xxx().
 define ("WS_ERROR_CONFIG_PROBLEM",     7);     // Server is not configured.
 define ("WS_ERROR_DISALLOWED",         8);     // Calling RPC interface is not allowed.
 define ("WS_ERROR_INVALID_REQUEST",    9);     // Missmatch between script/method name and/or parameters.
+define ("WS_ERROR_REQUEST_METHOD",    10);     // Request method is not accepted.
 
 // 
 // Return all error messages or a specific error message.
@@ -101,7 +112,8 @@ function get_error($code = null)
 		     "Failed call function associated function",
 		     "Server is not configured",
 		     "Calling this RPC interface is not allowed",
-		     "Missmatch between script/method name and/or parameters" );
+		     "Missmatch between script/method name and/or parameters",
+		     "Request method is not accepted" );
     
     if(isset($code)) {
 	if($code >= 1 && $code <= count($errors)) {
@@ -412,7 +424,7 @@ function ws_watch(&$out, $stamp)
     }
     return true;
 }
-  
+
 // 
 // Return an accossiative array of job directories where the key is the
 // name of the directory (result) and the value is the jobid.
@@ -686,7 +698,7 @@ function ws_http_session_setup($params = null)
 
 //
 // This function should be called from all XML-RPC web service scripts
-// before calling
+// to setup the script for handling XML-RPC method requests.
 // 
 function ws_xmlrpc_session_setup($hostid = null)
 {
@@ -733,6 +745,57 @@ function ws_xmlrpc_session_setup($hostid = null)
 	put_error("The hostid variable is missing");
 	ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
     }    
+}
+
+// 
+// Setup session for handling REST web service requests. The fact that REST is
+// based on HTTP lets us use cookies here.
+// 
+function ws_rest_session_setup($hostid = null)
+{
+    // 
+    // Make sure this script is allowed to be runned:
+    // 
+    if(!defined("WS_ENABLE_REST")) {
+	put_error("This script is not configured (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM, null, true);
+    }
+    if(!WS_ENABLE_REST) {
+	put_error("This script is disallowed by the configuration (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM, null, true);
+    }
+    
+    // 
+    // Handle hostid
+    // 
+    if(defined("WS_REST_HOSTID_SOURCE")) {
+	$source = WS_XMLRPC_HOSTID_SOURCE;
+    } else if(defined("WS_HOSTID_SOURCE")) {
+	$source = WS_HOSTID_SOURCE;
+    } else {
+	put_error("No hostid source defined in configuration (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM, null, true);
+    }
+    
+    switch($source) {
+     case "param":                           // request param
+	$GLOBALS['hostid'] = $hostid;      
+	break;
+     case "cookie":                          // use cookie
+	if(!isset($_COOKIES['hostid'])) {
+	    put_error("The hostid cookie is unset");
+	    send_error(WS_ERROR_MISSING_PARAMETER, null, true);
+	}
+	$GLOBALS['hostid'] = $_COOKIES['hostid'];
+	break;
+     case "auto":                            // set cookie
+	update_hostid_cookie();
+	break;
+    }
+    if(!isset($GLOBALS['hostid'])) {
+	put_error("The hostid variable is missing");
+	send_error(WS_ERROR_MISSING_PARAMETER, null, true);
+    }
 }
 
 ?>

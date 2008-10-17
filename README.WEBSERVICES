@@ -5,7 +5,7 @@
 
    Since version 0.7.0 support for web services has been added. W3C defines
    an web service as "a software system designed to support interoperable 
-   machine-to-machine interaction over a network". 
+   machine-to-machine interaction over a network".
    
    Batchelor defines an internal API that is exposed to web service clients
    thru different Web Service protocols/interfaces. The interfaces provided
@@ -13,6 +13,7 @@
    
    *) XML-RPC   : Following UserLand Software's specification.
    *) HTTP RPC  : A lightweight RPC over HTTP.
+   *) REST      : Representational State Transfer (see Wikipedia).
    
    All Web Service interfaces are located under source/ws/.
    
@@ -32,7 +33,7 @@
 ** TESTING:
 
    An client for testing the Web Services are provided in utils/ws.php. This
-   client let see all headers in the response.
+   client let you see all headers in the response for debuging purposes.
 
 ** HTTP RPC:
 
@@ -157,5 +158,135 @@
 
    The used specification are: http://www.xmlrpc.com/spec
 
+** REST:
+
+   This is an implementation of the REST web service architecture for 
+   Batchelor based on information from these document:
+   
+     * http://www.xfront.com/REST-Web-Services.html
+     * http://www.xml.com/pub/a/2004/08/11/rest.html
+
+   ** The resource space:
+   ------------------------------------------
+   
+   The REST web services is presented as a tree of URI's. Each URI has one
+   or more associated HTTP action(s) (standard GET, POST, PUT or DELETE).
+   All GET requests are non-modifying. An URI (a node resource) can be
+   changed by using PUT or POST (add or modified) or DELETE (removed).
+
+   ** Response:
+   ------------------------------------------
+   
+   The HTTP status code is always 200. The response is always wrapped inside
+   result tags, where the state attribute is either "success" or "failed".
+   The content (the embedded message) is either an list of links or an object,
+   where the object is the requested data, an status message or an error
+   object. 
+   
+   An example error message (missing method) looks like this:
+   
+     <result state="failed" type="error">
+       <error>
+         <code>3</code>
+         <message>No such method</message>
+       </error>
+     </result>
+
+   ** Ouput format:
+   ------------------------------------------
+
+   The output format from a GET request on an URI is either an list (of 
+   links) or data (possibly multiple objects). The format is selected in
+   two ways: either append format={list|data} to the request URI or append
+   the format to the URI path.
+   
+   Example:
+   
+     /queue/all?format=data      get all jobs
+     /queue/all/data             alternative way
+   
+   An modifying HTTP action (PUT, POST, DELETE) will return a status message.
+   Heres an example response for dequeue (removing) a job:
+   
+     <result state="success" type="status">
+       <status>Removed job 1355</status>
+     </result>
+
+   ** Resource links:
+   ------------------------------------------
+   
+   An link has possible action attributes like get, put, post and delete. The
+   action attribute value describes the object returned by taking this action.
+   
+   Example:
+   
+     <result state="success" type="link">
+       <link xlink:href="/queue" get="link" put="job" />
+       <link xlink:href="/result" get="link" />
+          ...
+     </result>
+   
+   The XML above tells us that the /queue URI supports GET and PUT, whereas
+   the /result URI only accepts GET.
+
+   ** Test client:
+   ------------------------------------------
+   
+   The web service utility (utils/ws.php) can be used to browse the REST
+   service. Start with: 'php ws.php --type=rest --params='' and then append
+   the relative URI path in the params option.
+
+   ** Schematic overview:
+   ------------------------------------------
+   
+   Schematic overview of the resources with theirs accepted actions (HTTP
+   request method) on the right.
+   
+   Node:                      Action:       Description:
+   ------                     --------      -------------
+   
+   root/                      GET           (the ws/rest service root)
+     +-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT)
+     |      +-- all/          GET,DELETE    (get or delete all objects)
+     |            +-- xxx/    GET,DELETE    (get or delete single job)
+     |      +-- sort/         GET
+     |            +-- xxx/    GET           (various sort options)
+     |      +-- filter/       GET
+     |            +-- xxx/    GET,DELETE    (get or delete all jobs matching filter)
+     +-- result/              GET           (list all job directories)
+     |      +-- dir/          GET           (list result files)
+     |            +-- <file>  GET           (get content of result file)
+     +-- watch/               POST          (watch jobs)
+     |      +-- <job>         GET           (get info about job)
+     +-- errors/              GET           (list all error types)
+     |      +-- <error>       GET           (get error object)
+     +-- suspend/             GET           (list suspendable jobs)
+     |      +-- <job>         GET,POST      (get info or suspend the job)
+     +-- resume/              GET           (list resumable jobs)
+            +-- <job>         GET,POST      (get info or resume the job)
+
+   ** Enqueue new jobs:
+   ------------------------------------------
+
+   All tasks except for starting new jobs (enqueue) should be fairly
+   obvious. I will here detail using POST and the /queue resource to start
+   new jobs.
+   
+   Because the indata might be arbitrary large, the data has to be uploaded
+   thru PUT or POST. Encoding the data in the URL is on a typical system
+   limited to 32kB, not to mention that is goes against REST principles also.
+   
+   The data must be posted in a multipart/form-data named 'file'. Using cURL
+   this is done like this:
+              
+     $post = array(
+     	   'file' => sprintf("@%s", $options->file)  // Notice the '@'!
+     );
+     curl_setopt($curl, CURLOPT_POST, 1);
+     curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+   
+   The POST request method has to be used because PUT is not supported by all
+   web servers.
+   
 Anders Lövgren,
-2008-09-30
+2008-10-17

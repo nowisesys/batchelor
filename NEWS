@@ -1,4 +1,11 @@
-Version 0.7.2 (2008-mm-dd):
+Version 0.7.3 (2008-10-17):
+
+	* Implemented the REST (Representational State Transfer) web service
+	  interface under source/ws/rest.
+	  
+	* Adding REST web service support to the test client utils/ws.php
+	
+Version 0.7.2 (2008-10-10):
 
 	* Adding support for enqueuing (starting) multiple jobs from a
 	  single submit. See include/hooks.inc.ex-multijob for details.
