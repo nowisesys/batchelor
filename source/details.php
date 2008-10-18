@@ -108,14 +108,22 @@ function print_body()
 	    $proctime = 0;
 	    if(isset($started) && isset($finished)) {
 		$proctime = $finished - $started;
-	    } 
+	    }
 	    printf("<span id=\"secthead\">Process time:</span>\n");
 	    printf("<p>\n");
 	    printf("<b>Started:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($started));
-	    printf("<b>Finished:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", format_timestamp($finished));
-	    printf("<b>Total job time:</b> %s\n", seconds_to_string($proctime));
+	    printf("<b>Finished:</b> %s&nbsp;&nbsp;&nbsp;&nbsp;", $finished != 0 ? format_timestamp($finished) : "&nbsp;---&nbsp;");
+	    if($proctime) {
+		printf("<b>Total job time:</b> %s\n", seconds_to_string($proctime));
+	    } else {
+		if($finished) {
+		    print "<b>Total job time:</b> < 1 sec\n";
+		} else {
+		    print "<b>Total job time:</b> &nbsp;---&nbsp;\n";
+		}
+	    }
 	    printf("</p><br>\n");
-	    
+	    	    
 	    if(isset($stdout)) {
 		printf("<span id=\"secthead\">Output from job:</span>\n");
 		printf("<p>%s</p>\n", preg_replace(array('/\n/', 
