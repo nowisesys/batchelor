@@ -290,10 +290,12 @@ function cache_find_jobs($hostid, $options)
 			continue;
 		    }
 		}
-		if($options->debug) {
-		    printf("debug: appending %s to list of job directories.\n", $dir);
+		if(is_dir($dir)) {
+		    if($options->debug) {
+			printf("debug: appending %s to list of job directories.\n", $dir);
+		    }
+		    array_push($result, $dir);
 		}
-		array_push($result, $dir);
 	    }
 	}
 	closedir($handle);
