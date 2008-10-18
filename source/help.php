@@ -45,7 +45,7 @@ function print_help()
 }
 
 // 
-// Display user supplied index.html if exists.
+// Display user supplied help.html if it exists.
 // 
 function print_body()
 {
