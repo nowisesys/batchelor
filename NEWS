@@ -1,3 +1,11 @@
+Version 0.7.5 (2008-10-18):
+
+	* Backported fixes for cache.php (treating queue.ser as directory)
+	  and collect.php (must use absolute path with is_dir()).
+	  
+	* The index.html (if supplied by user) is now embedded using the
+	  same template as all other pages.
+	  
 Version 0.7.4 (2008-10-17):
 
 	* A bug fix release that adds Apache configuration options for REST,
