@@ -73,6 +73,7 @@ if(isset($_SERVER['SERVER_ADDR'])) {
 
 include "../conf/config.inc";
 include "../include/common.inc";
+include "../include/queue.inc";
 include "../include/getopt.inc";
 
 if(USE_JPGRAPH_LIB) {
@@ -478,8 +479,8 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 	    printf("debug: processing job directories for host ID %s\n", $hostid);
 	}
 	while(($file = readdir($handle)) !== false) {
-	    if($file != "." && $file != ".." && is_dir($file)) {
-		$jobdir = sprintf("%s/%s", $hiddir, $file);		
+	    $jobdir = sprintf("%s/%s", $hiddir, $file);
+	    if($file != "." && $file != ".." && is_dir($jobdir)) {
 		// 
 		// Should this directory be collected?
 		// 
