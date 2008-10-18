@@ -96,12 +96,18 @@ function print_body()
 {
     if(file_exists("index.html")) {
 	if(BATCHELOR_CONFIGURED) {
-	    include "index.html";
+	    $index = file_get_contents("index.html");
+	    $matches = array();
+	    if(preg_match("/<body.*?>((.*?|[ \n]*)*)<\/body>/mi", $index, $matches)) {
+		print $matches[1];
+	    } else {
+		print "<h2><img src=\"icons/nuvola/error.png\"> Failed match pattern.</h2>\n"; 
+		print "The file index.html should be a complete HTML page, including headers.";
+	    }
 	} else {
 	    print_welcome();
 	}
-    }
-    else {
+    } else {
 	print_welcome();
     }
 }
@@ -121,17 +127,19 @@ function print_html($what)
     }
 }
 
-// 
-// Redirect to real start page if batchelor has been configured.
-// 
-if(defined("BATCHELOR_CONFIGURED") && defined("BATCHELOR_START_PAGE")) {
-    if(BATCHELOR_CONFIGURED) {
-	if(BATCHELOR_START_PAGE == "submit") {
-	    header("Location: queue.php?show=submit");
-	} else if(BATCHELOR_START_PAGE == "queue") {
-	    header("Location: queue.php?show=queue");
-	} else if(BATCHELOR_START_PAGE == "stats") {
-	    header("Location: statistics.php");
+if(!file_exists("index.html")) {
+    // 
+    // Redirect to real start page if batchelor has been configured.
+    // 
+    if(defined("BATCHELOR_CONFIGURED") && defined("BATCHELOR_START_PAGE")) {
+	if(BATCHELOR_CONFIGURED) {
+	    if(BATCHELOR_START_PAGE == "submit") {
+		header("Location: queue.php?show=submit");
+	    } else if(BATCHELOR_START_PAGE == "queue") {
+		header("Location: queue.php?show=queue");
+	    } else if(BATCHELOR_START_PAGE == "stats") {
+		header("Location: statistics.php");
+	    }
 	}
     }
 }
