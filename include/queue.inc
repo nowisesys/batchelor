@@ -443,9 +443,12 @@ function enqueue_job($formdata, &$jobs)
 		return false;
 	    }
 	    if(UPLOAD_PRESERVE_FILENAME) {
-		if(!symlink($indata, sprintf("%s/indata", $jobdir))) {
-		    put_error("Failed symlink uploaded file");
-		    return false;
+		$symlink = sprintf("%s/indata", $jobdir);
+		if(!file_exists($symlink)) {
+		    if(!symlink($indata, $symlink)) {
+			put_error("Failed symlink uploaded file");
+			return false;
+		    }
 		}
 	    }
 	}
@@ -603,9 +606,12 @@ function enqueue_single_job($indata, $jobdir, &$job, $index = 0)
     // Make sure indata is linked as indata.
     // 
     if(basename($indata) != "indata") {
-	if(!symlink($indata, sprintf("%s/indata", $jobdir))) {
-	    put_error("Failed symlink uploaded file");
-	    return false;
+	$symlink = sprintf("%s/indata", $jobdir);
+	if(!file_exists($symlink)) {
+	    if(!symlink($indata, $symlink)) {
+		put_error("Failed symlink uploaded file");
+		return false;
+	    }
 	}
     }
     
