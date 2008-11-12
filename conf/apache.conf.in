@@ -20,7 +20,7 @@
   # Transform xxx/?yyy into broker.php?name=xxx&yyy:
   AliasMatch ^/batchelor/ws/http/(.*) /var/www/localhost/apps/batchelor/source/ws/http/broker.php
   # Transform x/y/z into index.php/x/y/z:
-  AliasMatch ^/batchelor/ws/rest/(.*) /var/lib/http/localhost/apps/batchelor/source/ws/rest/index.php
+  AliasMatch ^/batchelor/ws/rest/(.*) /var/www/localhost/apps/batchelor/source/ws/rest/index.php
 </IfDefine>
 
 Alias /batchelor/ /var/www/localhost/apps/batchelor/source/
@@ -73,26 +73,26 @@ Alias /batchelor/ /var/www/localhost/apps/batchelor/source/
     </Directory>
     
     # Directory for the REST protocol:
-    <Directory /var/lib/http/localhost/apps/batchelor/source/ws/rest/>
+    <Directory /var/www/localhost/apps/batchelor/source/ws/rest/>
         Order deny,allow
     	Deny from all
-    	Allow from 127.0.0.1 ::1 130.238.39.208 130.238.39.209 130.238.39.237
+    	Allow from 127.0.0.1 ::1
     	Options Indexes FollowSymLinks MultiViews
     </Directory>
 
     # Directory for the SOAP protocol:
-    <Directory /var/lib/http/localhost/apps/batchelor/source/ws/soap/>
+    <Directory /var/www/localhost/apps/batchelor/source/ws/soap/>
         Order deny,allow
     	Deny from all
-    	Allow from 127.0.0.1 ::1 130.238.39.208 130.238.39.209 130.238.39.237
+    	Allow from 127.0.0.1 ::1
     	Options Indexes FollowSymLinks MultiViews
     </Directory>
 
     # Directory for WSDL:
-    <Directory /var/lib/http/localhost/apps/batchelor/source/ws/wsdl/>
+    <Directory /var/www/localhost/apps/batchelor/source/ws/wsdl/>
         Order deny,allow
     	Deny from all
-    	Allow from 127.0.0.1 ::1 130.238.39.208 130.238.39.209 130.238.39.237
+    	Allow from 127.0.0.1 ::1
     	Options Indexes FollowSymLinks MultiViews
 	DirectoryIndex batchelor.wsdl
     </Directory>
