@@ -569,7 +569,7 @@ function enqueue_job($formdata, &$jobs)
 // 
 // This function will enqueue a single job.
 // 
-function enqueue_single_job($indata, $jobdir, &$job, $index = 0)
+function enqueue_single_job($indata, &$jobdir, &$job, $index = 0)
 {
     // 
     // Create new job directory if enqueuing multiple jobs from a single 
