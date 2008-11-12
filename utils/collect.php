@@ -523,6 +523,11 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 		$queued   = collect_file_content(sprintf("%s/queued", $jobdir), 0);
 		$started  = collect_file_content(sprintf("%s/started", $jobdir), 0);
 		$finished = collect_file_content(sprintf("%s/finished", $jobdir), 0);
+
+		if($queued == 0) {
+		    printf(sprintf("warning: queued == 0 in jobs/%s/%s (skipped)\n", $hostid, $file));
+		    continue;
+		}
 		
 		// 
 		// Get datetime parts of queued time:
