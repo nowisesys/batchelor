@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Batchelor"
+ targetNamespace="batchelor" 
+ xmlns:apachesoap="http://xml.apache.org/xml-soap" 
+ xmlns:impl="batchelor" 
+ xmlns:intf="batchelor" 
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.2RC2 Built on Oct 11, 2008 (02:11:17 GMT+01:00)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="batchelor" xmlns="http://www.w3.org/2001/XMLSchema">
+   <element name="enqueue">
+    <complexType>
+     <sequence>
+      <element name="in0" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="enqueueResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="enqueueReturn" type="impl:EnqueueData"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="EnqueueData">
+    <sequence>
+     <element name="date" nillable="true" type="xsd:string"/>
+     <element name="jobID" nillable="true" type="xsd:string"/>
+     <element name="stamp" type="xsd:int"/>
+     <element name="time" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <element name="queue">
+    <complexType>
+     <sequence>
+      <element name="in0" type="xsd:string"/>
+      <element name="in1" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="queueResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="queueReturn" type="impl:QueuedJob"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="JobIdent">
+    <sequence>
+     <element name="jobId" nillable="true" type="xsd:string"/>
+     <element name="result" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="QueuedJob">
+    <sequence>
+     <element name="jobIdent" nillable="true" type="impl:JobIdent"/>
+     <element name="state" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <element name="resume">
+    <complexType>
+     <sequence>
+      <element name="in0" type="impl:JobIdent"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="resumeResponse">
+    <complexType>
+     <sequence>
+      <element name="resumeReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="suspend">
+    <complexType>
+     <sequence>
+      <element name="in0" type="impl:JobIdent"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="suspendResponse">
+    <complexType>
+     <sequence>
+      <element name="suspendReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="version">
+    <complexType/>
+   </element>
+   <element name="versionResponse">
+    <complexType>
+     <sequence>
+      <element name="versionReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="dequeue">
+    <complexType>
+     <sequence>
+      <element name="in0" type="impl:JobIdent"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="dequeueResponse">
+    <complexType>
+     <sequence>
+      <element name="dequeueReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="watch">
+    <complexType>
+     <sequence>
+      <element name="in0" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="watchResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="watchReturn" type="impl:QueuedJob"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="opendir">
+    <complexType/>
+   </element>
+   <element name="opendirResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="opendirReturn" type="impl:JobIdent"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="readdir">
+    <complexType>
+     <sequence>
+      <element name="in0" type="impl:JobIdent"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="readdirResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="readdirReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="fopen">
+    <complexType>
+     <sequence>
+      <element name="in0" type="impl:JobIdent"/>
+      <element name="in1" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="fopenResponse">
+    <complexType>
+     <sequence>
+      <element name="fopenReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="resumeRequest">
+
+      <wsdl:part element="impl:resume" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="resumeResponse">
+
+      <wsdl:part element="impl:resumeResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="queueResponse">
+
+      <wsdl:part element="impl:queueResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="enqueueRequest">
+
+      <wsdl:part element="impl:enqueue" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="suspendResponse">
+
+      <wsdl:part element="impl:suspendResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="dequeueRequest">
+
+      <wsdl:part element="impl:dequeue" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="dequeueResponse">
+
+      <wsdl:part element="impl:dequeueResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="readdirResponse">
+
+      <wsdl:part element="impl:readdirResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="enqueueResponse">
+
+      <wsdl:part element="impl:enqueueResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="watchRequest">
+
+      <wsdl:part element="impl:watch" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="fopenRequest">
+
+      <wsdl:part element="impl:fopen" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="readdirRequest">
+
+      <wsdl:part element="impl:readdir" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="versionRequest">
+
+      <wsdl:part element="impl:version" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="fopenResponse">
+
+      <wsdl:part element="impl:fopenResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="watchResponse">
+
+      <wsdl:part element="impl:watchResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="versionResponse">
+
+      <wsdl:part element="impl:versionResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="opendirResponse">
+
+      <wsdl:part element="impl:opendirResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="opendirRequest">
+
+      <wsdl:part element="impl:opendir" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="queueRequest">
+
+      <wsdl:part element="impl:queue" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="suspendRequest">
+
+      <wsdl:part element="impl:suspend" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="BatchelorProxy">
+
+      <wsdl:operation name="enqueue">
+
+         <wsdl:input message="impl:enqueueRequest" name="enqueueRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:enqueueResponse" name="enqueueResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queue">
+
+         <wsdl:input message="impl:queueRequest" name="queueRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:queueResponse" name="queueResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="resume">
+
+         <wsdl:input message="impl:resumeRequest" name="resumeRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:resumeResponse" name="resumeResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="suspend">
+
+         <wsdl:input message="impl:suspendRequest" name="suspendRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:suspendResponse" name="suspendResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="version">
+
+         <wsdl:input message="impl:versionRequest" name="versionRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:versionResponse" name="versionResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="dequeue">
+
+         <wsdl:input message="impl:dequeueRequest" name="dequeueRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:dequeueResponse" name="dequeueResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="watch">
+
+         <wsdl:input message="impl:watchRequest" name="watchRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:watchResponse" name="watchResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="opendir">
+
+         <wsdl:input message="impl:opendirRequest" name="opendirRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:opendirResponse" name="opendirResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="readdir">
+
+         <wsdl:input message="impl:readdirRequest" name="readdirRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:readdirResponse" name="readdirResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="fopen">
+
+         <wsdl:input message="impl:fopenRequest" name="fopenRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:fopenResponse" name="fopenResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="BatchelorSoapBinding" type="impl:BatchelorProxy">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="enqueue">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="enqueueRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="enqueueResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queue">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="queueRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="queueResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="resume">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="resumeRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="resumeResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="suspend">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="suspendRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="suspendResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="version">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="versionRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="versionResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="dequeue">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="dequeueRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="dequeueResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="watch">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="watchRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="watchResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="opendir">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="opendirRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="opendirResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="readdir">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="readdirRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="readdirResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="fopen">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="fopenRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="fopenResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="BatchelorProxyService">
+
+      <wsdl:port binding="impl:BatchelorSoapBinding" name="Batchelor">
+
+         <wsdlsoap:address location="http://localhost/batchelor/ws/soap/"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

@@ -36,6 +36,9 @@ if(strstr($_SERVER['REQUEST_URI'], "ws/xmlrpc")) {
 // 
 // Set format for the fopen method (send file content)
 // 
+if(!defined("WS_FOPEN_BASE64_ENCODE")) {
+    define("WS_FOPEN_BASE64_ENCODE", false);
+}
 if(defined("WS_XMLRPC")) {
     if(!defined("WS_XMLRPC_FOPEN_BASE64_ENCODE")) {
 	if(defined("WS_FOPEN_BASE64_ENCODE")) {
@@ -63,6 +66,17 @@ if(defined("WS_XMLRPC")) {
 	}
     }
     define("FOPEN_BASE64_ENCODE", WS_REST_FOPEN_BASE64_ENCODE);
+} elseif(defined("WS_SOAP")) {
+    if(!defined("WS_SOAP_FOPEN_BASE64_ENCODE")) {
+	if(defined("WS_FOPEN_BASE64_ENCODE")) {
+	    define("WS_SOAP_FOPEN_BASE64_ENCODE", WS_FOPEN_BASE64_ENCODE);
+	} else {
+	    define("WS_SOAP_FOPEN_BASE64_ENCODE", false);
+	}
+    }
+    define("FOPEN_BASE64_ENCODE", WS_SOAP_FOPEN_BASE64_ENCODE);
+} else {
+    define("FOPEN_BASE64_ENCODE", false);
 }
 if(FOPEN_BASE64_ENCODE) {
     define("WS_FOPEN_RETURN_FORMAT", "base64");
@@ -769,7 +783,7 @@ function ws_rest_session_setup($hostid = null)
     // Handle hostid
     // 
     if(defined("WS_REST_HOSTID_SOURCE")) {
-	$source = WS_XMLRPC_HOSTID_SOURCE;
+	$source = WS_REST_HOSTID_SOURCE;
     } else if(defined("WS_HOSTID_SOURCE")) {
 	$source = WS_HOSTID_SOURCE;
     } else {
@@ -795,6 +809,58 @@ function ws_rest_session_setup($hostid = null)
     if(!isset($GLOBALS['hostid'])) {
 	put_error("The hostid variable is missing");
 	send_error(WS_ERROR_MISSING_PARAMETER, null, true);
+    }
+}
+
+// 
+// Setup session for handling SOAP web service requests. Since our
+// SOAP service is only available using the HTTP, its safe to 
+// enable use of cookies.
+// 
+function ws_soap_session_setup($hostid = null)
+{
+    // 
+    // Make sure this script is allowed to be runned:
+    // 
+    if(!defined("WS_ENABLE_SOAP")) {
+	put_error("This script is not configured (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM);
+    }
+    if(!WS_ENABLE_SOAP) {
+	put_error("This script is disallowed by the configuration (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM);
+    }
+    
+    // 
+    // Handle hostid
+    // 
+    if(defined("WS_SOAP_HOSTID_SOURCE")) {
+	$source = WS_SOAP_HOSTID_SOURCE;
+    } else if(defined("WS_HOSTID_SOURCE")) {
+	$source = WS_HOSTID_SOURCE;
+    } else {
+	put_error("No hostid source defined in configuration (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM);
+    }
+    
+    switch($source) {
+     case "param":                           // request param
+	$GLOBALS['hostid'] = $hostid;      
+	break;
+     case "cookie":                          // use cookie
+	if(!isset($_COOKIES['hostid'])) {
+	    put_error("The hostid cookie is unset");
+	    send_error(WS_ERROR_MISSING_PARAMETER);
+	}
+	$GLOBALS['hostid'] = $_COOKIES['hostid'];
+	break;
+     case "auto":                            // set cookie
+	update_hostid_cookie();
+	break;
+    }
+    if(!isset($GLOBALS['hostid'])) {
+	put_error("The hostid variable is missing");
+	send_error(WS_ERROR_MISSING_PARAMETER);
     }
 }
 
