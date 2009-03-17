@@ -203,6 +203,18 @@ define ("MENU_STYLE", "graphic");
 define ("MENU_ORIENTATION", "vertical");
 
 // 
+// Configure default submit type. Use either "file" or "data".
+// 
+define ("FORM_SUBMIT_TYPE", "file");
+
+// 
+// If you define params_form_hook() in include/hooks.inc, then this option
+// let you decide where its output goes. Use either "north", "east", "south" 
+// or "compact".
+// 
+define ("FORM_PARAMS_LOCATION", "south");
+
+// 
 // Use the JpGraph library for generating graphics from statistics? Enable
 // this is recommended. JpGraph can be downloaded from http://www.aditus.nu/jpgraph/
 // 

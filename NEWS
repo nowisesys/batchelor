@@ -1,3 +1,16 @@
+Version 0.x.y (yyyy-mm-dd):
+
+	* Warning messages can now be communicated to end users from
+	  pre_enqueue_hook() by calling put_warning().
+
+	* The submit form can now be toggled between submit file and data.
+	  Its default mode can be configured in conf/config.inc.
+	  
+	* Extra request parameters can be passed by defining the function
+	  params_form_hook() in include/hooks.inc. The location where the
+	  HTML code is output can be defined as north, east, south and 
+	  compact.
+	  
 Version 0.7.5 (2008-10-18):
 
 	* Backported fixes for cache.php (treating queue.ser as directory)

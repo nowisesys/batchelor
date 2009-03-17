@@ -26,17 +26,23 @@
 // This function gets called prior to a job being added to the job queue. This 
 // allows submitted data and files (in $file) to be validated and rejected if
 // its invalid. This function should return true if the file should be accepted. 
-// If the file should be rejected, then set error to an string describing the
-// cause and return false.
+// 
+// If the file should be rejected, then put_error() with an string describing 
+// the cause and return false. Call put_warning() and return true to tell that 
+// the file was accepted but with warnings. If put_error() or put_warning() is
+// called, then the last message will be showed below the submit form.
 // 
 // By passing the file argument by reference its possible to rename the indata
 // file depending on its content.
 // 
 // See hooks.inc.ex-multijob for an example on how to enqueue multiple jobs
-// from an single submit from this function.
+// from an single submit using this function.
 // 
-// function pre_enqueue_hook(&$file, $jobdir, &$error, &$handled, &$jobs)
+// function pre_enqueue_hook(&$file, $jobdir, &$handled, &$jobs)
 // {
+//     if(function_exists("params_proc_hook")) {
+//         params_proc_hook($jobdir);
+//     }
 //     return true;
 // }
 
@@ -122,6 +128,35 @@
 // 
 // function show_indata_hook($indata)
 // {
+// }
+
+// 
+// This function can be used to add extra request parameters to the submit 
+// form. It should print HTML defining extra checkboxes or droplists to be
+// included in the submit form.
+// 
+// function params_form_hook()
+// {
+//     print "Name: <input type=\"text\" name=\"name\">\n";
+// }
+
+// 
+// This is an example on how to handle the extra request parameters sent to
+// the server by params_form_hook(). This function could be called from i.e.
+// pre_enqueue_hook() or post_enqueue_hook to save the request parameters 
+// for later use by utils/script.inc when running the queued job.
+// 
+// function params_proc_hook($jobdir)
+// {
+//     // 
+//     // Simple save all request parameters to a file:
+//     // 
+//     $fs = fopen(sprintf("%s/params", $jobdir));
+//     if($fs) {
+//         foreach($_REQUEST as $key => $val) {
+//             fprintf($fs, "%s = %s\n", $key, $val);
+//         }
+//     }
 // }
 
 ?>

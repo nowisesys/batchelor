@@ -51,6 +51,12 @@ if(!defined("UPLOAD_MAX_FILESIZE")) {
 if(!defined("UPLOAD_SUBJOB_LIMIT")) {
     define ("UPLOAD_SUBJOB_LIMIT", 5);
 }
+if(!defined("FORM_SUBMIT_TYPE")) {
+    define ("FORM_SUBMIT_TYPE", "file");   // send file by default.
+}
+if(!defined("FORM_PARAMS_LOCATION")) {
+    define ("FORM_PARAMS_LOCATION", "compact");
+}
 
 include "../include/common.inc";
 include "../include/queue.inc";
@@ -372,6 +378,108 @@ function show_jobs_table_plain(&$jobs)
 }
 
 // 
+// Print form for submitting a file.
+// 
+function print_submit_file()
+{    
+    // 
+    // The form for uploading a file.
+    // 
+    print "<form enctype=\"multipart/form-data\" action=\"queue.php\" method=\"POST\">\n";
+    if(function_exists("params_form_hook") && FORM_PARAMS_LOCATION == "north") {
+	print_form_hook();
+    }
+    print "<tr><td>Process file:</td><td>\n";
+    if(UPLOAD_MAX_FILESIZE > 0) {
+	print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
+	printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", UPLOAD_MAX_FILESIZE);
+    }
+    if(isset($_REQUEST['sort'])) {
+	printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
+    }
+    if(isset($_REQUEST['filter'])) {
+	printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+    }
+    if(isset($_REQUEST['proc'])) {
+	printf("   <input type=\"hidden\" name=\"proc\" value=\"%s\" />\n", $_REQUEST['proc']);
+    }
+    print "   <!-- Name of input element determines name in \$_FILES array -->\n";
+    print "   <input name=\"file\" type=\"file\" class=\"file\" size=\"50\" />\n";
+    print "</td>\n";
+    if(function_exists("params_form_hook") && FORM_PARAMS_LOCATION == "east") {
+	print_form_hook();
+    }
+    print "</tr>\n";
+    if(function_exists("params_form_hook") && 
+       (FORM_PARAMS_LOCATION == "south" || FORM_PARAMS_LOCATION == "compact")) {
+	print_form_hook();
+    }
+    print "<tr><td>&nbsp;</td><td><input type=\"submit\" value=\"Send File\" /></td></tr>\n";
+    print "</form>\n";
+}
+
+// 
+// Print form for submitting data.
+// 
+function print_submit_data()
+{
+    // 
+    // The form for submitting data.
+    // 
+    print "<form action=\"queue.php\" method=\"POST\">\n";
+    if(function_exists("params_form_hook") && FORM_PARAMS_LOCATION == "north") {
+	print_form_hook();
+    }
+    print "<tr><td>Process data:</td><td>\n";	
+    printf("   <textarea name=\"data\" cols=\"50\" rows=\"8\" wrap=\"%s\"></textarea>\n", UPLOAD_TEXTAREA_WRAPPING);
+    if(isset($_REQUEST['sort'])) {
+	printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
+    }
+    if(isset($_REQUEST['filter'])) {
+	printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+    }
+    if(isset($_REQUEST['proc'])) {
+	printf("   <input type=\"hidden\" name=\"proc\" value=\"%s\" />\n", $_REQUEST['proc']);
+    }
+    print "</td>\n";
+    if(function_exists("params_form_hook") && FORM_PARAMS_LOCATION == "east") {
+	print_form_hook();
+    }
+    print "</tr>\n";
+    if(function_exists("params_form_hook") && 
+       (FORM_PARAMS_LOCATION == "south" || FORM_PARAMS_LOCATION == "compact")) {
+	print_form_hook();
+    }
+    print "<tr><td>&nbsp;</td><td><input type=\"submit\" value=\"Send Data\" /></td></tr>\n";
+    print "</form>\n";
+}
+
+// 
+// An helper function for printing the params_form_hook().
+// 
+function print_form_hook()
+{
+    $addrow  = FORM_PARAMS_LOCATION == "east" ? false : true;
+    $compact = FORM_PARAMS_LOCATION == "compact" ? true : false;
+    
+    if($addrow) {
+	if($compact) {
+	    print "<tr><td>&nbsp;</td><td>\n";
+	    params_form_hook();
+	    print "</td></tr>\n";
+	} else {
+	    print "<tr><td colspan=\"2\">\n";
+	    params_form_hook();
+	    print "</td></tr>\n";
+	}
+    } else {
+	print "<td>\n";
+	params_form_hook();
+	print "</td>\n";
+    }
+}
+
+// 
 // This function prints the page body.
 // 
 function print_body()
@@ -383,51 +491,39 @@ function print_body()
     }
 
     if($_REQUEST['show'] == "submit") {
+	$submit = FORM_SUBMIT_TYPE;   // Current submitted type
+	
+	// 
+	// Determine what form to show:
+	// 
+	if(isset($_REQUEST['proc']) && $_REQUEST['proc'] == "file") {
+	    $submit = "file";
+	} elseif(isset($_REQUEST['proc']) && $_REQUEST['proc'] == "data") {
+	    $submit = "data";
+	}
+	
 	print "<h2><img src=\"icons/nuvola/network.png\"> Submit data for processing:</h2>\n";
 
 	// 
-	// Put both forms inside an table to get them aligned. This looks much better
-	// both in GUI and text based browsers.
-	//
-	print "<table>\n";
-	
+	// Print the form for either submitting file or data:
 	// 
-	// The form for uploading a file.
-	// 
-	print "<tr><td>Process file:</td><td>\n";
-	print "<form enctype=\"multipart/form-data\" action=\"queue.php\" method=\"POST\">\n";
-	if(UPLOAD_MAX_FILESIZE > 0) {
-	    print "   <!-- MAX_FILE_SIZE must precede the file input field -->\n";
-	    printf("   <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"%d\" />\n", UPLOAD_MAX_FILESIZE);
+	print "<div class=\"submit\"><table>\n";
+	print "<tr><td colspan=\"2\">\n"; 
+	printf("<img src=\"icons/nuvola/%s.png\">\n", 
+	       $submit == FORM_SUBMIT_TYPE ? "down" : "up");
+	if($submit == "file") {
+	    print "<a href=\"?show=submit&proc=data\" title=\"Switch to form for submitting data\">Toggle form</a>\n";
+	} else {
+	    print "<a href=\"?show=submit&proc=file\" title=\"Switch to form for submitting a file\">Toggle form</a>\n";
 	}
-	if(isset($_REQUEST['sort'])) {
-	    printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
+	print "</td></tr><tr><td>&nbsp;</td></tr>\n";
+	if($submit == "file") {
+	    print_submit_file();
+	} else {
+	    print_submit_data();
 	}
-	if(isset($_REQUEST['filter'])) {
-	    printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
-	}
-	
-	print "   <!-- Name of input element determines name in \$_FILES array -->\n";
-	print "   <input name=\"file\" type=\"file\" class=\"file\" size=\"50\" />\n";
-	print "   <input type=\"submit\" value=\"Send File\" />\n";
-	print "</form>\n";
-	print "</td></tr>\n";
-	
-	// 
-	// The form for submitting a data.
-	// 
-	print "<tr><td>Process data:</td><td>\n";	
-	print "<form action=\"queue.php\" method=\"POST\">\n";
-	printf("   <textarea name=\"data\" cols=\"50\" rows=\"8\" wrap=\"%s\"></textarea>\n", UPLOAD_TEXTAREA_WRAPPING);
-	print "   <input type=\"submit\" value=\"Send Data\" />\n";
-	if(isset($_REQUEST['sort'])) {
-	    printf("   <input type=\"hidden\" name=\"sort\" value=\"%s\" />\n", $_REQUEST['sort']);
-	}
-	if(isset($_REQUEST['filter'])) {
-	    printf("   <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
-	}
-	print "</form>\n";
-	print "</td></tr></table>\n";
+	print "</table><br></div>\n";
+	print "<br>\n";
     }
     
     if($_REQUEST['show'] == "queue") {
@@ -485,7 +581,10 @@ function print_body()
     if(isset($GLOBALS['error'])) {
 	print_message_box("error", $GLOBALS['error']);
     }
-    if(isset($_REQUEST['queued'])) {
+    elseif(isset($GLOBALS['warning'])) {
+	print_message_box("warning", $GLOBALS['warning']);
+    }
+    elseif(isset($_REQUEST['queued'])) {
 	print_message_box("info", "The submitted job has been queued.<br>Click on <a href=\"queue.php?show=queue\">Show Queue</a> to view its status and download the result.");
     }
 }
@@ -521,12 +620,15 @@ function print_html($what)
 // 
 // This is where we start output the whole page.
 // 
-function show_page($error = null) 
+function show_page($error = null, $warning = null) 
 {
     global $jobs;
     
     if(isset($error)) {
 	$GLOBALS['error'] = $error;
+    }
+    if(isset($warning)) {
+	$GLOBALS['warning'] = $warning;
     }
     
     if(isset($_REQUEST['show']) && $_REQUEST['show'] == "queue") {
@@ -563,7 +665,7 @@ function show_page($error = null)
 //
 function error_exit($str)
 {
-    show_page($str);
+    show_page($str, null);
     exit(1);
 }
 
@@ -597,11 +699,17 @@ if(isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
     if(!enqueue_job(isset($_REQUEST['data']) ? $_REQUEST['data'] : null, $jobs)) {
 	error_exit(get_last_error());
     }
+    if(has_warnings()) {
+	show_page(null, get_last_warning());
+	exit(0);
+    }
+    
     // 
     // Redirect the browser to an empty queue.php to prevent page
     // update to submit the same data or file twice or more.
     // 
-    header(sprintf("Location: queue.php?queued=yes&jobs=%d", count($jobs)));
+    header(sprintf("Location: queue.php?queued=yes&jobs=%d&proc=%s", 
+		   count($jobs), isset($_REQUEST['proc']) ? $_REQUEST['proc'] : FORM_SUBMIT_TYPE));
 }
 
 // 
