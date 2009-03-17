@@ -24,14 +24,18 @@
 // enqueuing internal in this function. When calling enqueue_single_job(),
 // we must pass index != 0 and increment it between each call.
 // 
-function pre_enqueue_hook(&$file, $jobdir, &$error, &$handled, &$jobs)
+// Note that the call to enqueue_single_job() will modify jobdir to point 
+// to the new sub job directory. We could use it when calling put_warning() 
+// to write per sub job warning files.
+// 
+function pre_enqueue_hook(&$file, $jobdir, &$handled, &$jobs)
 {
     $handled = true;              // We are handling enqueuing from here.
     $index = 1;                   // The index for each queued job.
     
     $fs = fopen($file, "r");
     if(!$fs) {
-	$error = "Failed open $file";
+	put_error("Failed open $file");
 	return false;
     }
 
@@ -45,7 +49,7 @@ function pre_enqueue_hook(&$file, $jobdir, &$error, &$handled, &$jobs)
 	    $out = sprintf("%s/%s", $jobdir, $line);
 	    file_put_contents($out, $line);
 	    if(!enqueue_single_job($out, $jobdir, $job, $index++)) {
-		$error = get_last_error();
+		put_error(get_last_error());
 		return false;
 	    }
 	    $jobs[] = $job;       // Append job to result array.

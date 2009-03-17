@@ -454,9 +454,6 @@ function update_hostid_cookie()
 // 
 function print_message_box($type, $msg)
 {
-    if($type == "error") {
-	$type = "warning";
-    }
     print "<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/big/$type.png\"></td><td valign=\"top\">$msg</td></tr></table></div>";
 }
 
@@ -516,6 +513,72 @@ function get_last_error()
     if(has_errors()) {
 	$last = count($GLOBALS['error']) - 1;			       
 	return $GLOBALS['error'][$last];
+    }
+}
+
+// 
+// Put an warning message to warning message list. If jobdir is 
+// non-null, then its appended to the file named warning in the
+// job directory.
+// 
+function put_warning($str, $jobdir = null)
+{
+    $GLOBALS['warning'][] = $str;
+    if($jobdir) {
+	file_put_contents(sprintf("%s/warning", $jobdir), 
+			  sprintf("%s\n", $str), 
+			  FILE_APPEND);
+    }
+}
+
+// 
+// Get array of warning messages.
+// 
+function get_warnings()
+{
+    return $GLOBALS['warning'];
+}
+
+// 
+// Test if any warning message is set.
+// 
+function has_warnings()
+{
+    return isset($GLOBALS['warning']);
+}
+
+// 
+// Clear any warnings in list.
+// 
+function clear_warnings()
+{
+    $GLOBALS['warning'] = null;
+}
+
+// 
+// Log any warnings to web server log and flush warning buffer 
+// if flush is true.
+//
+function log_warnings($flush = true)
+{
+    if(has_warnings()) {
+	foreach(get_warnings() as $warning) {
+	    warning_log($warning);
+	}
+	if($flush) {
+	    clear_warnings();
+	}
+    }
+}
+
+// 
+// Get last logged warning message.
+// 
+function get_last_warning()
+{
+    if(has_warnings()) {
+	$last = count($GLOBALS['warning']) - 1;			       
+	return $GLOBALS['warning'][$last];
     }
 }
 

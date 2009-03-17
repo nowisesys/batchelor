@@ -541,12 +541,10 @@ function enqueue_job($formdata, &$jobs)
     // 
     $handled = false;
     if(function_exists("pre_enqueue_hook")) {
-	$error = "";
-	if(!pre_enqueue_hook($indata, $jobdir, $error, $handled, $jobs)) {
+	if(!pre_enqueue_hook($indata, $jobdir, $handled, $jobs)) {
 	    if(!cleanup_jobdir($jobdir, $indata)) {
 		return false;
 	    }
-	    put_error($error);
 	    return false;
 	}
 	if($handled) {
