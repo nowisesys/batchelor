@@ -72,8 +72,12 @@ function print_body()
 		printf("<p><pre>%s</pre></p>\n", implode("\n", $content));
 	    }
 	}
-    }
-    else {
+    } elseif(isset($GLOBALS['warning'])) {
+	printf("<h2><img src=\"icons/nuvola/warning.png\"> Warning messages for Job ID %s</h2>\n", $GLOBALS['jobid']);
+	print "<p>\n";
+	readfile(sprintf("%s/warning", $GLOBALS['jobdir']));
+	print "<p>\n";
+    } else {
 	printf("<h2><img src=\"icons/nuvola/info.png\"> Details for Job ID %s</h2>\n", $GLOBALS['jobid']);
 	$cwd = getcwd();
 	chdir($GLOBALS['jobdir']);
@@ -179,6 +183,9 @@ $jobid  = $_REQUEST['jobid'];    // Job ID.
 $jobdir = $_REQUEST['result'];   // Job directory.
 if(isset($_REQUEST['data'])) {
     $indata = $_REQUEST['data']; // Show indata.
+}
+if(isset($_REQUEST['warn'])) {
+    $warning = $_REQUEST['warn'];// Show warning
 }
 
 // 

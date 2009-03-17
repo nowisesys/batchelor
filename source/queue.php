@@ -143,12 +143,12 @@ function show_jobs_table(&$jobs)
 function show_jobs_table_icons(&$jobs)
 {
     if(QUEUE_FORMAT_COMPACT) {
-	$headers = array("Q", "F", "Started", "Job", "D", "X");
+	$headers = array("Q", "F", "Started", "Job", "D", "X", "N");
 	if(ENABLE_JOB_CONTROL == "advanced") {
 	    array_push($headers, "Job Ctrl");
 	}
     } else {
-	$headers = array("Queued", "Finished", "Started", "Job", "Download", "Delete");
+	$headers = array("Queued", "Finished", "Started", "Job", "Notice", "Download", "Delete");
 	if(ENABLE_JOB_CONTROL == "advanced") {
 	    array_push($headers, "Job Control");
 	}
@@ -217,8 +217,13 @@ function show_jobs_table_icons(&$jobs)
 	       $job['jobid'], $jobdir, $title, $job['jobid']);
 		
 	// 
-	// Download and delete column
+	// Download, delete and warning (notice) column
 	// 
+	if(isset($job['warning'])) {
+	    printf("<td nowrap><a href=\"details.php?jobid=%s&result=%s&warn=1\" title=\"this job was queued with warnings, click on the icon to show the warning message.\" target=\"_blank\"><img src=\"icons/nuvola/warning.png\" alt=\"warning\"></a></td>", $job['jobid'], $jobdir);
+	} else {
+	    printf("<td>&nbsp;</td>\n");
+	}
 	if($job['state'] == "finished" || $job['state'] == "warning") {
 	    printf("<td><a href=\"download.php?jobid=%s&result=%s\" title=\"download result\"><img src=\"icons/nuvola/download.png\" alt=\"download\"></a></td>", $job['jobid'], $jobdir);
 	}

@@ -195,6 +195,10 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
 						    }
 						    $job[$file] = $name;
 						}
+						break;
+					     case "warning":
+						$job[$file] = true;
+						break;
 					    }
 					}
 				    }

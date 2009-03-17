@@ -1,7 +1,8 @@
-Version 0.x.y (yyyy-mm-dd):
+Version 0.7.6 (2009-03-17):
 
 	* Warning messages can now be communicated to end users from
-	  pre_enqueue_hook() by calling put_warning().
+	  pre_enqueue_hook() by calling put_warning(). Users can click on
+	  the notice icon in the queue to show the warning message.
 
 	* The submit form can now be toggled between submit file and data.
 	  Its default mode can be configured in conf/config.inc.
