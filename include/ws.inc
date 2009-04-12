@@ -31,11 +31,16 @@ if(strstr($_SERVER['REQUEST_URI'], "ws/xmlrpc")) {
     define("WS_HTTP", 1);
 } elseif(strstr($_SERVER['REQUEST_URI'], "ws/rest")) {
     define("WS_REST", 1);
+} elseif(strstr($_SERVER['REQUEST_URI'], "ws/soap")) {
+    define("WS_SOAP", 1);
 }
 
 // 
 // Set format for the fopen method (send file content)
 // 
+if(!defined("WS_FOPEN_BASE64_ENCODE")) {
+    define("WS_FOPEN_BASE64_ENCODE", false);
+}
 if(defined("WS_XMLRPC")) {
     if(!defined("WS_XMLRPC_FOPEN_BASE64_ENCODE")) {
 	if(defined("WS_FOPEN_BASE64_ENCODE")) {
@@ -63,6 +68,17 @@ if(defined("WS_XMLRPC")) {
 	}
     }
     define("FOPEN_BASE64_ENCODE", WS_REST_FOPEN_BASE64_ENCODE);
+} elseif(defined("WS_SOAP")) {
+    if(!defined("WS_SOAP_FOPEN_BASE64_ENCODE")) {
+	if(defined("WS_FOPEN_BASE64_ENCODE")) {
+	    define("WS_SOAP_FOPEN_BASE64_ENCODE", WS_FOPEN_BASE64_ENCODE);
+	} else {
+	    define("WS_SOAP_FOPEN_BASE64_ENCODE", false);
+	}
+    }
+    define("FOPEN_BASE64_ENCODE", WS_SOAP_FOPEN_BASE64_ENCODE);
+} else {
+    define("FOPEN_BASE64_ENCODE", false);
 }
 if(FOPEN_BASE64_ENCODE) {
     define("WS_FOPEN_RETURN_FORMAT", "base64");
@@ -95,9 +111,10 @@ define ("WS_ERROR_MISSING_EXTENSION",  4);     // Can't continue due to server p
 define ("WS_ERROR_REQUEST_BROKER",     5);     // Failed map logical name to script.
 define ("WS_ERROR_FAILED_CALL_METHOD", 6);     // Failed call function ws_xxx().
 define ("WS_ERROR_CONFIG_PROBLEM",     7);     // Server is not configured.
-define ("WS_ERROR_DISALLOWED",         8);     // Calling RPC interface is not allowed.
+define ("WS_ERROR_DISALLOWED",         8);     // Calling this RPC interface or method is not allowed.
 define ("WS_ERROR_INVALID_REQUEST",    9);     // Missmatch between script/method name and/or parameters.
 define ("WS_ERROR_REQUEST_METHOD",    10);     // Request method is not accepted.
+define ("WS_ERROR_NOT_IMPLEMENTED",   11);     // Method is not yet implemented/supported.
 
 // 
 // Return all error messages or a specific error message.
@@ -111,9 +128,10 @@ function get_error($code = null)
 		     "Failed map logical name to script",
 		     "Failed call function associated function",
 		     "Server is not configured",
-		     "Calling this RPC interface is not allowed",
+		     "Calling this RPC interface or method is not allowed",
 		     "Missmatch between script/method name and/or parameters",
-		     "Request method is not accepted" );
+		     "Request method is not accepted",
+		     "Method is not yet implemented/supported");
     
     if(isset($code)) {
 	if($code >= 1 && $code <= count($errors)) {
@@ -234,7 +252,7 @@ function ws_get_rpc_method_by_index($index = -1)
 			       "func" => "ws_enqueue",
 			       "name" => "enqueue",
 			       "long" => "batchelor.enqueue", 
-			       "desc" => "Enqueue (start) new job(s). Returns a job objects for the newly started jobs. The indata parameter is optional. If its missing, then its assumed that job data where uploaded thru HTTP POST (multipart/form-data). The result may contain multiple jobs.",
+			       "desc" => "Enqueue (start) new job(s). Returns a list of job objects for the newly started jobs. The indata parameter is optional. If its missing, then its assumed that job data where uploaded thru HTTP POST (multipart/form-data). The result may contain multiple jobs.",
 			       "params" => array( "indata" => "string" ),
 			       "return" => "array=[object=(jobid=integer,date=string,time=string,stamp=integer)]",
 			       "script" => "enqueue.php"
@@ -507,6 +525,10 @@ function ws_readdir($result, $jobid, &$out)
     return true;
 }
 
+// 
+// Get path to an file in the job directory. The caller can then decide
+// to either send its content or use it as a link for a downloader.
+// 
 function ws_fopen($result, $jobid, $file, &$out)
 {
     if(!isset($result)) {
@@ -769,7 +791,7 @@ function ws_rest_session_setup($hostid = null)
     // Handle hostid
     // 
     if(defined("WS_REST_HOSTID_SOURCE")) {
-	$source = WS_XMLRPC_HOSTID_SOURCE;
+	$source = WS_REST_HOSTID_SOURCE;
     } else if(defined("WS_HOSTID_SOURCE")) {
 	$source = WS_HOSTID_SOURCE;
     } else {
@@ -795,6 +817,58 @@ function ws_rest_session_setup($hostid = null)
     if(!isset($GLOBALS['hostid'])) {
 	put_error("The hostid variable is missing");
 	send_error(WS_ERROR_MISSING_PARAMETER, null, true);
+    }
+}
+
+// 
+// Setup session for handling SOAP web service requests. Since our
+// SOAP service is only available using the HTTP, its safe to 
+// enable use of cookies.
+// 
+function ws_soap_session_setup($hostid = null)
+{
+    // 
+    // Make sure this script is allowed to be runned:
+    // 
+    if(!defined("WS_ENABLE_SOAP")) {
+	put_error("This script is not configured (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM);
+    }
+    if(!WS_ENABLE_SOAP) {
+	put_error("This script is disallowed by the configuration (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM);
+    }
+    
+    // 
+    // Handle hostid
+    // 
+    if(defined("WS_SOAP_HOSTID_SOURCE")) {
+	$source = WS_SOAP_HOSTID_SOURCE;
+    } else if(defined("WS_HOSTID_SOURCE")) {
+	$source = WS_HOSTID_SOURCE;
+    } else {
+	put_error("No hostid source defined in configuration (see conf/config.inc)");
+	send_error(WS_ERROR_CONFIG_PROBLEM);
+    }
+    
+    switch($source) {
+     case "param":                           // request param
+	$GLOBALS['hostid'] = $hostid;      
+	break;
+     case "cookie":                          // use cookie
+	if(!isset($_COOKIES['hostid'])) {
+	    put_error("The hostid cookie is unset");
+	    send_error(WS_ERROR_MISSING_PARAMETER);
+	}
+	$GLOBALS['hostid'] = $_COOKIES['hostid'];
+	break;
+     case "auto":                            // set cookie
+	update_hostid_cookie();
+	break;
+    }
+    if(!isset($GLOBALS['hostid'])) {
+	put_error("The hostid variable is missing");
+	send_error(WS_ERROR_MISSING_PARAMETER);
     }
 }
 

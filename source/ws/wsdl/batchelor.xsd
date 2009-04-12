@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.4-b01-. --><xs:schema xmlns:tns="http://soap.batchelor.it.bmc.uu.se/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://soap.batchelor.it.bmc.uu.se/">
+
+<xs:element name="dequeue" type="tns:dequeue"></xs:element>
+
+<xs:element name="dequeueResponse" type="tns:dequeueResponse"></xs:element>
+
+<xs:element name="enqueue" type="tns:enqueue"></xs:element>
+
+<xs:element name="enqueueResponse" type="tns:enqueueResponse"></xs:element>
+
+<xs:element name="fopen" type="tns:fopen"></xs:element>
+
+<xs:element name="fopenResponse" type="tns:fopenResponse"></xs:element>
+
+<xs:element name="opendir" type="tns:opendir"></xs:element>
+
+<xs:element name="opendirResponse" type="tns:opendirResponse"></xs:element>
+
+<xs:element name="queue" type="tns:queue"></xs:element>
+
+<xs:element name="queueResponse" type="tns:queueResponse"></xs:element>
+
+<xs:element name="readdir" type="tns:readdir"></xs:element>
+
+<xs:element name="readdirResponse" type="tns:readdirResponse"></xs:element>
+
+<xs:element name="resume" type="tns:resume"></xs:element>
+
+<xs:element name="resumeResponse" type="tns:resumeResponse"></xs:element>
+
+<xs:element name="suspend" type="tns:suspend"></xs:element>
+
+<xs:element name="suspendResponse" type="tns:suspendResponse"></xs:element>
+
+<xs:element name="version" type="tns:version"></xs:element>
+
+<xs:element name="versionResponse" type="tns:versionResponse"></xs:element>
+
+<xs:element name="watch" type="tns:watch"></xs:element>
+
+<xs:element name="watchResponse" type="tns:watchResponse"></xs:element>
+
+<xs:complexType name="resume">
+<xs:sequence>
+<xs:element name="job" type="tns:jobIdentity" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="jobIdentity">
+<xs:sequence>
+<xs:element name="jobID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="result" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="resumeResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="suspend">
+<xs:sequence>
+<xs:element name="job" type="tns:jobIdentity" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="suspendResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="queue">
+<xs:sequence>
+<xs:element name="sort" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="filter" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="queueResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:queuedJob" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="queuedJob">
+<xs:sequence>
+<xs:element name="jobIdentity" type="tns:jobIdentity" minOccurs="0"></xs:element>
+<xs:element name="state" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="enqueue">
+<xs:sequence>
+<xs:element name="indata" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="enqueueResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:enqueueResult" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="enqueueResult">
+<xs:sequence>
+<xs:element name="date" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="jobID" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="result" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="stamp" type="xs:int"></xs:element>
+<xs:element name="time" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="watch">
+<xs:sequence>
+<xs:element name="stamp" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="watchResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:queuedJob" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="fopen">
+<xs:sequence>
+<xs:element name="job" type="tns:jobIdentity" minOccurs="0"></xs:element>
+<xs:element name="file" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="fopenResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:base64Binary" nillable="true" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="opendir">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="opendirResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:jobIdentity" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="readdir">
+<xs:sequence>
+<xs:element name="job" type="tns:jobIdentity" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="readdirResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dequeue">
+<xs:sequence>
+<xs:element name="job" type="tns:jobIdentity" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dequeueResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="version">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="versionResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

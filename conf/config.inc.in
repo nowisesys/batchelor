@@ -347,6 +347,7 @@ define ("HELP_ICON_INFO", true);
 define ("WS_ENABLE_HTTP",   false);
 define ("WS_ENABLE_XMLRPC", false);
 define ("WS_ENABLE_REST",   false);
+define ("WS_ENABLE_SOAP",   false);
 
 // 
 // Define the source for the hostid value. Possible values are "cookie",
@@ -393,6 +394,7 @@ define ("WS_HTTP_OUTPUT_FORMAT", "foa");
 // define ("WS_HTTP_FOPEN_BASE64_ENCODE", false);
 // define ("WS_XMLRPC_FOPEN_BASE64_ENCODE", false);
 // define ("WS_REST_FOPEN_BASE64_ENCODE", false);
+// define ("WS_SOAP_FOPEN_BASE64_ENCODE", false);
 
 // 
 // OK, done configuring? Great! Now just set configured to true and define 

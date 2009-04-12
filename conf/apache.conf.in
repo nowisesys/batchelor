@@ -94,7 +94,6 @@ Alias /batchelor/ /var/www/localhost/apps/batchelor/source/
     	Deny from all
     	Allow from 127.0.0.1 ::1
     	Options Indexes FollowSymLinks MultiViews
-	DirectoryIndex batchelor.wsdl
     </Directory>
 </IfDefine>
 

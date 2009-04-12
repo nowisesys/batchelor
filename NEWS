@@ -1,3 +1,8 @@
+Version 0.7.7 (2009-mm-dd):
+
+	* Added support for SOAP (Simple Object Access Protocol) to the web
+	  service interface. Tested using Java JAX-WS.
+
 Version 0.7.6 (2009-03-17):
 
 	* Warning messages can now be communicated to end users from

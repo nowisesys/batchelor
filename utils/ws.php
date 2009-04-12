@@ -26,6 +26,7 @@ if(isset($_SERVER['SERVER_ADDR'])) {
 }
 
 include "../include/getopt.inc";
+include "../include/soap.inc";
 
 // 
 // Call the HTTP RPC web service interface.
@@ -214,7 +215,100 @@ function get_rest_response($options)
 }
 
 // 
-// Call web service interface HTTP RPC, XML-RPC or REST.
+// Call the SOAP web service interface.
+// 
+function get_soap_response($options) 
+{
+    if(!extension_loaded("soap")) {
+	die("(-) error: the soap extension is not loaded\n");
+    }
+    
+    ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache 
+    
+    // 
+    // Using WSDL on server.
+    // 
+    $wsdl = sprintf("%s/wsdl/?wsdl", $options->baseurl);
+    $soap = &new SoapClient($wsdl, array( "trace" => 1 ));
+    if(!$soap) {
+	die("(-) error: failed create soap client\n");
+    }
+    
+    if($options->debug && $options->verbose) {
+	print "debug: these types are defined in the WSDL file:\n";
+	print "------------------------------------------------\n";
+	foreach($soap->__getTypes() as $type) {
+	    printf("%s\n", $type);
+	}
+	print "\n";
+    }
+    if($options->debug) {    
+	print "debug: these function are defined in the WSDL file:\n";
+	print "---------------------------------------------------\n";
+	foreach($soap->__getFunctions() as $func) {
+	    printf("%s\n", $func);
+	}
+	print "\n";
+    }
+
+    $params = array();
+    if(isset($options->params)) {
+	$parts = explode("&", $options->params);
+	foreach($parts as $part) {
+	    list($pk, $pv) = explode("=", $part);
+	    $params[$pk] = $pv;
+	}
+    }
+    
+    try {
+	switch($options->func) {
+	 case "enqueue":
+	    $resp = $soap->enqueue(new EnqueueParams($params['indata']));
+	    break;
+	 case "queue":
+	    $resp = $soap->queue(new QueueParams($params['sort'], $params['filter']));
+	    break;
+	 case "resume":
+	    $resp = $soap->resume(new ResumeParams(new JobIdent($params['jobid'], $params['result'])));
+	    break;
+	 case "suspend":
+	    $resp = $soap->resume(new SuspendParams(new JobIdent($params['jobid'], $params['result'])));
+	    break;
+	 case "version":
+	    $resp = $soap->version();
+	    break;
+	 case "dequeue":
+	    $resp = $soap->dequeue(new DequeueParams(new JobIdent($params['jobid'], $params['result'])));
+	    break;
+	 case "watch":
+	    $resp = $soap->watch(new WatchParams($params['stamp']));
+	    break;
+	 case "opendir":
+	    $resp = $soap->opendir();
+	    break;
+	 case "readdir":
+	    $resp = $soap->readdir(new DequeueParams(new JobIdent($params['jobid'], $params['result'])));
+	    break;
+	 case "fopen":
+	    $resp = $soap->fopen(new DequeueParams(new JobIdent($params['jobid'], $params['result']), $params['file']));
+	    break;
+	}
+	
+	if($options->debug && $options->verbose) {
+	    printf("Request:\n%s\n", $soap->__getLastRequest());
+	    printf("Request headers:\n%s\n", $soap->__getLastRequestHeaders());
+	    printf("Response:\n%s\n", $soap->__getLastResponse()); 
+	    printf("Response headers:\n%s\n", $soap->__getLastResponseHeaders()); 
+	}
+	
+	print_r($resp);
+    } catch(SoapFault $exception) {
+	echo $exception;
+    }    
+}
+
+// 
+// Call web service interface HTTP RPC, XML-RPC, REST or SOAP.
 // 
 function get_rpc_response($options)
 {
@@ -224,6 +318,8 @@ function get_rpc_response($options)
 	get_xmlrpc_response($options);
     } elseif($options->type == "rest") {
 	get_rest_response($options);
+    } elseif($options->type == "soap") {
+	get_soap_response($options);
     }
 }
 
@@ -237,7 +333,7 @@ function usage($prog, $defaults)
     print "Usage: $prog options...\n";
     print "Options:\n";
     printf("  --base=url:      The base URL to web services [%s]\n", $defaults->baseurl);
-    printf("  --type=str:      The web service interface, either http, xmlrpc or rest [%s]\n", $defaults->type);
+    printf("  --type=str:      The web service interface, either http, xmlrpc, rest or soap [%s]\n", $defaults->type);
     printf("  --func=name:     Execute the named function (see --func=info)\n");
     printf("  --file=name:     Use file when posting data (see --post=file)\n");
     printf("  --params=str:    URL-encoded function parameters (e.g. result=1234&id=99)\n"); 
@@ -345,8 +441,8 @@ function parse_options(&$argc, $argv, &$options)
 	    if(!isset($val)) {
 		die(sprintf("%s: option --type requires an argument (see --help)\n", $options->prog));
 	    }
-	    if($val != "http" && $val != "xmlrpc" && $val != "rest") {
-		die(sprintf("%s: argument for --type should be either http, xmlrpc or rest (see --help)\n", $options->prog));
+	    if($val != "http" && $val != "xmlrpc" && $val != "rest" && $val != "soap") {
+		die(sprintf("%s: argument for --type should be either http, xmlrpc, rest or soap (see --help)\n", $options->prog));
 	    }
 	    $options->type = $val;
 	    break;
@@ -409,7 +505,7 @@ function main(&$argc, $argv)
 	} elseif($options->type == "xmlrpc") {
 	    $options->func = "batchelor.info";
 	}
-	if($options->debug) {
+	if($options->debug && isset($options->func)) {
 	    printf("debug: using %s as default method\n", $options->func);
 	}
     }

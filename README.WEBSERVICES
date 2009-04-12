@@ -14,6 +14,7 @@
    *) XML-RPC   : Following UserLand Software's specification.
    *) HTTP RPC  : A lightweight RPC over HTTP.
    *) REST      : Representational State Transfer (see Wikipedia).
+   *) SOAP      : Simple Object Access Protocol.
    
    All Web Service interfaces are located under source/ws/.
    
@@ -287,6 +288,44 @@
    
    The POST request method has to be used because PUT is not supported by all
    web servers.
+
+** SOAP:
+
+   Batchelor supports the SOAP protocol and have been successful integrated
+   with PHP and Java service consumers (client applications).
+   
+   ** Optimizing WSDL:
+   ------------------------------------------
+
+   The WSDL is generated dynamic from source/ws/wsdl/batchelor.wsdl by 
+   substituting the soap:address location and the SOAP type schema location 
+   (we use a split WSDL).
+   
+   The dynamic genration can be disabled by putting a pre-parsed version of
+   batchelor.wsdl named source/ws/wsdl/batchelor.wsdl. If it exist, then its
+   sent "as is".
+   
+   ** Integration with other applications:
+   ------------------------------------------
+
+   Integrating Batchelor with other SOAP compliant applications, services
+   and libraries should be pretty simple. Configure your framework of choice
+   to use http://server/batchelor/ws/wsdl/?wsdl as the service description
+   URL and it should be able to generate client side code (stubs) automatic.
+      
+   ** Testing:
+   ------------------------------------------
+   
+   You can test the SOAP service by using the web service utility. Running 
+   the utility like this should dump the queue sorted on job ID:
+   
+     bash$> cd utils
+     bash$> php ws.php --type=soap --func=queue --params='sort=jobid'
+   
+   This command shows the available remote methods (attach -v to also see the
+   method argument types):
+   
+     bash$> php ws.php --type=soap -d
    
 Anders Lövgren,
-2008-10-17
+2009-04-11
