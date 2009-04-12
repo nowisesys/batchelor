@@ -653,13 +653,17 @@ function enqueue_single_job($indata, &$jobdir, &$job, $index = 0)
     if(function_exists("post_enqueue_hook")) {
 	post_enqueue_hook($indata, $jobdir);
     }
-        
+    
     // 
     // Append job to status update log.
     // 
     file_put_contents(sprintf("%s/status.log", dirname($jobdir)),
 		      sprintf("%s\n", basename($jobdir)), FILE_APPEND);
     
+    // 
+    // Save the final jobdir to create a unique handle to this job.
+    // 
+    $job['result'] = basename($jobdir);
     return true;
 }
 
