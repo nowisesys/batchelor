@@ -143,6 +143,13 @@ function get_xmlrpc_response($options)
 	if(!curl_exec($curl)) {
 	    echo "(-) error: failed connect to server\n";
 	}
+	if(($code = curl_getinfo($curl, CURLINFO_HTTP_CODE)) != 200) {
+	    if($code == 403) {
+		printf("(-) error: access is forbidden (%d), check conf/config.inc\n", $code);
+	    } else {
+		printf("(-) error: server returned code %d\n", $code);
+	    }
+	}
 	curl_close($curl);
     } else {
 	echo "(-) error: failed initilize curl\n";
