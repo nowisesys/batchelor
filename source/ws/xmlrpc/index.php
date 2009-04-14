@@ -439,8 +439,8 @@ function send_method_descr($name)
 	 case "dequeue":
 	    send_boolean_response(true);
 	    break;
-	 case "enqueue":
-	    $result = array("jobid" => "integer", "date" => "string", "time" => "string", "stamp" => "integer");
+	 case "enqueue":	    
+	    $result = array( array("jobid" => "integer", "date" => "string", "time" => "string", "stamp" => "integer") );
 	    send_enqueue_response($result);
 	    break;
 	 case "queue":
