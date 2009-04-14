@@ -6,6 +6,8 @@ Version 0.7.7 (2009-mm-dd):
 	* Its now possible to stat a queued job thru the various web service
 	  interfaces (SOAP, XML-RPC and HTTP RPC). For REST stat is implicit
 	  defined thru the queue.
+	  
+	* Adding web service documentation under source/ws/docs/.
 	   
 Version 0.7.6 (2009-03-17):
 

@@ -1,8 +1,4 @@
 * Publish XML schema for the REST service:
   define("WS_REST_SCHEMA_URL", "http://it.bmc.uu.se/batchelor/rest/200801");
 
-* Add stat method to all web service interfaces (SOAP, REST, XML-RPC and
-  HTTP RPC). The stat method is implicit defined for REST thru the queue
-  method.
-
-* Add online documentation of the web services in source/index.php
+* Check the meaning of $status = true in ws/xmlrpc.

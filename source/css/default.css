@@ -107,6 +107,7 @@ td.copyright, td.copyright a {
 }
 
 div.indent {
+	position: relative;
 	left: 20px;
 }
 

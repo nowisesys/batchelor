@@ -71,44 +71,6 @@ include "include/soap.inc";
 ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache when testing
 
 // 
-// Get WSDL URL.
-// 
-function get_wsdl_url() 
-{
-    // 
-    // Default options:
-    // 
-    $opts = array( 
-		   "scheme" => "http",
-		   "addr" => "localhost",
-		   "port" => 80,
-		   "path" => "/batchelor/ws" 
-		   );
-    
-    // 
-    // Adjust from global values:
-    // 
-    if(isset($_SERVER['HTTPS'])) {
-	$opts['scheme'] = "https";
-    }
-    if(isset($_SERVER['SERVER_ADDR'])) {
-	$opts['addr'] = $_SERVER['SERVER_ADDR'];
-    }
-    if(isset($_SERVER['SERVER_PORT'])) {
-	$opts['port'] = $_SERVER['SERVER_PORT'];
-    }
-    if(isset($_SERVER['SCRIPT_NAME'])) {
-	$opts['path'] = dirname(dirname($_SERVER['SCRIPT_NAME']));
-    }
-    if($opts['path'][0] == '/') {
-	$opts['path'] = substr($opts['path'], 1);
-    }
-    
-    $wsdl = sprintf("%s://%s:%d/%s/wsdl/?wsdl", $opts['scheme'], $opts['addr'], $opts['port'], $opts['path']);
-    return $wsdl;
-}
-
-// 
 // The SOAP handler class.
 // 
 class batchelor {
@@ -359,13 +321,10 @@ function send_error($code)
 // 
 ws_soap_session_setup();
 
-$wsdl = "../source/ws/wsdl/batchelor.wsdl.cache";
-if(!file_exists($wsdl)) {
-    $wsdl = get_wsdl_url();
-}
-
-// $server = new SoapServer("../wsdl/batchelor.wsdl", array('soap_version' => SOAP_1_2));
-$server = new SoapServer($wsdl);
+// 
+// Initilize SOAP library with the WSDL:
+// 
+$server = new SoapServer(get_wsdl_url());
 if(!$server) {
     error_log("Failed create SOAP server");
     send_error(WS_ERROR_MISSING_EXTENSION);
