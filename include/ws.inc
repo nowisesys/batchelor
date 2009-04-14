@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -100,6 +100,7 @@ define ("WS_RPC_METHOD_QUEUE",   7);
 define ("WS_RPC_METHOD_OPENDIR", 8);
 define ("WS_RPC_METHOD_READDIR", 9);
 define ("WS_RPC_METHOD_FOPEN",  10);
+define ("WS_RPC_METHOD_STAT",   11);
 
 // 
 // Error codes (encoded in HTTP header):
@@ -149,7 +150,7 @@ function get_error($code = null)
 // 
 function ws_get_rpc_method_by_name($name) 
 {
-    $names = array( "info", "func", "docs", "errors", "errmsg", "suspend", "resume", "enqueue", "dequeue", "queue", "watch", "opendir", "readdir", "fopen" );
+    $names = array( "info", "func", "docs", "errors", "errmsg", "suspend", "resume", "enqueue", "dequeue", "queue", "watch", "opendir", "readdir", "fopen", "stat" );
     for($i = 0; $i < count($names); $i++) {
 	if($names[$i] == $name) {
 	    return ws_get_rpc_method_by_index($i);
@@ -315,6 +316,16 @@ function ws_get_rpc_method_by_index($index = -1)
 						  "file"   => "string" ),
 			       "return" => WS_FOPEN_RETURN_FORMAT,
 			       "script" => "result.php"
+			       ),
+			array( 
+			       "func" => "ws_stat",
+			       "name" => "stat",
+			       "long" => "batchelor.stat",
+			       "desc" => "This method lets the caller check the status of a single job. This could be useful for monitoring an enqueued job for completion (polling).",
+			       "params" => array( "result" => "string",
+						  "jobid"  => "string" ),
+			       "return" => "object=()",
+			       "script" => "stat.php"
 			       )
 			);
     
@@ -550,6 +561,38 @@ function ws_fopen($result, $jobid, $file, &$out)
     }
     $out = $path;
     return true;
+}
+
+// 
+// This method lets the caller stat an already enqueued job. Think of it as 
+// an analogous of the UNIX stat(2) C-library function, but for web service.
+// 
+function ws_stat($result, $jobid, &$out) 
+{
+    if(!isset($result)) {
+	put_error("Required argument result is unset");
+	return false;
+    }
+    if(!isset($jobid)) {
+	put_error("Required argument jobid is unset");
+	return false;
+    }
+    $jobs = get_jobs($GLOBALS['hostid']);
+    if(is_array($jobs) && count($jobs) == 0) {
+	put_error("The job queue is empty");
+	return false;  // stating an non-existing job is an error.
+    }
+    if($jobs == false) {
+	return false;
+    }
+    foreach($jobs as $res => $job) {
+	if($res == $result && $job['jobid'] == $jobid) {
+	    $out = $job;
+	    return true;
+	}
+    }
+    put_error("Failed stat non-existing job");
+    return false;
 }
 
 // 

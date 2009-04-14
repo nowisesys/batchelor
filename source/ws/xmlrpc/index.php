@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -260,6 +260,30 @@ function send_fopen_response($file)
     }
 }
 
+function send_stat_response($result, $job) 
+{
+    print "      <struct>\n";
+    print "        <member>\n";
+    print "          <name>result</name>\n";
+    print "          <value><int>$result</int></value>\n";
+    print "        </member>\n";
+    foreach($job as $key => $val) {
+	$type = "string";
+	if(is_bool($val)) {
+	    $type = "boolean";
+	} elseif(is_float($val)) {
+	    $type = "double";
+	} elseif(is_numeric($val)) {
+	    $type = "int";
+	}
+	print "        <member>\n";
+	printf("          <name>%s</name>\n", $key);
+	printf("          <value><%s>%s</%s></value>\n", $type, $val, $type);
+	print "        </member>\n";
+    }
+    print "      </struct>\n";
+}
+
 // 
 // Send true or false response.
 // 
@@ -434,6 +458,10 @@ function send_method_descr($name)
 	    break;
 	 case "fopen":
 	    send_fopen_response("");
+	    break;
+	 case "stat":
+	    $result = array("jobid" => "");
+	    send_stat_response("", $result);
 	    break;
 	}
 	print "      </value>\n";
@@ -628,6 +656,19 @@ function send_response($request)
 	    }
 	} else {
 	    $status = true;
+	}
+	break;
+     case "stat":
+	if(check_params($request, $entry)) {
+	    if(($status = ws_stat(get_request_param($request, 0), 
+				  get_request_param($request, 1), 
+				  $result))) {
+		send_params_start();
+		send_stat_response(get_request_param($request, 0), $result);
+		send_params_end();
+	    }
+	} else {
+	    $status = true;        // handled
 	}
 	break;
      default:

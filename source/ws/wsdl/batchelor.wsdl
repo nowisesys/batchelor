@@ -64,6 +64,12 @@
 <message name="fopenResponse">
 <part name="parameters" element="tns:fopenResponse"></part>
 </message>
+<message name="stat">
+<part name="parameters" element="tns:stat"></part>
+</message>
+<message name="statResponse">
+<part name="parameters" element="tns:statResponse"></part>
+</message>
 <portType name="BatchelorSoapService">
 <operation name="enqueue">
 <input message="tns:enqueue"></input>
@@ -104,6 +110,10 @@
 <operation name="fopen">
 <input message="tns:fopen"></input>
 <output message="tns:fopenResponse"></output>
+</operation>
+<operation name="stat">
+<input message="tns:stat"></input>
+<output message="tns:statResponse"></output>
 </operation>
 </portType>
 <binding name="BatchelorSoapServicePortBinding" type="tns:BatchelorSoapService">
@@ -190,6 +200,15 @@
 </output>
 </operation>
 <operation name="fopen">
+<soap:operation soapAction=""></soap:operation>
+<input>
+<soap:body use="literal"></soap:body>
+</input>
+<output>
+<soap:body use="literal"></soap:body>
+</output>
+</operation>
+<operation name="stat">
 <soap:operation soapAction=""></soap:operation>
 <input>
 <soap:body use="literal"></soap:body>

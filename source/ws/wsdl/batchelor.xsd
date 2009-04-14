@@ -28,6 +28,10 @@
 
 <xs:element name="resumeResponse" type="tns:resumeResponse"></xs:element>
 
+<xs:element name="stat" type="tns:stat"></xs:element>
+
+<xs:element name="statResponse" type="tns:statResponse"></xs:element>
+
 <xs:element name="suspend" type="tns:suspend"></xs:element>
 
 <xs:element name="suspendResponse" type="tns:suspendResponse"></xs:element>
@@ -145,6 +149,18 @@
 <xs:complexType name="opendirResponse">
 <xs:sequence>
 <xs:element name="return" type="tns:jobIdentity" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="stat">
+<xs:sequence>
+<xs:element name="job" type="tns:jobIdentity" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="statResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:queuedJob" minOccurs="0"></xs:element>
 </xs:sequence>
 </xs:complexType>
 

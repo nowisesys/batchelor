@@ -314,6 +314,23 @@ class batchelor {
 	}
 	return new FopenResponse(file_get_contents($path));
     }
+    
+    // 
+    // input:  StatParams(jobIdentity)
+    // output: StatResponse(queuedJob)
+    // 
+    function stat($obj) 
+    {
+	if(!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
+	    send_error(WS_ERROR_MISSING_PARAMETER);
+	}
+	if(strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
+	    send_error(WS_ERROR_INVALID_FORMAT);
+	}
+	$result = array();
+	ws_stat($obj->job->result, $obj->job->jobID, $result);
+	return new StatResponse(new QueuedJob($obj->job, $result['state']));
+    }
 }
 
 // 

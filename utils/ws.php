@@ -269,16 +269,16 @@ function get_soap_response($options)
 	    $resp = $soap->queue(new QueueParams($params['sort'], $params['filter']));
 	    break;
 	 case "resume":
-	    $resp = $soap->resume(new ResumeParams(new JobIdent($params['jobid'], $params['result'])));
+	    $resp = $soap->resume(new ResumeParams(new JobIdentity($params['jobid'], $params['result'])));
 	    break;
 	 case "suspend":
-	    $resp = $soap->resume(new SuspendParams(new JobIdent($params['jobid'], $params['result'])));
+	    $resp = $soap->resume(new SuspendParams(new JobIdentity($params['jobid'], $params['result'])));
 	    break;
 	 case "version":
 	    $resp = $soap->version();
 	    break;
 	 case "dequeue":
-	    $resp = $soap->dequeue(new DequeueParams(new JobIdent($params['jobid'], $params['result'])));
+	    $resp = $soap->dequeue(new DequeueParams(new JobIdentity($params['jobid'], $params['result'])));
 	    break;
 	 case "watch":
 	    $resp = $soap->watch(new WatchParams($params['stamp']));
@@ -287,10 +287,13 @@ function get_soap_response($options)
 	    $resp = $soap->opendir();
 	    break;
 	 case "readdir":
-	    $resp = $soap->readdir(new DequeueParams(new JobIdent($params['jobid'], $params['result'])));
+	    $resp = $soap->readdir(new DequeueParams(new JobIdentity($params['jobid'], $params['result'])));
 	    break;
 	 case "fopen":
-	    $resp = $soap->fopen(new DequeueParams(new JobIdent($params['jobid'], $params['result']), $params['file']));
+	    $resp = $soap->fopen(new DequeueParams(new JobIdentity($params['jobid'], $params['result']), $params['file']));
+	    break;
+	 case "stat":
+	    $resp = $soap->stat(new StatParams(new JobIdentity($params['jobid'], $params['result'])));
 	    break;
 	}
 	
