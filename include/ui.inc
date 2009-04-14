@@ -286,5 +286,7 @@ function load_ui_template($type)
 	include "../template/$type.ui";
     } else if(file_exists("../template/$type.ui.in")) {
 	include "../template/$type.ui.in";
+    } else {
+	die(sprintf("Failed load template %s, check PHP include path.", $type));
     }
 }
