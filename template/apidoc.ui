@@ -23,6 +23,14 @@
   <div class="top"></div>
   <?php print_html("body"); ?>
   <br><hr>
-  <p id="footer">Batchelor - HTTP RPC manual - Copyright &copy; 2008 Anders L&oumlvgren and Computing Department at BMC, Uppsala Biomedical Center, Uppsala University.</p>
+  <p><a href="../docs/index.php">Index</a> | 
+     <a href="../docs/intro.php">Introduction</a> | 
+     <a href="../docs/soap.php">SOAP</a> | 
+     <a href="../docs/rest.php">REST</a> | 
+     <a href="../docs/http.php">HTTP RPC</a> | 
+     <a href="../docs/xmlrpc.php">XML-RPC</a>
+  </p>
+  <hr>
+  <p id="footer">Batchelor - Web Service manual - Copyright &copy; 2008-2009 Anders L&oumlvgren and Computing Department at BMC, Uppsala Biomedical Center, Uppsala University.</p>
 </body>
 </html>
