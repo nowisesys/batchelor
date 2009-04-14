@@ -197,6 +197,12 @@ function run_process($cmd, $dir, &$batch)
 function split_batch_output($str)
 {
     $rows = explode("\n", $str);    
+
+    // 
+    // We need to adjust for the current timezone:
+    // 
+    $timezone = date_default_timezone_get();
+    $offset = timezone_offset_get(timezone_open($timezone), new DateTime("now"));
     
     foreach($rows as $row) {
 	// 
@@ -204,17 +210,17 @@ function split_batch_output($str)
 	// 
 	$match = array();
 	if(preg_match('/job (\d+) at ([0-9]{4}-[0-9]{2}-[0-9]{2}) ([0-9]{2}:[0-9]{2})/', $row, $match)) {
-	    $stamp = strtotime(sprintf("%s %s", $match[2], $match[3]));
+	    $stamp = strtotime(sprintf("%s %s", $match[2], $match[3])) + $offset;
 	    return array( "jobid" => $match[1], "date" => $match[2], "time" => $match[3], "stamp" => $stamp);
 	}
 	else if(preg_match('/job (\d+) at (.*)/', $row, $match)) {
-	    $stamp = strtotime($match[2]);
+	    $stamp = strtotime($match[2]) + $offset;
 	    $time  = strftime("%H:%M", $stamp);
 	    $date  = strftime("%G-%m-%d", $stamp);
 	    return array( "jobid" => $match[1], "date" => $date, "time" => $time, "stamp" => $stamp);
 	}
 	else if(preg_match('/job (.*?) at (.*)/', $row, $match)) {
-	    $stamp = strtotime($match[2]);
+	    $stamp = strtotime($match[2]) + $offset;
 	    $time  = strftime("%H:%M", $stamp);
 	    $date  = strftime("%G-%m-%d", $stamp);
 	    return array( "jobid" => $match[1], "date" => $date, "time" => $time, "stamp" => $stamp);
