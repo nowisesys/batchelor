@@ -160,9 +160,13 @@ function check_params(&$request, &$entry)
 // 
 function get_request_param(&$request, $index)
 {
-    foreach(array( "string", "int", "boolean", "double" ) as $type) {
+    foreach(array( "base64", "string", "int", "boolean", "double" ) as $type) {
 	if(isset($request['params'][$index][$type])) {
-	    return $request['params'][$index][$type];
+	    if($type == "base64") {
+		return base64_decode($request['params'][$index][$type]);
+	    } else {
+		return $request['params'][$index][$type];
+	    }
 	}
     }
     return null;

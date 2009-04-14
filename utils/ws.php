@@ -98,7 +98,7 @@ function get_xmlrpc_response($options)
     }
     
     $url = sprintf("%s/%s/", $options->baseurl, $options->type);
-	
+
     // 
     // We need to split the parameters into its part and generate the 
     // XML payload for XML-RPC request.
@@ -106,16 +106,22 @@ function get_xmlrpc_response($options)
     $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
     $xml .= "<methodCall>\n";
     $xml .= sprintf("  <methodName>%s</methodName>\n", $options->func);
-    if(isset($options->params)) {
+    if(isset($options->params) || isset($options->file)) {
 	$params = explode("&", $options->params);
 	$xml .= "  <params>\n";
-	foreach($params as $param) {
-	    list($pk, $pv) = explode("=", $param);
-	    if(is_numeric($pv)) {
-		$xml .= sprintf("    <param><int>%d</int></param>\n", $pv);
-	    } else if(is_string($pv)) {
-		$xml .= sprintf("    <param><string>%s</string></param>\n", $pv);
+	if(isset($options->params)) {
+	    foreach($params as $param) {
+		list($pk, $pv) = explode("=", $param);
+		if(is_numeric($pv)) {
+		    $xml .= sprintf("    <param><int>%d</int></param>\n", $pv);
+		} else if(is_string($pv)) {
+		    $xml .= sprintf("    <param><string>%s</string></param>\n", $pv);
+		}
 	    }
+	}
+	if(isset($options->file)) {
+	    $xml .= sprintf("    <param><base64>%s</base64></param>\n", 
+			    base64_encode(file_get_contents($options->file)));
 	}
 	$xml .= "  </params>\n";
     }
