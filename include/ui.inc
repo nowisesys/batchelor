@@ -128,7 +128,7 @@ function print_footer()
     }
     if(FOOTER_SHOW_COPYING) {
 	print  "  <tr>\n";
-	print  "    <td class=\"copyright\" colspan=\"3\">Batchelor is Copyright &copy; 2007-2008 by Anders L&ouml;vgren and the <a href=\"http://www.bmc.uu.se\" target=\"blank\">Computing Department at Uppsala Biomedical Centre</a>, Uppsala University</td></tr>\n";
+	print  "    <td class=\"copyright\" colspan=\"3\">Batchelor is Copyright &copy; 2007-2009 by Anders L&ouml;vgren and the <a href=\"http://www.bmc.uu.se\" target=\"blank\">Computing Department at Uppsala Biomedical Centre</a>, Uppsala University</td></tr>\n";
     }
     print  "</table>\n";
 }
