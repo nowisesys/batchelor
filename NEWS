@@ -1,4 +1,4 @@
-Version 0.7.7 (2009-mm-dd):
+Version 0.7.7 (2009-04-15):
 
 	* Added support for SOAP (Simple Object Access Protocol) to the web
 	  service interface. Tested using Java JAX-WS.
