@@ -42,7 +42,7 @@ function print_about_batchelor()
     print "<p><b>Features of Batchelor:</b>\n";
     print "<ul><li>Easy to install, extend and customize.</li>\n";
     print "    <li>Template system for changing the user interface.</li>\n";
-    print "    <li>Web service interface (REST, HTTP RPC and XML-RPC)</li>\n";
+    print "    <li><a href=\"ws/docs/\">Web service interface</a> (SOAP, REST, HTTP RPC and XML-RPC)</li>\n";
     print "    <li>No database is required.</li>";
     print "    <li>Works with all browsers, even text-based (no javascript required).</li>\n";
     print "    <li>Supports system wide and personal statistics.</li>\n";
