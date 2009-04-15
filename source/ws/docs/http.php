@@ -128,6 +128,25 @@ function print_body()
     echo "</pre></div></p>\n";
     echo "<p>If you get anything else than HTTP status 200 and if X-RPC-Error is set, then its an ";
     echo "method call error.</p>\n";
+
+    echo "<span id=\"secthead\">Testing:</span>\n";
+    echo "<p>The HTTP RPC API can be tested using the web service client utils/ws.php</p>\n";
+    echo "<p>Query information about the resume method:</p>\n";
+    echo "<p><div class=\"indent\"><pre>\n";   
+    echo "  <code>bash$> php ws.php --type=http --func=func --params='name=resume'</code>\n";
+    echo "</pre></div></p>\n";
+    echo "<p>Submit a new job using URL encoded indata:</p>\n";
+    echo "<p><div class=\"indent\"><pre>\n";   
+    echo "  <code>bash$> php ws.php --type=http --func=enqueue --params='indata=hello'</code>\n";
+    echo "</pre></div></p>\n";
+    echo "<p>Dito, but now using --post to submit the file simula.c as indata:</p>\n";
+    echo "<p><div class=\"indent\"><pre>\n";   
+    echo "  <code>bash$> php ws.php --type=http --func=enqueue --post=simula.c</code>\n";
+    echo "</pre></div></p>\n";
+    echo "<p>List jobs finished with wanings, sorted on jobid:</p>\n";
+    echo "<p><div class=\"indent\"><pre>\n";   
+    echo "  <code>bash$> php ws.php --type=http --func=queue --params='sort=jobid&filter=warning'</code>\n";
+    echo "</pre></div></p>\n";
 }
  
 function print_html($what)
