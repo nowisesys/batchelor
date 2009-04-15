@@ -58,20 +58,20 @@ function print_body()
     echo "<span id=\"secthead\">Testing:</span>\n";
     echo "<p>Here are some example of using the utils/ws.php client for testing the XML-RPC protocol.</p>";
     echo "<p>Show all RPC methods:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  <code>bash$> php ws.php --type=xmlrpc --func=batchelor.info</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "<code>bash$> php ws.php --type=xmlrpc --func=batchelor.info</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>Describe the RPC method named batchelor.resume:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  <code>bash$> php ws.php --type=xmlrpc --func=batchelor.func --params='func=batchelor.resume'</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "<code>bash$> php ws.php --type=xmlrpc --func=batchelor.func --params='func=batchelor.resume'</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>List all jobs finished with errors, sorted by their start time:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  <code>bash$> php ws.php --type=xmlrpc --func=batchelor.queue --params='sort=started&filter=error'</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "<code>bash$> php ws.php --type=xmlrpc --func=batchelor.queue --params='sort=started&filter=error'</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>Starting new job with simula.c as indata:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  <code>bash$> php ws.php --type=xmlrpc --func=batchelor.enqueue --post=simula.c</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "<code>bash$> php ws.php --type=xmlrpc --func=batchelor.enqueue --post=simula.c</code>\n";
     echo "</pre></div></p>\n";
 }
  

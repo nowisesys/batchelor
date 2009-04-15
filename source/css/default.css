@@ -111,6 +111,26 @@ div.indent {
 	left: 20px;
 }
 
+div.code {
+	position: relative;
+	left: 20px;
+	border: 1px solid #9999ff;
+	padding-left: 20px;
+	margin-bottom: 10px;
+	width: 80%;
+	background-color: #eeeeff;
+}
+
+div.info {
+	position: relative;
+	left: 20px;
+	border: 1px solid #99ff99;
+	padding-left: 20px;
+	margin-bottom: 10px;
+	width: 80%;
+	background-color: #e0ffe0;
+}
+
 #info {
         border: 1px solid #999999;
 	margin: 2px;
@@ -120,7 +140,7 @@ div.indent {
 }
 
 #secthead {
-        color: #000066;
+        color: #333399;
 	text-decoration: underline;
 	font: normal bold 1.2em arial;
 }

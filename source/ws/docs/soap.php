@@ -65,21 +65,21 @@ function print_body()
     
     echo "<span id=\"secthead\">Example:</span>\n";
     echo "<p>Using the batchelor-java library is as simple as:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  import se.uu.bmc.it.batchelor.*;\n";
-    echo "  import se.uu.bmc.it.batchelor.soap.*;\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "import se.uu.bmc.it.batchelor.*;\n";
+    echo "import se.uu.bmc.it.batchelor.soap.*;\n";
     echo "\n";
-    echo "  class Client {\n";
+    echo "class Client {\n";
     echo "\n";
-    echo "      private BatchelorSoapClient service;\n";
+    echo "    private BatchelorSoapClient service;\n";
     echo "\n";
-    echo "      Client(URL url) {\n";
-    echo "          service = new BatchelorSoapClient(url);  // Use WSDL as URL.\n";
-    echo "      }\n";
+    echo "    Client(URL url) {\n";
+    echo "        service = new BatchelorSoapClient(url);  // Use WSDL as URL.\n";
+    echo "    }\n";
     echo "\n";
-    echo "      // ... methods calling service.XXX()\n";
+    echo "    // ... methods calling service.XXX()\n";
     echo "\n";
-    echo "  }\n";    
+    echo "}\n";    
     echo "</pre></div></p>\n";
     echo "<p>\n";
     echo "</p>\n";
@@ -94,14 +94,14 @@ function print_body()
     echo "<span id=\"secthead\">Testing:</span>\n";
     echo "<p>The SOAP service can be tested by using the web service utility. Run ";
     echo "the utility like this to dump the queue sorted on job ID:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  <code>bash$> cd utils</code>\n";
-    echo "  <code>bash$> php ws.php --type=soap --func=queue --params='sort=jobid'</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "<code>bash$> cd utils</code>\n";
+    echo "<code>bash$> php ws.php --type=soap --func=queue --params='sort=jobid'</code>\n";
     echo "</pre></div></p>";
     echo "<p>This command shows the available remote methods (attach -v to also see the ";
     echo "method argument types):</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  <code>bash$> php ws.php --type=soap -d</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "<code>bash$> php ws.php --type=soap -d</code>\n";
     echo "</pre></div></p>\n";
 }
  

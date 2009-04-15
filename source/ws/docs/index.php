@@ -64,7 +64,7 @@ function print_body()
     
     printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services</h2>\n", HTML_PAGE_TITLE);    
     echo "<span id=\"secthead\">Status:</span>\n";
-    echo "<p>\n";
+    echo "<p>\n";    
     foreach($status as $name => $data) {
 	if(file_exists(sprintf("ws/%s", $name))) {
 	    if($data['status']) {

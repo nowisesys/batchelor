@@ -42,7 +42,7 @@ function print_body()
     echo "to the request broker or direct to the script thru HTTP. The output (response) ";
     echo "format is configurable on the server and can also be selected by the ";
     echo "caller (the client). The output formats that can be selected are:</p>\n";
-    echo "<div class=\"indent\"><table>\n";
+    echo "<div class=\"info\"><table>\n";
     echo "<tr><td><b>XML</b>:</td><td>XML format using a minimal set of tags.</td></tr>\n";
     echo "<tr><td><b>FOA</b>:</td><td>Fast Object and Array encoding (described in the manual).</td></tr>\n";
     echo "<tr><td><b>PHP</b>:</td><td>Serialized data using PHP serialize() function.</td></tr>\n";
@@ -56,18 +56,18 @@ function print_body()
     echo "<span id=\"secthead\">Examples:</span>\n";   
     echo "<p>An request to list all queued jobs (thru the request broker) looks ";
     echo "like this:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  <code>http://localhost/batchelor/ws/http/queue?format=xml</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "<code>http://localhost/batchelor/ws/http/queue?format=xml</code>\n";
     echo "</pre></div></p>\n";
     
     echo "<span id=\"secthead\">Request Broker vs. Script Direct:</span>\n";   
     echo "<p>Listing result files thru the request broker:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";    
-    echo "  <code>http://localhost/batchelor/ws/http/readdir?result=1234&jobid=99</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";    
+    echo "<code>http://localhost/batchelor/ws/http/readdir?result=1234&jobid=99</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>Listing result files thru direct access:</p>\n";     
-    echo "<p><div class=\"indent\"><pre>\n";
-    echo "  <code>http://localhost/batchelor/ws/http/result.php?result=1234&jobid=99</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "<code>http://localhost/batchelor/ws/http/result.php?result=1234&jobid=99</code>\n";
     echo "</pre></div></p>\n";
    
     echo "<span id=\"secthead\">Methods:</span>\n";   
@@ -97,13 +97,13 @@ function print_body()
     echo "</table></div>\n";
     echo "<p>The func method can be used by a web service client to find out how to ";
     echo "call any of the methods. Try it out by either running CLI:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";   
-    echo "  <code>bash$> cd utils</code>\n";
-    echo "  <code>bash$> php ws.php --func=func --params='name=readdir'</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "<code>bash$> cd utils</code>\n";
+    echo "<code>bash$> php ws.php --func=func --params='name=readdir'</code>\n";
     echo "\n";
     echo "  -- or HTTP: ---\n";
     echo "\n";
-    echo "  <code>http://localhost/batchelor/ws/http/func?name=readdir</code>\n";
+    echo "<code>http://localhost/batchelor/ws/http/func?name=readdir</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>See the manual for more information.</p>\n";
    
@@ -123,8 +123,8 @@ function print_body()
     echo "is an error number. The error numbers are defined in include/ws.inc, but its ";
     echo "associated error message is accessable from the client by sending another ";
     echo "query to:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";   
-    echo "  <code>http://localhost/batchelor/ws/http/errmsg?code=nnn</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "<code>http://localhost/batchelor/ws/http/errmsg?code=nnn</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>If you get anything else than HTTP status 200 and if X-RPC-Error is set, then its an ";
     echo "method call error.</p>\n";
@@ -132,20 +132,20 @@ function print_body()
     echo "<span id=\"secthead\">Testing:</span>\n";
     echo "<p>The HTTP RPC API can be tested using the web service client utils/ws.php</p>\n";
     echo "<p>Query information about the resume method:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";   
-    echo "  <code>bash$> php ws.php --type=http --func=func --params='name=resume'</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "<code>bash$> php ws.php --type=http --func=func --params='name=resume'</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>Submit a new job using URL encoded indata:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";   
-    echo "  <code>bash$> php ws.php --type=http --func=enqueue --params='indata=hello'</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "<code>bash$> php ws.php --type=http --func=enqueue --params='indata=hello'</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>Dito, but now using --post to submit the file simula.c as indata:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";   
-    echo "  <code>bash$> php ws.php --type=http --func=enqueue --post=simula.c</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "<code>bash$> php ws.php --type=http --func=enqueue --post=simula.c</code>\n";
     echo "</pre></div></p>\n";
     echo "<p>List jobs finished with wanings, sorted on jobid:</p>\n";
-    echo "<p><div class=\"indent\"><pre>\n";   
-    echo "  <code>bash$> php ws.php --type=http --func=queue --params='sort=jobid&filter=warning'</code>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "<code>bash$> php ws.php --type=http --func=queue --params='sort=jobid&filter=warning'</code>\n";
     echo "</pre></div></p>\n";
 }
  

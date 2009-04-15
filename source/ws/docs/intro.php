@@ -51,17 +51,17 @@ function print_body()
     
     echo "<span id=\"secthead\">Introduction:</span>\n";
     echo "<p>Version 0.7.0 of Batchelor is the first release with support for web services. The API let ";
-    echo "users to consume Batchelors web service in the spirit ";
-    echo "of W3C: \"a software system designed to support interoperable ";
-    echo "machine-to-machine interaction over a network\". </p>\n";
+    echo "users to consume Batchelors web service in the spirit of W3C's web service ";
+    echo "definition: <i>\"a software system designed to support interoperable ";
+    echo "machine-to-machine interaction over a network\".</i></p>\n";
     
     echo "<p>Batchelor defines an internal API (see ws_xxx() in include/ws.inc) that is exposed to web service clients ";
     echo "thru different Web Service protocols/interfaces. The interfaces provided ";
     echo "are:</p>\n";
     
-    echo "<div class=\"indent\"><table>\n";
+    echo "<div class=\"info\"><table>\n";
     echo "<tr><td><b>XML-RPC:</b></td><td><a href=\"http://www.xmlrpc.com/spec\">Following UserLand Software's specification.</a></td></tr>\n";
-    echo "<tr><td><b>HTTP RPC:</b></td><td>A lightweight RPC over HTTP.</td></tr>\n";
+    echo "<tr><td><b>HTTP RPC:</b></td><td><a href=\"../http/docs?format=html\">A lightweight RPC over HTTP.</a></td></tr>\n";
     echo "<tr><td><b>REST:</b></td><td><a href=\"http://www.xml.com/pub/a/2004/08/11/rest.html\">Representational State Transfer</a> (see <a href=\"http://en.wikipedia.org/wiki/Representational_State_Transfer\">Wikipedia</a>).</td></tr>\n";
     echo "<tr><td><b>SOAP:</b></td><td><a href=\"http://en.wikipedia.org/wiki/SOAP\">Simple Object Access Protocol.</a></td></tr>\n";
     echo "</table></div>\n";
