@@ -97,11 +97,6 @@ function print_body()
     echo "<p>The XML above tells us that the /queue URI supports GET and PUT, ";
     echo "whereas the /result URI only accepts GET.</p>\n";
 
-    echo "<span id=\"secthead\">Test client:</span>\n";   
-    echo "<p>The web service utility (utils/ws.php) can be used to browse the REST ";
-    echo "service. Start with: 'php ws.php --type=rest --params='' and then append ";
-    echo "the relative URI path in the params option.</p>\n";
-
     echo "<span id=\"secthead\">Schematic overview:</span>\n";   
     echo "<p>Schematic overview of the resources with theirs accepted actions (HTTP ";
     echo "request method) on the right.</p>\n";
@@ -151,6 +146,17 @@ function print_body()
     
     echo "<p>The POST request method has to be used because PUT is not supported ";
     echo "by all web servers.</p>\n";
+
+    echo "<span id=\"secthead\">Testing:</span>\n";   
+    echo "<p>The web service utility (utils/ws.php) can be used to browse the REST ";
+    echo "service. Start with: 'php ws.php --type=rest --params='' and then append ";
+    echo "the relative URI path in the params option. The default output is XML, but ";
+    echo "FOA output can be requested by appending 'encode=foa' to the request parameters.</p>\n";
+    echo "<p>Browsing the root requesting FOA encoded output requires that the ";
+    echo "method argument (a virtual method) is explicit set:</p>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "bash$> php ws.php --type=rest --params='root?encode=foa'\n";
+    echo "</pre></div></p>\n";   
 }
  
 function print_html($what)

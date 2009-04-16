@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -108,13 +108,18 @@
 // in the 'path' member. Additional child nodes are available in the
 // 'childs' member (an array).
 // 
+// Output in FOA encoding is also supported, in addition to the XML encoding
+// described above. Output in FOA is selected by appending encode=foa to the
+// request parameters.
+// 
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../");
 
 // 
-// Define the XML-schema URL:
+// Define the XML-schema (URL and target namespace):
 // 
-define("WS_REST_SCHEMA_URL", "http://it.bmc.uu.se/batchelor/rest/200801");
+define("WS_REST_SCHEMA_URL", "http://it.bmc.uu.se/batchelor/rest/200901");
+define("WS_REST_SCHEMA_TNS", "http://it.bmc.uu.se/batchelor/rest/200901");
 
 //
 // Get configuration.
@@ -125,41 +130,6 @@ include "include/common.inc";
 include "include/queue.inc";
 include "include/ws.inc";
 include "include/delete.inc";
-
-// 
-// Output is always XML:
-// 
-header("Content-Type: text/xml");
-header("Connection: close");
-
-// 
-// Initilize the REST session.
-// 
-ws_rest_session_setup();
-
-// 
-// The error handler for the REST web service. The error parameter gets send
-// to the client (peer). If any error are set by put_error(), then they are
-// flushed to the web server log.
-// 
-function send_error($code, $message, $headers = false, $loop = false) 
-{ 
-    log_errors(true);
-    if($headers) {
-	printf("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
-    }
-    if(!$loop) {
-	send_start_tag("failed", "error");
-    }
-    printf("  <tns:error>\n");
-    printf("    <tns:code>%d</tns:code>\n", $code);
-    printf("    <tns:message>%s</tns:message>\n", isset($message) ? $message : get_error($code));
-    printf("  </tns:error>\n");
-    if(!$loop) {
-	send_end_tag();
-	exit(1);
-    }
-}
 
 // 
 // Decode request. We need to decode the request from the URI.
@@ -205,53 +175,8 @@ function decode_request()
     if(count($parts)) {
 	$request['childs'] = $parts;
     }
+    
     return (object)$request;
-}
-
-// 
-// Send header.
-// 
-function send_start_tag($state, $type) 
-{
-    printf("<tns:result state=\"%s\" type=\"%s\"\n   xmlns:tns=\"%s\"\n   xmlns:xlink=\"http://http.w3.org/1999/xlink\">\n", 
-	   $state, $type, WS_REST_SCHEMA_URL);
-}
-
-// 
-// Send footer.
-// 
-function send_end_tag() 
-{
-    print "</tns:result>\n";
-}
-
-// 
-// Send resource link. The attr argument contains an array of supported
-// actions for this link, and the expected object returned by taking this
-// action (like get => object). If attr is a string, then its interpret
-// as the get action.
-// 
-function send_link($href, $attr = null)
-{
-    $actions = "";
-    if(isset($attr)) {
-	if(is_array($attr)) {
-	    foreach($attr as $action => $object) {
-		$actions .= "$action=\"$object\" ";
-	    }
-	} elseif(is_string($attr)) {
-	    $actions = "get=\"$attr\"";
-	}
-    }
-    printf("  <tns:link xlink:href=\"%s\" $actions />\n", $href);
-}
-
-// 
-// Send status message in reponse to an modifying action.
-// 
-function send_status($message)
-{
-    printf("  <tns:status>$message</tns:status>\n");
 }
 
 // 
@@ -271,6 +196,7 @@ function send_root($request)
 	send_link(sprintf("%s/suspend", $request->base), "link");
 	send_link(sprintf("%s/resume", $request->base), "link");
     }
+    send_link(sprintf("%s/version", $request->base), "version");
     send_end_tag();
 }
 
@@ -308,9 +234,9 @@ function send_errors($request)
 	} else {
 	    $error = get_error($request->childs[0]);
 	    if(isset($error)) {
-		send_start_tag("success", "error");
+		send_start_tag("success", "error", false);
 		send_error($request->childs[0], $error, false, true);
-		send_end_tag();
+		send_end_tag(false);
 	    } else {
 		send_error(WS_ERROR_INVALID_REQUEST, null);
 	    }
@@ -360,13 +286,13 @@ function send_suspend($request)
 	    if(!ws_suspend($request->childs[0], $request->childs[1])) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
-	    send_start_tag("success", "link");
+	    send_start_tag("success", "link", false);
 	    send_link(sprintf("%s/suspend/%s/%s",
 			      $request->base,
 			      $request->childs[0],
 			      $request->childs[1]),
 		      "link");
-	    send_end_tag();
+	    send_end_tag(false);
 	}
     } else {
 	if($_SERVER['REQUEST_METHOD'] != "GET") {
@@ -438,13 +364,13 @@ function send_resume($request)
 	    if(!ws_resume($request->childs[0], $request->childs[1])) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
-	    send_start_tag("success", "link");
+	    send_start_tag("success", "link", false);
 	    send_link(sprintf("%s/resume/%s/%s",
 			      $request->base,
 			      $request->childs[0],
 			      $request->childs[1]),
 		      "link");
-	    send_end_tag();
+	    send_end_tag(false);
 	}
     } else {
 	if($_SERVER['REQUEST_METHOD'] != "GET") {
@@ -475,22 +401,6 @@ function send_resume($request)
 	}
 	send_end_tag();
     }
-}
-
-// 
-// Send a single job object.
-// 
-function send_job(&$job, $request)
-{
-    printf("  <tns:job timezone=\"%s\">\n", ini_get("date.timezone"));
-    foreach($job as $key => $val) {
-	if($key == "name") {
-	    printf("    <%s>%s</%s>\n", $key, utf8_encode($val), $key);
-	} else {
-	    printf("    <%s>%s</%s>\n", $key, $val, $key);
-	}
-    }
-    print "  </tns:job>\n";
 }
 
 // 
@@ -551,9 +461,9 @@ function send_queue($request)
 			    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 			}
 		    }
-		    send_start_tag("success", "link");
+		    send_start_tag("success", "link", false);
 		    send_status(sprintf("Removed %d jobs", count($jobs)));
-		    send_end_tag();
+		    send_end_tag(false);
 		} elseif($_SERVER['REQUEST_METHOD'] == "GET") {
 		    send_start_tag("success", "link");
 		    send_link(sprintf("%s/queue/all?format=list", $request->base), "link");
@@ -632,9 +542,9 @@ function send_queue($request)
 				   $request->childs[1])) {
 			send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 		    }
-		    send_start_tag("success", "link");
+		    send_start_tag("success", "link", false);
 		    send_status(sprintf("Removed job %s", $request->childs[1]));
-		    send_end_tag();
+		    send_end_tag(false);
 		} elseif($_SERVER['REQUEST_METHOD'] == "GET") {
 		    // 
 		    // Send a single job:
@@ -666,13 +576,13 @@ function send_queue($request)
 	    if(!ws_enqueue($data, $jobs)) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
-	    send_start_tag("success", "link");
+	    send_start_tag("success", "link", false);
 	    if(count($jobs) > 1) {
 		send_status(sprintf("Successful enqueued %d jobs", count($jobs)));
 	    } else {
 		send_status(sprintf("Successful enqueued new job (%d)", $jobs[0]['jobid']));
 	    }
-	    send_end_tag();
+	    send_end_tag(false);
 	} else {
 	    // 
 	    // Send all top nodes (links).
@@ -733,15 +643,9 @@ function send_result($request)
 	if(!file_exists($filename)) {
 	    send_error(WS_ERROR_INVALID_REQUEST, get_last_error());
 	} else {
-	    send_start_tag("success", "file");
-	    if(WS_FOPEN_RETURN_FORMAT == "base64") {
-		printf("<tns:file encoding=\"base64\">%s</tns:file>\n", 
-		       base64_encode(file_get_contents($filename)));
-	    } else {
-		printf("<tns:file encoding=\"binary\">%s</tns:file>\n", 
-		       file_get_contents($filename));
-	    }
-	    send_end_tag();
+	    send_start_tag("success", "file", false);
+	    send_file($filename);
+	    send_end_tag(false);
 	}
     } else {
 	send_error(WS_ERROR_INVALID_REQUEST, null);
@@ -772,8 +676,13 @@ function send_response($request)
      case "watch":
 	send_error(WS_ERROR_UNEXPECTED_METHOD, "method watch is not yet implemented");
 	break;
+     case "version":
+	send_start_tag("success", "version", false);
+	send_data("version", "1.0");
+	send_end_tag(false);
+	break;
      default:
-	if(isset($request->method)) {
+	if(isset($request->method) && $request->method != "root") {
 	    send_error(WS_ERROR_UNEXPECTED_METHOD, null);
 	} else {
 	    send_root($request);
@@ -781,7 +690,17 @@ function send_response($request)
     }
 }
 
-printf("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+// 
+// Initilize the REST session.
+// 
+ws_rest_session_setup();
+
+header(sprintf("Content-Type: %s", ws_get_mime_type()));
+header("Connection: close");
+
+if($GLOBALS['format'] == "xml") {
+    printf("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+}
 
 // 
 // Receive request:

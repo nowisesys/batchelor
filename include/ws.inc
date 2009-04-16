@@ -817,7 +817,36 @@ function ws_xmlrpc_session_setup($hostid = null)
 // based on HTTP lets us use cookies here.
 // 
 function ws_rest_session_setup($hostid = null)
-{
+{    
+    // 
+    // The first thing to do is to set the output format:
+    // 
+    if(!isset($_REQUEST['encode'])) {	
+	$GLOBALS['format'] = "xml";
+    } elseif($_REQUEST['encode'] == "xml" || 
+	     $_REQUEST['encode'] == "foa") {
+	$GLOBALS['format'] = $_REQUEST['encode'];
+	unset($_REQUEST['encode']);
+    } else {
+	$GLOBALS['format'] = null;
+    }
+    
+    // 
+    // Include the callback functions:
+    // 
+    switch($GLOBALS['format']) {
+     case "xml":
+	include "include/rest/xml.inc";
+	break;
+     case "foa":
+	include "include/rest/foa.inc";
+	break;
+     default:
+	$GLOBALS['format'] = "xml";
+	include "include/rest/xml.inc";
+	send_error(WS_ERROR_INVALID_REQUEST, "invalid encode parameter value", true);
+    }
+    
     // 
     // Make sure this script is allowed to be runned:
     // 

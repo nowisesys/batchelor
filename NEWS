@@ -1,3 +1,8 @@
+Version 0.7.8 (2009-mm-dd):
+
+	* The REST service responses can now be retreived in FOA encoding in 
+	  addition to the default XML encoding.
+	  
 Version 0.7.7 (2009-04-15):
 
 	* Added support for SOAP (Simple Object Access Protocol) to the web
