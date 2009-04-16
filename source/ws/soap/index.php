@@ -207,7 +207,6 @@ class batchelor {
     // 
     function watch($obj)
     {
-	error_log("watch arg: " . serialize($obj));
 	$jobs = array();
 	if(!isset($obj) || !isset($obj->stamp)) {
 	    send_error(WS_ERROR_MISSING_PARAMETER);
@@ -216,11 +215,9 @@ class batchelor {
 	    send_error(WS_ERROR_FAILED_CALL_METHOD);
 	}
 	$result = array();
-	error_log("watch job: " . serialize($jobs));
 	foreach($jobs as $resdir => $job) {
 	    array_push($result, new QueuedJob(new JobIdentity($job['jobid'], $resdir), $job['state']));
 	}
-	error_log("watch res: " . serialize($result));
 	return new WatchResponse($result);
     }
 
@@ -296,7 +293,9 @@ class batchelor {
 }
 
 // 
-// This function gets called to report error.
+// This function gets called to report error. It will also terminate
+// execution of the current script.
+// 
 // See: http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383510
 // 
 function send_error($code)
@@ -314,6 +313,12 @@ function send_error($code)
     } else {
 	throw new SoapFault("Client", get_error($code));
     }
+    
+    // 
+    // I assume that terminate the script is the right thing 
+    // to do here.
+    // 
+    exit(1);
 }
 
 //
