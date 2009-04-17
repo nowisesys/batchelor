@@ -24,7 +24,7 @@
     xmlns:tns="http://it.bmc.uu.se/batchelor/rest/200901"
     xmlns:xlink="http://it.bmc.uu.se/batchelor/xlink/200901">
     <!-- TODO: The XLink schema should be published to a server. -->
-    <xsd:import schemaLocation="batchelor-rest-xlink.xsd" namespace="http://it.bmc.uu.se/batchelor/xlink/200901"/>
+    <xsd:import schemaLocation="xlink.xsd" namespace="http://it.bmc.uu.se/batchelor/xlink/200901"/>
 
     <!-- The type of encoding of data: -->
     <xsd:attribute name="encoding">

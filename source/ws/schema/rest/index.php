@@ -19,10 +19,10 @@
 // either 'index.php?schema' (default) or 'index.php?xlink'.
 // 
 
-$files = array( "schema" => "batchelor-rest-schema.xsd",
-		"xlink"  => "batchelor-rest-xlink.xsd" );
+$files = array( "schema" => "result.xsd",
+		"xlink"  => "xlink.xsd" );
 
-if(isset($_REQUEST['schema'])) {
+if(isset($_REQUEST['schema']) || isset($_REQUEST['result']) {
     readfile($files['schema']);
 } elseif(isset($_REQUEST['xlink'])) {
     readfile($files['xlink']);    

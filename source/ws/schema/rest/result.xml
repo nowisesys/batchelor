@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    Document   : batchelor-rest-response.xml
+    Document   : result.xml
     Created on : April 17, 2009, 9:52 PM
     Author     : Anders Lövgren
     Description:
-        This XML file is used to validate the XML Schema against well-formed
+        XML file used for validatation of the XML Schema against well-formed
         XML data to detect possible errors. The data represent different XML
         response messages sent from the REST service.
 -->
@@ -13,7 +13,7 @@
 <tns:result  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
    xmlns:tns='http://it.bmc.uu.se/batchelor/rest/200901'
    xmlns:xlink='http://it.bmc.uu.se/batchelor/xlink/200901'
-   xsi:schemaLocation='http://it.bmc.uu.se/batchelor/rest/200901 file:/home/andlov/Develop/NetBeans/BatchelorWebService/BatchelorClient/src/META-INF/batchelor-rest-schema.xsd'
+   xsi:schemaLocation='http://it.bmc.uu.se/batchelor/rest/200901 http://localhost/batchelor/ws/schema/rest/result.xsd'
    tns:state="success" tns:type="version">
     <version>1.0</version>
     <status>Hello World!</status>
