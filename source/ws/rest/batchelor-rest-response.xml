@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : batchelor-rest-response.xml
+    Created on : April 17, 2009, 9:52 PM
+    Author     : Anders Lövgren
+    Description:
+        This XML file is used to validate the XML Schema against well-formed
+        XML data to detect possible errors. The data represent different XML
+        response messages sent from the REST service.
+-->
+
+<tns:result  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:tns='http://it.bmc.uu.se/batchelor/rest/200901'
+   xmlns:xlink='http://it.bmc.uu.se/batchelor/xlink/200901'
+   xsi:schemaLocation='http://it.bmc.uu.se/batchelor/rest/200901 file:/home/andlov/Develop/NetBeans/BatchelorWebService/BatchelorClient/src/META-INF/batchelor-rest-schema.xsd'
+   tns:state="success" tns:type="version">
+    <version>1.0</version>
+    <status>Hello World!</status>
+    <error>
+        <code>3</code>
+        <message>No such method</message>
+    </error>
+    <job timezone="CET">
+        <jobid>Job ABC</jobid>
+        <finished>123456789</finished>
+        <stdout>123456789</stdout>
+        <started>123456789</started>
+        <queued>123456789</queued>
+        <state>finished</state>
+        <result>123456789</result>
+    </job>
+    <job timezone="CET">
+        <jobid>Job DEF</jobid>
+        <finished>987654321</finished>
+        <stdout>987654321</stdout>
+        <started>987654321</started>
+        <queued>987654321</queued>
+        <state>finished</state>
+        <result>987654321</result>
+    </job>
+    <link tns:delete="" tns:get="" tns:post="" tns:put="" xlink:href="http://localhost/index.html"/>
+    <link tns:delete="" tns:get="" tns:post="" tns:put="" xlink:href="http://localhost/index.html"/>
+    <link tns:delete="" tns:get="" tns:post="" tns:put="" xlink:href="http://localhost/index.html"/>
+    <file tns:encoding="binary" name="" size="0">
+        <content></content>
+    </file>
+
+</tns:result>

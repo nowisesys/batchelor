@@ -2,7 +2,7 @@
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://it.bmc.uu.se/batchelor/xlink/200901"
-    xmlns:tns="http://it.bmc.uu.se/batchelor/xlink/200901"
+    xmlns:xlink="http://it.bmc.uu.se/batchelor/xlink/200901"
     elementFormDefault="qualified">
-    <xsd:attribute name="href" type="xsd:string"/>
+    <xsd:attribute name="href" type="xsd:anyURI"/>
 </xsd:schema>

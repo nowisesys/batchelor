@@ -22,10 +22,9 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://it.bmc.uu.se/batchelor/rest/200901"
     xmlns:tns="http://it.bmc.uu.se/batchelor/rest/200901"
-    xmlns:xlink0="http://www.w3.org/1999/xlink"
     xmlns:xlink="http://it.bmc.uu.se/batchelor/xlink/200901">
     <!-- TODO: The XLink schema should be published to a server. -->
-    <xsd:import schemaLocation="../META-INF/batchelor-rest-xlink.xsd" namespace="http://it.bmc.uu.se/batchelor/xlink/200901"/>
+    <xsd:import schemaLocation="batchelor-rest-xlink.xsd" namespace="http://it.bmc.uu.se/batchelor/xlink/200901"/>
 
     <!-- The type of encoding of data: -->
     <xsd:attribute name="encoding">
@@ -78,9 +77,16 @@
     <!-- File object type: -->
     <xsd:complexType name="file">
         <xsd:sequence>
-            <xsd:any/>
+            <xsd:element name="content" type="xsd:string" minOccurs="0"/>
         </xsd:sequence>
+        <!--
+        <xsd:sequence>
+            <xsd:byte maxOccurs="unbounded" minOccurs="0"/>
+        </xsd:sequence>
+          -->
         <xsd:attribute ref="tns:encoding"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="size" type="xsd:long"/>
     </xsd:complexType>
 
     <!-- Error object type: -->
@@ -121,7 +127,7 @@
                 <!-- Complex types embedded: -->
                 <xsd:element name="error" type="tns:error" minOccurs="0"/>
                 <xsd:element name="job" type="tns:job" maxOccurs="unbounded" minOccurs="0"/>
-                <xsd:element name="link" type="tns:link" minOccurs="0"/>
+                <xsd:element name="link" type="tns:link" maxOccurs="unbounded" minOccurs="0"/>
                 <xsd:element name="file" type="tns:file" minOccurs="0"/>
             </xsd:sequence>
             <xsd:attribute ref="tns:state" use="required"/>
