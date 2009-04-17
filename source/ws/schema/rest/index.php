@@ -22,7 +22,9 @@
 $files = array( "schema" => "result.xsd",
 		"xlink"  => "xlink.xsd" );
 
-if(isset($_REQUEST['schema']) || isset($_REQUEST['result']) {
+header("Content-type: text/xml");
+
+if(isset($_REQUEST['schema']) || isset($_REQUEST['result'])) {
     readfile($files['schema']);
 } elseif(isset($_REQUEST['xlink'])) {
     readfile($files['xlink']);    
