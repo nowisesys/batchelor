@@ -24,7 +24,7 @@ function get_wsdl_url()
     // 
     // Use the cached WSDL if it exists:
     // 
-    $wsdl = "../source/ws/wsdl/batchelor.wsdl.cache";
+    $wsdl = "../source/ws/schema/wsdl/batchelor.wsdl.cache";
     if(file_exists($wsdl)) {
 	return $wsdl;
     }
@@ -58,7 +58,7 @@ function get_wsdl_url()
 	$opts['path'] = substr($opts['path'], 1);
     }
     
-    $wsdl = sprintf("%s://%s:%d/%s/wsdl/?wsdl", $opts['scheme'], $opts['addr'], $opts['port'], $opts['path']);
+    $wsdl = sprintf("%s://%s:%d/%s/schema/wsdl/?wsdl", $opts['scheme'], $opts['addr'], $opts['port'], $opts['path']);
     return $wsdl;
 }
 

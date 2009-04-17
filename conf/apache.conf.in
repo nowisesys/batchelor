@@ -88,8 +88,8 @@ Alias /batchelor/ /var/www/localhost/apps/batchelor/source/
     	Options Indexes FollowSymLinks MultiViews
     </Directory>
 
-    # Directory for WSDL:
-    <Directory /var/www/localhost/apps/batchelor/source/ws/wsdl/>
+    # Directory for XML Schemas (WSDL and REST XSD):
+    <Directory /var/www/localhost/apps/batchelor/source/ws/schema/>
         Order deny,allow
     	Deny from all
     	Allow from 127.0.0.1 ::1

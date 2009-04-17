@@ -70,7 +70,7 @@ function send_port_definitions()
 	$root = get_server_url();
 	$addr = array( 
 		       "@soapaddr@" => "$root/soap/",
-		       "@wsdladdr@" => "$root/wsdl/" 
+		       "@wsdladdr@" => "$root/schema/wsdl/" 
 		       );
     
 	$fs = fopen("batchelor.wsdl", "r");
@@ -97,7 +97,7 @@ function send_type_definitions()
 function send_service_usage() 
 {
     $addr = get_server_url();
-    $wsdl = sprintf("%s/wsdl/?wsdl", $addr);
+    $wsdl = sprintf("%s/schema/wsdl/?wsdl", $addr);
     
     print "<html><head><title>Batchelor Web Service (SOAP)</title>\n";
     print "<body>\n";

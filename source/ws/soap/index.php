@@ -68,7 +68,7 @@ include "include/ws.inc";
 include "include/delete.inc";
 include "include/soap.inc";
 
-ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache when testing
+// ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache during testing
 
 // 
 // The SOAP handler class.

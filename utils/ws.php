@@ -241,7 +241,7 @@ function get_soap_response($options)
     // 
     // Using WSDL on server.
     // 
-    $wsdl = sprintf("%s/wsdl/?wsdl", $options->baseurl);
+    $wsdl = sprintf("%s/schema/wsdl/?wsdl", $options->baseurl);
     $soap = &new SoapClient($wsdl, array( "trace" => 1 ));
     if(!$soap) {
 	die("(-) error: failed create soap client\n");

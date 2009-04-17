@@ -85,10 +85,10 @@ function print_body()
     echo "</p>\n";
 
     echo "<span id=\"secthead\">Optimizing WSDL:</span>\n";
-    echo "<p>The WSDL is generated dynamic by default from source/ws/wsdl/batchelor.wsdl by ";
+    echo "<p>The WSDL is generated dynamic by default from source/ws/schema/wsdl/batchelor.wsdl by ";
     echo "substituting the soap:address location and the SOAP type schema location ";
     echo "(a split WSDL). The dynamic generation can be <u>disabled</u> by putting a pre-parsed version of ";
-    echo "batchelor.wsdl named batchelor.wsdl.cache under source/ws/wsdl/. If it exist, then its ";
+    echo "batchelor.wsdl named batchelor.wsdl.cache under source/ws/schema/wsdl/. If it exist, then its ";
     echo "sent \"as is\".</p>\n";
     
     echo "<span id=\"secthead\">Testing:</span>\n";
