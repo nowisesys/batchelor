@@ -47,10 +47,16 @@ function get_server_url()
 	$opts['port'] = $_SERVER['SERVER_PORT'];
     }
     if(isset($_SERVER['SCRIPT_NAME'])) {
-	$opts['path'] = dirname(dirname($_SERVER['SCRIPT_NAME']));
-    }
-    if($opts['path'][0] == '/') {
-	$opts['path'] = substr($opts['path'], 1);
+	$parts = explode("/", $_SERVER['SCRIPT_NAME']);
+	if(strlen($parts[0]) == 0) {
+	    array_shift($parts);
+	}
+	for($part = array_pop($parts); 
+	    isset($part) && $part != "ws"; 
+	    $part = array_pop($parts)) {
+	}
+	array_push($parts, "ws");
+	$opts['path'] = implode("/", $parts);
     }
 	
     $root = sprintf("%s://%s:%d/%s", $opts['scheme'], $opts['addr'], $opts['port'], $opts['path']);
