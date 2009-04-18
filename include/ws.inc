@@ -146,6 +146,50 @@ function get_error($code = null)
 }
 
 // 
+// Get URL of the web service directory.
+// 
+function get_server_url() 
+{
+    // 
+    // Default options:
+    // 
+    $opts = array( 
+		   "scheme" => "http",
+		   "addr" => "localhost",
+		   "port" => 80,
+		   "path" => "/batchelor/ws" 
+		   );
+
+    // 
+    // Adjust from global values:
+    // 
+    if(isset($_SERVER['HTTPS'])) {
+	$opts['scheme'] = "https";
+    }
+    if(isset($_SERVER['SERVER_ADDR'])) {
+	$opts['addr'] = $_SERVER['SERVER_ADDR'];
+    }
+    if(isset($_SERVER['SERVER_PORT'])) {
+	$opts['port'] = $_SERVER['SERVER_PORT'];
+    }
+    if(isset($_SERVER['SCRIPT_NAME'])) {
+	$parts = explode("/", $_SERVER['SCRIPT_NAME']);
+	if(strlen($parts[0]) == 0) {
+	    array_shift($parts);
+	}
+	for($part = array_pop($parts); 
+	    isset($part) && $part != "ws"; 
+	    $part = array_pop($parts)) {
+	}
+	array_push($parts, "ws");
+	$opts['path'] = implode("/", $parts);
+    }
+	
+    $root = sprintf("%s://%s:%d/%s", $opts['scheme'], $opts['addr'], $opts['port'], $opts['path']);
+    return $root;
+}
+
+// 
 // Returns the method entry based on its logical name (short).
 // 
 function ws_get_rpc_method_by_name($name) 

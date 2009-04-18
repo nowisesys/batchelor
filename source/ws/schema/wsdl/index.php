@@ -19,49 +19,12 @@
 // to SOAP service consumers (clients).
 // 
 
+ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../../");
+
 // 
-// Get server URL.
+// Include support functions for web services:
 // 
-function get_server_url() 
-{
-    // 
-    // Default options:
-    // 
-    $opts = array( 
-		   "scheme" => "http",
-		   "addr" => "localhost",
-		   "port" => 80,
-		   "path" => "/batchelor/ws" 
-		   );
-    
-    // 
-    // Adjust from global values:
-    // 
-    if(isset($_SERVER['HTTPS'])) {
-	$opts['scheme'] = "https";
-    }
-    if(isset($_SERVER['SERVER_ADDR'])) {
-	$opts['addr'] = $_SERVER['SERVER_ADDR'];
-    }
-    if(isset($_SERVER['SERVER_PORT'])) {
-	$opts['port'] = $_SERVER['SERVER_PORT'];
-    }
-    if(isset($_SERVER['SCRIPT_NAME'])) {
-	$parts = explode("/", $_SERVER['SCRIPT_NAME']);
-	if(strlen($parts[0]) == 0) {
-	    array_shift($parts);
-	}
-	for($part = array_pop($parts); 
-	    isset($part) && $part != "ws"; 
-	    $part = array_pop($parts)) {
-	}
-	array_push($parts, "ws");
-	$opts['path'] = implode("/", $parts);
-    }
-	
-    $root = sprintf("%s://%s:%d/%s", $opts['scheme'], $opts['addr'], $opts['port'], $opts['path']);
-    return $root;
-}
+include "include/ws.inc";
 
 // 
 // Send WSDL document. The generation of the WSDL document can be disabled by
