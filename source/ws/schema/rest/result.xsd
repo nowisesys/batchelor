@@ -23,7 +23,8 @@
     targetNamespace="http://it.bmc.uu.se/batchelor/rest/200901"
     xmlns:tns="http://it.bmc.uu.se/batchelor/rest/200901"
     xmlns:xlink="http://it.bmc.uu.se/batchelor/xlink/200901">
-    <!-- TODO: The XLink schema should be published to a server. -->
+    
+    <!-- Import XLink attributes: -->
     <xsd:import schemaLocation="xlink.xsd" namespace="http://it.bmc.uu.se/batchelor/xlink/200901"/>
 
     <!-- The type of encoding of data: -->
@@ -60,6 +61,16 @@
         </xsd:simpleType>
     </xsd:attribute>
 
+    <!-- The error origin: -->
+    <xsd:attribute name="origin">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="remote"/>
+                <xsd:enumeration value="local"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:attribute>
+
     <!-- The HTTP request method type: -->
     <xsd:attribute name="get" type="xsd:string"/>
     <xsd:attribute name="post" type="xsd:string"/>
@@ -92,9 +103,10 @@
     <!-- Error object type: -->
     <xsd:complexType name="error">
         <xsd:sequence>
-            <xsd:element name="code" type="xsd:integer"/>
+            <xsd:element name="code" type="xsd:int"/>
             <xsd:element name="message" type="xsd:string"/>
         </xsd:sequence>
+        <xsd:attribute ref="tns:origin" default="remote"/>
     </xsd:complexType>
 
     <!-- Job object type: -->
