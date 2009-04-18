@@ -29,7 +29,7 @@
 // 
 // An example error message (missing method) looks like this:
 // 
-//   <result state="failed" type="error">
+//   <tns:result state="failed" type="error">
 //     <error>
 //       <code>3</code>
 //       <message>No such method</message>
@@ -54,7 +54,7 @@
 // An modifying HTTP action (PUT, POST, DELETE) will return a status message.
 // Heres an example response for dequeue (removing) a job:
 // 
-//   <result state="success" type="status">
+//   <tns:result state="success" type="status">
 //     <status>Removed job 1355</status>
 //   </result>
 //
@@ -63,7 +63,7 @@
 // 
 // Example:
 // 
-//   <result state="success" type="link">
+//   <tns:result state="success" type="link">
 //     <link xlink:href="/queue" get="link" put="job" />
 //     <link xlink:href="/result" get="link" />
 //        ...
@@ -114,12 +114,6 @@
 // 
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../");
-
-// 
-// Define the XML-schema (URL and target namespace):
-// 
-define("WS_REST_SCHEMA_URL", "http://it.bmc.uu.se/batchelor/rest/200901");
-define("WS_REST_SCHEMA_TNS", "http://it.bmc.uu.se/batchelor/rest/200901");
 
 //
 // Get configuration.

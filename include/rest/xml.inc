@@ -20,6 +20,13 @@
 // 
 
 // 
+// Define the XML-schema (URL and target namespace):
+// 
+define("WS_REST_URL_SCHEMA", sprintf("%s/schema/rest", get_server_url()));
+define("WS_REST_TNS_SCHEMA", "http://it.bmc.uu.se/batchelor/rest/200901");
+define("WS_REST_TNS_XLINK",  "http://it.bmc.uu.se/batchelor/xlink/200901");
+
+// 
 // The error handler for the REST web service. The error parameter gets send
 // to the client (peer). If any error are set by put_error(), then they are
 // flushed to the web server log.
@@ -35,10 +42,10 @@ function send_error($code, $message, $headers = false, $loop = false)
     if(!$loop) {
 	send_start_tag("failed", "error");
     }
-    printf("  <tns:error>\n");
-    printf("    <tns:code>%d</tns:code>\n", $code);
-    printf("    <tns:message>%s</tns:message>\n", isset($message) ? $message : get_error($code));
-    printf("  </tns:error>\n");
+    printf("  <error>\n");
+    printf("    <code>%d</code>\n", $code);
+    printf("    <message>%s</message>\n", isset($message) ? $message : get_error($code));
+    printf("  </error>\n");
     if(!$loop) {
 	send_end_tag();
 	exit(1);
@@ -50,9 +57,11 @@ function send_error($code, $message, $headers = false, $loop = false)
 // 
 function send_start_tag($state, $type, $array = false) 
 {
-    printf("<tns:result state=\"%s\" type=\"%s\"\n", $state, $type);
-    printf("   xmlns:tns=\"%s\"\n", WS_REST_SCHEMA_URL);
-    printf("   xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"); 
+    printf("<tns:result xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n");
+    printf("   xmlns:tns='%s'\n", WS_REST_TNS_SCHEMA);
+    printf("   xmlns:xlink='%s'\n", WS_REST_TNS_XLINK);
+    printf("   xsi:schemaLocation='%s %s'\n", WS_REST_TNS_SCHEMA, WS_REST_URL_SCHEMA);
+    printf("   tns:state=\"%s\" tns:type=\"%s\">\n", $state, $type);
 }
 
 // 
@@ -81,7 +90,7 @@ function send_link($href, $attr = null)
 	    $actions = "tns:get=\"$attr\"";
 	}
     }
-    printf("  <tns:link xlink:href=\"%s\" $actions />\n", $href);
+    printf("  <link xlink:href=\"%s\" $actions />\n", $href);
 }
 
 // 
@@ -89,7 +98,7 @@ function send_link($href, $attr = null)
 // 
 function send_status($message)
 {
-    printf("  <tns:status>$message</tns:status>\n");
+    printf("  <status>$message</status>\n");
 }
 
 // 
@@ -97,7 +106,7 @@ function send_status($message)
 // 
 function send_job(&$job, $request)
 {
-    printf("  <tns:job timezone=\"%s\">\n", ini_get("date.timezone"));
+    printf("  <job timezone=\"%s\">\n", ini_get("date.timezone"));
     foreach($job as $key => $val) {
 	if($key == "name") {
 	    printf("    <%s>%s</%s>\n", $key, utf8_encode($val), $key);
@@ -105,7 +114,7 @@ function send_job(&$job, $request)
 	    printf("    <%s>%s</%s>\n", $key, $val, $key);
 	}
     }
-    print "  </tns:job>\n";
+    print "  </job>\n";
 }
 
 // 
@@ -114,20 +123,27 @@ function send_job(&$job, $request)
 function send_file($filename) 
 {
     if(WS_FOPEN_RETURN_FORMAT == "base64") {
-	printf("<tns:file encoding=\"base64\">%s</tns:file>\n", 
-	       base64_encode(file_get_contents($filename)));
+	$content = base64_encode(file_get_contents($filename));
+	printf("<file tns:encoding=\"base64\" name=\"%s\" size=\"%d\">\n", 
+	       basename($filename), strlen($content));
+	printf("  <content>%s</content>\n", $content);
+	printf("</file>\n"); 	
     } else {
-	printf("<tns:file encoding=\"binary\">%s</tns:file>\n", 
-	       file_get_contents($filename));
+	$name = basename($filename);
+	$size = filesize($filename);
+	printf("<file tns:encoding=\"binary\" name=\"%s\" size=\"%s\">\n",
+	       $name, $size);
+	printf("  <content>%s</content>\n");
+	printf("</file>\n"); 
     }
 }
 
 // 
 // Send a generic key/value message.
 // 
-function send_data($key, $val) 
+function send_data($key, $val, $ns = "xsd") 
 {
-    printf("  <tns:%s>%s</tns:%s>\n", $key, $val, $key);
+    printf("  <%s:%s>%s</%s:%s>\n", $ns, $key, $val, $ns, $key);
 }
 
 ?>
