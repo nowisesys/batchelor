@@ -38,9 +38,6 @@ if(strstr($_SERVER['REQUEST_URI'], "ws/xmlrpc")) {
 // 
 // Set format for the fopen method (send file content)
 // 
-if(!defined("WS_FOPEN_BASE64_ENCODE")) {
-    define("WS_FOPEN_BASE64_ENCODE", false);
-}
 if(defined("WS_XMLRPC")) {
     if(!defined("WS_XMLRPC_FOPEN_BASE64_ENCODE")) {
 	if(defined("WS_FOPEN_BASE64_ENCODE")) {
@@ -64,9 +61,13 @@ if(defined("WS_XMLRPC")) {
 	if(defined("WS_FOPEN_BASE64_ENCODE")) {
 	    define("WS_REST_FOPEN_BASE64_ENCODE", WS_FOPEN_BASE64_ENCODE);
 	} else {
-	    define("WS_REST_FOPEN_BASE64_ENCODE", false);
+	    if(isset($_REQUEST['encode']) && $_REQUEST['encode'] == "foa") {
+		define("WS_REST_FOPEN_BASE64_ENCODE", false);
+	    } else {
+		define("WS_REST_FOPEN_BASE64_ENCODE", true);
+	    }
 	}
-    }
+    } 
     define("FOPEN_BASE64_ENCODE", WS_REST_FOPEN_BASE64_ENCODE);
 } elseif(defined("WS_SOAP")) {
     if(!defined("WS_SOAP_FOPEN_BASE64_ENCODE")) {
