@@ -127,18 +127,18 @@ function send_file($filename)
     if(WS_FOPEN_RETURN_FORMAT == "base64") {
 	$buff = base64_encode(file_get_contents($filename));
 	$size = strlen($buff);
-	printf("@file = (\n");
-	printf("  name = %s\n", basename($filename));
-	printf("  size = %d\n", $size);
-	printf("  encoding = base64\n");
-	printf(")\n");
+	printf("  @file = (\n");
+	printf("    name = %s\n", basename($filename));
+	printf("    size = %d\n", $size);
+	printf("    encoding = base64\n");
+	printf("  )\n");
 	printf($buff);
     } else {
-	printf("@file = (\n");
-	printf("  name = %s\n", basename($filename));
-	printf("  size = %d\n", filesize($filename));
-	printf("  encoding = binary\n");
-	printf(")\n");
+	printf("  @file = (\n");
+	printf("    name = %s\n", basename($filename));
+	printf("    size = %d\n", filesize($filename));
+	printf("    encoding = binary\n");
+	printf("  )\n");
 	readfile($filename);
     }
 }
