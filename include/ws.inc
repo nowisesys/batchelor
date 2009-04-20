@@ -702,7 +702,7 @@ function ws_get_mime_type($path = null)
 	if($GLOBALS['format'] == "xml") {
 	    return "text/xml";
 	} else if($GLOBALS['format'] == "foa") {
-	    return "text/x-csv";
+	    return "text/x-foa";
 	} else if($GLOBALS['format'] == "html") {
 	    return "text/html";
 	} else if($GLOBALS['format'] == "human") {
