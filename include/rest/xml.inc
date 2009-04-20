@@ -133,7 +133,9 @@ function send_file($filename)
 	$size = filesize($filename);
 	printf("<file tns:encoding=\"binary\" name=\"%s\" size=\"%s\">\n",
 	       $name, $size);
-	printf("  <content>%s</content>\n");
+	printf("  <content>");
+	readfile($filename);
+	printf("  </content>\n");
 	printf("</file>\n"); 
     }
 }
