@@ -144,11 +144,11 @@ function send_file($filename)
 }
 
 // 
-// Send a generic key/value message.
+// Send version.
 // 
-function send_data($key, $val) 
+function send_version($version) 
 {
-    printf("  %s = %s\n", $key, $val);
+    printf("  version = %s\n", $version);
 }
 
 ?>

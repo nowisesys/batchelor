@@ -672,7 +672,7 @@ function send_response($request)
 	break;
      case "version":
 	send_start_tag("success", "version", false);
-	send_data("version", "1.0");
+	send_version("1.0");
 	send_end_tag(false);
 	break;
      default:

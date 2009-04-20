@@ -139,11 +139,11 @@ function send_file($filename)
 }
 
 // 
-// Send a generic key/value message.
+// Send version.
 // 
-function send_data($key, $val, $ns = "xsd") 
+function send_version($version) 
 {
-    printf("  <%s:%s>%s</%s:%s>\n", $ns, $key, $val, $ns, $key);
+    printf("  <version>%s</version>\n", $version);
 }
 
 ?>
