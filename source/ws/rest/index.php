@@ -34,7 +34,7 @@
 //       <code>3</code>
 //       <message>No such method</message>
 //     </error>
-//   </result>
+//   </tns:result>
 // 
 // The REST web services is presented as a tree of URI's. Each URI has one
 // or more associated HTTP action(s) (standard GET, POST, PUT or DELETE).
@@ -56,7 +56,7 @@
 // 
 //   <tns:result state="success" type="status">
 //     <status>Removed job 1355</status>
-//   </result>
+//   </tns:result>
 //
 // An link has possible action attributes like get, put, post and delete. The
 // action attribute value describes the object returned by taking this action.
@@ -67,10 +67,10 @@
 //     <link xlink:href="/queue" get="link" put="job" />
 //     <link xlink:href="/result" get="link" />
 //        ...
-//   </result>
+//   </tns:result>
 // 
-// The XML above tells us that the /queue URI supports GET and PUT, whereas
-// the /result URI only accepts GET.
+// The XML snippet above tells us that the /queue URI supports GET and PUT, 
+// whereas the /result URI only accepts GET.
 // 
 // The web service utility (utils/ws.php) can be used to browse the REST
 // service. Start with: 'php ws.php --type=rest --params='' and then append
@@ -108,8 +108,8 @@
 // in the 'path' member. Additional child nodes are available in the
 // 'childs' member (an array).
 // 
-// Output in FOA encoding is also supported, in addition to the XML encoding
-// described above. Output in FOA is selected by appending encode=foa to the
+// Output in FOA encoding, in addition to the XML encoding described above, 
+// is also supported. Output in FOA is selected by appending encode=foa to the
 // request parameters.
 // 
 
@@ -570,13 +570,11 @@ function send_queue($request)
 	    if(!ws_enqueue($data, $jobs)) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
-	    send_start_tag("success", "link", false);
-	    if(count($jobs) > 1) {
-		send_status(sprintf("Successful enqueued %d jobs", count($jobs)));
-	    } else {
-		send_status(sprintf("Successful enqueued new job (%d)", $jobs[0]['jobid']));
+	    send_start_tag("success", "job");
+	    foreach($jobs as $job) {
+		send_job($job, $request);
 	    }
-	    send_end_tag(false);
+	    send_end_tag();
 	} else {
 	    // 
 	    // Send all top nodes (links).
