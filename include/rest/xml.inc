@@ -102,16 +102,21 @@ function send_status($message)
 }
 
 // 
-// Send a single job object.
+// Send a single job object. The order of elements matters, at least if 
+// the output data should validate against the XML schema.
 // 
 function send_job(&$job, $request)
 {
     printf("  <job timezone=\"%s\">\n", ini_get("date.timezone"));
-    foreach($job as $key => $val) {
-	if($key == "name") {
-	    printf("    <%s>%s</%s>\n", $key, utf8_encode($val), $key);
-	} else {
-	    printf("    <%s>%s</%s>\n", $key, $val, $key);
+    foreach(array( "jobid", "result", "date", "time", "stamp", 
+		   "queued", "started", "finished",
+		   "stdout", "stderr", "state", "name" ) as $key) {
+	if(isset($job[$key])) {
+	    if($key == "name") {
+		printf("    <%s>%s</%s>\n", $key, utf8_encode($job[$key]), $key);
+	    } else {
+		printf("    <%s>%s</%s>\n", $key, $job[$key], $key);
+	    }
 	}
     }
     print "  </job>\n";
