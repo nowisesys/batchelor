@@ -245,16 +245,15 @@ function http_put_file()
 	if($size > $max) {
 	    break;
 	}
-	$bytes = fwrite($fso, fread($fsi, $chunk));
-	if(!$bytes) {
+	if(($bytes = fwrite($fso, fread($fsi, $chunk))) === FALSE) {
 	    break;
-	}
+	}	
 	$size += $bytes;
     }
     fclose($fso);
     fclose($fsi);
 
-    if(!$bytes) {
+    if($bytes === FALSE) {
 	$_FILES['file']['error'] = UPLOAD_ERR_PARTIAL;
 	return false;
     }
