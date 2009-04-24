@@ -227,6 +227,7 @@ function http_put_file()
     }
     
     $chunk = 8192;
+    $bytes = 0;
     $size = 0;
     $mult = array( "K" => 1024, 
 		   "M" => 1024 * 1024, 
@@ -244,12 +245,19 @@ function http_put_file()
 	if($size > $max) {
 	    break;
 	}
-	fwrite($fso, fread($fsi, $chunk));
-	$size += $chunk;
+	$bytes = fwrite($fso, fread($fsi, $chunk));
+	if(!$bytes) {
+	    break;
+	}
+	$size += $bytes;
     }
     fclose($fso);
     fclose($fsi);
 
+    if(!$bytes) {
+	$_FILES['file']['error'] = UPLOAD_ERR_PARTIAL;
+	return false;
+    }
     if($size > $max) {
 	$_FILES['file']['error'] = UPLOAD_ERR_INI_SIZE;
 	return false;
