@@ -438,7 +438,11 @@ function enqueue_job($formdata, &$jobs)
 	// Make sure the uploaded file is posted file and not an
 	// system file, i.e. /etc/passwd
 	// 
-	if(isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+	if(($_SERVER['REQUEST_METHOD'] == "POST" && 
+	    isset($_FILES['file']) && 
+	    is_uploaded_file($_FILES['file']['tmp_name'])) ||
+	   ($_SERVER['REQUEST_METHOD'] == "PUT" && 
+	    isset($_FILES['file']['tmp_name']))) {
 	    if(!rename($_FILES['file']['tmp_name'], $indata)) {
 		if(!cleanup_jobdir($jobdir, $_FILES['file']['tmp_name'])) {
 		    return false;

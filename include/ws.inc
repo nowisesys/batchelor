@@ -935,6 +935,14 @@ function ws_rest_session_setup($hostid = null)
 	put_error("The hostid variable is missing");
 	send_error(WS_ERROR_MISSING_PARAMETER, null, true);
     }
+    
+    // 
+    // Refuse to continue unless register globals is disabled:
+    // 
+    if(ini_get("register_globals") != 0) {
+	put_error("The PHP setting 'register_globals' is enabled (see php.ini), please disable it. Allowing register globals with the HTTP PUT action of the REST service could open a sequrity hole. The script will exit now.");
+	send_error(WS_ERROR_CONFIG_PROBLEM, null, true);
+    }
 }
 
 // 

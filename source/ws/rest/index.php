@@ -83,7 +83,8 @@
 // ------                     --------      -------------
 // 
 // root/                      GET           (the ws/rest service root)
-//   +-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT)
+//   +-- version/             GET           (get service version)
+//   +-- queue/               GET,PUT       (get sort and filter, enqueue with PUT)
 //   |      +-- all/          GET,DELETE    (get or delete all objects)
 //   |            +-- xxx/    GET,DELETE    (get or delete single job)
 //   |      +-- sort/         GET
@@ -171,6 +172,98 @@ function decode_request()
     }
     
     return (object)$request;
+}
+
+// 
+// Save HTTP PUT submitted file (read from stdin). We need to spool the
+// file because input can be really big.
+//
+function http_put_file() 
+{
+    $_FILES['file']['tmp_name'] = null;
+    
+    // 
+    // Do some safety checks. Don't set tmp_name unless all error checks
+    // has been completed without fails.
+    // 
+    if(ini_get("file_uploads") == 0) { 
+	$_FILES['file']['error'] = UPLOAD_ERR_EXTENSION;
+	return false;
+    }
+    
+    // 
+    // Detect temporary file directory:
+    // 
+    $tempdir = ini_get("upload_tmp_dir");
+    if(strlen($tempdir) == 0) {
+	$tempdir = sys_get_temp_dir();
+	if(strlen($tempdir) == 0) {
+	    $_FILES['file']['error'] = UPLOAD_ERR_NO_TMP_DIR;
+	    return false;
+	}
+    }
+
+    // 
+    // Set name of output file:
+    // 
+    if(isset($_REQUEST['name'])) {
+	$tmpname = sprintf("%s/%s", $tempdir, $_REQUEST['name']);
+    } else {
+	$tmpname = tempnam($tempdir, "indata");
+    }
+    
+    // 
+    // Copy stdin to output file:
+    // 
+    $fsi = fopen("php://input", "r");
+    if(!$fsi) {
+	$_FILES['file']['error'] = UPLOAD_ERR_NO_FILE;
+	return false;
+    }
+    $fso = fopen($tmpname, "w");
+    if(!$fso) {
+	$_FILES['file']['error'] = UPLOAD_ERR_CANT_WRITE;
+	return false;			
+    }
+    
+    $chunk = 8192;
+    $size = 0;
+    $mult = array( "K" => 1024, 
+		   "M" => 1024 * 1024, 
+		   "G" => 1024 * 1024 * 1024,
+		   "T" => 1024 * 1024 * 1024 * 1024 );
+    $max = ini_get("upload_max_filesize");
+    $suffix = strpbrk($max, "KkMmGgTt");
+    
+    if($suffix !== FALSE) {
+	$suffix = ucfirst($suffix);
+	$max = substr($max, 0, strlen($max) - 1) * $mult[$suffix];
+    }
+    
+    while(!feof($fsi)) {
+	if($size > $max) {
+	    break;
+	}
+	fwrite($fso, fread($fsi, $chunk));
+	$size += $chunk;
+    }
+    fclose($fso);
+    fclose($fsi);
+
+    if($size > $max) {
+	$_FILES['file']['error'] = UPLOAD_ERR_INI_SIZE;
+	return false;
+    }
+    
+    // 
+    // If we got here then the file is saved and valid. Now, set global 
+    // variables to emulate a HTTP POST so we can use the other code 
+    // unmodified:
+    // 
+    $_FILES['file']['name'] = $_REQUEST['name'];
+    $_FILES['file']['tmp_name'] = $tmpname;
+
+    return true;
 }
 
 // 
@@ -567,6 +660,9 @@ function send_queue($request)
 	   $_SERVER['REQUEST_METHOD'] == "POST") {
 	    $jobs = array();
 	    $data = null;
+	    if($_SERVER['REQUEST_METHOD'] == "PUT") {
+		http_put_file();
+	    }
 	    if(!ws_enqueue($data, $jobs)) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
