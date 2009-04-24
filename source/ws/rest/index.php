@@ -656,13 +656,10 @@ function send_queue($request)
 	    break;
 	}
     } else {
-	if($_SERVER['REQUEST_METHOD'] == "PUT" ||
-	   $_SERVER['REQUEST_METHOD'] == "POST") {
+	if($_SERVER['REQUEST_METHOD'] == "PUT") {
 	    $jobs = array();
 	    $data = null;
-	    if($_SERVER['REQUEST_METHOD'] == "PUT") {
-		http_put_file();
-	    }
+	    http_put_file();
 	    if(!ws_enqueue($data, $jobs)) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
@@ -671,7 +668,7 @@ function send_queue($request)
 		send_job($job, $request);
 	    }
 	    send_end_tag();
-	} else {
+	} elseif($_SERVER['REQUEST_METHOD'] == "GET") {
 	    // 
 	    // Send all top nodes (links).
 	    // 
@@ -680,6 +677,8 @@ function send_queue($request)
 	    send_link(sprintf("%s/queue/sort", $request->base), "link");
 	    send_link(sprintf("%s/queue/filter", $request->base), "link");
 	    send_end_tag();
+	} else {
+	    send_error(WS_ERROR_REQUEST_METHOD, null);
 	}
     }
 }
