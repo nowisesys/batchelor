@@ -200,8 +200,10 @@ function get_rest_response($options)
 	    }
 	    if($options->action == "put") {
 		curl_setopt($curl, CURLOPT_PUT, 1);
+		curl_setopt($curl, CURLOPT_INFILE, fopen($options->file, "r"));
+		curl_setopt($curl, CURLOPT_INFILESIZE, filesize($options->file));
 	    }
-	    if($options->file) {
+	    if($options->action == "post") {
 		// 
 		// Simulate file form upload:
 		// 
@@ -214,6 +216,7 @@ function get_rest_response($options)
 	} elseif($options->action == "delete") {
 	    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 	}
+
 	if($options->verbose) {
 	    print "(i) info: calling remote method\n";
 	}
