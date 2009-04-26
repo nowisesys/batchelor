@@ -84,7 +84,7 @@
 // 
 // root/                      GET           (the ws/rest service root)
 //   +-- version/             GET           (get service version)
-//   +-- queue/               GET,PUT       (get sort and filter, enqueue with PUT)
+//   +-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT/POST(*))
 //   |      +-- all/          GET,DELETE    (get or delete all objects)
 //   |            +-- xxx/    GET,DELETE    (get or delete single job)
 //   |      +-- sort/         GET
@@ -103,6 +103,8 @@
 //   +-- resume/              GET           (list resumable jobs)
 //   |      +-- <job>         GET,POST      (get info or resume the job)
 // 
+// (*) Note that POST for enqueue new jobs is not stricly RESTful, but we 
+//     allows it because not all web servers supports HTTP PUT (Apache does).
 // 
 // The nodes errors, suspend, resume, queue, result and watch is set as
 // the 'method' member in the request object. The node path is available
@@ -175,8 +177,10 @@ function decode_request()
 }
 
 // 
-// Save HTTP PUT submitted file (read from stdin). We need to spool the
-// file because input can be really big.
+// Save HTTP PUT submitted file (read from stdin). We need to spool the file
+// because input can be really big, so saving stdin to a string variable
+// could lead to out of memory errors. Another reason is that we must enforce
+// the same upload limits that exists for POST.
 //
 function http_put_file() 
 {
@@ -267,7 +271,11 @@ function http_put_file()
     // variables to emulate a HTTP POST so we can use the other code 
     // unmodified:
     // 
-    $_FILES['file']['name'] = $_REQUEST['name'];
+    if(isset($_REQUEST['name'])) {
+	$_FILES['file']['name'] = $_REQUEST['name'];
+    } else {
+	$_FILES['file']['name'] = "indata";
+    }
     $_FILES['file']['tmp_name'] = $tmpname;
 
     return true;
@@ -663,10 +671,13 @@ function send_queue($request)
 	    break;
 	}
     } else {
-	if($_SERVER['REQUEST_METHOD'] == "PUT") {
+	if($_SERVER['REQUEST_METHOD'] == "PUT" || 
+	   $_SERVER['REQUEST_METHOD'] == "POST") {
 	    $jobs = array();
 	    $data = null;
-	    http_put_file();
+	    if($_SERVER['REQUEST_METHOD'] == "PUT") {
+		http_put_file();
+	    }
 	    if(!ws_enqueue($data, $jobs)) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
