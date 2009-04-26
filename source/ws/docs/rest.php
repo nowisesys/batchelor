@@ -110,12 +110,12 @@ function print_body()
     echo "------                   --------      -------------\n";
     echo "\n";
     echo "root/                    GET           (the ws/rest service root)\n";
-    echo "+-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT/POST(*))\n";
+    echo "+-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT/POST(1))\n";
     echo "|      +-- all/          GET,DELETE    (get or delete all objects)\n";
     echo "|            +-- xxx/    GET,DELETE    (get or delete single job)\n";
-    echo "|      +-- sort/         GET\n";
+    echo "|      +-- sort/         GET           (2)\n";
     echo "|            +-- xxx/    GET           (various sort options)\n";
-    echo "|      +-- filter/       GET\n";
+    echo "|      +-- filter/       GET           (2)\n";
     echo "|            +-- xxx/    GET,DELETE    (get or delete all jobs matching filter)\n";
     echo "+-- result/              GET           (list all job directories)\n";
     echo "|      +-- dir/          GET           (list result files)\n";    
@@ -130,8 +130,11 @@ function print_body()
     echo "       +-- &lt;job&gt;         GET,POST      (get info or resume the job)\n";
     echo "</pre></div></p>\n";   
     
-    echo "<p>(*) Note that POST for enqueue new jobs is not stricly RESTful, but we ";
+    echo "<p>(1) Note that POST for enqueue new jobs is not stricly RESTful, but we ";
     echo "allows it because not all web servers supports HTTP PUT (Apache does).</p>\n";
+    echo "<p>(2) Both sort and filter URI accepts an additional companion request ";
+    echo "parameter, i.e. <code>'queue/sort/jobid/data?filter=error'</code> gives all error state ";
+    echo "jobs filtered on the job ID.</p>\n";
 
     echo "<span id=\"secthead\">Enqueue new jobs:</span>\n";   
     echo "<p>All tasks except for starting new jobs (enqueue) should be fairly ";

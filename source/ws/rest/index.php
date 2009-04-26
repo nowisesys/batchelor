@@ -84,27 +84,30 @@
 // 
 // root/                      GET           (the ws/rest service root)
 //   +-- version/             GET           (get service version)
-//   +-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT/POST(*))
+//   +-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT/POST(1))
 //   |      +-- all/          GET,DELETE    (get or delete all objects)
 //   |            +-- xxx/    GET,DELETE    (get or delete single job)
-//   |      +-- sort/         GET
+//   |      +-- sort/         GET           (2)
 //   |            +-- xxx/    GET           (various sort options)
-//   |      +-- filter/       GET
+//   |      +-- filter/       GET           (2)
 //   |            +-- xxx/    GET,DELETE    (get or delete all jobs matching filter)
 //   +-- result/              GET           (list all job directories)
 //   |      +-- dir/          GET           (list result files)
 //   |            +-- <file>  GET           (get content of result file)
 //   +-- watch/               POST          (watch jobs)
 //   |      +-- <job>         GET           (get info about job)
-//   +-- errors/              GET           (list all error types)
-//   |      +-- <error>       GET           (get error object)
 //   +-- suspend/             GET           (list suspendable jobs)
 //   |      +-- <job>         GET,POST      (get info or suspend the job)
 //   +-- resume/              GET           (list resumable jobs)
 //   |      +-- <job>         GET,POST      (get info or resume the job)
+//   +-- errors/              GET           (list all error types)
+//   |      +-- <error>       GET           (get error object)
 // 
-// (*) Note that POST for enqueue new jobs is not stricly RESTful, but we 
+// (1) Note that POST for enqueue new jobs is not stricly RESTful, but we 
 //     allows it because not all web servers supports HTTP PUT (Apache does).
+// 
+// (2) Both sort and filter URI accepts an additional companion request 
+//     parameter, i.e. 'queue/sort/jobid/data?filter=error'.
 // 
 // The nodes errors, suspend, resume, queue, result and watch is set as
 // the 'method' member in the request object. The node path is available
@@ -171,6 +174,13 @@ function decode_request()
     $request['method'] = array_shift($parts);
     if(count($parts)) {
 	$request['childs'] = $parts;
+    }
+
+    if(!isset($request['filter'])) {
+	$request['filter'] = "all";
+    }
+    if(!isset($request['sort'])) {
+	$request['sort'] = "none";
     }
     
     return (object)$request;
@@ -543,7 +553,7 @@ function send_queue($request)
 {
     if(isset($request->childs)) {
 	switch($request->childs[0]) {
-	 case "all":
+	 case "all":    
 	    if(isset($request->childs[1])) {
 		send_queue_helper($request, $request->childs[1], "none", "all");
 	    } elseif(isset($request->format)) {
@@ -577,9 +587,9 @@ function send_queue($request)
 	 case "sort":
 	    if(isset($request->childs[1])) {
 		if(isset($request->childs[2])) {
-		    send_queue_helper($request, $request->childs[2], $request->childs[1], "all");
+		    send_queue_helper($request, $request->childs[2], $request->childs[1], $request->filter);
 		} elseif(isset($request->format)) {
-		    send_queue_helper($request, $request->format, $request->childs[1], "all");
+		    send_queue_helper($request, $request->format, $request->childs[1], $request->filter);
 		} else {
 		    send_start_tag("success", "link");
 		    send_link(sprintf("%s/queue/sort/%s?format=list", 
@@ -603,9 +613,9 @@ function send_queue($request)
 	 case "filter":
 	    if(isset($request->childs[1])) {
 		if(isset($request->childs[2])) {
-		    send_queue_helper($request, $request->childs[2], "none", $request->childs[1]);
+		    send_queue_helper($request, $request->childs[2], $request->sort, $request->childs[1]);
 		} elseif(isset($request->format)) {
-		    send_queue_helper($request, $request->format, "none", $request->childs[1]);
+		    send_queue_helper($request, $request->format, $request->sort, $request->childs[1]);
 		} else {
 		    send_start_tag("success", "link");
 		    send_link(sprintf("%s/queue/filter/%s?format=list", 
@@ -677,7 +687,7 @@ function send_queue($request)
 	    $data = null;
 	    if($_SERVER['REQUEST_METHOD'] == "PUT") {
 		http_put_file();
-	    }
+	    }	    
 	    if(!ws_enqueue($data, $jobs)) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
