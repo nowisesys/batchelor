@@ -47,7 +47,7 @@ function print_body()
     echo "<p>The REST web services is presented as a tree of URI's. Each URI has one ";
     echo "or more associated HTTP action(s) (standard GET, POST, PUT or DELETE). ";
     echo "All GET requests are non-modifying. An URI (a node resource) can be ";
-    echo "changed by using PUT or POST (add or modified) or DELETE (removed).</p>\n";
+    echo "changed by using PUT or POST (add or modified) or DELETE (remove).</p>\n";
 
     echo "<span id=\"secthead\">Response:</span>\n";   
     echo "<p>The HTTP status code is always 200. The response is always wrapped inside ";
@@ -57,13 +57,17 @@ function print_body()
     echo "object.</p>\n";
     echo "<p>An example error message (missing method) looks like this:</p>\n";
     echo "<p><div class=\"code\"><pre>\n";
-    echo "&ltresult state=\"failed\" type=\"error\"&gt;\n";
+    echo "&lt;tns:result state=\"failed\" type=\"error\"&gt;\n";
     echo "  &lt;error&gt;\n";
     echo "    &lt;code&gt;3&lt;/code&gt;\n";
     echo "    &lt;message&gt;No such method&lt;/message&gt;\n";
     echo "  &lt;/error&gt;\n";
-    echo "&lt;/result&gt;\n";
+    echo "&lt;/tns:result&gt;\n";
     echo "</pre></div></p>\n";
+    echo "<p>The response encoding is either XML or FOA selectable by appending ";
+    echo "encode={xml|foa} to the request string. The default response encoding is XML. ";
+    echo "The XML encoded response is formalized by the <a href=\"../schema/rest/\">XML Schema</a>  for REST responses. ";
+    echo "The <a href=\"http://it.bmc.uu.se/andlov/proj/libfoa/spec.php\">FOA specification</a> describes the FOA encoded response format.</p>\n";
 
     echo "<span id=\"secthead\">Ouput format:</span>\n";   
     echo "<p>The output format from a GET request on an URI is either an list (of ";
@@ -75,12 +79,12 @@ function print_body()
     echo "<code>/queue/all?format=data      /* get all jobs */</code>\n";
     echo "<code>/queue/all/data             /* alternative way */</code>\n";
     echo "</pre></div></p>\n";
-    echo "<p>An modifying HTTP action (PUT, POST, DELETE) will return a status ";
-    echo "message. Heres an example response for dequeue (removing) a job:</p>\n";
+    echo "<p>An modifying HTTP action (PUT, POST, DELETE) will either return a status ";
+    echo "message or data depending on the URI. Heres an example response for dequeue (removing) a job:</p>\n";
     echo "<p><div class=\"code\"><pre>\n";   
-    echo "&lt;result state=\"success\" type=\"status\"&gt;\n";
+    echo "&lt;tns:result state=\"success\" type=\"status\"&gt;\n";
     echo "  &lt;status&gt;Removed job 1355&lt;/status&gt;\n";
-    echo "&lt;/result&gt;\n";
+    echo "&lt;/tns:result&gt;\n";
     echo "</pre></div></p>\n";
 
     echo "<span id=\"secthead\">Resource links:</span>\n";   
@@ -88,13 +92,13 @@ function print_body()
     echo "The action attribute value describes the object returned by taking this action.</p>\n";
     echo "<p><u><b>Example:</b></u></p>\n";
     echo "<p><div class=\"code\"><pre>\n";   
-    echo "&lt;result state=\"success\" type=\"link\"&gt;\n";
+    echo "&lt;tns:result state=\"success\" type=\"link\"&gt;\n";
     echo "  &lt;link xlink:href=\"/queue\" get=\"link\" put=\"job\" /&gt;\n";
     echo "  &lt;link xlink:href=\"/result\" get=\"link\" /&gt;\n";
     echo "    ...\n";
-    echo "&lt;/result&gt;\n";
+    echo "&lt;/tns:result&gt;\n";
     echo "</pre></div></p>\n";   
-    echo "<p>The XML above tells us that the /queue URI supports GET and PUT, ";
+    echo "<p>The XML snippet above tells us that the /queue URI supports GET and PUT, ";
     echo "whereas the /result URI only accepts GET.</p>\n";
 
     echo "<span id=\"secthead\">Schematic overview:</span>\n";   
@@ -106,7 +110,7 @@ function print_body()
     echo "------                   --------      -------------\n";
     echo "\n";
     echo "root/                    GET           (the ws/rest service root)\n";
-    echo "+-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT)\n";
+    echo "+-- queue/               GET,PUT,POST  (get sort and filter, enqueue with PUT/POST(*))\n";
     echo "|      +-- all/          GET,DELETE    (get or delete all objects)\n";
     echo "|            +-- xxx/    GET,DELETE    (get or delete single job)\n";
     echo "|      +-- sort/         GET\n";
@@ -126,16 +130,26 @@ function print_body()
     echo "       +-- &lt;job&gt;         GET,POST      (get info or resume the job)\n";
     echo "</pre></div></p>\n";   
     
+    echo "<p>(*) Note that POST for enqueue new jobs is not stricly RESTful, but we ";
+    echo "allows it because not all web servers supports HTTP PUT (Apache does).</p>\n";
+
     echo "<span id=\"secthead\">Enqueue new jobs:</span>\n";   
     echo "<p>All tasks except for starting new jobs (enqueue) should be fairly ";
-    echo "obvious, so I will only outline the details on using POST and the /queue resource to start ";
+    echo "obvious, so I will only outline the details on using PUT/POST and the /queue resource to start ";
     echo "new jobs.</p>\n";   
     echo "<p>Because the indata might be arbitrary large, the data has to be uploaded ";
     echo "thru PUT or POST. Encoding the data in the URL is on a typical system ";
-    echo "limited to 32kB, not to mention it goes against REST principles also. The data ";
+    echo "limited to 32kB, not to mention it goes against REST principles also.\n";
+    
+    echo "<p>This is how to do HTTP PUT with PHP's cURL library:</p>\n";    
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "curl_setopt(\$curl, CURLOPT_PUT, 1);\n";
+    echo "curl_setopt(\$curl, CURLOPT_INFILE, fopen(\$options->file, \"r\"));\n";
+    echo "curl_setopt(\$curl, CURLOPT_INFILESIZE, filesize(\$options->file));\n";
+    echo "</pre></div></p>\n";   
+    
+    echo "<p>This is how to do such an POST using PHP's cURL library. The data ";
     echo "must be posted in a multipart/form-data named 'file'.</p>\n";
-    echo "<p>This is how to do such an POST using PHP's cURL library:</p>\n";
-              
     echo "<p><div class=\"code\"><pre>\n";   
     echo "\$post = array(\n";
     echo "    'file' => sprintf(\"@%s\", \$options->file)  // Notice the '@'!\n";
@@ -144,9 +158,6 @@ function print_body()
     echo "curl_setopt(\$curl, CURLOPT_POSTFIELDS, \$post);\n";
     echo "</pre></div></p>\n";   
     
-    echo "<p>The POST request method has to be used because PUT is not supported ";
-    echo "by all web servers.</p>\n";
-
     echo "<span id=\"secthead\">Testing:</span>\n";   
     echo "<p>The web service utility (utils/ws.php) can be used to browse the REST ";
     echo "service. Start with: 'php ws.php --type=rest --params='' and then append ";
@@ -157,6 +168,10 @@ function print_body()
     echo "<p><div class=\"code\"><pre>\n";   
     echo "bash$> php ws.php --type=rest --params='root?encode=foa'\n";
     echo "</pre></div></p>\n";   
+    echo "<p>Enqueue a new job with data.txt as indata is done by putting (PUT) the file on the queue URI:</p>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "bash$> php ws.php --type=rest --file=data.txt --put --params='queue'\n";
+    echo "</pre></div></p>\n";       
 }
  
 function print_html($what)
