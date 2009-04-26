@@ -330,13 +330,21 @@ function get_queued_jobs(&$jobs)
 		$jobs[$match[1]] = ($match[4] == "=") ? "running" : "pending";
 	    }
 	    // 
+	    // Linux format (later): 
+	    // 153     Sun Apr 26 23:22:00 2009 = apache
+	    // 147     Sun Apr 26 23:16:00 2009 b apache
+	    // 
+	    elseif(preg_match("/(\d+)\s+\w{3}\s+\w{3}\s+[0-9]{2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4}\s+([b=]{1})\s+(.*)/", $str, $match)) {
+		$jobs[$match[1]] = ($match[2] == "=") ? "running" : "pending";
+	    }	    
+	    // 
 	    // Solaris 8 (and later?) format:
 	    //   'user = root     1210583160.a    Mon May 12 11:06:00 2008'
 	    //   'user = root     1210583160.a    Mon May 12 11:06:00 2008'
 	    // 
 	    // NOTE: Listing as non-root user don't show user = xxx.
 	    // 	    
-	    else if(preg_match('/([0-9]*\.[ab]{1})\t(.*)/', $str, $match)) {
+	    elseif(preg_match('/([0-9]*\.[ab]{1})\t(.*)/', $str, $match)) {
 		$jobs[$match[1]] = "pending";
 	    }
 	    // 
@@ -346,7 +354,7 @@ function get_queued_jobs(&$jobs)
 	    // 
 	    // NOTE: Simply flag job as pending because information is missing.
 	    // 
-	    else if(preg_match("/(\d+)\s+(.*)/", $str, $match)) { 
+	    elseif(preg_match("/(\d+)\s+(.*)/", $str, $match)) { 
 		$jobs[$match[1]] = "pending";
 	    } 
 	    // 
