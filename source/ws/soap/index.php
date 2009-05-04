@@ -118,10 +118,13 @@ class batchelor {
 	$jobs = array();
 	
 	if(isset($obj->sort) && strlen($obj->sort) != 0) {
-	    $args->sort = $obj->sort;
+	    $args->sort = strtolower($obj->sort);
 	}
 	if(isset($obj->filter) && strlen($obj->filter) != 0) {
-	    $args->filter = $args->filter;
+	    $args->filter = strtolower($obj->filter);
+	}
+	if($args->sort == "job_id") {
+	    $args->sort = "jobid";
 	}
 	
 	if(!ws_queue($jobs, $args->sort, $args->filter)) {
