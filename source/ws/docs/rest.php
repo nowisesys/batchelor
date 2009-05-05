@@ -170,11 +170,15 @@ function print_body()
     echo "method argument (a virtual method) is explicit set:</p>\n";
     echo "<p><div class=\"code\"><pre>\n";   
     echo "bash$> php ws.php --type=rest --params='root?encode=foa'\n";
-    echo "</pre></div></p>\n";   
+    echo "</pre></div></p>\n";
     echo "<p>Enqueue a new job with data.txt as indata is done by putting (PUT) the file on the queue URI:</p>\n";
     echo "<p><div class=\"code\"><pre>\n";   
     echo "bash$> php ws.php --type=rest --file=data.txt --put --params='queue'\n";
-    echo "</pre></div></p>\n";       
+    echo "</pre></div></p>\n";
+    echo "<p>Watch jobs for completion. This variant includes sending the timestamp using POST.</p>\n";
+    echo "<p><div class=\"code\"><pre>\n";   
+    echo "bash$> php ws.php --type=rest --post='stamp=1241490725' --params='watch'\n";
+    echo "</pre></div></p>\n";
 }
  
 function print_html($what)

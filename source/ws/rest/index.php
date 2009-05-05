@@ -94,8 +94,7 @@
 //   +-- result/              GET           (list all job directories)
 //   |      +-- dir/          GET           (list result files)
 //   |            +-- <file>  GET           (get content of result file)
-//   +-- watch/               POST          (watch jobs)
-//   |      +-- <job>         GET           (get info about job)
+//   +-- watch/               POST          (watch jobs (3))
 //   +-- suspend/             GET           (list suspendable jobs)
 //   |      +-- <job>         GET,POST      (get info or suspend the job)
 //   +-- resume/              GET           (list resumable jobs)
@@ -108,6 +107,9 @@
 // 
 // (2) Both sort and filter URI accepts an additional companion request 
 //     parameter, i.e. 'queue/sort/jobid/data?filter=error'.
+// 
+// (3) The content under watch is logical modified by the request, so it
+//     should be a POST action, not GET. The result is links to queued jobs.
 // 
 // The nodes errors, suspend, resume, queue, result and watch is set as
 // the 'method' member in the request object. The node path is available
@@ -137,6 +139,11 @@ include "include/delete.inc";
 function decode_request()
 {
     $request = array();
+    
+    if($_SERVER['REQUEST_METHOD'] == "POST") {
+	$request = $_REQUEST;
+    }
+    
     while(strstr($_SERVER['REQUEST_URI'], "//")) {
 	$_SERVER['REQUEST_URI'] = str_replace("//", "/", $_SERVER['REQUEST_URI']);
     }
@@ -297,9 +304,9 @@ function http_put_file()
 function send_root($request)
 {
     send_start_tag("success", "link");
-    send_link(sprintf("%s/queue", $request->base), array( "get" => "link", "put" => "job"));
+    send_link(sprintf("%s/queue", $request->base), array( "get" => "link", "put" => "job" ));
     send_link(sprintf("%s/result", $request->base), "link");
-    send_link(sprintf("%s/watch", $request->base), "link");
+    send_link(sprintf("%s/watch", $request->base), array( "post" => "link" ));
     send_link(sprintf("%s/errors", $request->base), "link");
     // 
     // Don't expose suspend and resume methods unless job control is enabled.
@@ -510,15 +517,8 @@ function send_resume($request)
 // 
 // Helper function for send_queue().
 // 
-function send_queue_helper($request, $format, $sort, $filter)
+function send_queue_jobs($request, $format, &$jobs)
 {
-    // 
-    // Send all jobs either as an list or as an array of job objects.
-    // 
-    $jobs = array();
-    if(!ws_queue($jobs, $sort, $filter)) {
-	send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-    }
     if($format == "data") {
 	send_start_tag("success", "job");
 	foreach($jobs as $result => $job) {
@@ -536,6 +536,21 @@ function send_queue_helper($request, $format, $sort, $filter)
 	}
 	send_end_tag();
     }
+}
+
+// 
+// Helper function for send_queue().
+// 
+function send_queue_helper($request, $format, $sort, $filter)
+{
+    // 
+    // Send all jobs either as an list or as an array of job objects.
+    // 
+    $jobs = array();
+    if(!ws_queue($jobs, $sort, $filter)) {
+	send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+    }
+    send_queue_jobs($request, $format, $jobs);
 }
 
 // 
@@ -760,6 +775,25 @@ function send_result($request)
 }
 
 // 
+// The watch method. In parameter is a single timestamp.
+// 
+function send_watch($request) 
+{
+    if($_SERVER['REQUEST_METHOD'] != "POST") {
+	send_error(WS_ERROR_REQUEST_METHOD, null);
+    }
+    
+    $stamp  = isset($request->stamp) ? $request->stamp : 0;
+    $format = isset($request->format) ? $request->format : "list";
+    $jobs = array();
+    
+    if(!ws_watch($jobs, $stamp)) {
+	send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+    }
+    send_queue_jobs($request, $format, $jobs);
+}
+
+// 
 // Send response for request.
 // 
 function send_response($request)
@@ -781,7 +815,7 @@ function send_response($request)
 	send_result($request);
 	break;
      case "watch":
-	send_error(WS_ERROR_UNEXPECTED_METHOD, "method watch is not yet implemented");
+	send_watch($request);
 	break;
      case "version":
 	send_start_tag("success", "version", false);
