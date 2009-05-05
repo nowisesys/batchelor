@@ -398,12 +398,8 @@ function send_suspend($request)
 	    if(!ws_suspend($request->childs[0], $request->childs[1])) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
-	    send_start_tag("success", "link", false);
-	    send_link(sprintf("%s/suspend/%s/%s",
-			      $request->base,
-			      $request->childs[0],
-			      $request->childs[1]),
-		      "link");
+	    send_start_tag("success", "status", false);
+	    send_status(sprintf("Job %s suspended", $request->childs[0]));
 	    send_end_tag(false);
 	}
     } else {
@@ -432,7 +428,7 @@ function send_suspend($request)
 				  $request->base,
 				  $result,
 				  $job['jobid']),
-			  "link");
+			  array("get" => "job", "post" => "status"));
 	    }
 	}
 	send_end_tag();
@@ -476,12 +472,8 @@ function send_resume($request)
 	    if(!ws_resume($request->childs[0], $request->childs[1])) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	    }
-	    send_start_tag("success", "link", false);
-	    send_link(sprintf("%s/resume/%s/%s",
-			      $request->base,
-			      $request->childs[0],
-			      $request->childs[1]),
-		      "link");
+	    send_start_tag("success", "status", false);
+	    send_status(sprintf("Job %s resumed", $request->childs[0]));
 	    send_end_tag(false);
 	}
     } else {
@@ -506,7 +498,7 @@ function send_resume($request)
 					  $request->base,
 					  $result,
 					  $job['jobid']),
-				  "link");
+				  array("get" => "job", "post" => "status"));
 		    }
 		}
 	    }
