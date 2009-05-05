@@ -330,11 +330,11 @@ function get_queued_jobs(&$jobs)
 		$jobs[$match[1]] = ($match[4] == "=") ? "running" : "pending";
 	    }
 	    // 
-	    // Linux format (later): 
+	    // Linux format (later?): 
 	    // 153     Sun Apr 26 23:22:00 2009 = apache
 	    // 147     Sun Apr 26 23:16:00 2009 b apache
 	    // 
-	    elseif(preg_match("/(\d+)\s+\w{3}\s+\w{3}\s+[0-9]{2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4}\s+([b=]{1})\s+(.*)/", $str, $match)) {
+	    elseif(preg_match("/(\d+)\s+\w{3}\s+\w{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4}\s+([b=]{1})\s+(.*)/", $str, $match)) {
 		$jobs[$match[1]] = ($match[2] == "=") ? "running" : "pending";
 	    }	    
 	    // 
