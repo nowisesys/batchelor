@@ -204,12 +204,25 @@ function get_rest_response($options)
 		curl_setopt($curl, CURLOPT_INFILESIZE, filesize($options->file));
 	    }
 	    if($options->action == "post") {
+		$post = array();
 		// 
-		// Simulate file form upload:
+		// POST parameters gets passed in the $options->file member:
 		// 
-		$post = array( 
-			       'file' => sprintf("@%s", $options->file)
-			       );
+		if(file_exists($options->file)) {
+		    // 
+		    // Simulate file form upload:
+		    // 
+		    $post['file'] = sprintf("@%s", $options->file);
+		} else {
+		    // 
+		    // Treat $options->file as regular POST parameters:
+		    // 
+		    $params = explode("&", $options->file);
+		    foreach($params as $param) {
+			list($key, $val) = explode("=", $param);
+			$post[$key] = $val;
+		    }
+		}
 		curl_setopt($curl, CURLOPT_POST, 1);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
 	    }
@@ -448,7 +461,7 @@ function parse_options(&$argc, $argv, &$options)
 	    break;
 	 case "--post":
 	    if(!isset($val)) {
-		die(sprintf("%s: option --post requires an argument (see --help)\n", $options->prog));
+	    	die(sprintf("%s: option --post requires an argument (see --help)\n", $options->prog));
 	    }
 	    $options->action = "post";
 	    $options->file = $val;
