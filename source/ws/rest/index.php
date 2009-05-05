@@ -565,7 +565,7 @@ function send_queue($request)
 			    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 			}
 		    }
-		    send_start_tag("success", "link", false);
+		    send_start_tag("success", "status", false);
 		    send_status(sprintf("Removed %d jobs", count($jobs)));
 		    send_end_tag(false);
 		} elseif($_SERVER['REQUEST_METHOD'] == "GET") {
@@ -646,7 +646,7 @@ function send_queue($request)
 				   $request->childs[1])) {
 			send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 		    }
-		    send_start_tag("success", "link", false);
+		    send_start_tag("success", "status", false);
 		    send_status(sprintf("Removed job %s", $request->childs[1]));
 		    send_end_tag(false);
 		} elseif($_SERVER['REQUEST_METHOD'] == "GET") {
