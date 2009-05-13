@@ -1,9 +1,18 @@
-Version 0.7.8 (2009-mm-dd):
+Version 0.8.0 (2009-05-13):
+
+	* This is the first release with full support for SOAP and REST web
+	  services. The REST service supports both XML and FOA encoded
+	  response messages. XML-RPC and HTTP RPC is still supported, but its
+	  usage is discourage in favour of SOAP and REST.
 
 	* The REST service responses can now be retreived in FOA encoding in 
 	  addition to the default XML encoding.
 	  
-	* Native HTTP PUT is now enabled for enqueue jobs.
+	* Native HTTP PUT is now enabled for enqueuing jobs (REST). POST is
+	  also accepted to support web servers where PUT is disabled.
+	
+	* Added W3C XML Schema (source/ws/rest/schema) describing XML
+	  response messages for the REST seervice.
 	  
 Version 0.7.7 (2009-04-15):
 
@@ -15,7 +24,7 @@ Version 0.7.7 (2009-04-15):
 	  defined thru the queue.
 	  
 	* Adding web service documentation under source/ws/docs/.
-	   
+	  
 Version 0.7.6 (2009-03-17):
 
 	* Warning messages can now be communicated to end users from
