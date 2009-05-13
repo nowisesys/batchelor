@@ -5,5 +5,8 @@
    pointing a web browser to http://localhost/batchelor/ws/docs/. The index
    page contains basic status too.
    
+   The XML Schemas for SOAP and REST can be found under source/ws/schema/,
+   use a browser to review them.
+   
 Anders Lövgren,
 2009-04-15
