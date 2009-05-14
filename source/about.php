@@ -27,6 +27,19 @@
 include "../include/ui.inc";
 include "../conf/config.inc";
 
+if(!defined("WS_ENABLE_HTTP")) {
+    define("WS_ENABLE_HTTP", null);
+}
+if(!defined("WS_ENABLE_SOAP")) {
+    define("WS_ENABLE_SOAP", null);
+}
+if(!defined("WS_ENABLE_REST")) {
+    define("WS_ENABLE_REST", null);
+}
+if(!defined("WS_ENABLE_XMLRPC")) {
+    define("WS_ENABLE_XMLRPC", null);
+}
+
 // 
 // Print about info for batchelor.
 // 
@@ -130,6 +143,50 @@ function print_about_batchelor()
 }
 
 // 
+// Print about info on web services (SOAP, REST, HTTP RPC and XML-RPC).
+// 
+function print_webservices() 
+{    
+    $status = array(
+		    "http"   => array( "status" => WS_ENABLE_HTTP,
+				       "name"   => "HTTP RPC",
+				       "link"   => "ws/docs/http.php" ),
+		    "xmlrpc" => array( "status" => WS_ENABLE_XMLRPC,
+				       "name"   => "XML-RPC",
+				       "link"   => "ws/docs/xmlrpc.php" ),
+		    "soap"   => array( "status" => WS_ENABLE_SOAP,
+				       "name"   => "SOAP",
+				       "link"   => "ws/docs/soap.php" ),
+		    "rest"   => array( "status" => WS_ENABLE_REST,
+				       "name"   => "REST",
+				       "link"   => "ws/docs/rest.php" )
+		);
+    
+    echo "<span id=\"secthead\">Status:</span>\n";
+    echo "<p>\n";
+    foreach($status as $name => $data) {
+	if(file_exists(sprintf("ws/%s", $name))) {
+	    if(isset($data['status'])) {
+		if($data['status']) {
+		    printf("<img src=\"icons/nuvola/enabled.png\"><a href=\"%s\"> %s</a> is enabled.<br>\n", 
+			   $data['link'], $data['name']);
+		} else {
+		    printf("<img src=\"icons/nuvola/disabled.png\"><a href=\"%s\"> %s</a> is disabled.<br>\n", 
+			   $data['link'], $data['name']);
+		}
+	    } else {
+		printf("<img src=\"icons/nuvola/unconfigured.png\"><a href=\"%s\"> %s</a> is not configured.<br>\n", 
+		       $data['link'], $data['name']);
+	    }
+	}
+    }
+    echo "</p>\n";
+    echo "<p>These are the web services that are currently enabled. Click on the link next to the status ";
+    echo "icon to read the documentation for respective service type.<br>\n";
+    echo "See <a href=\"ws/docs/intro.php\">introduction</a> for getting started information.</p>\n";
+}
+
+// 
 // Show batchelor license file.
 //
 function print_license()
@@ -200,18 +257,22 @@ function print_about()
     //   1. Add an function in this file (like for batchelor).
     //   2. Add an external page (like the app example).
     //
-    $tabmenu = array( "appname"   => array( "desc" => "The Application",
-					    "func" => null,
-					    "page" => "about_app.html",
-					    "show" => true ),
-		      "batchelor" => array( "desc" => "Batchelor",
-					    "func" => "print_about_batchelor",
-					    "page" => null,
-					    "show" => true ),
-		      "license"   => array( "desc" => "GNU Public License",
-					    "func" => "print_license",
-					    "page" => null,
-					    "show" => false ));
+    $tabmenu = array( "appname"    => array( "desc" => "The Application",
+					     "func" => null,
+					     "page" => "about_app.html",
+					     "show" => true ),
+		      "batchelor"  => array( "desc" => "Batchelor",
+					     "func" => "print_about_batchelor",
+					     "page" => null,
+					     "show" => true ),
+		      "webservice" => array( "desc" => "Web Services",
+					     "func" => "print_webservices",
+					     "page" => null,
+					     "show" => true ),
+		      "license"    => array( "desc" => "GNU Public License",
+					     "func" => "print_license",
+					     "page" => null,
+					     "show" => false ));
     
     $selected = "appname";
     if(isset($_REQUEST['sect'])) {
