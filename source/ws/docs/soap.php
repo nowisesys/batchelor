@@ -42,9 +42,9 @@ function print_body()
     echo "Batchelor supports the SOAP protocol and have been successful integrated ";
     echo "with PHP and Java service consumers (client applications).</p>\n";
     echo "<p>The SOAP interface consists of methods for:\n";
-    echo "<ul><li>running jobs (enqueue, dequeue, suspend, resume)</li>\n";
-    echo "    <li>monitor jobs (queue, watch, stat)</li>\n";
-    echo "    <li>reading results (opendir, readdir, fopen)</li>\n";
+    echo "<ul><li><a href=\"#running\">running jobs</a> (enqueue, dequeue, suspend, resume)</li>\n";
+    echo "    <li><a href=\"#monitor\">monitor jobs</a> (queue, watch, stat)</li>\n";
+    echo "    <li><a href=\"#reading\">reading results</a> (opendir, readdir, fopen)</li>\n";
     echo "</ul>\n";
     echo "</p>\n";
     echo "<p>The interface was developed using <a href=\"https://jax-ws.dev.java.net/\">Java JAX-WS</a> to ensure conformance ";
@@ -83,6 +83,27 @@ function print_body()
     echo "</pre></div></p>\n";
     echo "<p>\n";
     echo "</p>\n";
+    
+    echo "<span id=\"secthead\">Method description:</span>\n";
+    echo "<p>This section documents the various methods and their purpose. For those using the ";
+    echo "batchelor-java library, its better to read the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor-java/javadoc/se/uu/bmc/it/batchelor/soap/BatchelorSoapClient.html\">Javadoc API documentation</a>.</p>\n";
+    echo "<p><u><b><a name=\"running\">Running jobs:</a></b></u></p>\n";
+    echo "<ul><li><b>enqueue</b>: queues a new job for later execution.</li>\n";
+    echo "    <li><b>dequeue</b>: removes an existing job.</li>\n";
+    echo "    <li><b>suspend</b>: suspends an already running job.</li>\n";
+    echo "    <li><b>resume</b>: resumes an suspended job.</li>\n";
+    echo "</ul>\n";
+    echo "<p><u><b><a name=\"monitor\">Monitor jobs:</a></b></u></p>\n";
+    echo "<ul><li><b>queue</b>: list content of the queue.</li>\n";
+    echo "    <li><b>watch</b>: get list of jobs finished after a timestamp.</li>\n";
+    echo "    <li><b>stat</b>: get status of a single job.</li>\n";
+    echo "</ul>\n";
+    echo "<p><u><b><a name=\"reading\">Reading results:</a></b></u></p>\n";
+    echo "<ul><li><b>opendir</b>: get list of job directories.</li>\n";
+    echo "    <li><b>readdir</b>: get list of files in a single job directory.</li>\n";
+    echo "    <li><b>fopen</b>: read a file from the job directory.</li>\n";
+    echo "</ul>\n";
+    echo "<p>The in and out types of each method can be read on the <a href=\"soap_types.php\">SOAP types</a> page.</p>\n";
 
     echo "<span id=\"secthead\">Optimizing WSDL:</span>\n";
     echo "<p>The WSDL is generated dynamic by default from source/ws/schema/wsdl/batchelor.wsdl by ";
