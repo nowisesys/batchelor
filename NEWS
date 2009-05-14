@@ -1,3 +1,11 @@
+Version 0.8.1 (2009-05-14):
+
+	* Updated SOAP documentation. Its now includes documentation about
+	  the methods and the request/response object types.
+	  
+	* The about page is now showing a tab for web service status with
+	  links to documentation for respective web service type.
+	  
 Version 0.8.0 (2009-05-13):
 
 	* This is the first release with full support for SOAP and REST web
