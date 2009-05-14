@@ -48,18 +48,18 @@ function print_title()
 function print_body()
 {
     $status = array(
+		    "rest"   => array( "status" => WS_ENABLE_REST,
+				       "name"   => "REST",
+				       "link"   => "rest.php" ),
+		    "soap"   => array( "status" => WS_ENABLE_SOAP,
+				       "name"   => "SOAP",
+				       "link"   => "soap.php" ),
 		    "http"   => array( "status" => WS_ENABLE_HTTP,
 				       "name"   => "HTTP RPC",
 				       "link"   => "http.php" ),
 		    "xmlrpc" => array( "status" => WS_ENABLE_XMLRPC,
 				       "name"   => "XML-RPC",
-				       "link"   => "xmlrpc.php" ),
-		    "soap"   => array( "status" => WS_ENABLE_SOAP,
-				       "name"   => "SOAP",
-				       "link"   => "soap.php" ),
-		    "rest"   => array( "status" => WS_ENABLE_REST,
-				       "name"   => "REST",
-				       "link"   => "rest.php" )
+				       "link"   => "xmlrpc.php" )
 		);
     
     printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services</h2>\n", HTML_PAGE_TITLE);    

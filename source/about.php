@@ -148,18 +148,18 @@ function print_about_batchelor()
 function print_webservices() 
 {    
     $status = array(
+		    "rest"   => array( "status" => WS_ENABLE_REST,
+				       "name"   => "REST",
+				       "link"   => "ws/docs/rest.php" ),
+		    "soap"   => array( "status" => WS_ENABLE_SOAP,
+				       "name"   => "SOAP",
+				       "link"   => "ws/docs/soap.php" ),
 		    "http"   => array( "status" => WS_ENABLE_HTTP,
 				       "name"   => "HTTP RPC",
 				       "link"   => "ws/docs/http.php" ),
 		    "xmlrpc" => array( "status" => WS_ENABLE_XMLRPC,
 				       "name"   => "XML-RPC",
-				       "link"   => "ws/docs/xmlrpc.php" ),
-		    "soap"   => array( "status" => WS_ENABLE_SOAP,
-				       "name"   => "SOAP",
-				       "link"   => "ws/docs/soap.php" ),
-		    "rest"   => array( "status" => WS_ENABLE_REST,
-				       "name"   => "REST",
-				       "link"   => "ws/docs/rest.php" )
+				       "link"   => "ws/docs/xmlrpc.php" )
 		);
     
     echo "<span id=\"secthead\">Status:</span>\n";
