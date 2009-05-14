@@ -290,6 +290,7 @@ function get_soap_response($options)
     }
     
     try {
+	$resp = "";
 	switch($options->func) {
 	 case "enqueue":
 	    $resp = $soap->enqueue(new EnqueueParams($params['indata']));
