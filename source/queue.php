@@ -186,7 +186,7 @@ function show_jobs_table_icons(&$jobs)
 	    break;
 	 case "crashed":
 	    $title = sprintf("started %s, \njob has crashed (not running)", 
-			     format_timestamp($job['started']));
+			     format_timestamp(isset($job['started']) ? $job['started'] : 0));
 	    break;
 	}
 	
@@ -207,7 +207,7 @@ function show_jobs_table_icons(&$jobs)
 	    print "<td align=\"center\">---</td>";
 	}
 	else {
-	    printf("<td nowrap>%s</td>", format_timestamp($job['started']));
+	    printf("<td nowrap>%s</td>", format_timestamp(isset($job['started']) ? $job['started'] : 0));
 	}
 	
 	// 
