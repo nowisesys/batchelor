@@ -376,7 +376,7 @@ function check_predefined_variables(&$failed)
 // 
 function check_loaded_extensions(&$failed)
 {
-    print_section_header("Checking loaded extensions");
+    print_section_header("Checking required extensions");
     
     foreach(array("zip", "posix", "pcre", "date", "standard") as $extension) {
 	output("Checking if extension $extension is loaded: ");
@@ -389,6 +389,30 @@ function check_loaded_extensions(&$failed)
 	}
     }
 
+    print_section_header("Checking recommended extensions");
+    
+    foreach(array("soap", "curl") as $extension) {
+	output("Checking if extension $extension is loaded: ");
+	if(extension_loaded($extension)) {
+	    success("yes");
+	}
+	else {
+	    warning("no");
+	}
+    }
+
+    print_section_header("Checking optional extensions");
+    
+    foreach(array("wddx") as $extension) {
+	output("Checking if extension $extension is loaded: ");
+	if(extension_loaded($extension)) {
+	    success("yes");
+	}
+	else {
+	    success("no");
+	}
+    }
+    
     return $failed == false;
 }
 
