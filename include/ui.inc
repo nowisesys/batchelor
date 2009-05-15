@@ -25,7 +25,19 @@ function print_header()
 {
     printf("<!-- A web application using: batchelor - batch job queue manager -->\n");
     if(isset($GLOBALS['refresh'])) {
+	if(isset($GLOBALS['ajax'])) {
+	    // 
+	    // Use Ajax (XMLHttpRequest) for page refresh.
+	    // 
+	    print "<script type=\"text/javascript\" src=\"js/engine.js\"></script>\n";
+	    print "<script type=\"text/javascript\" src=\"js/queue.js\"></script>\n";
+	    printf("<script language=\"javascript\">start_poll_queue(%d);</script>\n", PAGE_REFRESH_RATE);
+	} else {
+	    // 
+	    // Fallback on meta refresh.
+	    // 
 	printf("<meta http-equiv=\"refresh\" content=\"%d\" />", PAGE_REFRESH_RATE);
+	}
     }
 }
 
@@ -35,7 +47,7 @@ function print_header()
 function print_menu()
 {
     $queue = array( "Submit Jobs" => array( "href" => "queue.php?show=submit", "attr" => "", "icon" => "network.png" ),
-		    "Show Queue"  => array( "href" => "queue.php?show=queue",  "attr" => "", "icon" => "services.png" ));
+		    "Show Queue"  => array( "href" => "queue.php?show=queue",  "attr" => "onclick=\"this.href+='&js=on';\"", "icon" => "services.png" ));
     $utils = array( "Statistics" => array( "href" => "statistics.php", "attr" => "", "icon" => "statistics.png" ),
 		    "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"", "icon" => "info.png" ),
 		    "Help"  => array( "href" => "help.php",  "attr" => "target=\"_blank\"", "icon" => "help.png" ));

@@ -648,12 +648,15 @@ function show_page($error = null, $warning = null)
 	
 	if(PAGE_REFRESH_RATE > 0) {
 	    // 
-	    // Only output meta refresh tag if we got pending 
+	    // Only use Ajax or output meta refresh tag if we got pending 
 	    // or running jobs.
 	    // 
 	    foreach($jobs as $job) {
 		if($job['state'] == "pending" || $job['state'] == "running") {
 		    $GLOBALS['refresh'] = true;
+		    if(isset($_REQUEST['js']) && $_REQUEST['js'] == "on") {
+			$GLOBALS['ajax'] = true; // Enable Ajax
+		    }
 		    break;
 		}
 	    }

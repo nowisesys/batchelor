@@ -1,3 +1,9 @@
+Version 0.8.2 (2009-mm-dd):
+
+	* Using Ajax technology together with the HTTP RPC web service for 
+	  updating the queue view when the it's state changes if the browser
+	  supports Javascript.
+	  
 Version 0.8.1 (2009-05-14):
 
 	* Updated SOAP documentation. Its now includes documentation about
