@@ -47,6 +47,7 @@ function print_body()
     echo "<tr><td><b>FOA</b>:</td><td>Fast Object and Array encoding (described in the manual).</td></tr>\n";
     echo "<tr><td><b>PHP</b>:</td><td>Serialized data using PHP serialize() function.</td></tr>\n";
     echo "<tr><td><b>JSON</b>:</td><td>JavaScript Object Notation (JSON) data-interchange format.</td></tr>\n";
+    echo "<tr><td><b>WDDX</b>:</td><td>Web Distributed Data eXchange (WDDX) mechanism.</td></tr>\n";
     echo "</table></div>\n";
     echo "<p>The default format is <a href=\"http://it.bmc.uu.se/andlov/proj/foa/\">FOA</a>.</p>\n";
    
