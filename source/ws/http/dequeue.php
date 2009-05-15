@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -71,6 +71,14 @@ function send_result_json($result)
 }
 
 // 
+// Send result as WDDX packet.
+// 
+function send_result_wddx($result) 
+{
+    printf("%s", wddx_serialize_value($result));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -87,6 +95,9 @@ function send_result($result)
 	break;
      case "json":
 	send_result_json($result);
+	break;
+     case "wddx":
+	send_result_wddx($result);
 	break;
      default:
 	put_error(sprintf("Method dequeue don't implements format %s", $GLOBALS['format']));

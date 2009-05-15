@@ -370,7 +370,7 @@ function usage($prog, $defaults)
     printf("  --func=name:     Execute the named function (see --func=info)\n");
     printf("  --file=name:     Use file when posting data (see --post=file)\n");
     printf("  --params=str:    URL-encoded function parameters (e.g. result=1234&id=99)\n"); 
-    printf("  --format=str:    Output format: either foa, xml, json, php (or html or human for docs).\n");
+    printf("  --format=str:    Output format: either foa, xml, json, php, wddx (or html or human for docs).\n");
     printf("  --action=str:    Request method: either get, post, put or delete.\n");
     printf("  -d,--debug:      Enable debug.\n");
     printf("  -v,--verbose:    Be more verbose.\n");

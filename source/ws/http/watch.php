@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -110,6 +110,22 @@ function send_result_json(&$jobs)
 }
 
 // 
+// Send result as WDDX packet.
+// 
+function send_result_wddx(&$jobs) 
+{
+    $finished = array();
+    foreach($jobs as $result => $job) {
+	$job['result'] = $result;
+	if(isset($job['name'])) {
+	    $job['name'] = utf8_encode($job['name']);
+	}
+	$finished[] = (object)$job;
+    }
+    printf("%s", wddx_serialize_vars("finished"));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result)
@@ -127,6 +143,9 @@ function send_result($result)
      case "json":
      	send_result_json($result);
      	break;
+     case "wddx":
+	send_result_wddx($result);
+	break;
      default:
 	put_error(sprintf("Method watch don't implements format %s", $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);

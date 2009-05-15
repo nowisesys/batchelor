@@ -98,6 +98,20 @@ function send_result_json($result, &$job)
 }
 
 // 
+// Send result in WDDX packet.
+// 
+function send_result_wddx($result, &$job)
+{
+    $arr = array();
+    $job['result'] = $result;
+    if(isset($job['name'])) {
+	$job['name'] = utf8_encode($job['name']);
+    }
+    $arr[] = (object)$job;
+    printf("%s", wddx_serialize_vars("arr"));
+}
+
+// 
 // Send result to client.
 // 
 function send_result($result, &$job)
@@ -115,6 +129,9 @@ function send_result($result, &$job)
      case "json":
      	send_result_json($result, $job);
      	break;
+     case "wddx":
+	send_result_wddx($result, $job);
+	break;
      default:
 	put_error(sprintf("Method queue don't implements format %s", $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);

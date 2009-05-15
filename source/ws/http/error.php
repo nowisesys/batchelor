@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -103,6 +103,15 @@ function send_collection_json()
 }
 
 // 
+// Send collection as WDDX packet.
+// 
+function send_collection_wddx() 
+{
+    $errors = get_error();
+    printf("%s", wddx_serialize_vars("errors"));
+}
+
+// 
 // Send error message in XML format.
 // 
 function send_error_message_xml($code)
@@ -136,6 +145,14 @@ function send_error_message_json($code)
 }
 
 // 
+// Send error message as WDDX packet.
+// 
+function send_error_message_wddx($code) 
+{
+    printf("%s", wddx_serialize_value(get_error($code), "error code"));
+}
+
+// 
 // Start output buffering.
 // 
 ob_start();
@@ -154,6 +171,9 @@ if(isset($_REQUEST['code'])) {
      case "json":
      	send_error_message_json($_REQUEST['code']);
      	break;
+     case "wddx":
+	send_error_message_wddx($_REQUEST['code']);
+	break;
      default:
 	put_error(sprintf("Method %s don't implements format %s", $GLOBALS['name'], $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
@@ -172,6 +192,9 @@ if(isset($_REQUEST['code'])) {
      case "json":
      	send_collection_json();
      	break;
+     case "wddx":
+	send_collection_wddx();
+	break;
      default:
 	put_error(sprintf("Method %s don't implements format %s", $GLOBALS['name'], $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);

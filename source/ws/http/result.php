@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -89,6 +89,14 @@ function print_opendir_json(&$data)
 }
 
 // 
+// Send directory list as WDDX packet.
+// 
+function print_opendir_wddx(&$data) 
+{
+    printf("%s", wddx_serialize_vars("data"));
+}
+
+// 
 // Process opendir request.
 // 
 function process_opendir()
@@ -111,6 +119,9 @@ function process_opendir()
      case "json":
 	print_opendir_json($data);
      	break;	
+     case "wddx":
+	print_opendir_wddx($data);
+	break;
      default:
 	put_error(sprintf("Method opendir don't implements format %s", $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
@@ -154,8 +165,16 @@ function print_readdir_php(&$data)
 // Send files list in JSON format.
 // 
 function print_readdir_json(&$data)
-{
+{    
     printf("%s", json_encode($data));
+}
+
+//
+// Send files list as WDDX packet.
+// 
+function print_readdir_wddx(&$data)
+{
+    printf("%s", wddx_serialize_vars("data"));
 }
 
 // 
@@ -187,6 +206,9 @@ function process_readdir()
      case "json":
      	print_readdir_json($data);
      	break;
+     case "wddx":
+	print_readdir_wddx($data);
+	break;
      default:
 	put_error(sprintf("Method readdir don't implements format %s", $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
@@ -230,7 +252,7 @@ function process_fopen()
 ob_start();
 
 // 
-// This script is multifunction.
+// This script is multi function.
 // 
 if($GLOBALS['name'] == "opendir") {
     process_opendir();

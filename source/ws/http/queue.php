@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -121,6 +121,14 @@ function send_result_json(&$jobs)
 }
 
 // 
+// Send result as WDDX packet.
+// 
+function send_result_wddx(&$jobs) 
+{
+    printf("%s", wddx_serialize_vars("jobs"));
+}
+
+// 
 // Send result to client.
 // 
 function send_result(&$jobs)
@@ -138,6 +146,9 @@ function send_result(&$jobs)
      case "json":
      	send_result_json($jobs);
      	break;
+     case "wddx":
+	send_result_wddx($jobs);
+	break;
      default:
 	put_error(sprintf("Method queue don't implements format %s", $GLOBALS['format']));
 	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);

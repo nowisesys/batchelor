@@ -797,6 +797,12 @@ function ws_http_session_setup($params = null)
 		ws_http_error_handler(500, WS_ERROR_MISSING_EXTENSION);
 	    }
 	    $GLOBALS['format'] = "json";
+	} elseif($_REQUEST['format'] == "wddx") {
+	    if(!extension_loaded("wddx")) {
+		put_error("The wddx format can't be used due to missing extension");
+		ws_http_error_handler(500, WS_ERROR_MISSING_EXTENSION);
+	    }
+	    $GLOBALS['format'] = "wddx";
 	} elseif($_REQUEST['format'] == "plain" || $_REQUEST['format'] == "human") {
 	    $GLOBALS['format'] = "human";
 	} elseif($_REQUEST['format'] == "html") {

@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -90,6 +90,19 @@ function print_info_json()
 }
 
 // 
+// Print function list as WDDX packet.
+// 
+function print_info_wddx()
+{
+    $entries = ws_get_rpc_method_by_index();
+    $names = array();
+    foreach($entries as $entry) {
+	$names[] = $entry['name'];
+    }
+    printf("%s", wddx_serialize_vars("names"));
+}
+
+// 
 // Print function list in human readable format.
 // 
 function print_info_human()
@@ -171,7 +184,7 @@ function print_info_html()
     print "<h3>Sending method requests</h3>\n";
     print "<h4>Parameter format:</h4>\n";
     print "<p>Parameters for methods are always submitted using standard HTTP GET or POST. \n";
-    print "An additional parameter format={foa|xml|php|json} can be passed to select the format of returned data.</p>\n";
+    print "An additional parameter format={foa|xml|php|json|wddx} can be passed to select the format of returned data.</p>\n";
     printf("<p>The standard format used if the format parameter is missing is %s, but its \n", WS_HTTP_OUTPUT_FORMAT);
     print "up to each installation to select the default format in its configuration. No format is prefered over the others, \n";
     print "it depends on the language you use for the client side.</p>\n";
@@ -185,6 +198,7 @@ function print_info_html()
     print "<li>FOA   : Fast Object and Array encoding (described in the manual).</li>\n";
     print "<li>PHP   : Serialized data using PHP serialize() function.</li>\n";
     print "<li>JSON  : JavaScript Object Notation (JSON) data-interchange format.</li>\n";
+    print "<li>WDDX  : Web Distributed Data eXchange (WDDX) mechanism (ColdFusion).</li>\n";
     print "</ul>\n";
     print "</p>\n";
     print "<p>The native format is FOA, that stands for Fast Object and Array encoding, and is designed to be lightweight \n";
@@ -192,7 +206,7 @@ function print_info_html()
     
     print "<h4>Return values (FOA):</h4>\n";
     print "<p>The XML format of return values should be fairly easy to understand, so this section \n";
-    print "will focus on describing the FOA-format.</p>\n";
+    print "will focus on describing the FOA-format. See <a href=\"http://www.wikipedia.org\">Wikipedia</a> for descriptions of the other formats.</p>\n";
     print "<p>All methods returns either nothing (void), an single value (boolean, integer or string) or \n";
     print "an compound value (array or object). The single values are fairly obvious, but arrays and objects \n";
     print "serves an disscussion.</p>\n";
@@ -329,6 +343,14 @@ function print_func_json($entry)
 }
 
 // 
+// Print function info as WDDX packet.
+// 
+function print_func_wddx($entry)
+{
+    printf("%s", wddx_serialize_vars("entry"));
+}
+
+// 
 // Print function info in human readable format.
 // 
 function print_func_human($entry)
@@ -456,6 +478,9 @@ if($GLOBALS['name'] == "info") {
      case "json":
 	print_info_json();
 	break;
+     case "wddx":
+	print_info_wddx();
+	break;
      case "html":	
 	print_html_page();
 	break;
@@ -481,6 +506,9 @@ if($GLOBALS['name'] == "info") {
 	break;
      case "json":
 	print_func_json($entry);
+	break;
+     case "wddx":
+	print_func_wddx($entry);
 	break;
      case "html":
 	print_html_page();
