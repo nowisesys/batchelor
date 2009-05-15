@@ -704,6 +704,8 @@ function ws_get_mime_type($path = null)
 	    return "text/xml";
 	} else if($GLOBALS['format'] == "foa") {
 	    return "text/x-foa";
+	} else if($GLOBALS['format'] == "json") {
+	    return "application/json";
 	} else if($GLOBALS['format'] == "html") {
 	    return "text/html";
 	} else if($GLOBALS['format'] == "human") {
