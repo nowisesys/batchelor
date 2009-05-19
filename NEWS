@@ -1,3 +1,8 @@
+Version 0.8.3 (2009-05-19):
+
+	* Small fixes in the SOAP and REST services binding to the ws_fopen()
+	  internal method (maintenance release).
+	
 Version 0.8.2 (2009-05-16):
 
 	* Ajax technology is used together with the HTTP RPC web service to 
