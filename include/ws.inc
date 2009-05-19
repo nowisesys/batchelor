@@ -789,7 +789,9 @@ function ws_http_session_setup($params = null)
 	$GLOBALS['format'] = WS_HTTP_OUTPUT_FORMAT;
     }
     if(isset($_REQUEST['format'])) {
-	if($_REQUEST['format'] == "xml" || $_REQUEST['format'] == "foa" || $_REQUEST['format'] == "php") {
+	if($_REQUEST['format'] == "xml" || 
+	   $_REQUEST['format'] == "foa" || 
+	   $_REQUEST['format'] == "php") {
 	    $GLOBALS['format'] = $_REQUEST['format'];
 	} elseif($_REQUEST['format'] == "json") {
 	    if(!extension_loaded("json")) {
@@ -803,7 +805,9 @@ function ws_http_session_setup($params = null)
 		ws_http_error_handler(500, WS_ERROR_MISSING_EXTENSION);
 	    }
 	    $GLOBALS['format'] = "wddx";
-	} elseif($_REQUEST['format'] == "plain" || $_REQUEST['format'] == "human") {
+	} elseif($_REQUEST['format'] == "plain" || 
+		 $_REQUEST['format'] == "human" || 
+		 $_REQUEST['format'] == "text") {
 	    $GLOBALS['format'] = "human";
 	} elseif($_REQUEST['format'] == "html") {
 	    $GLOBALS['format'] = "html";

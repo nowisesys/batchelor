@@ -484,6 +484,7 @@ if($GLOBALS['name'] == "info") {
      case "html":	
 	print_html_page();
 	break;
+     case "text":
      case "human":
 	print_info_human();
 	break;
@@ -513,6 +514,7 @@ if($GLOBALS['name'] == "info") {
      case "html":
 	print_html_page();
 	break;
+     case "text":
      case "human":
 	print_func_human($entry);
 	break;
