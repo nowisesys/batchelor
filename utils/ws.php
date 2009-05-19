@@ -360,29 +360,46 @@ function get_rpc_response($options)
 // Show basic usage.
 //
 function usage($prog, $defaults)
-{    
+{
     print "$prog - test utility for web services\n";
     print "\n";      
     print "Usage: $prog options...\n";
+    print "\n";      
     print "Options:\n";
-    printf("  --base=url:      The base URL to web services [%s]\n", $defaults->baseurl);
-    printf("  --type=str:      The web service interface, either http, xmlrpc, rest or soap [%s]\n", $defaults->type);
-    printf("  --func=name:     Execute the named function (see --func=info)\n");
-    printf("  --file=name:     Use file when posting data (see --post=file)\n");
-    printf("  --params=str:    URL-encoded function parameters (e.g. result=1234&id=99)\n"); 
-    printf("  --format=str:    Output format: either foa, xml, json, php, wddx (or html or human for docs).\n");
-    printf("  --action=str:    Request method: either get, post, put or delete.\n");
-    printf("  -d,--debug:      Enable debug.\n");
-    printf("  -v,--verbose:    Be more verbose.\n");
-    printf("  -h,--help:       This help.\n");
-    printf("  -V,--version:    Show version info.\n");
-    printf("Convenience options:\n");
-    printf("  --get:           Alias for --action=get\n");
-    printf("  --post=file:     Alias for --action=post --file=name\n");
-    printf("  --delete:        Alias for --action=delete\n");
-    printf("  --put:           Alias for --action=put\n");
+    printf("  --base=url:    The base URL to web services [%s]\n", $defaults->baseurl);
+    printf("  --type=str:    The web service interface, either http, xmlrpc, rest or soap [%s]\n", $defaults->type);
+    printf("  --func=name:   Execute the named function (see --func=info)\n");
+    printf("  --file=name:   Use file when posting data (see --post=file)\n");
+    printf("  --params=str:  URL-encoded function parameters (e.g. result=1234&id=99)\n"); 
+    printf("  --format=str:  Output format: either foa, xml, json, php, wddx (and html or human for docs).\n");
+    printf("  --action=str:  Request method: either get, post, put or delete.\n");
+    printf("  -d,--debug:    Enable debug.\n");
+    printf("  -v,--verbose:  Be more verbose.\n");
+    printf("  -h,--help:     This help.\n");
+    printf("  -V,--version:  Show version info.\n");
+    print "\n";      
+    printf("Aliases:\n");
+    printf("  --get:         Alias for --action=get\n");
+    printf("  --post=file:   Alias for --action=post --file=name\n");
+    printf("  --delete:      Alias for --action=delete\n");
+    printf("  --put:         Alias for --action=put\n");
     print "\n";
-    print "Example:  php ws.php --func=enqueue --type=xmlrpc --params='indata=test'\n";
+    printf("  --http:        Alias for --type=http\n");
+    printf("  --soap:        Alias for --type=soap\n");
+    printf("  --rest:        Alias for --type=rest\n");
+    printf("  --xmlrpc:      Alias for --type=xmlrpc\n");
+    print "\n";
+    print "Notes:\n";
+    print "  1) Option --func don't make sense together with --rest\n";
+    print "  2) Option --format can only be used with --http\n";
+    print "\n";
+    print "Example:\n";
+    print "  php ws.php --func=enqueue --type=xmlrpc --params='indata=test'\n";
+    print "  php ws.php --func=enqueue --http --post=file.txt --format=json\n";
+    print "  php ws.php --func=func --params='name=suspend' --format=human\n";
+    print "\n";
+    print "This tool is released under GNU General Public License version 2\n";
+    print "Copyright (C) 2007-2009 Anders Lövgren\n";
 }
 
 //
@@ -454,6 +471,9 @@ function parse_options(&$argc, $argv, &$options)
 	 case "--help":            // Show help.
 	    usage($options->prog, $defaults);
 	    exit(0);
+	 case "--http":
+	    $options->type = "http";
+	    break;
 	 case "--params":
 	    if(!isset($val)) {
 		die(sprintf("%s: option --params requires an argument (see --help)\n", $options->prog));
@@ -469,6 +489,12 @@ function parse_options(&$argc, $argv, &$options)
 	    break;
 	 case "--put":
 	    $options->action = "put";
+	    break;
+	 case "--rest":
+	    $options->type = "rest";
+	    break;
+	 case "--soap":
+	    $options->type = "soap";
 	    break;
 	 case "--type":
 	    if(!isset($val)) {
@@ -487,6 +513,9 @@ function parse_options(&$argc, $argv, &$options)
 	 case "--version":         // Show version info.
 	    version($options->prog, $options->version);
 	    exit(0);	      
+	 case "--xmlrpc":
+	    $options->type = "xmlrpc";
+	    break;
 	 default:
 	    die(sprintf("%s: unknown option '%s', see --help\n", $options->prog, $key));
 	}
