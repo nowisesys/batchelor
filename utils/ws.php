@@ -317,10 +317,10 @@ function get_soap_response($options)
 	    $resp = $soap->opendir();
 	    break;
 	 case "readdir":
-	    $resp = $soap->readdir(new DequeueParams(new JobIdentity($params['jobid'], $params['result'])));
+	    $resp = $soap->readdir(new ReaddirParams(new JobIdentity($params['jobid'], $params['result'])));
 	    break;
 	 case "fopen":
-	    $resp = $soap->fopen(new DequeueParams(new JobIdentity($params['jobid'], $params['result']), $params['file']));
+	    $resp = $soap->fopen(new FopenParams(new JobIdentity($params['jobid'], $params['result']), $params['file']));
 	    break;
 	 case "stat":
 	    $resp = $soap->stat(new StatParams(new JobIdentity($params['jobid'], $params['result'])));
