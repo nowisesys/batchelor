@@ -754,23 +754,24 @@ function send_result($request)
 		      "file");
 	}
 	send_end_tag();
-    } elseif(count($request->childs) == "3") {
+    } elseif(count($request->childs) > "2") {
+	$frequest = implode("/", array_slice($request->childs, 2));
 	$filename = "";
 	if(!ws_fopen($request->childs[0], 
 		     $request->childs[1], 
-		     $request->childs[2], 
+		     $frequest, 
 		     $filename)) {
 	    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
 	}
 	if(!file_exists($filename)) {
-	    send_error(WS_ERROR_INVALID_REQUEST, get_last_error());
+	    send_error(WS_ERROR_INVALID_REQUEST, null);
+	} elseif(is_dir($filename)) {
+	    send_error(WS_ERROR_INVALID_REQUEST, null);
 	} else {
 	    send_start_tag("success", "file", false);
 	    send_file($filename);
 	    send_end_tag(false);
 	}
-    } else {
-	send_error(WS_ERROR_INVALID_REQUEST, null);
     }
 }
 
