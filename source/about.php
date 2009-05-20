@@ -220,7 +220,7 @@ function print_about_page($page, $desc)
 	}
     }
     else {
-    	print "<span id=\"secthead\">Missing page</span>\n";
+    	print "<span id=\"secthead\">Missing page!</span>\n";
 	printf("<p>The about page for '%s' is missing. Please check your installation. If this is \n", $desc);	
 	printf("a new installation, then create a HTML page named '%s' with information \n", $page);
 	print "about your application or remove this tab menu entry inside about.php.\n";
@@ -255,10 +255,18 @@ function print_about()
 {
     // 
     // Add pages to the tab menu. You can add your own tabs by either:
+    // 
     //   1. Add an function in this file (like for batchelor).
     //   2. Add an external page (like the app example).
+    // 
+    // Note that this breaks the update plan, so you have to manual merge your
+    // changes into the new about.php if you ever update.
     //
-    $tabmenu = array( "appname"    => array( "desc" => "The Application",
+    $appname = "The Application";
+    if(defined("HTML_PAGE_TITLE") && HTML_PAGE_TITLE != "Batchelor") {
+	$appname = HTML_PAGE_TITLE;
+    }
+    $tabmenu = array( "appname"    => array( "desc" => $appname,
 					     "func" => null,
 					     "page" => "about_app.html",
 					     "show" => true ),

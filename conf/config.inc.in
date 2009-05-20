@@ -250,7 +250,8 @@ define ("FOOTER_SHOW_NOTES", true);
 define ("FOOTER_SHOW_COPYING", true);
 
 // 
-// Define the string used in the title for each page.
+// Define the string used in the title for each page. This is also used as 
+// the name for the application tab on the about page.
 // 
 define ("HTML_PAGE_TITLE", "Batchelor");
 
