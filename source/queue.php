@@ -125,16 +125,18 @@ function show_jobs_table(&$jobs)
 	else {
 	    show_jobs_table_plain($jobs);
 	}
+	// 
+	// Add button for deleting currently shown jobs.
+	// 
+	printf("<br>\n");
+	printf("<form action=\"delete.php\" method=\"GET\">\n");
+	printf("  <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
+	printf("  <input type=\"hidden\" name=\"sort\" value=\"%s\">\n", $_REQUEST['sort']);
+	printf("  <input type=\"submit\" name=\"multiple\" value=\"Delete Jobs\" title=\"Delete all jobs showed in this list\" />\n");
+	printf("</form>\n");
+    } else {
+	print_message_box("info", "No jobs in the queue where found that matched your filter criterias.");
     }
-    // 
-    // Add button for deleting currently shown jobs.
-    // 
-    printf("<br>\n");
-    printf("<form action=\"delete.php\" method=\"GET\">\n");
-    printf("  <input type=\"hidden\" name=\"filter\" value=\"%s\" />\n", $_REQUEST['filter']);
-    printf("  <input type=\"hidden\" name=\"sort\" value=\"%s\">\n", $_REQUEST['sort']);
-    printf("  <input type=\"submit\" name=\"multiple\" value=\"Delete Jobs\" title=\"Delete all jobs showed in this list\" />\n");
-    printf("</form>\n");
 }
 
 // 
@@ -652,7 +654,7 @@ function show_page($error = null, $warning = null)
 	if(!$jobs) {
 	    log_errors();
 	}
-	
+		
 	if(PAGE_REFRESH_RATE > 0) {
 	    // 
 	    // Only use Ajax or output meta refresh tag if we got pending 
