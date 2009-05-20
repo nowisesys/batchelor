@@ -197,7 +197,7 @@ define ("QUEUE_FORMAT_COMPACT", false);
 // 
 // Define queue sort order (value are either "asc" or "desc").
 // 
-define ("QUEUE_SORT_ORDER", "asc");
+define ("QUEUE_SORT_ORDER", "desc");
 
 // 
 // Configure the menu style. Use either "graphic", "text" or "compact".
