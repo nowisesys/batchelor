@@ -342,7 +342,8 @@ define ("HELP_STYLE", "graphic");
 define ("HELP_LEVEL", 2);
 
 // 
-// Show description about icons used in queue viewer.
+// Show description about icons used in queue viewer. This setting has no
+// effect unless USE_ICONIZED_QUEUE is true.
 //
 define ("HELP_ICON_INFO", true);
 

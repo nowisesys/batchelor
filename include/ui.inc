@@ -228,7 +228,7 @@ function context_help_system($what)
 	if(HELP_LEVEL > 2) {
 	    print "<p>Click on the job ID link to view <b>details</b> and <b>uploaded data</b> for that specific job.</p>\n";
 	}
-	if(HELP_ICON_INFO) {
+	if(HELP_ICON_INFO && USE_ICONIZED_QUEUE) {
 	    if(HELP_LEVEL > 0) {
 		print "<p><u>Description of exit status icons:</u>\n";
 		print "<ul>\n";
