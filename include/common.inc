@@ -463,6 +463,24 @@ function print_message_box($type, $msg)
     print "<div id=\"info\"><table><tr><td><img src=\"icons/nuvola/big/$type.png\"></td><td valign=\"top\">$msg</td></tr></table></div>";
 }
 
+//
+// Returns true if trusted hosts is defined (see TRUSTED_HOSTS in conf/config.inc)
+// and remote host is in the defined array.
+//
+function trusted_host($ipaddr)
+{
+    static $trusted = NULL;
+    
+    if(is_null($trusted)) {
+	if(defined("TRUSTED_HOSTS")) {
+	    $trusted = in_array($ipaddr, explode(",", TRUSTED_HOSTS));
+	} else {
+	    $trusted = false;
+	}
+    }
+    return $trusted;
+}
+
 // 
 // Put an error message to error message list.
 // 

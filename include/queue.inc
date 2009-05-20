@@ -543,7 +543,11 @@ function enqueue_job($formdata, &$jobs)
 			   bytes_to_string(UPLOAD_MIN_FILESIZE)));
 	return false;
     }
-    if(UPLOAD_MAX_FILESIZE != 0 && filesize($indata) > UPLOAD_MAX_FILESIZE) {
+    
+    //
+    // Nuke file upload if file is too big and peer is not an trusted hosts.
+    // 
+    if(UPLOAD_MAX_FILESIZE != 0 && filesize($indata) > UPLOAD_MAX_FILESIZE && !trusted_host($_SERVER['REMOTE_ADDR'])) {
 	if(!cleanup_jobdir($jobdir, $indata)) {
 	    return false;
 	}
