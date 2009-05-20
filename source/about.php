@@ -93,7 +93,8 @@ function print_about_batchelor()
 
     print "<span id=\"secthead\">Copyright</span>\n";
     print "<p>Batchelor is Copyright &copy; 2007-2009 by Anders L&ouml;vgren and the ";
-    print "Computing Department at <a href=\"http://www.bmc.uu.se\">Uppsala Biomedical Centre</a>, Uppsala University (with equally shared rights).</p>\n";
+    print "<a href=\"http://www.bmc.uu.se/node151\">Computing Department</a> ";
+    print "at <a href=\"http://www.bmc.uu.se\">Uppsala Biomedical Centre</a>, Uppsala University (with equally shared rights).</p>\n";
         
     $credits = "../CREDITS";
     if(file_exists($credits)) {
@@ -115,7 +116,7 @@ function print_about_batchelor()
 	    }
 	    fclose($fp);
 	    print "<span id=\"secthead\">Credits</span>\n";
-	    print "<p>Thanks to the <a href=\"http://www.bmc.uu.se/node151\">Computing Department at BMC</a> for allocating time for me to work on and extend this project.</p>\n";
+	    // print "<p>Thanks to the <a href=\"http://www.bmc.uu.se/node151\">Computing Department at BMC</a> for allocating time for me to work on and extend this project.</p>\n";
 	    if(count($package)) {
 		print "<p>The following other projects have been used in Batchelor:\n</p>";
 		foreach($package as $name => $links) {
