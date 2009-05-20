@@ -562,10 +562,10 @@ function run_all_tests()
     
     print_section_header("Summary");
     if($failed) {
-	output("One or more test failed, check your PHP installation.\n");
+	output("One or more test has failed, check your system and PHP installation.\n");
     }
     else {
-	output("Your PHP installation seems to be OK.\n");
+	output("Your PHP installation seems to be OK. Your system seems to be ready for running Batchelor.\n");
     }
 }
 
