@@ -293,6 +293,22 @@ function has_function($name)
 }
 
 // 
+// Check if the given class exists.
+// 
+function has_class($name)
+{
+    output("Checking if class $name exists: ");
+    
+    if(class_exists($name)) {
+	success("yes");
+	return true;
+    }
+    
+    failed("no");
+    return false;
+}
+
+// 
 // Check all required external commands.
 //
 function check_external_commands(&$failed)
@@ -325,11 +341,31 @@ function check_builtin_functions(&$failed)
 		       "stream_get_contents", "fclose", "proc_close", "preg_match",
 		       "strtotime", "filemtime", "error_log", "rename", "array_shift",
 		       "array_unshift", "basename", "posix_getpwuid", "posix_getuid",
-		       "posix_geteuid", "posix_kill", "ob_start", "ob_end_flush");
+		       "posix_geteuid", "posix_kill", "ob_start", "ob_end_flush", 
+		       "date_default_timezone_get", "timezone_offset_get", "timezone_open");
     sort($functions);
     
     foreach($functions as $func) {
 	if(!has_function($func)) {
+	    $failed = true;
+	}
+    }    
+
+    return $failed == false;
+}
+
+// 
+// Check all required classes.
+// 
+function check_builtin_classes(&$failed)
+{
+    print_section_header("Checking required classes");
+
+    $classes = array("DateTime");
+    sort($classes);
+
+    foreach($classes as $name) {
+	if(!has_class($name)) {
 	    $failed = true;
 	}
     }    
@@ -556,6 +592,7 @@ function run_all_tests()
 	check_loaded_extensions($failed);
 	check_cache_permission($failed);
 	check_builtin_functions($failed);
+	check_builtin_classes($failed);
 	check_predefined_variables($failed);
 	check_php_settings($failed);
     }
