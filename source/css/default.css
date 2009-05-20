@@ -158,6 +158,7 @@ div.menuhead {
 	border: 1px solid #cccccc;
 	margin-left: 5px;
 	margin-top: 10px;
+	white-space: nowrap;
 }
 
 div.submit {
