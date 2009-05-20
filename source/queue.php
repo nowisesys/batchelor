@@ -308,6 +308,7 @@ function show_jobs_table_plain(&$jobs)
     $color = array( "pending"  => "#000066",
 		    "running"  => "#0000bb",
 		    "finished" => "#006600",
+		    "warning"  => "#0000ff",
 		    "error"    => "#990000",
 		    "crashed"  => "#666666" );
       
@@ -376,6 +377,9 @@ function show_jobs_table_plain(&$jobs)
 	}
 	if($job['state'] == "finished") {
 	    array_push($links, sprintf("<a href=\"download.php?jobid=%s&result=%s\">download</a>", $job['jobid'], $jobdir));
+	}
+	if(isset($job['warning'])) {
+	    array_push($links, sprintf("<a href=\"details.php?jobid=%s&result=%s&warn=1\" title=\"this job was queued with warnings, click on the icon to show the warning message.\" target=\"_blank\">notice</a>", $job['jobid'], $jobdir));
 	}
 	printf("<td nowrap>%s</td></tr>\n", implode(", ", $links));
     }
