@@ -45,7 +45,7 @@ if(!defined("WS_ENABLE_XMLRPC")) {
 // 
 function print_about_batchelor()
 {
-    print "<span id=\"secthead\">About batchelor</span>\n";
+    print "<span id=\"secthead\">About Batchelor</span>\n";
     print "<p>This web application is powered by Batchelor, a batch job queue manager written in PHP.</p>\n";
     print "<p>Using a batch queue manager allows jobs with long run times ";
     print "to be submitted to the web server and scheduled for later ";
@@ -64,10 +64,10 @@ function print_about_batchelor()
     print "<span id=\"secthead\">Licensing</span>\n";    
     print "<p>Batchelor is released under the <a href=\"about.php?sect=license\">GNU Public License</a> (GPL) and free ";
     print "for anyone to modify or redistribute. See the file COPYING bundled ";
-    print "together with batchelor for details. Batchelor is originally developed Anders L&ouml;vgren.</p>\n";
+    print "together with Batchelor for details. Batchelor is originally developed Anders L&ouml;vgren.</p>\n";
 
     print "<span id=\"secthead\">Authors</span>\n";    
-    print "<p>The following people have contributed to batchelor:\n</p><p>";
+    print "<p>The following people have contributed to Batchelor:\n</p><p>";
     $authors = "../AUTHORS";
     if(file_exists($authors)) {
 	$fp = fopen($authors, "r");
@@ -92,8 +92,8 @@ function print_about_batchelor()
     print "</p>\n";
 
     print "<span id=\"secthead\">Copyright</span>\n";
-    print "<p>Batchelor is Copyright &copy; 2007-2008 by Anders L&ouml;vgren and the ";
-    print "Computing Department at <a href=\"http://www.bmc.uu.se\">Uppsala Biomedical Centre</a>, Uppsala University (equally shared).</p>\n";
+    print "<p>Batchelor is Copyright &copy; 2007-2009 by Anders L&ouml;vgren and the ";
+    print "Computing Department at <a href=\"http://www.bmc.uu.se\">Uppsala Biomedical Centre</a>, Uppsala University (with equally shared rights).</p>\n";
         
     $credits = "../CREDITS";
     if(file_exists($credits)) {
@@ -117,7 +117,7 @@ function print_about_batchelor()
 	    print "<span id=\"secthead\">Credits</span>\n";
 	    print "<p>Thanks to the <a href=\"http://www.bmc.uu.se/node151\">Computing Department at BMC</a> for allocating time for me to work on and extend this project.</p>\n";
 	    if(count($package)) {
-		print "<p>The following other projects have been used in batchelor:\n</p>";
+		print "<p>The following other projects have been used in Batchelor:\n</p>";
 		foreach($package as $name => $links) {
 		    print "<p><u>$name:</u><ul>\n";
 		    foreach($links as $link) {
@@ -136,7 +136,7 @@ function print_about_batchelor()
     print "<p>The latest version of Batchelor can be downloaded from <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor/\">http://it.bmc.uu.se/andlov/proj/batchelor/</a></p>\n";
     
     print "<span id=\"secthead\">Bug reports</span>\n";
-    print "<p>If you think you have found a bug in the batch queue manager (batchelor), ";
+    print "<p>If you think you have found a bug in the batch queue manager (Batchelor), ";
     print "please send a bug report to Anders L&ouml;vgren &lt;<a href=\"mailto:lespaul@algonet.se\">lespaul@algonet.se</a>&gt;. ";
     print "Include any error message, all relevant lines from the Apache error log and the output ";
     print "from check.php (runned from the command line is OK). Use 'batchelor: bug report' as subject line.</p>\n";
