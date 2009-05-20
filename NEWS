@@ -7,6 +7,14 @@ Version 0.8.4 (2009-05-20):
 	
 	* Added download links of indata and result to the details page.
 	  Added "View Result" link to left menu showing all finished jobs.
+	  
+        * The non-graphic queue view has now the same features as the queue
+	  view using icons (these two presents the queue from slightly
+	  different angles).
+	  
+	* Improved the UI of the queue view by showing a message box and
+	  hiding the 'delete jobs' button if no jobs in the queue matches the 
+	  filter criterias.
 
 Version 0.8.3 (2009-05-19):
 
