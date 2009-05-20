@@ -144,8 +144,14 @@ function print_body()
 	    }
 	}
 	printf("<span id=\"secthead\">More information:</span>\n");
-	printf("<p><a href=\"details.php?jobid=%s&result=%s&data=1\" target=\"_blank\">View indata...</a></p>", 
+	printf("<p><ul>\n");
+	printf("<li><a href=\"details.php?jobid=%s&result=%s&data=1\" target=\"_blank\">View indata</a></li>",
 	       $_REQUEST['jobid'], $_REQUEST['result']);
+	printf("<li><a href=\"download.php?jobid=%s&result=%s&what=indata\">Download indata</a></li>",
+	       $_REQUEST['jobid'], $_REQUEST['result']);
+	printf("<li><a href=\"download.php?jobid=%s&result=%s&what=result\">Download result</a></li>",
+	       $_REQUEST['jobid'], $_REQUEST['result']);
+	printf("</ul></p>\n");
 	
 	chdir($cwd);
     }
