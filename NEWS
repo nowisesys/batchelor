@@ -1,3 +1,13 @@
+Version 0.8.4 (2009-05-20):
+
+	* Trusted hosts with extended capabilities (i.e. allowed to bypass the 
+	  upload filesize limit) can now be defined in conf/config.inc.
+	  
+	* The JpGraph config file (conf/jpgraph.inc) is now config protected.
+	
+	* Added download links of indata and result to the details page.
+	  Added "View Result" link to left menu showing all finished jobs.
+
 Version 0.8.3 (2009-05-19):
 
 	* Small fixes in the SOAP and REST services binding to the ws_fopen()
