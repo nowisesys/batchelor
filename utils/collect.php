@@ -77,7 +77,11 @@ include "../include/queue.inc";
 include "../include/getopt.inc";
 
 if(USE_JPGRAPH_LIB) {
-    include "../conf/jpgraph.inc";
+    if(file_exists("../conf/jpgraph.inc")) {
+	include "../conf/jpgraph.inc";
+    } elseif(file_exists("../conf/jpgraph.inc.in")) {
+	include "../conf/jpgraph.inc.in";
+    }
     if(defined("JPGRAPH_LIB_PATH")) {
 	ini_set("include_path", ini_get("include_path") . ":" . JPGRAPH_LIB_PATH);
     }

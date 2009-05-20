@@ -130,6 +130,22 @@ function check_config_files(&$failed)
 	warning("No, if you are using Apache web server, then copy 'conf/apache.conf.in' to 'conf/apache.conf' and edit the file, then rerun the test");
     }
     
+    // 
+    // The jpgraph.inc is recommended.
+    // 
+    output("Checking if jpgraph.inc exists: ");
+    if(file_exists("../conf/jpgraph.inc")) {
+	if(filemtime("../conf/jpgraph.inc.in") < filemtime("../conf/jpgraph.inc")) {
+	    success("OK");
+	}
+	else {
+	    warning("File exists but 'conf/jpgraph.inc.in' is newer than 'conf/jpgraph.inc' (possibly updated)");
+	}
+    }
+    else {
+	warning("No, if you are planning to use the JpGraph graphics library (used when generating statistics graphs), then copy 'conf/jpgraph.inc.in' to 'conf/jpgraph.inc' and edit the file, then rerun the test");
+    }
+    
     return $failed == false;
 }
 
