@@ -31,7 +31,6 @@ include "../conf/config.inc";
 function print_help()
 {
     printf("<h2><img src=\"icons/nuvola/help.png\"> Help contents</h2>\n");
-    printf("<hr>\n");
     
     printf("<span id=\"secthead\">General</span>\n");
     printf("<p>You see this page because no installation specific help has been written (yet). ");

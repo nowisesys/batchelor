@@ -289,7 +289,6 @@ function print_about()
     }
     
     printf("<h2><img src=\"icons/nuvola/info.png\"> About %s</h2>\n", $tabmenu[$selected]['desc']);
-    printf("<hr>\n");
     
     // 
     // Print tab menu:
