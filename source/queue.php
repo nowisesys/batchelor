@@ -664,7 +664,7 @@ function show_page($error = null, $warning = null)
 	if(!$jobs) {
 	    log_errors();
 	}
-		
+	
 	if(PAGE_REFRESH_RATE > 0) {
 	    // 
 	    // Only use Ajax or output meta refresh tag if we got pending 
@@ -673,7 +673,7 @@ function show_page($error = null, $warning = null)
 	    foreach($jobs as $job) {
 		if($job['state'] == "pending" || $job['state'] == "running") {
 		    $GLOBALS['refresh'] = true;
-		    if(isset($_REQUEST['js']) && $_REQUEST['js'] == "on") {
+		    if(isset($_REQUEST['js']) && $_REQUEST['js'] == "on" && WS_ENABLE_HTTP) {
 			$GLOBALS['ajax'] = true; // Enable Ajax
 		    }
 		    break;
