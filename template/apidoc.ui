@@ -23,11 +23,11 @@
   <div class="top"></div>
   <?php print_html("body"); ?>
   <br><hr>
-  <p><a href="../docs/index.php">Index</a> | 
-     <a href="../docs/intro.php">Introduction</a> | 
-     <a href="../docs/soap.php">SOAP</a> | 
-     <a href="../docs/rest.php">REST</a> | 
-     <a href="../docs/http.php">HTTP RPC</a> | 
+  <p><a href="../docs/index.php">Index</a> :: 
+     <a href="../docs/intro.php">Introduction</a> :: 
+     <a href="../docs/soap.php">SOAP</a> :: 
+     <a href="../docs/rest.php">REST</a> :: 
+     <a href="../docs/http.php">HTTP RPC</a> :: 
      <a href="../docs/xmlrpc.php">XML-RPC</a>
   </p>
   <hr>
