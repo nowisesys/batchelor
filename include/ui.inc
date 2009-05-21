@@ -47,8 +47,9 @@ function print_header()
 function print_menu()
 {
     $queue = array( "Submit Jobs" => array( "href" => "queue.php?show=submit", "attr" => "", "icon" => "network.png" ),
-		    "View Result" => array( "href" => "queue.php?show=queue&sort=started&filter=finished",  "attr" => "onclick=\"this.href+='&js=on';\"", "icon" => "services.png" ),
-		    "Show Queue"  => array( "href" => "queue.php?show=queue",  "attr" => "onclick=\"this.href+='&js=on';\"", "icon" => "services.png" ));
+		    "View Result" => array( "href" => "queue.php?show=queue&sort=started&filter=finished", "attr" => "onclick=\"this.href+='&js=on';\"", "icon" => "services.png" ),
+		    "Show Active" => array( "href" => "queue.php?show=queue&sort=state&filter=waiting", "attr" => "onclick=\"this.href+='&js=on';\"", "icon" => "services.png" ),
+		    "Show Queue"  => array( "href" => "queue.php?show=queue", "attr" => "onclick=\"this.href+='&js=on';\"", "icon" => "services.png" ));
     $utils = array( "Statistics" => array( "href" => "statistics.php", "attr" => "", "icon" => "statistics.png" ),
 		    "About" => array( "href" => "about.php", "attr" => "target=\"_blank\"", "icon" => "info.png" ),
 		    "Help"  => array( "href" => "help.php",  "attr" => "target=\"_blank\"", "icon" => "help.png" ));
