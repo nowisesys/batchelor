@@ -201,8 +201,19 @@ function split_batch_output($str)
     // 
     // We need to adjust for the current timezone:
     // 
-    $timezone = date_default_timezone_get();
-    $offset = timezone_offset_get(timezone_open($timezone), new DateTime("now"));
+    if(function_exists("timezone_open") && class_exists("DateTime")) {
+	// 
+	// These functions was included in PHP >= 5.1.0:
+	// 
+	$timezone = date_default_timezone_get();
+	$offset   = timezone_offset_get(timezone_open($timezone), new DateTime("now"));	
+    } else {
+	// 
+	// Fall back on the old date() function:
+	// 
+	$timezone = date("T");
+	$offset   = date("Z");
+    }
     
     foreach($rows as $row) {
 	// 
