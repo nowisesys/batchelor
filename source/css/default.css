@@ -50,7 +50,10 @@ img {
 }
 
 hr {
-	color: #000066;
+	color: #bbbbbb;
+	background-color: #bbbbbb;
+	border: none;
+	height: 2px;
 }
 
 p {
