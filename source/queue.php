@@ -113,6 +113,9 @@ function show_jobs_table(&$jobs)
     print "<table><tr><td align=\"left\"><span id=\"secthead\">Filter Options:</span></td>\n";
     print "<td><form action=\"queue.php\" method=\"get\">\n";
     print "<input type=\"hidden\" name=\"show\" value=\"queue\" />\n";
+    if(isset($_REQUEST['js'])) {
+	print "<input type=\"hidden\" name=\"js\" value=\"on\" />\n";
+    }
     print "<table><tr>\n";
     print_select("Sort on", "sort", $sort);
     print_select("Show", "filter",  $filter);
@@ -606,7 +609,7 @@ function print_body()
 	print_message_box("warning", $GLOBALS['warning']);
     }
     elseif(isset($_REQUEST['queued'])) {
-	print_message_box("info", "The submitted job has been queued.<br>Click on <a href=\"queue.php?show=queue\">Show Queue</a> to view its status and download the result.");
+	print_message_box("info", "The submitted job has been queued.<br>Click on <a href=\"queue.php?show=queue\" onclick=\"this.href+='&js=on';\">Show Queue</a> to view its status and download the result.");
     }
 }
 
