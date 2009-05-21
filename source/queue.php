@@ -161,7 +161,14 @@ function show_jobs_table_icons(&$jobs)
     }
     print "<tr>\n";
     
-    foreach($jobs as $jobdir => $job) {	    
+    foreach($jobs as $jobdir => $job) {
+	// 
+	// Prevent error if we failed to parse the jobid from batch queue output:
+	// 
+	if(!isset($job['jobid'])) {
+	    $job['jobid'] = "@";
+	}
+
 	switch($job['state']) {
 	 case "pending":
 	    $title = sprintf("queued %s, \nwaiting in queue", 
