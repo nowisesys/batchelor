@@ -50,21 +50,24 @@ function print_body()
     printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services</h2>\n", HTML_PAGE_TITLE);    
     
     echo "<span id=\"secthead\">Introduction:</span>\n";
-    echo "<p>Version 0.7.0 of Batchelor is the first release with support for web services. The API let ";
-    echo "users to consume Batchelors web service in the spirit of W3C's web service ";
-    echo "definition: <i>\"a software system designed to support interoperable ";
-    echo "machine-to-machine interaction over a network\".</i></p>\n";
+    echo "<p>Batchelor provides a fairly complete web service API that let it's users consume the ";
+    echo "batchelor job queue service in the spirit of W3C's definition of a web service: ";
+    echo "<i>\"a software system designed to support interoperable machine-to-machine interaction over a network\".</i></p>\n";
     
-    echo "<p>Batchelor defines an internal API (see ws_xxx() in include/ws.inc) that is exposed to web service clients ";
-    echo "thru different Web Service protocols/interfaces. The interfaces provided ";
-    echo "are:</p>\n";
+    echo "<p>Batchelor defines an internal API (see ws_xxx() in include/ws.inc) that is exposed ";
+    echo "to web service clients thru the different web service protocols/interfaces. The same internal ";
+    echo "API is also used by the web (www) frontend, this ensure that the internal state of the system is allways in sync no ";
+    echo "matter which public interface is used. This picture shows this in a schematic way:<br>";
+    echo "<img src=\"../../images/ws_api.png\"><br>\n";
+    echo "<i>Picture showing the relation between the public interface, the internal API and Batchelor core system (bottom).</i></p>\n";
     
+    echo "<p>The interfaces provided are:\n";
     echo "<div class=\"info\"><table>\n";
     echo "<tr><td><b>XML-RPC:</b></td><td><a href=\"http://www.xmlrpc.com/spec\">Following UserLand Software's specification.</a></td></tr>\n";
-    echo "<tr><td><b>HTTP RPC:</b></td><td><a href=\"../http/docs?format=html\">A lightweight RPC over HTTP.</a></td></tr>\n";
+    echo "<tr><td><b>HTTP RPC:</b></td><td><a href=\"../http/docs?format=html\">A lightweight RPC over HTTP</a> (used internal for Ajax)</td></tr>\n";
     echo "<tr><td><b>REST:</b></td><td><a href=\"http://www.xml.com/pub/a/2004/08/11/rest.html\">Representational State Transfer</a> (see <a href=\"http://en.wikipedia.org/wiki/Representational_State_Transfer\">Wikipedia</a>).</td></tr>\n";
     echo "<tr><td><b>SOAP:</b></td><td><a href=\"http://en.wikipedia.org/wiki/SOAP\">Simple Object Access Protocol.</a></td></tr>\n";
-    echo "</table></div>\n";
+    echo "</table></div></p>\n";
     
     echo "<p>All Web Service interfaces are located under source/ws/.</p>\n";
 
