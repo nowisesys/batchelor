@@ -20,6 +20,10 @@ textarea {
         height: 150px;
 }
 
+fieldset {
+	border: 1px solid #b9b9b9;
+}
+
 a {
 	color: #000099;
 }
