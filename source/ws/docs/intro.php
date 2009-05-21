@@ -64,7 +64,7 @@ function print_body()
     echo "<p>The interfaces provided are:\n";
     echo "<div class=\"info\"><table>\n";
     echo "<tr><td><b>XML-RPC:</b></td><td><a href=\"http://www.xmlrpc.com/spec\">Following UserLand Software's specification.</a></td></tr>\n";
-    echo "<tr><td><b>HTTP RPC:</b></td><td><a href=\"../http/docs?format=html\">A lightweight RPC over HTTP</a> (used internal for Ajax)</td></tr>\n";
+    echo "<tr><td><b>HTTP RPC:</b></td><td><a href=\"../http/docs?format=html\">A lightweight RPC over HTTP</a> (used internally with Ajax)</td></tr>\n";
     echo "<tr><td><b>REST:</b></td><td><a href=\"http://www.xml.com/pub/a/2004/08/11/rest.html\">Representational State Transfer</a> (see <a href=\"http://en.wikipedia.org/wiki/Representational_State_Transfer\">Wikipedia</a>).</td></tr>\n";
     echo "<tr><td><b>SOAP:</b></td><td><a href=\"http://en.wikipedia.org/wiki/SOAP\">Simple Object Access Protocol.</a></td></tr>\n";
     echo "</table></div></p>\n";
@@ -78,9 +78,15 @@ function print_body()
     echo "In Gentoo, the -D WEB_SERVICE define to Apache can be set in the config ";
     echo "file /etc/conf.d/apache2</p>\n";
    
-    echo "<p>Make sure to set permissions in conf/config.inc for thoose web service ";
-    echo "interfaces you like to enable. By default, all web services are locked ";
-    echo "down to localhost access.</p>\n";
+    echo "<p>Make sure to enable thoose web service protocol/interface you like to use ";
+    echo "in <code>conf/config.inc</code> and also set access permissions in <code>conf/apache.conf</code>. ";
+    echo "By default, all web services are locked down to local host access, but it highly ";
+    echo "recommended that at least HTTP RPC gets enabled for world wide access.</p>\n";
+    
+    echo "<p><span id=\"subsect\">Ajax and the queue view refresh:</span></p>\n";
+    echo "<p>The HTTP RPC interface is used together with Ajax technology to keep the queue ";
+    echo "view updated. If HTTP RPC is disabled, the the queue view update will fall back on ";
+    echo "using 'HTTP meta refresh' instead, which is an bad alternative.</p>\n";
 
     echo "<span id=\"secthead\">Testing:</span>\n";
     echo "<p>An client for testing the Web Services are provided in utils/ws.php. ";

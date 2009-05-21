@@ -74,7 +74,7 @@ function print_body()
     echo "links) or data (possibly multiple objects). The format is selected in ";
     echo "two ways: either append format={list|data} to the request URI or append ";
     echo "the format to the URI path.</p>\n";   
-    echo "<p><u><b>Example:</b></u></p>\n";
+    echo "<p><span id=\"subsect\">Example:</span></p>\n";
     echo "<p><div class=\"code\"><pre>\n";   
     echo "<code>/queue/all?format=data      /* get all jobs */</code>\n";
     echo "<code>/queue/all/data             /* alternative way */</code>\n";
@@ -90,7 +90,7 @@ function print_body()
     echo "<span id=\"secthead\">Resource links:</span>\n";   
     echo "<p>An link has possible action attributes like get, put, post and delete. ";
     echo "The action attribute value describes the object returned by taking this action.</p>\n";
-    echo "<p><u><b>Example:</b></u></p>\n";
+    echo "<p><span id=\"subsect\">Example:</span></p>\n";
     echo "<p><div class=\"code\"><pre>\n";   
     echo "&lt;tns:result state=\"success\" type=\"link\"&gt;\n";
     echo "  &lt;link xlink:href=\"/queue\" get=\"link\" put=\"job\" /&gt;\n";

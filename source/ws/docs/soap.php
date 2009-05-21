@@ -53,12 +53,12 @@ function print_body()
     
     echo "<span id=\"secthead\">Usage:</span>\n";
     echo "<p>\n";
-    echo "<b><u>Using WSDL:</u></b>\n";
+    echo "<span id=\"subsect\">Using WSDL:</span>\n";
     printf("<p>Use the <a href=\"%s\">WSDL describing the SOAP service</a> ", get_wsdl_url());
     echo "with your favourite SOAP framework to generate code (stub methods) to connect ";
     echo "your application to the Batchelor SOAP service.</p>\n";
     echo "<p>\n";
-    echo "<b><u>Using the Java library:</u></b>\n";
+    echo "<span id=\"subsect\">The Java library:</span>\n";
     echo "<p>\n";
     echo "You can download the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor-java/\" title=\"The BatchelorWebService library for Java developers\">client side Java (tm) library batchelor-java</a>. ";
     echo "The library is fully documented using javadoc comments.</p>\n";
@@ -87,18 +87,18 @@ function print_body()
     echo "<span id=\"secthead\">Method description:</span>\n";
     echo "<p>This section documents the various methods and their purpose. For those using the ";
     echo "batchelor-java library, its better to read the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor-java/javadoc/se/uu/bmc/it/batchelor/soap/BatchelorSoapClient.html\">Javadoc API documentation</a>.</p>\n";
-    echo "<p><u><b><a name=\"running\">Running jobs:</a></b></u></p>\n";
+    echo "<p><span id=\"subsect\"><a name=\"running\">Running jobs:</a></span></p>\n";
     echo "<ul><li><b>enqueue</b>: queues a new job for later execution.</li>\n";
     echo "    <li><b>dequeue</b>: removes an existing job.</li>\n";
     echo "    <li><b>suspend</b>: suspends an already running job.</li>\n";
     echo "    <li><b>resume</b>: resumes an suspended job.</li>\n";
     echo "</ul>\n";
-    echo "<p><u><b><a name=\"monitor\">Monitor jobs:</a></b></u></p>\n";
+    echo "<p><span id=\"subsect\"><a name=\"monitor\">Monitor jobs:</a></span></p>\n";
     echo "<ul><li><b>queue</b>: list content of the queue.</li>\n";
     echo "    <li><b>watch</b>: get list of jobs finished after a timestamp.</li>\n";
     echo "    <li><b>stat</b>: get status of a single job.</li>\n";
     echo "</ul>\n";
-    echo "<p><u><b><a name=\"reading\">Reading results:</a></b></u></p>\n";
+    echo "<p><span id=\"subsect\"><a name=\"reading\">Reading results:</a></span></p>\n";
     echo "<ul><li><b>opendir</b>: get list of job directories.</li>\n";
     echo "    <li><b>readdir</b>: get list of files in a single job directory.</li>\n";
     echo "    <li><b>fopen</b>: read a file from the job directory.</li>\n";

@@ -152,6 +152,12 @@ div.info {
 	font: normal bold 1.2em arial;
 }
 
+#subsect {
+        color: black;
+	text-decoration: underline;
+	font-weight: bold;
+}
+
 div.top {
 	background: #dcdcdc url("../images/shadow.gif") repeat-x;
 	height: 15px;
