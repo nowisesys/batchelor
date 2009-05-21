@@ -353,7 +353,7 @@ define ("HELP_ICON_INFO", true);
 // applies to a specific web service interface, then its prefixed like e.g.
 // WS_HTTP_XXX.
 // 
-define ("WS_ENABLE_HTTP",   false);
+define ("WS_ENABLE_HTTP",   true);
 define ("WS_ENABLE_XMLRPC", false);
 define ("WS_ENABLE_REST",   false);
 define ("WS_ENABLE_SOAP",   false);
