@@ -571,6 +571,62 @@ function check_php_settings(&$failed)
     return $failed == false;
 }
 
+// 
+// Check web service settings.
+// 
+function check_web_services(&$failed) 
+{
+    print_section_header("Checking web services");
+
+    // 
+    // Enable the HTTP RPC service is strongly recommended.
+    // 
+    output("Checking the HTTP RPC service: ");
+    if(defined("WS_ENABLE_HTTP")) {
+	if(WS_ENABLE_HTTP) {
+	    success("yes");
+	} else {
+	    warning("no (not enabled, please enable it or the queue view update will fallback on using HTTP meta refresh (bad))");
+	}
+    } else {
+	failed("no (not defined, please define WS_ENABLE_HTTP in conf/config.inc)");
+    }
+    
+    // 
+    // The other services are not that important.
+    // 
+    output("Checking the REST service: ");
+    if(defined("WS_ENABLE_REST")) {
+	if(WS_ENABLE_REST) {
+	    success("yes");
+	} else {
+	    success("no");
+	}
+    } else {
+	failed("no (not defined, please define WS_ENABLE_REST in conf/config.inc)");
+    }
+    output("Checking the SOAP service: ");
+    if(defined("WS_ENABLE_SOAP")) {
+	if(WS_ENABLE_SOAP) {
+	    success("yes");
+	} else {
+	    success("no");
+	}
+    } else {
+	failed("no (not defined, please define WS_ENABLE_SOAP in conf/config.inc)");
+    }
+    output("Checking the XML-RPC service: ");
+    if(defined("WS_ENABLE_XMLRPC")) {
+	if(WS_ENABLE_XMLRPC) {
+	    success("yes");
+	} else {
+	    success("no");
+	}
+    } else {
+	failed("no (not defined, please define WS_ENABLE_XMLRPC in conf/config.inc)");
+    }
+}
+
 //
 // Run all tests.
 // 
@@ -595,6 +651,7 @@ function run_all_tests()
 	check_builtin_classes($failed);
 	check_predefined_variables($failed);
 	check_php_settings($failed);
+	check_web_services($failed);
     }
     
     print_section_header("Summary");
