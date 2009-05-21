@@ -1,3 +1,14 @@
+Version 0.8.5 (2009-05-21):
+
+	* Adding workaround for missing datetime/timezone functions.
+	
+	* Improved Ajax support. All links leading to the queue view is now
+	  working, the same when using the refresh button in the queue view.
+	  
+	* Improved installation and web service documentation. Added picture
+	  describing the relations between the web frontend, the web service
+	  API and the internal API.
+	
 Version 0.8.4 (2009-05-20):
 
 	* Trusted hosts with extended capabilities (i.e. allowed to bypass the 
