@@ -72,8 +72,12 @@
 ** CONFIGURE THE SOURCE:
 
    Open conf/config.inc and edit its content. Then continue with editing the
-   wrapper script utils/script.sh, just replace the 'simula ...' line with
+   wrapper script utils/script.inc, just replace the 'simula ...' line with
    the command you want to run.
+
+   Its recommended that you enable the HTTP RPC web service as its used with
+   Ajax technology to automatic refresh the queue view whenever its state
+   changes.
 
    Check your installation by pointing a browser at http://localhost/batchelor/check.php
    or run it from inside the source directory as 'php check.php'.
