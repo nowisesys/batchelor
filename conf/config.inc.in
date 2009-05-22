@@ -85,7 +85,7 @@ define ("BATCH_REMOVE", "atrm %d");
 // Note that PHP itself also impose limits that needs to be adjusted. The
 // value is an array of ip-addresses.
 //
-define ("TRUSTED_HOSTS", "127.0.0.1,::1"));
+define ("TRUSTED_HOSTS", "127.0.0.1,::1");
 
 // 
 // 
