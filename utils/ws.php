@@ -337,7 +337,7 @@ function get_soap_response($options)
 	print_r($resp);
     } catch(SoapFault $exception) {
 	echo $exception;
-    }    
+    }
 }
 
 // 
