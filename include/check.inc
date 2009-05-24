@@ -325,7 +325,7 @@ function check_external_commands(&$failed)
 }
 
 // 
-// Check all required functions.
+// Check all required and recommended functions.
 // 
 function check_builtin_functions(&$failed)
 {
@@ -341,8 +341,7 @@ function check_builtin_functions(&$failed)
 		       "stream_get_contents", "fclose", "proc_close", "preg_match",
 		       "strtotime", "filemtime", "error_log", "rename", "array_shift",
 		       "array_unshift", "basename", "posix_getpwuid", "posix_getuid",
-		       "posix_geteuid", "posix_kill", "ob_start", "ob_end_flush", 
-		       "date_default_timezone_get", "timezone_offset_get", "timezone_open");
+		       "posix_geteuid", "posix_kill", "ob_start", "ob_end_flush");
     sort($functions);
     
     foreach($functions as $func) {
@@ -351,6 +350,15 @@ function check_builtin_functions(&$failed)
 	}
     }    
 
+    print_section_header("Checking recommended functions");
+    
+    $functions = array("date_default_timezone_get", "timezone_offset_get", "timezone_open");
+    sort($functions);
+    
+    foreach($functions as $func) {
+	has_function($func);
+    }    
+    
     return $failed == false;
 }
 
@@ -359,7 +367,7 @@ function check_builtin_functions(&$failed)
 // 
 function check_builtin_classes(&$failed)
 {
-    print_section_header("Checking required classes");
+    print_section_header("Checking recommended classes");
 
     $classes = array("DateTime");
     sort($classes);
@@ -422,15 +430,13 @@ function check_predefined_variables(&$failed)
 }
 
 // 
-// Check required extensions. The list was created by scanning
-// the output from running 'using php --rf $func' on all used
-// functions, see check_builtin_functions().
+// Check required, recommended and optional extensions.
 // 
 function check_loaded_extensions(&$failed)
 {
     print_section_header("Checking required extensions");
     
-    foreach(array("zip", "posix", "pcre", "date", "standard") as $extension) {
+    foreach(array("zip", "posix", "pcre", "standard") as $extension) {
 	output("Checking if extension $extension is loaded: ");
 	if(extension_loaded($extension)) {
 	    success("yes");
@@ -443,7 +449,7 @@ function check_loaded_extensions(&$failed)
 
     print_section_header("Checking recommended extensions");
     
-    foreach(array("soap", "curl") as $extension) {
+    foreach(array("date", "soap", "curl", "json") as $extension) {
 	output("Checking if extension $extension is loaded: ");
 	if(extension_loaded($extension)) {
 	    success("yes");
