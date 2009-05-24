@@ -90,7 +90,19 @@ function print_body()
 
     echo "<span id=\"secthead\">Testing:</span>\n";
     echo "<p>An client for testing the Web Services are provided in utils/ws.php. ";
-    echo "This client let you see all headers in the response for debuging purposes.</p>\n";
+    echo "This client let you see all headers in the response for debuging purposes ";
+    echo "if you use the '-d' option.</p>\n";
+    echo "<p><span id=\"subsect\">Notes for users of PHP 4:</span></p>\n";
+    echo "<p>The ws.php utility can't be used out of the box with PHP 4, you have to ";
+    echo "create an compatible version first. This is due to missing support ";
+    echo "for the try/catch keywords, causing the script compilation to fail.</p>\n";
+    echo "<p>An PHP 4 compatible version is built through these steps:</p>\n";
+    echo "<p><div class=\"code\"><pre>\n";
+    echo "bash$> cd utils\n";
+    echo "bash$> make ws_php4\n";
+    echo "</pre></div></p>\n";
+    echo "<p>The make target should now have created an PHP 4 compatible version of ";
+    echo "ws.php named ws_php4.php</p>\n";
 }
  
 function print_html($what)
