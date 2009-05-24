@@ -83,9 +83,10 @@ function print_body()
     echo "By default, all web services are locked down to local host access, but it highly ";
     echo "recommended that at least HTTP RPC gets enabled for world wide access.</p>\n";
     
-    echo "<p><span id=\"subsect\">Ajax and the queue view refresh:</span></p>\n";
+    echo "<p><span id=\"subsect\">Ajax and refresh of the queue view:</span></p>\n";
     echo "<p>The HTTP RPC interface is used together with Ajax technology to keep the queue ";
-    echo "view updated. If HTTP RPC is disabled, the the queue view update will fall back on ";
+    echo "view updated as the state of queued jobs changes (i.e. going from pending to running). ";
+    echo "If the HTTP RPC service is disabled, the the queue view update will fall back on ";
     echo "using 'HTTP meta refresh' instead, which is an bad alternative.</p>\n";
 
     echo "<span id=\"secthead\">Testing:</span>\n";
