@@ -15,13 +15,20 @@
 // -------------------------------------------------------------------------------
 
 // 
-// The timezone can either be set system wide (in php.ini) or application
-// local (here in config.inc). Setting the timezone is recommended as it
-// affects how date() and strftime() formats timestamps (UNIX timestamp).
+// The TZ environment variable *has* to be set because its inherited by sub
+// processes (like at). It also affects the formatting of timestamps. Either 
+// set it here, or if safe_mode is enabled, in the apache config.
 // 
-if(!ini_get("date.timezone")) {
-    // ini_set("date.timezone", "CET");
-}
+// if(!getenv("TZ")) {
+//     putenv("TZ=Europe/Stockholm");
+// }
+// if(!getenv("TZ")) {
+//     die("The environment variable TZ is not set!");
+// }
+// if(!ini_get("date.timezone")) {
+//     ini_set("date.timezone", getenv("TZ"));
+// }
+// 
 
 // 
 // The contact address for problems running batchelor. This address is used

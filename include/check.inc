@@ -526,11 +526,10 @@ function check_php_settings(&$failed)
     print_section_header("Checking PHP settings");
     
     output("Checking if timezone is set: ");
-    if(ini_get("date.timezone")) {
-	success(sprintf("yes (%s)", ini_get("date.timezone")));
-    }
-    else {
-	warning("no, consider define your timezone either system wide (in php.ini) or application local (in config.inc)");
+    if(getenv("TZ")) {
+	success(sprintf("yes, TZ=%s (%s)", getenv("TZ"), date('T')));
+    } else {
+	failed("no, please set the environment variable TZ either in the apache config or in conf/config.inc");
     }
     
     output("Checking if contact address is set: ");
