@@ -42,12 +42,12 @@ if(!defined("WS_ENABLE_SOAP")) {
 
 function print_title() 
 {
-    printf("%s - Web Services", HTML_PAGE_TITLE);
+    printf("%s - Web Services - Introduction", HTML_PAGE_TITLE);
 }
 
 function print_body()
 {
-    printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services</h2>\n", HTML_PAGE_TITLE);    
+    printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services - Introduction</h2>\n", HTML_PAGE_TITLE);    
     
     echo "<span id=\"secthead\">Introduction:</span>\n";
     echo "<p>Batchelor provides a fairly complete web service API that let it's users consume the ";

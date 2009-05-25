@@ -28,12 +28,12 @@ include "include/ui.inc";
 
 function print_title() 
 {
-    printf("%s - Web Services", HTML_PAGE_TITLE);
+    printf("%s - Web Services - Setup", HTML_PAGE_TITLE);
 }
 
 function print_body()
 {
-    printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services</h2>\n", HTML_PAGE_TITLE);    
+    printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services - Setup</h2>\n", HTML_PAGE_TITLE);    
 
     echo "<span id=\"secthead\">Requirements:</span>\n";
     
