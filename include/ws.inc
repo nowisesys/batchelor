@@ -119,6 +119,15 @@ define ("WS_ERROR_REQUEST_METHOD",    10);     // Request method is not accepted
 define ("WS_ERROR_NOT_IMPLEMENTED",   11);     // Method is not yet implemented/supported.
 
 // 
+// The various status of an web service interface.
+// 
+define("WS_STATUS_UNKNOWN", 0);
+define("WS_STATUS_ENABLED", 1);
+define("WS_STATUS_DISABLED", 2);
+define("WS_STATUS_NOT_CONFIGURED", 3);
+define("WS_STATUS_MISSING_EXTENSION", 4);
+
+// 
 // Return all error messages or a specific error message.
 // 
 function get_error($code = null)
@@ -1007,6 +1016,68 @@ function ws_soap_session_setup($hostid = null)
 	put_error("The hostid variable is missing");
 	send_error(WS_ERROR_MISSING_PARAMETER);
     }
+}
+
+// 
+// Output the status of all known web service interfaces.
+// 
+function ws_print_services_status($relative = "")
+{
+    $service = array(
+		     "rest"   => array( "status"    => WS_ENABLE_REST,
+					"name"      => "REST",
+					"extension" => null,
+					"link"      => "${relative}ws/docs/rest.php" ),
+		     "soap"   => array( "status"    => WS_ENABLE_SOAP,
+					"name"      => "SOAP",
+					"extension" => "soap",
+					"link"      => "${relative}ws/docs/soap.php" ),
+		     "http"   => array( "status"    => WS_ENABLE_HTTP,
+					"name"      => "HTTP RPC",
+					"extension" => null,
+					"link"      => "${relative}ws/docs/http.php" ),
+		     "xmlrpc" => array( "status"    => WS_ENABLE_XMLRPC,
+					"name"      => "XML-RPC",
+					"extension" => null,
+					"link"      => "${relative}ws/docs/xmlrpc.php" )
+		     );
+    echo "<p>\n";
+    foreach($service as $name => $data) {
+	if(file_exists(sprintf("ws/%s", $name))) {
+	    $status = WS_STATUS_UNKNOWN;	    
+	    if(isset($data['status'])) {
+		if($data['status']) {
+		    if(isset($data['extension']) && !extension_loaded($data['extension'])) {
+			$status = WS_STATUS_MISSING_EXTENSION;
+		    } else {
+			$status = WS_STATUS_ENABLED;
+		    }
+		} else {
+		    $status = WS_STATUS_DISABLED;
+		}
+	    } else {
+		$status = WS_STATUS_NOT_CONFIGURED;
+	    }
+	    
+	    if($status == WS_STATUS_ENABLED) {
+		printf("<img src=\"${relative}icons/nuvola/enabled.png\"><a href=\"%s\"> %s</a> is enabled.<br>\n", 
+		       $data['link'], $data['name']);
+	    } elseif($status == WS_STATUS_DISABLED) {
+		printf("<img src=\"${relative}icons/nuvola/disabled.png\"><a href=\"%s\"> %s</a> is disabled by config.<br>\n", 
+		       $data['link'], $data['name']);
+	    } elseif($status == WS_STATUS_MISSING_EXTENSION) {
+		printf("<img src=\"${relative}icons/nuvola/disabled.png\"><a href=\"%s\"> %s</a> is disabled by missing %s extension.<br>\n", 
+		       $data['link'], $data['name'], $data['extension']);
+	    } elseif($status == WS_STATUS_NOT_CONFIGURED) {
+		printf("<img src=\"${relative}icons/nuvola/unconfigured.png\"><a href=\"%s\"> %s</a> is not configured.<br>\n", 
+		       $data['link'], $data['name']);
+	    } else {
+		printf("<img src=\"${relative}icons/nuvola/unconfigured.png\"><a href=\"%s\"> %s</a> has unknown status.<br>\n", 
+		       $data['link'], $data['name']);
+	    }
+	}
+    }
+    echo "</p>\n";
 }
 
 ?>

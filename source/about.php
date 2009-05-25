@@ -27,6 +27,9 @@
 include "../include/ui.inc";
 include "../conf/config.inc";
 
+// 
+// Set defaults for web service status.
+// 
 if(!defined("WS_ENABLE_HTTP")) {
     define("WS_ENABLE_HTTP", null);
 }
@@ -40,14 +43,7 @@ if(!defined("WS_ENABLE_XMLRPC")) {
     define("WS_ENABLE_XMLRPC", null);
 }
 
-// 
-// The various status of an web service interface.
-// 
-define("WS_STATUS_UNKNOWN", 0);
-define("WS_STATUS_ENABLED", 1);
-define("WS_STATUS_DISABLED", 2);
-define("WS_STATUS_NOT_CONFIGURED", 3);
-define("WS_STATUS_MISSING_EXTENSION", 4);
+include "../include/ws.inc";
 
 // 
 // Print about info for batchelor.
@@ -156,64 +152,9 @@ function print_about_batchelor()
 // Print about info on web services (SOAP, REST, HTTP RPC and XML-RPC).
 // 
 function print_webservices() 
-{    
-    $service = array(
-		     "rest"   => array( "status"    => WS_ENABLE_REST,
-					"name"      => "REST",
-					"extension" => null,
-					"link"      => "ws/docs/rest.php" ),
-		     "soap"   => array( "status"    => WS_ENABLE_SOAP,
-					"name"      => "SOAP",
-					"extension" => "soap",
-					"link"      => "ws/docs/soap.php" ),
-		     "http"   => array( "status"    => WS_ENABLE_HTTP,
-					"name"      => "HTTP RPC",
-					"extension" => null,
-					"link"      => "ws/docs/http.php" ),
-		     "xmlrpc" => array( "status"    => WS_ENABLE_XMLRPC,
-					"name"      => "XML-RPC",
-					"extension" => null,
-					"link"      => "ws/docs/xmlrpc.php" )
-		     );
-    
+{        
     echo "<span id=\"secthead\">Status:</span>\n";
-    echo "<p>\n";
-    foreach($service as $name => $data) {
-	if(file_exists(sprintf("ws/%s", $name))) {
-	    $status = WS_STATUS_UNKNOWN;	    
-	    if(isset($data['status'])) {
-		if($data['status']) {
-		    if(isset($data['extension']) && !extension_loaded($data['extension'])) {
-			$status = WS_STATUS_MISSING_EXTENSION;
-		    } else {
-			$status = WS_STATUS_ENABLED;
-		    }
-		} else {
-		    $status = WS_STATUS_DISABLED;
-		}
-	    } else {
-		$status = WS_STATUS_NOT_CONFIGURED;
-	    }
-	    
-	    if($status == WS_STATUS_ENABLED) {
-		printf("<img src=\"icons/nuvola/enabled.png\"><a href=\"%s\"> %s</a> is enabled.<br>\n", 
-		       $data['link'], $data['name']);
-	    } elseif($status == WS_STATUS_DISABLED) {
-		printf("<img src=\"icons/nuvola/disabled.png\"><a href=\"%s\"> %s</a> is disabled by config.<br>\n", 
-		       $data['link'], $data['name']);
-	    } elseif($status == WS_STATUS_MISSING_EXTENSION) {
-		printf("<img src=\"icons/nuvola/disabled.png\"><a href=\"%s\"> %s</a> is disabled by missing %s extension.<br>\n", 
-		       $data['link'], $data['name'], $data['extension']);
-	    } elseif($status == WS_STATUS_NOT_CONFIGURED) {
-		printf("<img src=\"icons/nuvola/unconfigured.png\"><a href=\"%s\"> %s</a> is not configured.<br>\n", 
-		       $data['link'], $data['name']);
-	    } else {
-		printf("<img src=\"icons/nuvola/unconfigured.png\"><a href=\"%s\"> %s</a> has unknown status.<br>\n", 
-		       $data['link'], $data['name']);
-	    }
-	}
-    }
-    echo "</p>\n";
+    ws_print_services_status();
     echo "<p>These are the web services that currently exist at this host. Click on the link next to the status ";
     echo "icon to read the documentation for respective service type.<br>\n";
     echo "See <a href=\"ws/docs/intro.php\">introduction</a> for getting started information.</p>\n";

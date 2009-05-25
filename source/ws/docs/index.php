@@ -27,18 +27,23 @@ ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../.." . 
 include "conf/config.inc";
 include "include/ui.inc";
 
+// 
+// Set defaults for web service status.
+// 
 if(!defined("WS_ENABLE_HTTP")) {
-    define ("WS_ENABLE_HTTP", false);
-}
-if(!defined("WS_ENABLE_XMLRPC")) {
-    define ("WS_ENABLE_XMLRPC", false);
-}
-if(!defined("WS_ENABLE_REST")) {
-    define ("WS_ENABLE_REST", false);
+    define("WS_ENABLE_HTTP", null);
 }
 if(!defined("WS_ENABLE_SOAP")) {
-    define ("WS_ENABLE_SOAP",   true);
+    define("WS_ENABLE_SOAP", null);
 }
+if(!defined("WS_ENABLE_REST")) {
+    define("WS_ENABLE_REST", null);
+}
+if(!defined("WS_ENABLE_XMLRPC")) {
+    define("WS_ENABLE_XMLRPC", null);
+}
+
+include "include/ws.inc";
 
 function print_title() 
 {
@@ -47,36 +52,9 @@ function print_title()
 
 function print_body()
 {
-    $status = array(
-		    "rest"   => array( "status" => WS_ENABLE_REST,
-				       "name"   => "REST",
-				       "link"   => "rest.php" ),
-		    "soap"   => array( "status" => WS_ENABLE_SOAP,
-				       "name"   => "SOAP",
-				       "link"   => "soap.php" ),
-		    "http"   => array( "status" => WS_ENABLE_HTTP,
-				       "name"   => "HTTP RPC",
-				       "link"   => "http.php" ),
-		    "xmlrpc" => array( "status" => WS_ENABLE_XMLRPC,
-				       "name"   => "XML-RPC",
-				       "link"   => "xmlrpc.php" )
-		);
-    
     printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services</h2>\n", HTML_PAGE_TITLE);    
     echo "<span id=\"secthead\">Status:</span>\n";
-    echo "<p>\n";    
-    foreach($status as $name => $data) {
-	if(file_exists(sprintf("ws/%s", $name))) {
-	    if($data['status']) {
-		printf("<img src=\"../../icons/nuvola/enabled.png\"><a href=\"%s\"> %s</a> is enabled.<br>\n", 
-		       $data['link'], $data['name']);
-	    } else {
-		printf("<img src=\"../../icons/nuvola/disabled.png\"><a href=\"%s\"> %s</a> is disabled.<br>\n", 
-		       $data['link'], $data['name']);
-	    }
-	}
-    }
-    echo "</p>\n";
+    ws_print_services_status("../../");
     echo "<p>See <a href=\"intro.php\">introduction</a> for getting started information.</p>\n";
 }
  
