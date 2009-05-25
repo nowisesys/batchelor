@@ -120,6 +120,7 @@ function download_result($resdir, $jobid)
 	readfile($zipfile);
     }
     else {
+	error_log("Failed create zip file, make sure the zip command is correct or that the zip extension is loaded.");
 	error_handler("zip");
     }
 }
