@@ -170,12 +170,18 @@ div.top {
 
 div.menuhead {
 	text-align: left;
+	vertical-align: middle;
 	font-weight: bold;
 	background: #dcdcdc url('../images/menuhead.gif') left top repeat-x;
 	border: 1px solid #cccccc;
 	margin-left: 5px;
 	margin-top: 10px;
+	padding: 2px;
 	white-space: nowrap;
+}
+
+div.menuhead img {
+	vertical-align: middle;
 }
 
 div.submit {
