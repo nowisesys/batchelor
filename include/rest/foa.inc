@@ -104,7 +104,7 @@ function send_status($message)
 function send_job(&$job, $request)
 {
     printf("  job = (\n");
-    printf("    timezone = %s\n", ini_get("date.timezone"));
+    printf("    timezone = %s\n", date('T');
     printf("    data = (\n");
     foreach($job as $key => $val) {
 	if($key == "name") {
