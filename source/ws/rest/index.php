@@ -217,7 +217,16 @@ function http_put_file()
     // 
     $tempdir = ini_get("upload_tmp_dir");
     if(strlen($tempdir) == 0) {
-	$tempdir = sys_get_temp_dir();
+	if(function_exists("sys_get_temp_dir")) {
+	    $tempdir = sys_get_temp_dir();
+	} 
+	if(strlen($tempdir) == 0) {
+	    $tempnam = tempnam(null, "put");
+	    if($tempnam) {
+		$tempdir = dirname($tempnam);
+		unlink($tempnam);
+	    }
+	}
 	if(strlen($tempdir) == 0) {
 	    $_FILES['file']['error'] = UPLOAD_ERR_NO_TMP_DIR;
 	    return false;
