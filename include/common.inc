@@ -25,7 +25,7 @@
 // 
 if(!function_exists("stream_get_contents") && 
    !function_exists("file_put_contents")) {
-    include "contents.inc";
+    include "missing/contents.inc";
 }
 
 // 
