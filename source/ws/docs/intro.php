@@ -27,19 +27,6 @@ ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../.." . 
 include "conf/config.inc";
 include "include/ui.inc";
 
-if(!defined("WS_ENABLE_HTTP")) {
-    define ("WS_ENABLE_HTTP", false);
-}
-if(!defined("WS_ENABLE_XMLRPC")) {
-    define ("WS_ENABLE_XMLRPC", false);
-}
-if(!defined("WS_ENABLE_REST")) {
-    define ("WS_ENABLE_REST", false);
-}
-if(!defined("WS_ENABLE_SOAP")) {
-    define ("WS_ENABLE_SOAP",   true);
-}
-
 function print_title() 
 {
     printf("%s - Web Services - Introduction", HTML_PAGE_TITLE);
