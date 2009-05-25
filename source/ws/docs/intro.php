@@ -70,25 +70,7 @@ function print_body()
     echo "</table></div></p>\n";
     
     echo "<p>All Web Service interfaces are located under source/ws/.</p>\n";
-
-    echo "<span id=\"secthead\">Setup:</span>\n";
-    echo "<p>The web server must be configured to allow the various web services under ";
-    echo "source/ws/ to be callable. For Apache this is done inside conf/config.inc ";
-    echo "and by appending -D WEB_SERVICE to Apache's command line options. ";    
-    echo "In Gentoo, the -D WEB_SERVICE define to Apache can be set in the config ";
-    echo "file /etc/conf.d/apache2</p>\n";
-   
-    echo "<p>Make sure to enable thoose web service protocol/interface you like to use ";
-    echo "in <code>conf/config.inc</code> and also set access permissions in <code>conf/apache.conf</code>. ";
-    echo "By default, all web services are locked down to local host access, but it highly ";
-    echo "recommended that at least HTTP RPC gets enabled for world wide access.</p>\n";
     
-    echo "<p><span id=\"subsect\">Ajax and refresh of the queue view:</span></p>\n";
-    echo "<p>The HTTP RPC interface is used together with Ajax technology to keep the queue ";
-    echo "view updated as the state of queued jobs changes (i.e. going from pending to running). ";
-    echo "If the HTTP RPC service is disabled, the the queue view update will fall back on ";
-    echo "using 'HTTP meta refresh' instead, which is an bad alternative.</p>\n";
-
     echo "<span id=\"secthead\">Testing:</span>\n";
     echo "<p>An client for testing the Web Services are provided in utils/ws.php. ";
     echo "This client let you see all headers in the response for debuging purposes ";

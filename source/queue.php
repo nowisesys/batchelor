@@ -667,8 +667,8 @@ function show_page($error = null, $warning = null)
 	
 	if(PAGE_REFRESH_RATE > 0) {
 	    // 
-	    // Only use Ajax or output meta refresh tag if we got pending 
-	    // or running jobs. Note that Ajax requires the JSON extension.
+	    // Only use Ajax or output meta refresh tag if we got pending or running
+	    // jobs. Note that Ajax update requires that the JSON extension is loaded.
 	    // 
 	    foreach($jobs as $job) {
 		if($job['state'] == "pending" || $job['state'] == "running") {
