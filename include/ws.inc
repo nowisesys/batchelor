@@ -1066,7 +1066,7 @@ function ws_print_services_status($relative = "")
 		printf("<img src=\"${relative}icons/nuvola/disabled.png\"><a href=\"%s\"> %s</a> is disabled by config.<br>\n", 
 		       $data['link'], $data['name']);
 	    } elseif($status == WS_STATUS_MISSING_EXTENSION) {
-		printf("<img src=\"${relative}icons/nuvola/disabled.png\"><a href=\"%s\"> %s</a> is disabled by missing %s extension.<br>\n", 
+		printf("<img src=\"${relative}icons/nuvola/disabled2.png\"><a href=\"%s\"> %s</a> is disabled by missing %s extension.<br>\n", 
 		       $data['link'], $data['name'], $data['extension']);
 	    } elseif($status == WS_STATUS_NOT_CONFIGURED) {
 		printf("<img src=\"${relative}icons/nuvola/unconfigured.png\"><a href=\"%s\"> %s</a> is not configured.<br>\n", 
