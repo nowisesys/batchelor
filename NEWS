@@ -1,3 +1,12 @@
+Version 0.8.7 (2009-05-25):
+
+	* Improved compatibility by ensuring the system works with:
+	  allow_call_time_pass_reference = Off
+	  
+	* Improved PHP 4 support (needed for RHEL4):
+	  1) Added workaround for missing sys_get_temp_dir() and strpbrk(). 
+	  2) Fixed timezone handling.
+
 Version 0.8.6 (2009-05-25):
 
 	* Run 'make ws_php4' to create a PHP4 compatible version of utils/ws.php.
