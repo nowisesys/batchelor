@@ -21,6 +21,16 @@
 // 
 
 // 
+// Required constants (from ext/standard/file.h in PHP 5):
+// 
+if(!defined("FILE_USE_INCLUDE_PATH")) {
+    define ("FILE_USE_INCLUDE_PATH", 1);
+}
+if(!defined("FILE_APPEND")) {
+    define ("FILE_APPEND", 8);
+}
+
+// 
 // Write a string to a file (PHP 5) 
 // int file_put_contents ( string filename, mixed data [, int flags [, resource context]] )
 // 
