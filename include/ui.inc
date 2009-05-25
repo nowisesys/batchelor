@@ -136,7 +136,7 @@ function print_footer()
     print  "<table>\n";
     if(FOOTER_SHOW_NOTES) {
 	print  "  <tr>\n";
-	printf("    <td class=\"footer\">Last updated: %s<br>Contact: %s</td><td width=\"100%%\">&nbsp;</td>\n", format_timestamp(time()), CONTACT_STRING);
+	printf("    <td class=\"footer\">Last updated: %s (%s)<br>Contact: %s</td><td width=\"100%%\">&nbsp;</td>\n", format_timestamp(time()), date('T'), CONTACT_STRING);
 	print  "    <td class=\"notes\">This web application is powered by <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor/\" target=\"_blank\">Batchelor</a></td></tr>\n";
 	print  "  <tr><td>&nbsp;</td></tr>\n";
     }
