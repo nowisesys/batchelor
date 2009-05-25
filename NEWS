@@ -1,3 +1,12 @@
+Version 0.8.6 (2009-05-25):
+
+	* Run 'make ws_php4' to create a PHP4 compatible version of utils/ws.php.
+	
+	* The web service status page is now showing an service as disabled if 
+	  an required PHP extension is not loaded (i.e. missing soap extension).
+	  
+	* Visual improvements: fixing help menu width, icon alignment, headers, ...
+	
 Version 0.8.5 (2009-05-21):
 
 	* Adding workaround for missing datetime/timezone functions.
