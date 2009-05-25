@@ -34,7 +34,7 @@
 // Example:
 // 
 // $args = array();
-// get_opt($_SERVER['argv'], $_SERVER['argc'], &$args);
+// get_opt($_SERVER['argv'], $_SERVER['argc'], $args);
 // foreach($args as $key => $val) {
 //     // 
 //     // All accepted option should have an switch case.

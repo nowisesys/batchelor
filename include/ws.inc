@@ -401,7 +401,7 @@ function ws_get_rpc_method_by_index($index = -1)
 function ws_signal_process($result, $jobid, $signal)
 {
     $error = null;
-    if(!process_control($GLOBALS['hostid'], $result, $jobid, $signal, &$error)) {
+    if(!process_control($GLOBALS['hostid'], $result, $jobid, $signal, $error)) {
 	switch($error['where']) {
 	 case "resdir":
 	    if(!isset($error['reason'])) {
@@ -538,7 +538,7 @@ function readdir_add_files(&$out, $subdir)
 	    if($file != "." && $file != "..") {
 		$path = sprintf("%s/%s", $subdir, $file);
 		if(is_dir($path)) {
-		    if(!readdir_add_files(&$out, $path)) {
+		    if(!readdir_add_files($out, $path)) {
 			return false;
 		    }
 		}

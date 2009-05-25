@@ -30,7 +30,7 @@ function add_zipfile(&$objzip, $subdir)
 	    if($file != "." && $file != "..") {
 		$path = sprintf("%s/%s", $subdir, $file);
 		if(is_dir($path)) {
-		    if(!add_zipfile(&$objzip, $path)) {
+		    if(!add_zipfile($objzip, $path)) {
 			return false;
 		    }
 		}
@@ -52,7 +52,7 @@ function add_zipfile(&$objzip, $subdir)
 function create_zipfile($zipfile, $zipdir)
 {
     $objzip =& new ZipArchive();	 	
-    if($objzip->open(&$zipfile, ZipArchive::CREATE)) {
+    if($objzip->open($zipfile, ZipArchive::CREATE)) {
 	if(!add_zipfile($objzip, $zipdir)) {
 	    $objzip->close();
 	    unlink($zipfile);
