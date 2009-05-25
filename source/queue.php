@@ -533,12 +533,12 @@ function print_body()
 	// 
 	print "<div class=\"submit\"><table>\n";
 	print "<tr><td colspan=\"2\">\n"; 
-	printf("<img src=\"icons/nuvola/%s.png\">\n", 
+	printf("<img class=\"form\" src=\"icons/nuvola/%s.png\">\n", 
 	       $submit == FORM_SUBMIT_TYPE ? "down" : "up");
 	if($submit == "file") {
-	    print "<a href=\"?show=submit&proc=data\" title=\"Switch to form for submitting data\">Toggle form</a>\n";
+	    print "<a href=\"?show=submit&proc=data\" title=\"Switch to form for submitting data\">Switch</a>\n";
 	} else {
-	    print "<a href=\"?show=submit&proc=file\" title=\"Switch to form for submitting a file\">Toggle form</a>\n";
+	    print "<a href=\"?show=submit&proc=file\" title=\"Switch to form for submitting a file\">Switch</a>\n";
 	}
 	print "</td></tr><tr><td>&nbsp;</td></tr>\n";
 	if($submit == "file") {

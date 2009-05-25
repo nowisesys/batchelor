@@ -35,10 +35,14 @@ a:hover {
 h2 {
 	background-color: #ffffff;
 	color: #000055;
-	border: 1px solid #bbbbdd;
+	border-bottom: 3px solid #bbbbdd;
 	padding-left: 10px;
 	margin-top: 10px;
 	margin-left: 0px;
+}
+
+td img.form {
+	vertical-align: bottom;
 }
 
 td {
