@@ -32,6 +32,13 @@ include "include/queue.inc";
 include "include/delete.inc";
 
 // 
+// Include replacement for missing strpbrk() function:
+// 
+if(!function_exists("strpbrk")) {
+    include "include/missing/strpbrk.inc";
+}
+
+// 
 // Fill optional request values with defaults.
 // 
 if(!isset($_REQUEST['sort'])) {

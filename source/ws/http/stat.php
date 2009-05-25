@@ -31,6 +31,13 @@ include_once "include/ws.inc";
 include "include/queue.inc";
 
 // 
+// Include replacement for missing strpbrk() function:
+// 
+if(!function_exists("strpbrk")) {
+    include "include/missing/strpbrk.inc";
+}
+
+// 
 // Setup HTTP web service session. This will terminate the script if any 
 // problem is detected.
 // 

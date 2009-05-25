@@ -134,6 +134,13 @@ include "include/ws.inc";
 include "include/delete.inc";
 
 // 
+// Include replacement for missing strpbrk() function:
+// 
+if(!function_exists("strpbrk")) {
+    include "include/missing/strpbrk.inc";
+}
+
+// 
 // Decode request. We need to decode the request from the URI.
 // 
 function decode_request()
