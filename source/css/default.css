@@ -107,7 +107,7 @@ td.footer a:hover {
 	color: #666666;
 }
 
-td.copyright, td.copyright a {
+td.copyright, td.copyright a, #copyright {
 	color: #bbbbbb;
 	vertical-align: top;
 	width: 100%;
