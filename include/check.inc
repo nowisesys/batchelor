@@ -352,7 +352,8 @@ function check_builtin_functions(&$failed)
 
     print_section_header("Checking recommended functions");
     
-    $functions = array("date_default_timezone_get", "timezone_offset_get", "timezone_open");
+    $functions = array("date_default_timezone_get", "timezone_offset_get", "timezone_open",
+		       "sys_get_temp_dir", "strpbrk");
     sort($functions);
     
     foreach($functions as $func) {
