@@ -118,6 +118,7 @@ function run_process($cmd, $dir, &$batch)
 		 1 => array("pipe", "w"),
 		 2 => array("pipe", "w")
 		 );
+
     $env = array( "SHELL" => "/bin/bash", "TZ" => "UTC" );
     $pipes = array();
     
@@ -139,7 +140,10 @@ function run_process($cmd, $dir, &$batch)
     }
     
     if(version_compare(phpversion(), "5.0.0") < 0) {
+	$timezone = getenv("TZ");
+	putenv(sprintf("TZ=%s", $env['TZ']));
 	$process = proc_open(sprintf($method, $cmd), $fds, $pipes);
+	putenv(sprintf("TZ=%s", $timezone));
     }
     else {
 	$process = proc_open(sprintf($method, $cmd), $fds, $pipes, null, $env);
