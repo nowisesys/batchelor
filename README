@@ -13,14 +13,14 @@
    Once the input data is uploaded, it queues a batch job running the wrapper
    script (utils/script.sh), passing input data and result directory as
    script arguments. The stderr and stdout is captured to files and can be
-   reviewed thru the web interface.
+   reviewed thru the web frontend or thru the web service API.
 
 ** THE CACHE DIRECTORY:
 
-   All jobs (pending, running and finished) are keept under the cache directory
-   in a filesystem "database". Each peer has its private namespace (a job
-   directory) under cache. Batchelor uses cookies to associate the peer with
-   its job directory. 
+   All jobs (pending, running and finished) are kept under the cache directory
+   in a filesystem "database". Each peer has its private namespace (with job
+   directories) under cache. Batchelor uses cookies to associate the peer with
+   its job directories. 
 
 ** USER INTERFACE:
 
@@ -87,9 +87,9 @@
    
 ** WEB SERVICES:
 
-   Web service interfaces where added from version 7.0.x. It supports REST, 
-   HTTP RCP and XML-RPC (SOAP is planned and in development). See the file 
-   README.WEBSERVICES for more info.
+   Work on adding web service interfaces where started in version 0.7.x and
+   finished in 0.8.0. Currently REST, SOAP, HTTP RCP and XML-RPC is supported. 
+   See the file README.WEBSERVICES for more info.
    
 ** ITS ALL FREE, BUT...:
 
@@ -97,10 +97,16 @@
    modify it and/or redistribute it, see COPYING for details.
    
    If you find it useful as a building block in your web application, then
-   its considered polite if you:
+   it's considered polite if you:
    
-     1. Keep the link to about.php from your application.
-     2. Don't remove the the License or Authors section from about.php.
-
+     1. Keep the About link in the left menu and don't hide or modify the
+        content under the About tab.
+	
+     2. Leave the "This web application is powered by Batchelor" and the
+        copyright notice at bottom of the main page.
+	
+   Its also nice to know anyones experiences using this application, please
+   let me know what you think ;-)
+   
 Anders Lövgren,
-2008-03-14
+2009-05-26
