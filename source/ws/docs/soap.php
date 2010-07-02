@@ -113,7 +113,7 @@ function print_body()
     echo "sent \"as is\".</p>\n";
     
     echo "<span id=\"secthead\">Testing:</span>\n";
-    echo "<p>The SOAP service can be tested by using the web service utility (included with the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor/download.php\">source code</a> for batchelor). Run ";
+    echo "<p>The SOAP service can be tested by using the CLI web service utility (included with the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor/download.php\">source code</a> for batchelor). Run ";
     echo "the utility like this to dump the queue sorted on job ID:</p>\n";
     echo "<p><div class=\"code\"><pre>\n";
     echo "<code>bash$> cd utils</code>\n";
