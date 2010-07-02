@@ -437,7 +437,7 @@ function parse_options(&$argc, $argv, &$options)
 	    if(!isset($val)) {
 		die(sprintf("%s: option --base requires an argument (see --help)\n", $options->prog));
 	    }
-	    $options->base = $val;
+	    $options->baseurl = $val;
 	    break;
 	 case "-d":
 	 case "--debug":           // Enable debug.
