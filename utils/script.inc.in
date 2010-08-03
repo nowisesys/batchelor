@@ -98,8 +98,8 @@ function jobexec()
   ##
   ## Remove these lines when done:
   ## 
-  echo "Neither bgexec() or fgexec() is called from jobexec() in script.inc" >> ${QUEUE_STDERR}
-  echo "Can't continue unless one of these are defined and called from obexec()" >> ${QUEUE_STDERR}
+  echo "Neither bgexec() or fgexec() is called from jobexec() in utils/script.inc." >> ${QUEUE_STDERR}
+  echo "Can't continue unless one of these are defined and called from jobexec()." >> ${QUEUE_STDERR}
   
-  qsignal "fatal" "The user defined script script.inc is not yet configured"
+  qsignal "fatal" "The user defined script script.inc is not yet configured."
 }
