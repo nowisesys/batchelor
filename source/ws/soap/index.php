@@ -140,6 +140,9 @@ class batchelor {
 	
 	$result = array();
 	foreach($jobs as $resdir => $job) {
+	    if(isset($job['jobid'])) {
+		$job['jobid'] = 0;   // Assign 0 as jobid for crashed jobs, see delete_single_job() for reference.
+	    }
 	    array_push($result, new QueuedJob(new JobIdentity($job['jobid'], $resdir), $job['state']));
 	}	
 	return new QueueResponse($result);
