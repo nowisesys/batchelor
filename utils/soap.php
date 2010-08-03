@@ -33,7 +33,7 @@ ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache
 // 
 function generate_classes($wsdl) 
 {
-    $soap = &new SoapClient($wsdl);
+    $soap = new SoapClient($wsdl);
     if(!$soap) {
 	die("(-) error: failed create soap client\n");
     }
