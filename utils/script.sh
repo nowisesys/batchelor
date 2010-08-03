@@ -141,7 +141,7 @@ qsignal "started"
 ##
 scriptinc="$(dirname $0)/script.inc"
 if ! [ -e $scriptinc ]; then
-  qsignal "fatal" "The user defined job execution script (script.inc) do not exist"
+  qsignal "fatal" "The user defined job execution script (utils/script.inc) do not exist"
   exit $status
 else 
   source $scriptinc
