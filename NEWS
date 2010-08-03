@@ -1,3 +1,9 @@
+Version 0.8.9 (2010-08-03):
+
+	* Maintenance release that fixes some documentation errors and
+	  some minor bugs in the web service API (missing call to user
+	  defined hooks).
+        
 Version 0.8.8 (2009-05-26):
 
 	* Fixed a bug (missing paranthesis) in the FOA encoder for the REST service.
