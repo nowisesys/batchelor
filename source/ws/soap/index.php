@@ -68,6 +68,13 @@ include "include/ws.inc";
 include "include/delete.inc";
 include "include/soap.inc";
 
+// 
+// Must check using an relative or absolute path, can't use include path.
+// 
+if(file_exists("../../../include/hooks.inc")) {
+    include("include/hooks.inc");
+}
+
 // ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache during testing
 
 // 

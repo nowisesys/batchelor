@@ -134,6 +134,13 @@ include "include/ws.inc";
 include "include/delete.inc";
 
 // 
+// Must check using an relative or absolute path, can't use include path.
+// 
+if(file_exists("../../../include/hooks.inc")) {
+    include("include/hooks.inc");
+}
+
+// 
 // Include replacement for missing strpbrk() function:
 // 
 if(!function_exists("strpbrk")) {
