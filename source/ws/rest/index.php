@@ -213,7 +213,7 @@ function decode_request()
 // could lead to out of memory errors. Another reason is that we must enforce
 // the same upload limits that exists for POST.
 //
-function http_put_file() 
+function rest_http_put_file() 
 {
     $_FILES['file']['tmp_name'] = null;
     
@@ -716,7 +716,7 @@ function send_queue($request)
 	    $jobs = array();
 	    $data = null;
 	    if($_SERVER['REQUEST_METHOD'] == "PUT") {
-		http_put_file();
+		rest_http_put_file();
 	    }	    
 	    if(!ws_enqueue($data, $jobs)) {
 		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
