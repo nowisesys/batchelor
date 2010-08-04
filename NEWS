@@ -1,3 +1,9 @@
+Version 0.8.10 (2010-08-10):
+
+	* Maintenance release for web services. Fixed zero job ID for
+	  crashed jobs (SOAP) and redeclared function error for http_put_file()
+	  defined in PECL HTTP extension.
+
 Version 0.8.9 (2010-08-03):
 
 	* Maintenance release that fixes some documentation errors and
