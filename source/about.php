@@ -70,18 +70,20 @@ function print_about_batchelor()
         print "together with Batchelor for details. Batchelor is originally developed Anders L&ouml;vgren.</p>\n";
 
         print "<span id=\"secthead\">Authors</span>\n";
-        print "<p>The following people have contributed to Batchelor:\n</p><p>";
+        print "<p>The following people have contributed to Batchelor:\n";
         $authors = "../AUTHORS";
         if (file_exists($authors)) {
                 $fp = fopen($authors, "r");
                 if ($fp) {
+                        printf("<p><table>\n");
                         while (($str = fgets($fp))) {
                                 if ($str[0] != '#') {
                                         $pattern = '/(.*)\s+<(.*)>\s+-(.*)/';
-                                        $replace = '${1} <<a href="mailto:${2}">${2}</a>>: ${3}';
-                                        printf("<code>%s</code><br>\n", strtr(preg_replace($pattern, $replace, $str), array("å" => "&aring;", "ä" => "&auml;", "ö" => "&ouml;")));
+                                        $replace = '<a href="mailto:${2}">${1}</a></td><td>${3}';
+                                        printf("<tr><td>%s</td></tr>\n", trim(strtr(preg_replace($pattern, $replace, $str), array("å" => "&aring;", "ä" => "&auml;", "ö" => "&ouml;"))));
                                 }
                         }
+                        printf("</table></p>\n");
                         fclose($fp);
                 } else {
                         printf("<b>Failed open %s, check your installation!</b>\n", $authors);
