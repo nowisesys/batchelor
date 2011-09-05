@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2008 Anders Lövgren
+//  Copyright (C) 2008-2011 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -142,7 +142,7 @@ function print_footer()
     }
     if(FOOTER_SHOW_COPYING) {
 	print  "  <tr>\n";
-	print  "    <td class=\"copyright\" colspan=\"3\">Batchelor is Copyright &copy; 2007-2009 by Anders L&ouml;vgren and the <a href=\"http://www.bmc.uu.se\" target=\"blank\">Computing Department at Uppsala Biomedical Centre</a>, Uppsala University</td></tr>\n";
+	print  "    <td class=\"copyright\" colspan=\"3\">Batchelor is Copyright &copy; 2007-2011 by Anders L&ouml;vgren and the <a href=\"http://www.bmc.uu.se\" target=\"blank\">Computing Department at Uppsala Biomedical Centre</a>, Uppsala University</td></tr>\n";
     }
     print  "</table>\n";
 }

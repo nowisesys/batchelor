@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007 Anders Lövgren
+//  Copyright (C) 2007-2011 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -143,9 +143,9 @@ function print_about_batchelor()
     
     print "<span id=\"secthead\">Bug reports</span>\n";
     print "<p>If you think you have found a bug in the batch queue manager (Batchelor), ";
-    print "please send a bug report to Anders L&ouml;vgren &lt;<a href=\"mailto:lespaul@algonet.se\">lespaul@algonet.se</a>&gt;. ";
+    print "please send a bug report to Anders L&ouml;vgren &lt;<a href=\"mailto:anders.lovgren@bmc.uu.se\">anders.lovgren@bmc.uu.se</a>&gt;. ";
     print "Include any error message, all relevant lines from the Apache error log and the output ";
-    print "from check.php (runned from the command line is OK). Use 'batchelor: bug report' as subject line.</p>\n";
+    print "from check.php (runned from the command line is OK).</p>\n";
 }
 
 // 
