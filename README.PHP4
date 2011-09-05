@@ -60,4 +60,4 @@
    The above should be on a single command line.
    
 
-// Anders Lövgren, 2009-05-26
+// Anders LÃ¶vgren, 2009-05-26

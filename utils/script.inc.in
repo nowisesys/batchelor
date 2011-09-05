@@ -3,7 +3,7 @@
 # User defined job execution. This file is sourced by script.sh (called from
 # the queue handler) that calls the function jobexec() defined here. 
 # 
-# Author: Anders Lövgren
+# Author: Anders LÃ¶vgren
 # Date:   2008-06-05
 #
 # 1. ENVIRONMENT:

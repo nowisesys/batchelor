@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007 Anders Lövgren
+//  Copyright (C) 2007 Anders LÃ¶vgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ function print_about_batchelor()
 		    $pattern = '/(.*)\s+<(.*)>\s+-(.*)/';
 		    $replace = '${1} <<a href="mailto:${2}">${2}</a>>: ${3}';
 		    printf("<code>%s</code><br>\n", strtr(preg_replace($pattern, $replace, $str),
-							  array( "å" => "&aring;", "ä" => "&auml;", "ö" => "&ouml;" )));
+							  array( "Ã¥" => "&aring;", "Ã¤" => "&auml;", "Ã¶" => "&ouml;" )));
 		}
 	    }
 	    fclose($fp);
@@ -97,7 +97,7 @@ function print_about_batchelor()
     print "</p>\n";
 
     print "<span id=\"secthead\">Copyright</span>\n";
-    print "<p>Batchelor is Copyright &copy; 2007-2009 by Anders L&ouml;vgren and the ";
+    print "<p>Batchelor is Copyright &copy; 2007-2011 by Anders L&ouml;vgren and the ";
     print "<a href=\"http://www.bmc.uu.se/node151\">Computing Department</a> ";
     print "at <a href=\"http://www.bmc.uu.se\">Uppsala Biomedical Centre</a>, Uppsala University (with equally shared rights).</p>\n";
         

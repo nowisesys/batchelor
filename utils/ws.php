@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2009 Anders Lövgren
+//  Copyright (C) 2007-2009 Anders LÃ¶vgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -399,7 +399,7 @@ function usage($prog, $defaults)
     print "  php ws.php --func=func --params='name=suspend' --format=human\n";
     print "\n";
     print "This tool is released under GNU General Public License version 2\n";
-    print "Copyright (C) 2007-2009 Anders Lövgren\n";
+    print "Copyright (C) 2007-2009 Anders LÃ¶vgren\n";
 }
 
 //

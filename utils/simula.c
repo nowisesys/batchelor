@@ -6,7 +6,7 @@
  * 2. Workload (busy loop or sleep).
  * 3. Capture of standard streams (stdout and stderr).
  * 
- * Author: Anders Lövgren
+ * Author: Anders LÃ¶vgren
  * Date:   2007-11-05
  * 
  * This program is released under GPL version 2 or later. See COPYING

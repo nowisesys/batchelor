@@ -5,7 +5,7 @@
  * 
  * Usage: date -u '%s'
  * 
- * Author: Anders Lövgren
+ * Author: Anders LÃ¶vgren
  * Date:   2008-05-12
  */
 

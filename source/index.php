@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2008 Anders LÃ¶vgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ function print_welcome()
     printf("inside the utils directory. See usage example by running:</p>\n");
     printf("<p><code>php cache.php --help example</code></p>\n");
     
-    printf("<br><i>Good luck! Anders Lövgren.</i>\n");
+    printf("<br><i>Good luck! Anders LÃ¶vgren.</i>\n");
 }
 
 // 

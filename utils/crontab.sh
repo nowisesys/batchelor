@@ -4,7 +4,7 @@
 #
 # Run periodic tasks for Batchelor (the batch job queue manager).
 #
-# Author: Anders Lövgren
+# Author: Anders LÃ¶vgren
 # Date:   2008-03-19
 
 # Update statistics:

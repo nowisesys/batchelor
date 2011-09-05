@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2009 Anders Lövgren
+//  Copyright (C) 2007-2011 Anders LÃ¶vgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 
 // 
 // This script is part of the lightweight HTTP web service interface. This script
-// implements the RPC method queue.
+// implements the RPC method stat.
 // 
 
 ini_set("include_path", ini_get("include_path") . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR . "../");
@@ -53,7 +53,7 @@ function send_result_xml($result, &$job)
     printf("  <result>%s</result>\n", $result);
     foreach($job as $key => $val) {
 	if($key == "name") {
-	    $val = htmlentities($val, ENT_QUOTES, "ISO-8859-1");
+	    $val = htmlentities($val, ENT_QUOTES, "UTF-8");
 	}
 	printf("  <%s>%s</%s>\n", $key, $val, $key);
     }

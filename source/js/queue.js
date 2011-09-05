@@ -10,7 +10,7 @@
 // This script depends on the free, open source JSMX Ajax library. It can be
 // downloaded from: http://www.lalabird.com/?fa=JSMX.downloads
 // 
-// Author: Anders Lövgren
+// Author: Anders LÃ¶vgren
 // Date:   2009-05-15
 // 
 
