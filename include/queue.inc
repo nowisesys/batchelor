@@ -133,7 +133,7 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
                                 }
                         }
 
-                        if ($dirs = opendir(".")) {
+                        if (($dirs = opendir("."))) {
                                 while (false !== ($dir = readdir($dirs))) {
                                         if ($dir != "." && $dir != "..") {
                                                 if (is_dir($dir)) {
@@ -147,7 +147,7 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
                                                                 }
                                                         }
                                                         if (chdir($dir)) {
-                                                                if ($files = opendir(".")) {
+                                                                if (($files = opendir("."))) {
                                                                         $job = array();
                                                                         while (false !== ($file = readdir($files))) {
                                                                                 if ($file != "." && $file != "..") {
@@ -296,7 +296,7 @@ function get_queued_jobs(&$jobs)
         // 
         $jobs = array();
 
-        if ($handle = popen(BATCH_LISTING, "r")) {
+        if (($handle = popen(BATCH_LISTING, "r"))) {
                 while ($str = fgets($handle)) {
 
                         // 
