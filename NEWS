@@ -1,6 +1,9 @@
 Version 0.8.11 (2011-09-06):
 
-    * Converting application from ISO-8859-1 to UTF-8.
+    * Converting the application file encoding from ISO-8859-1 to UTF-8.
+
+    * The project source is managed using the netbeans IDE. The formatting is 
+      using Linux kernel source (C) rules (eight chars indent).
 
 Version 0.8.10 (2010-08-10):
 

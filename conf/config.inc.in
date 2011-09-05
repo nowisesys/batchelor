@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // The TZ environment variable *has* to be set because its inherited by sub
 // processes (like at). It also affects the formatting of timestamps. Either 
@@ -29,21 +28,19 @@
 //     ini_set("date.timezone", getenv("TZ"));
 // }
 // 
-
 // 
 // The contact address for problems running batchelor. This address is used
 // in some error messages and is also printed in page footer. You should set
 // it to a real address!
 //
-define ("CONTACT_NAME", "System Manager");
-define ("CONTACT_ADDRESS", "batchelor@localhost");
-define ("CONTACT_STRING", sprintf("<a href=\"mailto:%s\">%s</a>", 
-				  CONTACT_ADDRESS, CONTACT_NAME));
+define("CONTACT_NAME", "System Manager");
+define("CONTACT_ADDRESS", "batchelor@localhost");
+define("CONTACT_STRING", sprintf("<a href=\"mailto:%s\">%s</a>", CONTACT_ADDRESS, CONTACT_NAME));
 
 // 
 // This command lists number of running jobs from all users.
 // 
-define ("BATCH_RUNNING", "at -l | grep '=' | wc -l");
+define("BATCH_RUNNING", "at -l | grep '=' | wc -l");
 
 // 
 // The maximum number of jobs thats allowed to run simultanous. The number
@@ -52,7 +49,7 @@ define ("BATCH_RUNNING", "at -l | grep '=' | wc -l");
 // 
 // Use 0 to force all jobs to be queued using the BATCH_COMMAND command.
 // 
-define ("BATCH_LIMIT", 3);
+define("BATCH_LIMIT", 3);
 
 // 
 // The batch cammand to run. The %s gets substituted with the batch job
@@ -66,33 +63,32 @@ define ("BATCH_LIMIT", 3);
 // define ("BATCH_COMMAND", "echo \"%s\" | at -q a now + 0 minutes");
 // define ("BATCH_EXECUTE", BATCH_COMMAND);
 // 
-define ("BATCH_COMMAND", "echo \"%s\" | batch");
-define ("BATCH_EXECUTE", "echo \"%s\" | at now");
+define("BATCH_COMMAND", "echo \"%s\" | batch");
+define("BATCH_EXECUTE", "echo \"%s\" | at now");
 
 // 
 // List all batch jobs. Jobs in queue 'b' is pending batch jobs and 
 // jobs in queue '=' is currently running jobs.
 // 
-define ("BATCH_LISTING", "at -l");
+define("BATCH_LISTING", "at -l");
 
 // 
 // Remove a pending job from the batch queue. The %d is substituted
 // with the job ID to remove from queue.
 // 
-define ("BATCH_REMOVE", "atrm %d");
+define("BATCH_REMOVE", "atrm %d");
 
 // 
 // Define to 1 if jobs are removed from the batch queue listing when 
 // they are started. Normally they remains until the job has finished.
 // 
 // define ("BATCH_START_DEQUEUES", 0);
-
 //
 // Trusted host are allowed to by-pass limits on i.e. max upload file size.
 // Note that PHP itself also impose limits that needs to be adjusted. The
 // value is an array of ip-addresses.
 //
-define ("TRUSTED_HOSTS", "127.0.0.1,::1");
+define("TRUSTED_HOSTS", "127.0.0.1,::1");
 
 // 
 // 
@@ -100,13 +96,13 @@ define ("TRUSTED_HOSTS", "127.0.0.1,::1");
 // disable minimum/maximum file size check. The maximum is affected
 // by PHP's upload_max_filesize.
 // 
-define ("UPLOAD_MIN_FILESIZE", 5000);
-define ("UPLOAD_MAX_FILESIZE", 0);
+define("UPLOAD_MIN_FILESIZE", 5000);
+define("UPLOAD_MAX_FILESIZE", 0);
 
 // 
 // Should original name of uploaded file be preserved?
 // 
-define ("UPLOAD_PRESERVE_FILENAME", false);
+define("UPLOAD_PRESERVE_FILENAME", false);
 
 // 
 // Define the wrapping mode for the textarea. Possible values are:
@@ -114,13 +110,13 @@ define ("UPLOAD_PRESERVE_FILENAME", false);
 //   "logical"  - show visual line breaks but only submit"hardtyped".
 //   "off"      - no visual linebreak, instead show scrollbars.
 // 
-define ("UPLOAD_TEXTAREA_WRAPPING", "off");
+define("UPLOAD_TEXTAREA_WRAPPING", "off");
 
 // 
 // The maximum number of subjobs accepted from a single submit. Use this 
 // in pre_enqueue_hook() to enforce a limit (defaults to 10).
 // 
-define ("UPLOAD_SUBJOB_LIMIT", 5);
+define("UPLOAD_SUBJOB_LIMIT", 5);
 
 // 
 // The number of seconds between reload of the page waiting for
@@ -128,42 +124,42 @@ define ("UPLOAD_SUBJOB_LIMIT", 5);
 // page refresh. Note that some browsers don't handle meta refresh
 // correct, see http://en.wikipedia.org/wiki/Meta_refresh.
 // 
-define ("PAGE_REFRESH_RATE", 15);
+define("PAGE_REFRESH_RATE", 15);
 
 // 
 // Use session cookies or persistent cookies?
 //
-define ("USE_SESSION_COOKIES", false);
+define("USE_SESSION_COOKIES", false);
 
 // 
 // Cookie life time (not for session cookies).
 // 
-define ("COOKIE_LIFE_TIME", 3600 * 24 * 7);
+define("COOKIE_LIFE_TIME", 3600 * 24 * 7);
 
 // 
 // Path to directory where job data gets saved. This directory must
 // be read/write to the user the webserver is running as.
 // 
-define ("CACHE_DIRECTORY", realpath(dirname(__FILE__) . "/../cache"));
-define ("CACHE_PERMISSION", 0750);
+define("CACHE_DIRECTORY", realpath(dirname(__FILE__) . "/../cache"));
+define("CACHE_PERMISSION", 0750);
 
 // 
 // Should we save peer address <=> hostid associations to file?
 // Useful for debbuging and for generating statistics.
 // 
-define ("SAVE_HOSTID_MAPPING", true);
+define("SAVE_HOSTID_MAPPING", true);
 
 // 
 // Show delete job link.
 // 
-define ("SHOW_JOB_DELETE_LINK", true);
+define("SHOW_JOB_DELETE_LINK", true);
 
 // 
 // Format of UNIX timestamps, see manual page for date() function. 
 // Localized output is enabled by setlocale() and using "%c" as
 // format string.
 // 
-define ("TIMESTAMP_FORMAT", "%Y-%m-%d %H:%M:%S");
+define("TIMESTAMP_FORMAT", "%Y-%m-%d %H:%M:%S");
 
 // 
 // If PHP >= 5.2 and the PECL zip extension (http://pecl.php.net) is loaded,
@@ -179,54 +175,54 @@ define ("TIMESTAMP_FORMAT", "%Y-%m-%d %H:%M:%S");
 // 
 // This example is for 7-Zip:
 // 
-define ("ZIP_FILE_COMMAND", "7z a %s %s -tzip");
+define("ZIP_FILE_COMMAND", "7z a %s %s -tzip");
 
 // 
 // Configures whether to present the job queue with icons or plain text 
 // inside the table view.
 // 
-define ("USE_ICONIZED_QUEUE", true);
+define("USE_ICONIZED_QUEUE", true);
 
 // 
 // Configures whether to show job name in queue (see README), their max length 
 // and how to truncate names of they exceed max length. The truncate option is 
 // either "head", "middle" or "tail".
 // 
-define ("QUEUE_SHOW_NAMES", true);
-define ("QUEUE_MAX_NAME_LENGHT", 65);
-define ("QUEUE_TRUNCATE_NAME", "middle");
+define("QUEUE_SHOW_NAMES", true);
+define("QUEUE_MAX_NAME_LENGHT", 65);
+define("QUEUE_TRUNCATE_NAME", "middle");
 
 // 
 // Display the queue in a more compact format.
 // 
-define ("QUEUE_FORMAT_COMPACT", false);
+define("QUEUE_FORMAT_COMPACT", false);
 
 // 
 // Define queue sort order (value are either "asc" or "desc").
 // 
-define ("QUEUE_SORT_ORDER", "desc");
+define("QUEUE_SORT_ORDER", "desc");
 
 // 
 // Configure the menu style. Use either "graphic", "text" or "compact".
 // 
-define ("MENU_STYLE", "graphic");
+define("MENU_STYLE", "graphic");
 
 // 
 // Configure the menu orientation. Use either "vertical" or "horizontal".
 // 
-define ("MENU_ORIENTATION", "vertical");
+define("MENU_ORIENTATION", "vertical");
 
 // 
 // Configure default submit type. Use either "file" or "data".
 // 
-define ("FORM_SUBMIT_TYPE", "file");
+define("FORM_SUBMIT_TYPE", "file");
 
 // 
 // If you define params_form_hook() in include/hooks.inc, then this option
 // let you decide where its output goes. Use either "north", "east", "south" 
 // or "compact".
 // 
-define ("FORM_PARAMS_LOCATION", "south");
+define("FORM_PARAMS_LOCATION", "south");
 
 // 
 // Use the JpGraph library for generating graphics from statistics? Enable
@@ -234,7 +230,7 @@ define ("FORM_PARAMS_LOCATION", "south");
 // 
 // Settings for JpGraph can be tuned inside the file conf/jpgraph.inc
 // 
-define ("USE_JPGRAPH_LIB", false);
+define("USE_JPGRAPH_LIB", false);
 
 // 
 // Define how to expose the statistics module. Possible values are:
@@ -242,32 +238,32 @@ define ("USE_JPGRAPH_LIB", false);
 // * hidden => hide link to statistics module.
 // * locked => only trusted host can access statistics.
 // 
-define ("STATISTICS_EXPOSED", "public");
+define("STATISTICS_EXPOSED", "public");
 
 // 
 // If STATISTICS_EXPOSED is locked, then set this to a colon (':') separated
 // list of hosts that are allowed to access the statistics module.
 // 
-define ("STATISTICS_TRUSTED", "127.0.0.1");
+define("STATISTICS_TRUSTED", "127.0.0.1");
 
 // 
 // Define footer info.
 // 
-define ("FOOTER_SHOW_NOTES", true);
-define ("FOOTER_SHOW_COPYING", true);
+define("FOOTER_SHOW_NOTES", true);
+define("FOOTER_SHOW_COPYING", true);
 
 // 
 // Define the string used in the title for each page. This is also used as 
 // the name for the application tab on the about page.
 // 
-define ("HTML_PAGE_TITLE", "Batchelor");
+define("HTML_PAGE_TITLE", "Batchelor");
 
 // 
 // Enable job control thru queue viewer. This option affects the possibility 
 // to control running jobs (already started by the batch queue).
 // Possible values are: "off", "simple" or "advanced".
 // 
-define ("ENABLE_JOB_CONTROL", "off");
+define("ENABLE_JOB_CONTROL", "off");
 
 // 
 // Define the pre-selected or default option for job control. This will be 
@@ -276,48 +272,48 @@ define ("ENABLE_JOB_CONTROL", "off");
 // 
 // Using "stop" or "cont" is pointless unless job control is "advanced".
 // 
-define ("JOB_CONTROL_ACTION", "term");
+define("JOB_CONTROL_ACTION", "term");
 
 // 
 // You must define the signal values used in $signals. Run 'kill -l' or use the 
 // utility script utils/signals.php. These defines are for GNU/Linux.
 // 
-define ("SIGHUP", 1);
-define ("SIGINT", 2);
-define ("SIGQUIT", 3);
-define ("SIGILL", 4);
-define ("SIGTRAP", 5);
-define ("SIGABRT", 6);
-define ("SIGIOT", 6);
-define ("SIGBUS", 7);
-define ("SIGFPE", 8);
-define ("SIGKILL", 9);
-define ("SIGUSR1", 10);
-define ("SIGSEGV", 11);
-define ("SIGUSR2", 12);
-define ("SIGPIPE", 13);
-define ("SIGALRM", 14);
-define ("SIGTERM", 15);
-define ("SIGSTKFLT", 16);
-define ("SIGCHLD", 17);
-define ("SIGCONT", 18);
-define ("SIGSTOP", 19);
-define ("SIGTSTP", 20);
-define ("SIGTTIN", 21);
-define ("SIGTTOU", 22);
-define ("SIGURG", 23);
-define ("SIGXCPU", 24);
-define ("SIGXFSZ", 25);
-define ("SIGVTALRM", 26);
-define ("SIGPROF", 27);
-define ("SIGWINCH", 28);
-define ("SIGIO", 29);
-define ("SIGLOST", 29);
-define ("SIGPWR", 30);
-define ("SIGSYS", 31);
-define ("SIGUNUSED", 31);
-define ("SIGRTMIN", 32);
-define ("SIGSTKSZ", 8192);
+define("SIGHUP", 1);
+define("SIGINT", 2);
+define("SIGQUIT", 3);
+define("SIGILL", 4);
+define("SIGTRAP", 5);
+define("SIGABRT", 6);
+define("SIGIOT", 6);
+define("SIGBUS", 7);
+define("SIGFPE", 8);
+define("SIGKILL", 9);
+define("SIGUSR1", 10);
+define("SIGSEGV", 11);
+define("SIGUSR2", 12);
+define("SIGPIPE", 13);
+define("SIGALRM", 14);
+define("SIGTERM", 15);
+define("SIGSTKFLT", 16);
+define("SIGCHLD", 17);
+define("SIGCONT", 18);
+define("SIGSTOP", 19);
+define("SIGTSTP", 20);
+define("SIGTTIN", 21);
+define("SIGTTOU", 22);
+define("SIGURG", 23);
+define("SIGXCPU", 24);
+define("SIGXFSZ", 25);
+define("SIGVTALRM", 26);
+define("SIGPROF", 27);
+define("SIGWINCH", 28);
+define("SIGIO", 29);
+define("SIGLOST", 29);
+define("SIGPWR", 30);
+define("SIGSYS", 31);
+define("SIGUNUSED", 31);
+define("SIGRTMIN", 32);
+define("SIGSTKSZ", 8192);
 
 // 
 // The array of accepted signals. The action defines optional actions to 
@@ -327,32 +323,32 @@ define ("SIGSTKSZ", 8192);
 //   flag:  create a file containing the signal sent.
 //   clear: wipe out the job directory.
 //   
-$signals = array( 
-		  "term" => array( "value" => SIGTERM, "desc" => "Terminate Process", "action" => "clear" ),
-		  "stop" => array( "value" => SIGSTOP, "desc" => "Stop (Pause)", "action" => "flag" ),
-		  "cont" => array( "value" => SIGCONT, "desc" => "Continue (Resume)", "action" => "flag" ),
-		  "kill" => array( "value" => SIGKILL, "desc" => "Kill Process", "action" => "clear" ),
-		  "hup"  => array( "value" => SIGHUP,  "desc" => "Signal Hangup", "action" => "flag" ),
-		  "usr1" => array( "value" => SIGUSR1, "desc" => "User Defined #1", "action" => "none" ),
-		  "usr2" => array( "value" => SIGUSR2, "desc" => "User Defined #2", "action" => "none" ),
-		  );
+$signals = array(
+        "term" => array("value" => SIGTERM, "desc" => "Terminate Process", "action" => "clear"),
+        "stop" => array("value" => SIGSTOP, "desc" => "Stop (Pause)", "action" => "flag"),
+        "cont" => array("value" => SIGCONT, "desc" => "Continue (Resume)", "action" => "flag"),
+        "kill" => array("value" => SIGKILL, "desc" => "Kill Process", "action" => "clear"),
+        "hup" => array("value" => SIGHUP, "desc" => "Signal Hangup", "action" => "flag"),
+        "usr1" => array("value" => SIGUSR1, "desc" => "User Defined #1", "action" => "none"),
+        "usr2" => array("value" => SIGUSR2, "desc" => "User Defined #2", "action" => "none"),
+);
 
 // 
 // Configure the help style. Use either "graphic" or "text".
 // 
-define ("HELP_STYLE", "graphic");
+define("HELP_STYLE", "graphic");
 
 // 
 // Define "verbosity" level for builtin help. Value is between 0 and 3 where
 // 0 is completely silent.
 // 
-define ("HELP_LEVEL", 2);
+define("HELP_LEVEL", 2);
 
 // 
 // Show description about icons used in queue viewer. This setting has no
 // effect unless USE_ICONIZED_QUEUE is true.
 //
-define ("HELP_ICON_INFO", true);
+define("HELP_ICON_INFO", true);
 
 // 
 // Define which web services interfaces that should be allowed. All other
@@ -360,40 +356,39 @@ define ("HELP_ICON_INFO", true);
 // applies to a specific web service interface, then its prefixed like e.g.
 // WS_HTTP_XXX.
 // 
-define ("WS_ENABLE_HTTP",   false);
-define ("WS_ENABLE_XMLRPC", false);
-define ("WS_ENABLE_REST",   false);
-define ("WS_ENABLE_SOAP",   false);
+define("WS_ENABLE_HTTP", false);
+define("WS_ENABLE_XMLRPC", false);
+define("WS_ENABLE_REST", false);
+define("WS_ENABLE_SOAP", false);
 
 // 
 // Define the source for the hostid value. Possible values are "cookie",
 // "param" or "auto". Using "auto" tells the script to use the same method 
 // as source/queue.php (for web service only)
 // 
-define ("WS_HOSTID_SOURCE", "auto");
+define("WS_HOSTID_SOURCE", "auto");
 // 
 // This allowes the above settings to be configured individual for each
 // web service interface. These settings overrides WS_HOSTID_SOURCE.
 // 
 // define ("WS_HTTP_HOSTID_SOURCE", "auto");
 // define ("WS_XMLRPC_HOSTID_SOURCE", "auto");
-
 // 
 // Define the base directory relative the job directory, i.e. "result/set1"
 // 
-define ("WS_BASE_DIRECTORY", null);
+define("WS_BASE_DIRECTORY", null);
 
 // 
 // Send error body also if true (for debug). For XML-RPC the error message
 // is always encoded in the message body.
 // 
-define ("WS_HTTP_SEND_ERROR_BODY", false);
+define("WS_HTTP_SEND_ERROR_BODY", false);
 
 // 
 // Define to true is additional HTTP headers should be sent, like file size
 // and MIME type (for the moment).
 // 
-define ("WS_HTTP_SEND_FILE_PROPS", true);
+define("WS_HTTP_SEND_FILE_PROPS", true);
 
 // 
 // Default format of output from HTTP RCP methods. Possible values are "xml",
@@ -401,7 +396,7 @@ define ("WS_HTTP_SEND_FILE_PROPS", true);
 // valid, but they are intended only for debug and development and are not 
 // be implemented by all methods.
 // 
-define ("WS_HTTP_OUTPUT_FORMAT", "foa");
+define("WS_HTTP_OUTPUT_FORMAT", "foa");
 
 // 
 // Should file content sent by the fopen method be base64 encoded?
@@ -411,12 +406,10 @@ define ("WS_HTTP_OUTPUT_FORMAT", "foa");
 // define ("WS_XMLRPC_FOPEN_BASE64_ENCODE", false);
 // define ("WS_REST_FOPEN_BASE64_ENCODE", false);
 // define ("WS_SOAP_FOPEN_BASE64_ENCODE", false);
-
 // 
 // OK, done configuring? Great! Now just set configured to true and define 
 // default start page. Start page is either one of "submit", "queue" or "stats".
 // 
-define ("BATCHELOR_CONFIGURED", false);
-define ("BATCHELOR_START_PAGE", "submit");
-
+define("BATCHELOR_CONFIGURED", false);
+define("BATCHELOR_START_PAGE", "submit");
 ?>

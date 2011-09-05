@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This script is part of the lightweight HTTP web service interface. This script
 // implements the RPC method stat.
@@ -33,31 +32,31 @@ include "include/queue.inc";
 // 
 // Include replacement for missing strpbrk() function:
 // 
-if(!function_exists("strpbrk")) {
-    include "include/missing/strpbrk.inc";
+if (!function_exists("strpbrk")) {
+        include "include/missing/strpbrk.inc";
 }
 
 // 
 // Setup HTTP web service session. This will terminate the script if any 
 // problem is detected.
 // 
-ws_http_session_setup(array( "result", "jobid" ));
+ws_http_session_setup(array("result", "jobid"));
 
 // 
 // Send result in XML format.
 // 
 function send_result_xml($result, &$job)
 {
-    print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
-    print "<job>\n";
-    printf("  <result>%s</result>\n", $result);
-    foreach($job as $key => $val) {
-	if($key == "name") {
-	    $val = htmlentities($val, ENT_QUOTES, "UTF-8");
-	}
-	printf("  <%s>%s</%s>\n", $key, $val, $key);
-    }
-    print "</job>\n";
+        print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+        print "<job>\n";
+        printf("  <result>%s</result>\n", $result);
+        foreach ($job as $key => $val) {
+                if ($key == "name") {
+                        $val = htmlentities($val, ENT_QUOTES, "UTF-8");
+                }
+                printf("  <%s>%s</%s>\n", $key, $val, $key);
+        }
+        print "</job>\n";
 }
 
 // 
@@ -65,18 +64,18 @@ function send_result_xml($result, &$job)
 // 
 function send_result_foa($result, &$job)
 {
-    printf("(\nresult=%s\n", $result);
-    foreach($job as $key => $val) {
-	if($key == "name") {
-	    if(strpbrk($val, "[]()\n")) {
-		$spec = array("[", "]", "(", ")", "\\");
-		$repl = array("%5B", "%5D", "%28", "%29", "%5C");
-		$val = str_replace($spec, $repl, $val);
-	    }
-	}
-	printf("%s=%s\n", $key, $val);
-    }
-    print ")\n";
+        printf("(\nresult=%s\n", $result);
+        foreach ($job as $key => $val) {
+                if ($key == "name") {
+                        if (strpbrk($val, "[]()\n")) {
+                                $spec = array("[", "]", "(", ")", "\\");
+                                $repl = array("%5B", "%5D", "%28", "%29", "%5C");
+                                $val = str_replace($spec, $repl, $val);
+                        }
+                }
+                printf("%s=%s\n", $key, $val);
+        }
+        print ")\n";
 }
 
 // 
@@ -84,10 +83,10 @@ function send_result_foa($result, &$job)
 // 
 function send_result_php($result, &$job)
 {
-    $arr = array();
-    $job['result'] = $result;
-    $arr[] = (object)$job;
-    printf("%s", serialize($arr));
+        $arr = array();
+        $job['result'] = $result;
+        $arr[] = (object) $job;
+        printf("%s", serialize($arr));
 }
 
 // 
@@ -95,13 +94,13 @@ function send_result_php($result, &$job)
 // 
 function send_result_json($result, &$job)
 {
-    $arr = array();
-    $job['result'] = $result;
-    if(isset($job['name'])) {
-	$job['name'] = utf8_encode($job['name']);
-    }
-    $arr[] = (object)$job;
-    printf("%s", json_encode($arr));
+        $arr = array();
+        $job['result'] = $result;
+        if (isset($job['name'])) {
+                $job['name'] = utf8_encode($job['name']);
+        }
+        $arr[] = (object) $job;
+        printf("%s", json_encode($arr));
 }
 
 // 
@@ -109,13 +108,13 @@ function send_result_json($result, &$job)
 // 
 function send_result_wddx($result, &$job)
 {
-    $arr = array();
-    $job['result'] = $result;
-    if(isset($job['name'])) {
-	$job['name'] = utf8_encode($job['name']);
-    }
-    $arr[] = (object)$job;
-    printf("%s", wddx_serialize_vars("arr"));
+        $arr = array();
+        $job['result'] = $result;
+        if (isset($job['name'])) {
+                $job['name'] = utf8_encode($job['name']);
+        }
+        $arr[] = (object) $job;
+        printf("%s", wddx_serialize_vars("arr"));
 }
 
 // 
@@ -123,26 +122,26 @@ function send_result_wddx($result, &$job)
 // 
 function send_result($result, &$job)
 {
-    switch($GLOBALS['format']) {
-     case "xml":
-	send_result_xml($result, $job);
-	break;
-     case "foa":
-     	send_result_foa($result, $job);
-     	break;
-     case "php":
-     	send_result_php($result, $job);
-     	break;
-     case "json":
-     	send_result_json($result, $job);
-     	break;
-     case "wddx":
-	send_result_wddx($result, $job);
-	break;
-     default:
-	put_error(sprintf("Method queue don't implements format %s", $GLOBALS['format']));
-	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
-    }
+        switch ($GLOBALS['format']) {
+                case "xml":
+                        send_result_xml($result, $job);
+                        break;
+                case "foa":
+                        send_result_foa($result, $job);
+                        break;
+                case "php":
+                        send_result_php($result, $job);
+                        break;
+                case "json":
+                        send_result_json($result, $job);
+                        break;
+                case "wddx":
+                        send_result_wddx($result, $job);
+                        break;
+                default:
+                        put_error(sprintf("Method queue don't implements format %s", $GLOBALS['format']));
+                        ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
+        }
 }
 
 // 
@@ -154,8 +153,8 @@ ob_start();
 // Call requested method.
 // 
 $job = array();
-if(!ws_stat($_REQUEST['result'], $_REQUEST['jobid'], $job)) {
-    ws_http_error_handler(409, WS_ERROR_FAILED_CALL_METHOD);
+if (!ws_stat($_REQUEST['result'], $_REQUEST['jobid'], $job)) {
+        ws_http_error_handler(409, WS_ERROR_FAILED_CALL_METHOD);
 }
 send_result($_REQUEST['result'], $job);
 
@@ -166,5 +165,4 @@ header(sprintf("Content-Type: %s; charset=%s", ws_get_mime_type(), "UTF-8"));
 header("Connection: close");
 
 ob_end_flush();
-
 ?>

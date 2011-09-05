@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This script is part of the lightweight HTTP web service interface. This script
 // implements the RPC method enqueue.
@@ -42,8 +41,8 @@ ws_http_session_setup();
 // 
 // Make sure indata has been set.
 // 
-if(!isset($_REQUEST['indata'])) {
-    $_REQUEST['indata'] = null;
+if (!isset($_REQUEST['indata'])) {
+        $_REQUEST['indata'] = null;
 }
 
 // 
@@ -51,16 +50,16 @@ if(!isset($_REQUEST['indata'])) {
 // 
 function send_result_xml($jobs)
 {
-    print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
-    print "<jobs>\n";
-    foreach($jobs as $job) {
-	print "  <job>\n";
-	foreach($job as $key => $val) {
-	    printf("    <%s>%s</%s>\n", $key, $val, $key);
-	}
-	print "  </job>\n";
-    }
-    print "</jobs>\n";
+        print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+        print "<jobs>\n";
+        foreach ($jobs as $job) {
+                print "  <job>\n";
+                foreach ($job as $key => $val) {
+                        printf("    <%s>%s</%s>\n", $key, $val, $key);
+                }
+                print "  </job>\n";
+        }
+        print "</jobs>\n";
 }
 
 // 
@@ -68,16 +67,16 @@ function send_result_xml($jobs)
 // 
 function send_result_foa($jobs)
 {
-    print "[\n";
-    foreach($jobs as $job) {
-	$res = array_values($job);
-	print "(\n";    
-	for($i = 0; $i < count($res); $i++) {
-	    printf("%s\n", $res[$i]);
-	}
-	print ")\n";
-    }
-    print "]\n";
+        print "[\n";
+        foreach ($jobs as $job) {
+                $res = array_values($job);
+                print "(\n";
+                for ($i = 0; $i < count($res); $i++) {
+                        printf("%s\n", $res[$i]);
+                }
+                print ")\n";
+        }
+        print "]\n";
 }
 
 // 
@@ -85,7 +84,7 @@ function send_result_foa($jobs)
 // 
 function send_result_php($jobs)
 {
-    printf("%s", serialize($jobs));
+        printf("%s", serialize($jobs));
 }
 
 // 
@@ -93,15 +92,15 @@ function send_result_php($jobs)
 // 
 function send_result_json($jobs)
 {
-    printf("%s", json_encode($jobs));
+        printf("%s", json_encode($jobs));
 }
 
 // 
 // Send result as WDDX packet.
 // 
-function send_result_wddx(&$jobs) 
+function send_result_wddx(&$jobs)
 {
-    printf("%s", wddx_serialize_vars("jobs"));
+        printf("%s", wddx_serialize_vars("jobs"));
 }
 
 // 
@@ -109,26 +108,26 @@ function send_result_wddx(&$jobs)
 // 
 function send_result($result)
 {
-    switch($GLOBALS['format']) {
-     case "xml":
-	send_result_xml($result);
-	break;
-     case "foa":
-     	send_result_foa($result);
-     	break;
-     case "php":
-     	send_result_php($result);
-     	break;
-     case "json":
-     	send_result_json($result);
-     	break;
-     case "wddx":
-	send_result_wddx($result);
-	break;
-     default:
-	put_error(sprintf("Method enqueue don't implements format %s", $GLOBALS['format']));
-	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
-    }
+        switch ($GLOBALS['format']) {
+                case "xml":
+                        send_result_xml($result);
+                        break;
+                case "foa":
+                        send_result_foa($result);
+                        break;
+                case "php":
+                        send_result_php($result);
+                        break;
+                case "json":
+                        send_result_json($result);
+                        break;
+                case "wddx":
+                        send_result_wddx($result);
+                        break;
+                default:
+                        put_error(sprintf("Method enqueue don't implements format %s", $GLOBALS['format']));
+                        ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
+        }
 }
 
 // 
@@ -140,8 +139,8 @@ ob_start();
 // Call requested method.
 // 
 $job = null;
-if(!ws_enqueue($_REQUEST['indata'], $job)) {
-    ws_http_error_handler(409, WS_ERROR_FAILED_CALL_METHOD);
+if (!ws_enqueue($_REQUEST['indata'], $job)) {
+        ws_http_error_handler(409, WS_ERROR_FAILED_CALL_METHOD);
 }
 send_result($job);
 
@@ -152,5 +151,4 @@ header(sprintf("Content-Type: %s; charset=%s", ws_get_mime_type(), "UTF-8"));
 header("Connection: close");
 
 ob_end_flush();
-
 ?>

@@ -13,11 +13,9 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // A replacement for missing strpbrk() in PHP < 5
 // 
-
 // 
 // The strpbrk() function locates the first occurrence in the string haystack
 // of any of the characters in the string accept. 
@@ -27,13 +25,13 @@
 // 
 function strpbrk($haystack, $accept)
 {
-    for($i = 0; $i < strlen($haystack); ++$i) {
-	for($j = 0; $j < strlen($accept); ++$j) {
-	    if($haystack[$i] == $accept[$j]) {
-		return substr($haystack, $i);
-	    }
-	}
-    }
+        for ($i = 0; $i < strlen($haystack); ++$i) {
+                for ($j = 0; $j < strlen($accept); ++$j) {
+                        if ($haystack[$i] == $accept[$j]) {
+                                return substr($haystack, $i);
+                        }
+                }
+        }
 }
 
 ?>

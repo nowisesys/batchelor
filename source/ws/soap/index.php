@@ -13,11 +13,9 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This is the server side code implementing a SOAP service.
 // 
-
 // 
 // Both input and output for some methods are complex types (objects), so
 // we must support it here also. We have (at least) two ways to do that. 
@@ -71,238 +69,240 @@ include "include/soap.inc";
 // 
 // Must check using an relative or absolute path, can't use include path.
 // 
-if(file_exists("../../../include/hooks.inc")) {
-    include("include/hooks.inc");
+if (file_exists("../../../include/hooks.inc")) {
+        include("include/hooks.inc");
 }
 
 // ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache during testing
-
 // 
 // The SOAP handler class.
 // 
-class batchelor {
-    // 
-    // output: VersionResponse(version=string)
-    // 
-    function version()
-    {
-	return new VersionResponse(WS_SOAP_INTERFACE_VERSION);
-    }
-    
-    // 
-    // input:  EnqueueParams(indata=string)
-    // output: EnqueueRepsonse(EnqueueResult[])
-    // 
-    function enqueue($obj)
-    {
-	if(!isset($obj) || !isset($obj->indata)) {
-	    send_error(WS_ERROR_MISSING_PARAMETER);
-	}
-	if(strlen($obj->indata) == 0) {
-	    send_error(WS_ERROR_INVALID_FORMAT);
-	}
-	$jobs = array();
-	if(!ws_enqueue($obj->indata, $jobs)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD);
-	}
-	
-	$result = array();
-	foreach($jobs as $job) {
-	    array_push($result, new EnqueueResult($job['date'], $job['jobid'], 
-						  $job['result'], $job['stamp'], 
-						  $job['time']));
-	}	
-	return new EnqueueResponse($result);
-    }
+class batchelor
+{
 
-    // 
-    // input:  QueueParams(sort=string, filter=string)
-    // output: QueueResponse(QueuedJob[])
-    // 
-    function queue($obj)
-    {	
-	$args = new QueueParams("none", "all");
-	$jobs = array();
-	
-	if(isset($obj->sort) && strlen($obj->sort) != 0) {
-	    $args->sort = strtolower($obj->sort);
-	}
-	if(isset($obj->filter) && strlen($obj->filter) != 0) {
-	    $args->filter = strtolower($obj->filter);
-	}
-	if($args->sort == "job_id") {
-	    $args->sort = "jobid";
-	}
-	
-	if(!ws_queue($jobs, $args->sort, $args->filter)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD);
-	}
-	
-	$result = array();
-	foreach($jobs as $resdir => $job) {
-	    if(isset($job['jobid'])) {
-		$job['jobid'] = 0;   // Assign 0 as jobid for crashed jobs, see delete_single_job() for reference.
-	    }
-	    array_push($result, new QueuedJob(new JobIdentity($job['jobid'], $resdir), $job['state']));
-	}	
-	return new QueueResponse($result);
-    }
-    
-    // 
-    // input:  ResumeParams(jobIdentity)
-    // output: ResumeResponse(bool)
-    // 
-    function resume($obj)
-    {	
-	// 
-	// Don't allow the method call unless job control is enabled.
-	// 
-	if(!defined("ENABLE_JOB_CONTROL") || ENABLE_JOB_CONTROL == "off") {
-	    send_error(WS_ERROR_DISALLOWED);
-	}
-	
-	if(!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
-	    send_error(WS_ERROR_MISSING_PARAMETER);
-	}
-	if(strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
-	    send_error(WS_ERROR_INVALID_FORMAT);
-	}
-	
-	$result = ws_resume($obj->job->result, $obj->job->jobID);
-	return new ResumeResponse($result);
-    }
+        // 
+        // output: VersionResponse(version=string)
+        // 
+        function version()
+        {
+                return new VersionResponse(WS_SOAP_INTERFACE_VERSION);
+        }
 
-    // 
-    // input:  SuspendParams(jobIdentity)
-    // output: SuspendResponse(bool)
-    // 
-    function suspend($obj)
-    {
-	// 
-	// Don't allow the method call unless job control is enabled.
-	// 
-	if(!defined("ENABLE_JOB_CONTROL") || ENABLE_JOB_CONTROL == "off") {
-	    send_error(WS_ERROR_DISALLOWED);
-	}
-	
-	if(!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
-	    send_error(WS_ERROR_MISSING_PARAMETER);
-	}
-	if(strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
-	    send_error(WS_ERROR_INVALID_FORMAT);
-	}
-	
-	$result = ws_suspend($obj->job->result, $obj->job->jobID);
-	return new SuspendResponse($result);
-    }
-    
-    // 
-    // input:  DequeueParams(jobIdentity)
-    // output: DequeueResponse(boolean)
-    // 
-    function dequeue($obj)
-    {
-	if(!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
-	    send_error(WS_ERROR_MISSING_PARAMETER);
-	}
-	
-	if(strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
-	    send_error(WS_ERROR_INVALID_FORMAT);
-	}
-	
-	$result = ws_dequeue($obj->job->result, $obj->job->jobID);	
-	return new DequeueResponse($result);
-    }
+        // 
+        // input:  EnqueueParams(indata=string)
+        // output: EnqueueRepsonse(EnqueueResult[])
+        // 
+        function enqueue($obj)
+        {
+                if (!isset($obj) || !isset($obj->indata)) {
+                        send_error(WS_ERROR_MISSING_PARAMETER);
+                }
+                if (strlen($obj->indata) == 0) {
+                        send_error(WS_ERROR_INVALID_FORMAT);
+                }
+                $jobs = array();
+                if (!ws_enqueue($obj->indata, $jobs)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD);
+                }
 
-    // 
-    // input:  WatchParams(stamp=int)
-    // output: WatchResponse(QueuedJob[])
-    // 
-    function watch($obj)
-    {
-	$jobs = array();
-	if(!isset($obj) || !isset($obj->stamp)) {
-	    send_error(WS_ERROR_MISSING_PARAMETER);
-	}
-	if(!ws_watch($jobs, $obj->stamp)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD);
-	}
-	$result = array();
-	foreach($jobs as $resdir => $job) {
-	    array_push($result, new QueuedJob(new JobIdentity($job['jobid'], $resdir), $job['state']));
-	}
-	return new WatchResponse($result);
-    }
+                $result = array();
+                foreach ($jobs as $job) {
+                        array_push($result, new EnqueueResult($job['date'], $job['jobid'],
+                                        $job['result'], $job['stamp'],
+                                        $job['time']));
+                }
+                return new EnqueueResponse($result);
+        }
 
-    // 
-    // output: OpendirResponse(jobIdentity[])
-    // 
-    function opendir()
-    {
-	$jobs = array();
-	if(!ws_opendir($jobs)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD);
-	}
-	$result = array();
-	foreach($jobs as $resdir => $job) {
-	    array_push($result, new JobIdentity($job, $resdir));
-	}
-	return new OpendirResponse($result);
-    }
+        // 
+        // input:  QueueParams(sort=string, filter=string)
+        // output: QueueResponse(QueuedJob[])
+        // 
+        function queue($obj)
+        {
+                $args = new QueueParams("none", "all");
+                $jobs = array();
 
-    // 
-    // input:  ReaddirParams(jobIdentity)
-    // output: ReaddirResponse(string[])     // List of files including subdirs
-    // 
-    function readdir($obj)
-    {
-	if(!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
-	    send_error(WS_ERROR_MISSING_PARAMETER);
-	}
-	if(strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
-	    send_error(WS_ERROR_INVALID_FORMAT);
-	}
-	
-	$result = array();
-	ws_readdir($obj->job->result, $obj->job->jobID, $result);
-	return new ReaddirResponse($result);
-    }
-    
-    // 
-    // input:  FopenParams(jobIdentity, file=string)
-    // output: FopenResponse(base64Binary)   // The file content.
-    // 
-    function fopen($obj)
-    {
-	if(!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result) || !isset($obj->file)) {
-	    send_error(WS_ERROR_MISSING_PARAMETER);
-	}
-	if(strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0 || strlen($obj->file) == 0) {
-	    send_error(WS_ERROR_INVALID_FORMAT);
-	}
-	$path = "";
-	if(!ws_fopen($obj->job->result, $obj->job->jobID, $obj->file, $path)) {
-	    send_error(WS_ERROR_INVALID_REQUEST);
-	}
-	return new FopenResponse(file_get_contents($path));
-    }
-    
-    // 
-    // input:  StatParams(jobIdentity)
-    // output: StatResponse(queuedJob)
-    // 
-    function stat($obj) 
-    {
-	if(!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
-	    send_error(WS_ERROR_MISSING_PARAMETER);
-	}
-	if(strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
-	    send_error(WS_ERROR_INVALID_FORMAT);
-	}
-	$result = array();
-	ws_stat($obj->job->result, $obj->job->jobID, $result);
-	return new StatResponse(new QueuedJob($obj->job, $result['state']));
-    }
+                if (isset($obj->sort) && strlen($obj->sort) != 0) {
+                        $args->sort = strtolower($obj->sort);
+                }
+                if (isset($obj->filter) && strlen($obj->filter) != 0) {
+                        $args->filter = strtolower($obj->filter);
+                }
+                if ($args->sort == "job_id") {
+                        $args->sort = "jobid";
+                }
+
+                if (!ws_queue($jobs, $args->sort, $args->filter)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD);
+                }
+
+                $result = array();
+                foreach ($jobs as $resdir => $job) {
+                        if (isset($job['jobid'])) {
+                                $job['jobid'] = 0;   // Assign 0 as jobid for crashed jobs, see delete_single_job() for reference.
+                        }
+                        array_push($result, new QueuedJob(new JobIdentity($job['jobid'], $resdir), $job['state']));
+                }
+                return new QueueResponse($result);
+        }
+
+        // 
+        // input:  ResumeParams(jobIdentity)
+        // output: ResumeResponse(bool)
+        // 
+        function resume($obj)
+        {
+                // 
+                // Don't allow the method call unless job control is enabled.
+                // 
+                if (!defined("ENABLE_JOB_CONTROL") || ENABLE_JOB_CONTROL == "off") {
+                        send_error(WS_ERROR_DISALLOWED);
+                }
+
+                if (!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
+                        send_error(WS_ERROR_MISSING_PARAMETER);
+                }
+                if (strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
+                        send_error(WS_ERROR_INVALID_FORMAT);
+                }
+
+                $result = ws_resume($obj->job->result, $obj->job->jobID);
+                return new ResumeResponse($result);
+        }
+
+        // 
+        // input:  SuspendParams(jobIdentity)
+        // output: SuspendResponse(bool)
+        // 
+        function suspend($obj)
+        {
+                // 
+                // Don't allow the method call unless job control is enabled.
+                // 
+                if (!defined("ENABLE_JOB_CONTROL") || ENABLE_JOB_CONTROL == "off") {
+                        send_error(WS_ERROR_DISALLOWED);
+                }
+
+                if (!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
+                        send_error(WS_ERROR_MISSING_PARAMETER);
+                }
+                if (strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
+                        send_error(WS_ERROR_INVALID_FORMAT);
+                }
+
+                $result = ws_suspend($obj->job->result, $obj->job->jobID);
+                return new SuspendResponse($result);
+        }
+
+        // 
+        // input:  DequeueParams(jobIdentity)
+        // output: DequeueResponse(boolean)
+        // 
+        function dequeue($obj)
+        {
+                if (!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
+                        send_error(WS_ERROR_MISSING_PARAMETER);
+                }
+
+                if (strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
+                        send_error(WS_ERROR_INVALID_FORMAT);
+                }
+
+                $result = ws_dequeue($obj->job->result, $obj->job->jobID);
+                return new DequeueResponse($result);
+        }
+
+        // 
+        // input:  WatchParams(stamp=int)
+        // output: WatchResponse(QueuedJob[])
+        // 
+        function watch($obj)
+        {
+                $jobs = array();
+                if (!isset($obj) || !isset($obj->stamp)) {
+                        send_error(WS_ERROR_MISSING_PARAMETER);
+                }
+                if (!ws_watch($jobs, $obj->stamp)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD);
+                }
+                $result = array();
+                foreach ($jobs as $resdir => $job) {
+                        array_push($result, new QueuedJob(new JobIdentity($job['jobid'], $resdir), $job['state']));
+                }
+                return new WatchResponse($result);
+        }
+
+        // 
+        // output: OpendirResponse(jobIdentity[])
+        // 
+        function opendir()
+        {
+                $jobs = array();
+                if (!ws_opendir($jobs)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD);
+                }
+                $result = array();
+                foreach ($jobs as $resdir => $job) {
+                        array_push($result, new JobIdentity($job, $resdir));
+                }
+                return new OpendirResponse($result);
+        }
+
+        // 
+        // input:  ReaddirParams(jobIdentity)
+        // output: ReaddirResponse(string[])     // List of files including subdirs
+        // 
+        function readdir($obj)
+        {
+                if (!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
+                        send_error(WS_ERROR_MISSING_PARAMETER);
+                }
+                if (strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
+                        send_error(WS_ERROR_INVALID_FORMAT);
+                }
+
+                $result = array();
+                ws_readdir($obj->job->result, $obj->job->jobID, $result);
+                return new ReaddirResponse($result);
+        }
+
+        // 
+        // input:  FopenParams(jobIdentity, file=string)
+        // output: FopenResponse(base64Binary)   // The file content.
+        // 
+        function fopen($obj)
+        {
+                if (!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result) || !isset($obj->file)) {
+                        send_error(WS_ERROR_MISSING_PARAMETER);
+                }
+                if (strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0 || strlen($obj->file) == 0) {
+                        send_error(WS_ERROR_INVALID_FORMAT);
+                }
+                $path = "";
+                if (!ws_fopen($obj->job->result, $obj->job->jobID, $obj->file, $path)) {
+                        send_error(WS_ERROR_INVALID_REQUEST);
+                }
+                return new FopenResponse(file_get_contents($path));
+        }
+
+        // 
+        // input:  StatParams(jobIdentity)
+        // output: StatResponse(queuedJob)
+        // 
+        function stat($obj)
+        {
+                if (!isset($obj) || !isset($obj->job) || !isset($obj->job->jobID) || !isset($obj->job->result)) {
+                        send_error(WS_ERROR_MISSING_PARAMETER);
+                }
+                if (strlen($obj->job->jobID) == 0 || strlen($obj->job->result) == 0) {
+                        send_error(WS_ERROR_INVALID_FORMAT);
+                }
+                $result = array();
+                ws_stat($obj->job->result, $obj->job->jobID, $result);
+                return new StatResponse(new QueuedJob($obj->job, $result['state']));
+        }
+
 }
 
 // 
@@ -313,25 +313,25 @@ class batchelor {
 // 
 function send_error($code)
 {
-    // 
-    // Write fault reason to error log:
-    // 
-    error_log(sprintf("SOAP call error: %d (%s)", $code, get_error($code)));
-    
-    // 
-    // Send SOAP fault code to client:
-    // 
-    if($code == WS_ERROR_FAILED_CALL_METHOD) {
-	throw new SoapFault("Server", get_error($code));
-    } else {
-	throw new SoapFault("Client", get_error($code));
-    }
-    
-    // 
-    // I assume that terminate the script is the right thing 
-    // to do here.
-    // 
-    exit(1);
+        // 
+        // Write fault reason to error log:
+        // 
+        error_log(sprintf("SOAP call error: %d (%s)", $code, get_error($code)));
+
+        // 
+        // Send SOAP fault code to client:
+        // 
+        if ($code == WS_ERROR_FAILED_CALL_METHOD) {
+                throw new SoapFault("Server", get_error($code));
+        } else {
+                throw new SoapFault("Client", get_error($code));
+        }
+
+        // 
+        // I assume that terminate the script is the right thing 
+        // to do here.
+        // 
+        exit(1);
 }
 
 //
@@ -343,20 +343,19 @@ ws_soap_session_setup();
 // Initilize SOAP library with the WSDL:
 // 
 $server = new SoapServer(get_wsdl_url());
-if(!$server) {
-    error_log("Failed create SOAP server");
-    send_error(WS_ERROR_MISSING_EXTENSION);
+if (!$server) {
+        error_log("Failed create SOAP server");
+        send_error(WS_ERROR_MISSING_EXTENSION);
 }
 $server->setClass("batchelor");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $server->handle();
+        $server->handle();
 } else {
-    echo "The SOAP service provides the following functions:<br />";
-    $functions = $server->getFunctions();
-    foreach($functions as $func) {
-	echo $func . "<br />\n";
-    }
+        echo "The SOAP service provides the following functions:<br />";
+        $functions = $server->getFunctions();
+        foreach ($functions as $func) {
+                echo $func . "<br />\n";
+        }
 }
-
 ?>

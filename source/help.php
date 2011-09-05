@@ -13,12 +13,10 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This is the help page. Installers or integrators should add source/help.html
 // to change the help content.
 // 
-
 // 
 // Include configuration and libs.
 // 
@@ -30,17 +28,17 @@ include "../conf/config.inc";
 // 
 function print_help()
 {
-    printf("<h2><img src=\"icons/nuvola/help.png\"> Help contents</h2>\n");
-    
-    printf("<span id=\"secthead\">General</span>\n");
-    printf("<p>You see this page because no installation specific help has been written (yet). ");
-    printf("If this is your installation then create the file <b>source/help.html</b> giving ");
-    printf("information on how to use your batch queue, i.e. describing the accepted format ");
-    printf("of uploaded data.</p>\n");
-    
-    printf("<span id=\"secthead\">Reporting bugs</span>\n");
-    printf("<p>If you think you found a bug in batchelor, please visit the <a href=\"about.php\">");
-    printf("about</a> page for instructions on how to send a bug report.</p>\n");
+        printf("<h2><img src=\"icons/nuvola/help.png\"> Help contents</h2>\n");
+
+        printf("<span id=\"secthead\">General</span>\n");
+        printf("<p>You see this page because no installation specific help has been written (yet). ");
+        printf("If this is your installation then create the file <b>source/help.html</b> giving ");
+        printf("information on how to use your batch queue, i.e. describing the accepted format ");
+        printf("of uploaded data.</p>\n");
+
+        printf("<span id=\"secthead\">Reporting bugs</span>\n");
+        printf("<p>If you think you found a bug in batchelor, please visit the <a href=\"about.php\">");
+        printf("about</a> page for instructions on how to send a bug report.</p>\n");
 }
 
 // 
@@ -48,37 +46,34 @@ function print_help()
 // 
 function print_body()
 {
-    if(file_exists("help.html")) {
-	$help = file_get_contents("help.html");
-	$matches = array();
-	if(preg_match("/<body.*?>((.*?|[ \n]*)*)<\/body>/mi", $help, $matches)) {
-	    print $matches[1];
-	}
-	else {
-	    print "<h2><img src=\"icons/nuvola/error.png\"> Failed match pattern.</h2>\n"; 
-	    print "The file help.html should be a complete HTML page, including headers.";
-	}
-    }
-    else {
-	print_help();
-    }
+        if (file_exists("help.html")) {
+                $help = file_get_contents("help.html");
+                $matches = array();
+                if (preg_match("/<body.*?>((.*?|[ \n]*)*)<\/body>/mi", $help, $matches)) {
+                        print $matches[1];
+                } else {
+                        print "<h2><img src=\"icons/nuvola/error.png\"> Failed match pattern.</h2>\n";
+                        print "The file help.html should be a complete HTML page, including headers.";
+                }
+        } else {
+                print_help();
+        }
 }
 
 function print_html($what)
 {
-    switch($what) {
-     case "body":
-	print_body();
-	break;
-     case "title":
-	printf("%s - Help", HTML_PAGE_TITLE);
-	break;
-     default:
-	print_common_html($what);
-	break;
-    }
+        switch ($what) {
+                case "body":
+                        print_body();
+                        break;
+                case "title":
+                        printf("%s - Help", HTML_PAGE_TITLE);
+                        break;
+                default:
+                        print_common_html($what);
+                        break;
+        }
 }
 
 load_ui_template("popup");
-
 ?>

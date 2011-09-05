@@ -13,11 +13,9 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // Script for downloading job result or indata.
 // 
-
 //
 // Get configuration.
 // 
@@ -28,28 +26,27 @@ include "../conf/config.inc";
 // 
 function error_handler($type)
 {
-    // 
-    // Redirect caller back to queue.php and let it report an error.
-    // 
-    header("Location: queue.php?error=download&type=$type");
+        // 
+        // Redirect caller back to queue.php and let it report an error.
+        // 
+        header("Location: queue.php?error=download&type=$type");
 }
 
 // 
 // Check required parameters.
 // 
-if(!isset($_REQUEST['jobid']) || !isset($_REQUEST['result'])) {
-    error_handler("params");
+if (!isset($_REQUEST['jobid']) || !isset($_REQUEST['result'])) {
+        error_handler("params");
 }
-if(!isset($_COOKIE['hostid'])) {
-    error_handler("hostid");
+if (!isset($_COOKIE['hostid'])) {
+        error_handler("hostid");
 }
 
 // 
 // Get request parameters.
 // 
-$jobid  = $_REQUEST['jobid'];    // Job ID
+$jobid = $_REQUEST['jobid'];    // Job ID
 $resdir = $_REQUEST['result'];   // Job result directory.
-
 // 
 // Get hostid from cookie.
 // 
@@ -63,8 +60,8 @@ $resdir = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $resdir);
 // 
 // If result directory is missing, the show an error message.
 // 
-if(!file_exists($resdir)) {
-    error_handler("resdir");
+if (!file_exists($resdir)) {
+        error_handler("resdir");
 }
 
 // 
@@ -72,57 +69,55 @@ if(!file_exists($resdir)) {
 // 
 function download_result($resdir, $jobid)
 {
-    // 
-    // Now create the result zip if missing.
-    //
-    $zipdir  = "result";
-    $zipfile = "result.zip";
+        // 
+        // Now create the result zip if missing.
+        //
+    $zipdir = "result";
+        $zipfile = "result.zip";
 
-    chdir($resdir);
-    if(!file_exists("result.zip")) {
-	// 
-	// Use bundled PECL zip extention if available.
-	//
-	if(extension_loaded("zip") && version_compare(phpversion(), "5.2.0", ">=")) {
-	    // 
-	    // This is a workaround because the PHP4 compiler will die
-	    // on enums (like ZipArchive::CREATE).
-	    // 
-	    $zipinc = realpath(sprintf("%s/../include/zip5.inc", dirname(__FILE__)));
-	    include $zipinc;
-	    if(!create_zipfile($zipfile, $zipdir)) {
-		error_handler("zip");
-	    }
-	}
-	else {
-	    // 
-	    // Fallback on external command.
-	    //
+        chdir($resdir);
+        if (!file_exists("result.zip")) {
+                // 
+                // Use bundled PECL zip extention if available.
+                //
+	if (extension_loaded("zip") && version_compare(phpversion(), "5.2.0", ">=")) {
+                        // 
+                        // This is a workaround because the PHP4 compiler will die
+                        // on enums (like ZipArchive::CREATE).
+                        // 
+                        $zipinc = realpath(sprintf("%s/../include/zip5.inc", dirname(__FILE__)));
+                        include $zipinc;
+                        if (!create_zipfile($zipfile, $zipdir)) {
+                                error_handler("zip");
+                        }
+                } else {
+                        // 
+                        // Fallback on external command.
+                        //
 	    $handle = popen(sprintf(ZIP_FILE_COMMAND, $zipfile, $zipdir), "r");
-	    pclose($handle);
-	}
-    }
-    
-    // 
-    // Make sure the archive where created:
-    //
-    if(file_exists($zipfile)) {
-	//
-	// Hint browser about filename to use for "save as..."
-	// 
-	header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("result-job-%s.zip", $jobid)));
-	header(sprintf("Content-Type: %s", "application/zip"));
-	header(sprintf("Content-Length: %d", filesize($zipfile)));
-	
-	// 
-	// Now send the file:
-	// 
-	readfile($zipfile);
-    }
-    else {
-	error_log("Failed create zip file, make sure the zip command is correct or that the zip extension is loaded.");
-	error_handler("zip");
-    }
+                        pclose($handle);
+                }
+        }
+
+        // 
+        // Make sure the archive where created:
+        //
+    if (file_exists($zipfile)) {
+                //
+                // Hint browser about filename to use for "save as..."
+                // 
+                header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("result-job-%s.zip", $jobid)));
+                header(sprintf("Content-Type: %s", "application/zip"));
+                header(sprintf("Content-Length: %d", filesize($zipfile)));
+
+                // 
+                // Now send the file:
+                // 
+                readfile($zipfile);
+        } else {
+                error_log("Failed create zip file, make sure the zip command is correct or that the zip extension is loaded.");
+                error_handler("zip");
+        }
 }
 
 // 
@@ -130,34 +125,33 @@ function download_result($resdir, $jobid)
 // 
 function download_indata($resdir)
 {
-    $indata = sprintf("%s/indata", $resdir);
-    
-    // 
-    // Make sure that indata exists.
-    // 
-    if(file_exists($indata)) {
-	//
-	// Hint browser about filename to use for "save as..."
-	// 
-	header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("indata.txt", $indata)));
-	header(sprintf("Content-Type: %s", "text/plain"));
-	header(sprintf("Content-Length: %d", filesize($indata)));
-	
-	// 
-	// Now send the file:
-	// 
-	readfile($indata);
-    }
+        $indata = sprintf("%s/indata", $resdir);
+
+        // 
+        // Make sure that indata exists.
+        // 
+        if (file_exists($indata)) {
+                //
+                // Hint browser about filename to use for "save as..."
+                // 
+                header(sprintf("Content-Disposition: attachment; filename=\"%s\"", sprintf("indata.txt", $indata)));
+                header(sprintf("Content-Type: %s", "text/plain"));
+                header(sprintf("Content-Length: %d", filesize($indata)));
+
+                // 
+                // Now send the file:
+                // 
+                readfile($indata);
+        }
 }
 
-if(isset($_REQUEST['what'])) {
-    if($_REQUEST['what'] == "indata") {
-	download_indata($resdir);
-    } else if($_REQUEST['what'] == "result") {
-	download_result($resdir, $jobid);
-    }
+if (isset($_REQUEST['what'])) {
+        if ($_REQUEST['what'] == "indata") {
+                download_indata($resdir);
+        } else if ($_REQUEST['what'] == "result") {
+                download_result($resdir, $jobid);
+        }
 } else {
-    download_result($resdir, $jobid);
+        download_result($resdir, $jobid);
 }
-
 ?>

@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This is an implementation of the REST web service architecture for 
 // Batchelor based on information from these document:
@@ -136,15 +135,15 @@ include "include/delete.inc";
 // 
 // Must check using an relative or absolute path, can't use include path.
 // 
-if(file_exists("../../../include/hooks.inc")) {
-    include("include/hooks.inc");
+if (file_exists("../../../include/hooks.inc")) {
+        include("include/hooks.inc");
 }
 
 // 
 // Include replacement for missing strpbrk() function:
 // 
-if(!function_exists("strpbrk")) {
-    include "include/missing/strpbrk.inc";
+if (!function_exists("strpbrk")) {
+        include "include/missing/strpbrk.inc";
 }
 
 // 
@@ -152,59 +151,59 @@ if(!function_exists("strpbrk")) {
 // 
 function decode_request()
 {
-    $request = array();
-    
-    if($_SERVER['REQUEST_METHOD'] == "POST") {
-	$request = $_REQUEST;
-    }
-    
-    while(strstr($_SERVER['REQUEST_URI'], "//")) {
-	$_SERVER['REQUEST_URI'] = str_replace("//", "/", $_SERVER['REQUEST_URI']);
-    }
-    $_SERVER['REQUEST_URI'] = trim($_SERVER['REQUEST_URI'], "/");
+        $request = array();
 
-    if(strstr($_SERVER['REQUEST_URI'], "?")) {
-	list($path, $params) = explode("?", $_SERVER['REQUEST_URI']);
-	foreach(explode("&", $params) as $param) {
-	    list($key, $val) = explode("=", $param);
-	    if(!isset($val)) {
-		$val = $key;
-	    }
-	    $request[$key] = $val;
-	}
-    } else {
-	$path = $_SERVER['REQUEST_URI'];
-    }
-    $parts = explode("/", $path);
-    foreach($parts as $part) {
-	if(strlen($part) == 0) {
-	    array_shift($parts);
-	}
-    }
-    for($pos = 0; $pos < count($parts); $pos++) {
-	if($parts[$pos] == "rest") {
-	    $pos++;
-	    break;
-	}
-    }        
-    $request['base'] = sprintf("http://%s", $_SERVER['SERVER_NAME']);
-    for($i = 0; $i < $pos; $i++) {
-	$request['base'] .= "/" . array_shift($parts);
-    }
-    $request['path'] = "/" . implode("/", $parts);
-    $request['method'] = array_shift($parts);
-    if(count($parts)) {
-	$request['childs'] = $parts;
-    }
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                $request = $_REQUEST;
+        }
 
-    if(!isset($request['filter'])) {
-	$request['filter'] = "all";
-    }
-    if(!isset($request['sort'])) {
-	$request['sort'] = "none";
-    }
-    
-    return (object)$request;
+        while (strstr($_SERVER['REQUEST_URI'], "//")) {
+                $_SERVER['REQUEST_URI'] = str_replace("//", "/", $_SERVER['REQUEST_URI']);
+        }
+        $_SERVER['REQUEST_URI'] = trim($_SERVER['REQUEST_URI'], "/");
+
+        if (strstr($_SERVER['REQUEST_URI'], "?")) {
+                list($path, $params) = explode("?", $_SERVER['REQUEST_URI']);
+                foreach (explode("&", $params) as $param) {
+                        list($key, $val) = explode("=", $param);
+                        if (!isset($val)) {
+                                $val = $key;
+                        }
+                        $request[$key] = $val;
+                }
+        } else {
+                $path = $_SERVER['REQUEST_URI'];
+        }
+        $parts = explode("/", $path);
+        foreach ($parts as $part) {
+                if (strlen($part) == 0) {
+                        array_shift($parts);
+                }
+        }
+        for ($pos = 0; $pos < count($parts); $pos++) {
+                if ($parts[$pos] == "rest") {
+                        $pos++;
+                        break;
+                }
+        }
+        $request['base'] = sprintf("http://%s", $_SERVER['SERVER_NAME']);
+        for ($i = 0; $i < $pos; $i++) {
+                $request['base'] .= "/" . array_shift($parts);
+        }
+        $request['path'] = "/" . implode("/", $parts);
+        $request['method'] = array_shift($parts);
+        if (count($parts)) {
+                $request['childs'] = $parts;
+        }
+
+        if (!isset($request['filter'])) {
+                $request['filter'] = "all";
+        }
+        if (!isset($request['sort'])) {
+                $request['sort'] = "none";
+        }
+
+        return (object) $request;
 }
 
 // 
@@ -213,112 +212,112 @@ function decode_request()
 // could lead to out of memory errors. Another reason is that we must enforce
 // the same upload limits that exists for POST.
 //
-function rest_http_put_file() 
+function rest_http_put_file()
 {
-    $_FILES['file']['tmp_name'] = null;
-    
-    // 
-    // Do some safety checks. Don't set tmp_name unless all error checks
-    // has been completed without fails.
-    // 
-    if(ini_get("file_uploads") == 0) { 
-	$_FILES['file']['error'] = UPLOAD_ERR_EXTENSION;
-	return false;
-    }
-    
-    // 
-    // Detect temporary file directory:
-    // 
-    $tempdir = ini_get("upload_tmp_dir");
-    if(strlen($tempdir) == 0) {
-	if(function_exists("sys_get_temp_dir")) {
-	    $tempdir = sys_get_temp_dir();
-	} 
-	if(strlen($tempdir) == 0) {
-	    $tempnam = tempnam(null, "put");
-	    if($tempnam) {
-		$tempdir = dirname($tempnam);
-		unlink($tempnam);
-	    }
-	}
-	if(strlen($tempdir) == 0) {
-	    $_FILES['file']['error'] = UPLOAD_ERR_NO_TMP_DIR;
-	    return false;
-	}
-    }
+        $_FILES['file']['tmp_name'] = null;
 
-    // 
-    // Set name of output file:
-    // 
-    if(isset($_REQUEST['name'])) {
-	$tmpname = sprintf("%s/%s", $tempdir, $_REQUEST['name']);
-    } else {
-	$tmpname = tempnam($tempdir, "indata");
-    }
-    
-    // 
-    // Copy stdin to output file:
-    // 
-    $fsi = fopen("php://input", "r");
-    if(!$fsi) {
-	$_FILES['file']['error'] = UPLOAD_ERR_NO_FILE;
-	return false;
-    }
-    $fso = fopen($tmpname, "w");
-    if(!$fso) {
-	$_FILES['file']['error'] = UPLOAD_ERR_CANT_WRITE;
-	return false;			
-    }
-    
-    $chunk = 8192;
-    $bytes = 0;
-    $size = 0;
-    $mult = array( "K" => 1024, 
-		   "M" => 1024 * 1024, 
-		   "G" => 1024 * 1024 * 1024,
-		   "T" => 1024 * 1024 * 1024 * 1024 );
-    $max = ini_get("upload_max_filesize");
-    $suffix = strpbrk($max, "KkMmGgTt");
-    
-    if($suffix !== FALSE) {
-	$suffix = ucfirst($suffix);
-	$max = substr($max, 0, strlen($max) - 1) * $mult[$suffix];
-    }
-    
-    while(!feof($fsi)) {
-	if($size > $max) {
-	    break;
-	}
-	if(($bytes = fwrite($fso, fread($fsi, $chunk))) === FALSE) {
-	    break;
-	}	
-	$size += $bytes;
-    }
-    fclose($fso);
-    fclose($fsi);
+        // 
+        // Do some safety checks. Don't set tmp_name unless all error checks
+        // has been completed without fails.
+        // 
+        if (ini_get("file_uploads") == 0) {
+                $_FILES['file']['error'] = UPLOAD_ERR_EXTENSION;
+                return false;
+        }
 
-    if($bytes === FALSE) {
-	$_FILES['file']['error'] = UPLOAD_ERR_PARTIAL;
-	return false;
-    }
-    if($size > $max) {
-	$_FILES['file']['error'] = UPLOAD_ERR_INI_SIZE;
-	return false;
-    }
-    
-    // 
-    // If we got here then the file is saved and valid. Now, set global 
-    // variables to emulate a HTTP POST so we can use the other code 
-    // unmodified:
-    // 
-    if(isset($_REQUEST['name'])) {
-	$_FILES['file']['name'] = $_REQUEST['name'];
-    } else {
-	$_FILES['file']['name'] = "indata";
-    }
-    $_FILES['file']['tmp_name'] = $tmpname;
+        // 
+        // Detect temporary file directory:
+        // 
+        $tempdir = ini_get("upload_tmp_dir");
+        if (strlen($tempdir) == 0) {
+                if (function_exists("sys_get_temp_dir")) {
+                        $tempdir = sys_get_temp_dir();
+                }
+                if (strlen($tempdir) == 0) {
+                        $tempnam = tempnam(null, "put");
+                        if ($tempnam) {
+                                $tempdir = dirname($tempnam);
+                                unlink($tempnam);
+                        }
+                }
+                if (strlen($tempdir) == 0) {
+                        $_FILES['file']['error'] = UPLOAD_ERR_NO_TMP_DIR;
+                        return false;
+                }
+        }
 
-    return true;
+        // 
+        // Set name of output file:
+        // 
+        if (isset($_REQUEST['name'])) {
+                $tmpname = sprintf("%s/%s", $tempdir, $_REQUEST['name']);
+        } else {
+                $tmpname = tempnam($tempdir, "indata");
+        }
+
+        // 
+        // Copy stdin to output file:
+        // 
+        $fsi = fopen("php://input", "r");
+        if (!$fsi) {
+                $_FILES['file']['error'] = UPLOAD_ERR_NO_FILE;
+                return false;
+        }
+        $fso = fopen($tmpname, "w");
+        if (!$fso) {
+                $_FILES['file']['error'] = UPLOAD_ERR_CANT_WRITE;
+                return false;
+        }
+
+        $chunk = 8192;
+        $bytes = 0;
+        $size = 0;
+        $mult = array("K" => 1024,
+                "M" => 1024 * 1024,
+                "G" => 1024 * 1024 * 1024,
+                "T" => 1024 * 1024 * 1024 * 1024);
+        $max = ini_get("upload_max_filesize");
+        $suffix = strpbrk($max, "KkMmGgTt");
+
+        if ($suffix !== FALSE) {
+                $suffix = ucfirst($suffix);
+                $max = substr($max, 0, strlen($max) - 1) * $mult[$suffix];
+        }
+
+        while (!feof($fsi)) {
+                if ($size > $max) {
+                        break;
+                }
+                if (($bytes = fwrite($fso, fread($fsi, $chunk))) === FALSE) {
+                        break;
+                }
+                $size += $bytes;
+        }
+        fclose($fso);
+        fclose($fsi);
+
+        if ($bytes === FALSE) {
+                $_FILES['file']['error'] = UPLOAD_ERR_PARTIAL;
+                return false;
+        }
+        if ($size > $max) {
+                $_FILES['file']['error'] = UPLOAD_ERR_INI_SIZE;
+                return false;
+        }
+
+        // 
+        // If we got here then the file is saved and valid. Now, set global 
+        // variables to emulate a HTTP POST so we can use the other code 
+        // unmodified:
+        // 
+        if (isset($_REQUEST['name'])) {
+                $_FILES['file']['name'] = $_REQUEST['name'];
+        } else {
+                $_FILES['file']['name'] = "indata";
+        }
+        $_FILES['file']['tmp_name'] = $tmpname;
+
+        return true;
 }
 
 // 
@@ -326,143 +325,137 @@ function rest_http_put_file()
 // 
 function send_root($request)
 {
-    send_start_tag("success", "link");
-    send_link(sprintf("%s/queue", $request->base), array( "get" => "link", "put" => "job" ));
-    send_link(sprintf("%s/result", $request->base), "link");
-    send_link(sprintf("%s/watch", $request->base), array( "post" => "link" ));
-    send_link(sprintf("%s/errors", $request->base), "link");
-    // 
-    // Don't expose suspend and resume methods unless job control is enabled.
-    // 
-    if(defined("ENABLE_JOB_CONTROL") && ENABLE_JOB_CONTROL != "off") {
-	send_link(sprintf("%s/suspend", $request->base), "link");
-	send_link(sprintf("%s/resume", $request->base), "link");
-    }
-    send_link(sprintf("%s/version", $request->base), "version");
-    send_end_tag();
+        send_start_tag("success", "link");
+        send_link(sprintf("%s/queue", $request->base), array("get" => "link", "put" => "job"));
+        send_link(sprintf("%s/result", $request->base), "link");
+        send_link(sprintf("%s/watch", $request->base), array("post" => "link"));
+        send_link(sprintf("%s/errors", $request->base), "link");
+        // 
+        // Don't expose suspend and resume methods unless job control is enabled.
+        // 
+        if (defined("ENABLE_JOB_CONTROL") && ENABLE_JOB_CONTROL != "off") {
+                send_link(sprintf("%s/suspend", $request->base), "link");
+                send_link(sprintf("%s/resume", $request->base), "link");
+        }
+        send_link(sprintf("%s/version", $request->base), "version");
+        send_end_tag();
 }
 
 // 
 // Send all errors or specific error message.
 // 
-function send_errors($request) 
+function send_errors($request)
 {
-    // 
-    // Only request method GET is accepted.
-    // 
-    if($_SERVER['REQUEST_METHOD'] != "GET") {
-	send_error(WS_ERROR_REQUEST_METHOD, null);
-    }
-    
-    if(isset($request->childs) || isset($request->format)) {
-	if((isset($request->childs) && $request->childs[0] == "list") || 
-	   (isset($request->format) && $request->format == "list")) {
-	    $errors = get_error();
-	    send_start_tag("success", "link");
-	    for($i = 0; $i < count($errors); $i++) {
-		send_link(sprintf("%s/%s/%d", 
-				  $request->base, $request->method, $i + 1),
-			  "error");
-	    }
-	    send_end_tag();
-	} elseif((isset($request->childs) && $request->childs[0] == "data") ||
-		 (isset($request->format) && $request->format == "data")) {
-	    $errors = get_error();
-	    send_start_tag("success", "error");
-	    for($i = 0; $i < count($errors); $i++) {
-		send_error($i + 1, $errors[$i], false, true);
-	    }
-	    send_end_tag();
-	} else {
-	    $error = get_error($request->childs[0]);
-	    if(isset($error)) {
-		send_start_tag("success", "error", false);
-		send_error($request->childs[0], $error, false, true);
-		send_end_tag(false);
-	    } else {
-		send_error(WS_ERROR_INVALID_REQUEST, null);
-	    }
-	}
-    } else {
-	send_start_tag("success", "link");
-	send_link(sprintf("%s/errors/list", $request->base), "link");
-	send_link(sprintf("%s/errors/data", $request->base), "error");
-	send_end_tag();
-    }
+        // 
+        // Only request method GET is accepted.
+        // 
+        if ($_SERVER['REQUEST_METHOD'] != "GET") {
+                send_error(WS_ERROR_REQUEST_METHOD, null);
+        }
+
+        if (isset($request->childs) || isset($request->format)) {
+                if ((isset($request->childs) && $request->childs[0] == "list") ||
+                        (isset($request->format) && $request->format == "list")) {
+                        $errors = get_error();
+                        send_start_tag("success", "link");
+                        for ($i = 0; $i < count($errors); $i++) {
+                                send_link(sprintf("%s/%s/%d", $request->base, $request->method, $i + 1), "error");
+                        }
+                        send_end_tag();
+                } elseif ((isset($request->childs) && $request->childs[0] == "data") ||
+                        (isset($request->format) && $request->format == "data")) {
+                        $errors = get_error();
+                        send_start_tag("success", "error");
+                        for ($i = 0; $i < count($errors); $i++) {
+                                send_error($i + 1, $errors[$i], false, true);
+                        }
+                        send_end_tag();
+                } else {
+                        $error = get_error($request->childs[0]);
+                        if (isset($error)) {
+                                send_start_tag("success", "error", false);
+                                send_error($request->childs[0], $error, false, true);
+                                send_end_tag(false);
+                        } else {
+                                send_error(WS_ERROR_INVALID_REQUEST, null);
+                        }
+                }
+        } else {
+                send_start_tag("success", "link");
+                send_link(sprintf("%s/errors/list", $request->base), "link");
+                send_link(sprintf("%s/errors/data", $request->base), "error");
+                send_end_tag();
+        }
 }
 
 // 
 // The suspend method.
 // 
 function send_suspend($request)
-{    
-    if(!defined("ENABLE_JOB_CONTROL") || ENABLE_JOB_CONTROL == "off") {
-	send_error(WS_ERROR_DISALLOWED, "job control is not enabled");
-    }
-    if(isset($request->childs)) {
-	if($_SERVER['REQUEST_METHOD'] != "GET" && 
-	   $_SERVER['REQUEST_METHOD'] != "POST") {
-	    send_error(WS_ERROR_REQUEST_METHOD, null);
-	}
-	if($_SERVER['REQUEST_METHOD'] == "GET") {
-	    // 
-	    // Return job.
-	    // 
-	    $jobs = array();
-	    if(!ws_queue($jobs)) {
-		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	    }
-	    send_start_tag("success", "job");
-	    foreach($jobs as $result => $job) {
-		if($request->childs[0] == $result &&
-		   $request->childs[1] == $job['jobid']) {
-		    $job['result'] = $result;		    
-		    send_job($job, $request);
-		}
-	    }
-	    send_end_tag();
-	} else {
-	    // 
-	    // Suspend job.
-	    // 
-	    if(!ws_suspend($request->childs[0], $request->childs[1])) {
-		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	    }
-	    send_start_tag("success", "status", false);
-	    send_status(sprintf("Job %s suspended", $request->childs[0]));
-	    send_end_tag(false);
-	}
-    } else {
-	if($_SERVER['REQUEST_METHOD'] != "GET") {
-	    send_error(WS_ERROR_REQUEST_METHOD, null);
-	}
-	
-	// 
-	// Return suspendable jobs.
-	// 
-	$jobs = array();
-	if(!ws_queue($jobs)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	}
-	send_start_tag("success", "link");
-	foreach($jobs as $result => $job) {
-	    if($job['state'] == "running") {
-		$sigfile = sprintf("%s/jobs/%s/%s/signal", CACHE_DIRECTORY, $GLOBALS['hostid'], $result);
-		if(file_exists($sigfile)) {
-		    $signal = file_get_contents($sigfile);
-		    if($signal == "stop") {
-			continue;         // already suspended
-		    }
-		}
-		send_link(sprintf("%s/suspend/%s/%s",
-				  $request->base,
-				  $result,
-				  $job['jobid']),
-			  array("get" => "job", "post" => "status"));
-	    }
-	}
-	send_end_tag();
-    }
+{
+        if (!defined("ENABLE_JOB_CONTROL") || ENABLE_JOB_CONTROL == "off") {
+                send_error(WS_ERROR_DISALLOWED, "job control is not enabled");
+        }
+        if (isset($request->childs)) {
+                if ($_SERVER['REQUEST_METHOD'] != "GET" &&
+                        $_SERVER['REQUEST_METHOD'] != "POST") {
+                        send_error(WS_ERROR_REQUEST_METHOD, null);
+                }
+                if ($_SERVER['REQUEST_METHOD'] == "GET") {
+                        // 
+                        // Return job.
+                        // 
+                        $jobs = array();
+                        if (!ws_queue($jobs)) {
+                                send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                        }
+                        send_start_tag("success", "job");
+                        foreach ($jobs as $result => $job) {
+                                if ($request->childs[0] == $result &&
+                                        $request->childs[1] == $job['jobid']) {
+                                        $job['result'] = $result;
+                                        send_job($job, $request);
+                                }
+                        }
+                        send_end_tag();
+                } else {
+                        // 
+                        // Suspend job.
+                        // 
+                        if (!ws_suspend($request->childs[0], $request->childs[1])) {
+                                send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                        }
+                        send_start_tag("success", "status", false);
+                        send_status(sprintf("Job %s suspended", $request->childs[0]));
+                        send_end_tag(false);
+                }
+        } else {
+                if ($_SERVER['REQUEST_METHOD'] != "GET") {
+                        send_error(WS_ERROR_REQUEST_METHOD, null);
+                }
+
+                // 
+                // Return suspendable jobs.
+                // 
+                $jobs = array();
+                if (!ws_queue($jobs)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                }
+                send_start_tag("success", "link");
+                foreach ($jobs as $result => $job) {
+                        if ($job['state'] == "running") {
+                                $sigfile = sprintf("%s/jobs/%s/%s/signal", CACHE_DIRECTORY, $GLOBALS['hostid'], $result);
+                                if (file_exists($sigfile)) {
+                                        $signal = file_get_contents($sigfile);
+                                        if ($signal == "stop") {
+                                                continue;         // already suspended
+                                        }
+                                }
+                                send_link(sprintf("%s/suspend/%s/%s", $request->base, $result, $job['jobid']), array("get" => "job", "post" => "status"));
+                        }
+                }
+                send_end_tag();
+        }
 }
 
 // 
@@ -470,71 +463,67 @@ function send_suspend($request)
 // 
 function send_resume($request)
 {
-    if(!defined("ENABLE_JOB_CONTROL") || ENABLE_JOB_CONTROL == "off") {
-	send_error(WS_ERROR_DISALLOWED, "job control is not enabled");
-    }
-    if(isset($request->childs)) {
-	if($_SERVER['REQUEST_METHOD'] != "GET" && 
-	   $_SERVER['REQUEST_METHOD'] != "POST") {
-	    send_error(WS_ERROR_REQUEST_METHOD, null);
-	}
-	if($_SERVER['REQUEST_METHOD'] == "GET") {
-	    // 
-	    // Return job.
-	    // 
-	    $jobs = array();
-	    if(!ws_queue($jobs)) {
-		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	    }
-	    send_start_tag("success", "job");
-	    foreach($jobs as $result => $job) {
-		if($request->childs[0] == $result &&
-		   $request->childs[1] == $job['jobid']) {
-		    $job['result'] = $result;
-		    send_job($job, $request);
-		}
-	    }
-	    send_end_tag();
-	} else {
-	    // 
-	    // Resume job.
-	    // 
-	    if(!ws_resume($request->childs[0], $request->childs[1])) {
-		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	    }
-	    send_start_tag("success", "status", false);
-	    send_status(sprintf("Job %s resumed", $request->childs[0]));
-	    send_end_tag(false);
-	}
-    } else {
-	if($_SERVER['REQUEST_METHOD'] != "GET") {
-	    send_error(WS_ERROR_REQUEST_METHOD, null);
-	}	
-	// 
-	// Return resumable jobs.
-	// 
-	$jobs = array();
-	if(!ws_queue($jobs)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	}
-	send_start_tag("success", "link");
-	foreach($jobs as $result => $job) {
-	    if($job['state'] == "running") {
-		$sigfile = sprintf("%s/jobs/%s/%s/signal", CACHE_DIRECTORY, $GLOBALS['hostid'], $result);
-		if(file_exists($sigfile)) {
-		    $signal = file_get_contents($sigfile);
-		    if($signal == "stop") {
-			send_link(sprintf("%s/resume/%s/%s",
-					  $request->base,
-					  $result,
-					  $job['jobid']),
-				  array("get" => "job", "post" => "status"));
-		    }
-		}
-	    }
-	}
-	send_end_tag();
-    }
+        if (!defined("ENABLE_JOB_CONTROL") || ENABLE_JOB_CONTROL == "off") {
+                send_error(WS_ERROR_DISALLOWED, "job control is not enabled");
+        }
+        if (isset($request->childs)) {
+                if ($_SERVER['REQUEST_METHOD'] != "GET" &&
+                        $_SERVER['REQUEST_METHOD'] != "POST") {
+                        send_error(WS_ERROR_REQUEST_METHOD, null);
+                }
+                if ($_SERVER['REQUEST_METHOD'] == "GET") {
+                        // 
+                        // Return job.
+                        // 
+                        $jobs = array();
+                        if (!ws_queue($jobs)) {
+                                send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                        }
+                        send_start_tag("success", "job");
+                        foreach ($jobs as $result => $job) {
+                                if ($request->childs[0] == $result &&
+                                        $request->childs[1] == $job['jobid']) {
+                                        $job['result'] = $result;
+                                        send_job($job, $request);
+                                }
+                        }
+                        send_end_tag();
+                } else {
+                        // 
+                        // Resume job.
+                        // 
+                        if (!ws_resume($request->childs[0], $request->childs[1])) {
+                                send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                        }
+                        send_start_tag("success", "status", false);
+                        send_status(sprintf("Job %s resumed", $request->childs[0]));
+                        send_end_tag(false);
+                }
+        } else {
+                if ($_SERVER['REQUEST_METHOD'] != "GET") {
+                        send_error(WS_ERROR_REQUEST_METHOD, null);
+                }
+                // 
+                // Return resumable jobs.
+                // 
+                $jobs = array();
+                if (!ws_queue($jobs)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                }
+                send_start_tag("success", "link");
+                foreach ($jobs as $result => $job) {
+                        if ($job['state'] == "running") {
+                                $sigfile = sprintf("%s/jobs/%s/%s/signal", CACHE_DIRECTORY, $GLOBALS['hostid'], $result);
+                                if (file_exists($sigfile)) {
+                                        $signal = file_get_contents($sigfile);
+                                        if ($signal == "stop") {
+                                                send_link(sprintf("%s/resume/%s/%s", $request->base, $result, $job['jobid']), array("get" => "job", "post" => "status"));
+                                        }
+                                }
+                        }
+                }
+                send_end_tag();
+        }
 }
 
 // 
@@ -542,23 +531,20 @@ function send_resume($request)
 // 
 function send_queue_jobs($request, $format, &$jobs)
 {
-    if($format == "data") {
-	send_start_tag("success", "job");
-	foreach($jobs as $result => $job) {
-	    $job['result'] = $result;
-	    send_job($job, $request);
-	}
-	send_end_tag();
-    } elseif($format == "list") {
-	send_start_tag("success", "link");
-	foreach($jobs as $result => $job) {
-	    send_link(sprintf("%s/queue/%s/%s", 
-			      $request->base,
-			      $result, $job['jobid']), 
-		      array( "get" => "job", "delete" => "status" ));
-	}
-	send_end_tag();
-    }
+        if ($format == "data") {
+                send_start_tag("success", "job");
+                foreach ($jobs as $result => $job) {
+                        $job['result'] = $result;
+                        send_job($job, $request);
+                }
+                send_end_tag();
+        } elseif ($format == "list") {
+                send_start_tag("success", "link");
+                foreach ($jobs as $result => $job) {
+                        send_link(sprintf("%s/queue/%s/%s", $request->base, $result, $job['jobid']), array("get" => "job", "delete" => "status"));
+                }
+                send_end_tag();
+        }
 }
 
 // 
@@ -566,14 +552,14 @@ function send_queue_jobs($request, $format, &$jobs)
 // 
 function send_queue_helper($request, $format, $sort, $filter)
 {
-    // 
-    // Send all jobs either as an list or as an array of job objects.
-    // 
-    $jobs = array();
-    if(!ws_queue($jobs, $sort, $filter)) {
-	send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-    }
-    send_queue_jobs($request, $format, $jobs);
+        // 
+        // Send all jobs either as an list or as an array of job objects.
+        // 
+        $jobs = array();
+        if (!ws_queue($jobs, $sort, $filter)) {
+                send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+        }
+        send_queue_jobs($request, $format, $jobs);
 }
 
 // 
@@ -581,164 +567,147 @@ function send_queue_helper($request, $format, $sort, $filter)
 //
 function send_queue($request)
 {
-    if(isset($request->childs)) {
-	switch($request->childs[0]) {
-	 case "all":    
-	    if(isset($request->childs[1])) {
-		send_queue_helper($request, $request->childs[1], "none", "all");
-	    } elseif(isset($request->format)) {
-		send_queue_helper($request, $request->format, "none", "all");
-	    } else {
-		if($_SERVER['REQUEST_METHOD'] != "GET" && 
-		   $_SERVER['REQUEST_METHOD'] != "DELETE") {
-		    send_error(WS_ERROR_REQUEST_METHOD, null);
-		}
-		if($_SERVER['REQUEST_METHOD'] == "DELETE") {
-		    $jobs = array();
-		    if(!ws_queue($jobs)) {
-			send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-		    }
-		    foreach($jobs as $result => $job) {
-			if(!ws_dequeue($result, $job['jobid'])) {
-			    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-			}
-		    }
-		    send_start_tag("success", "status", false);
-		    send_status(sprintf("Removed %d jobs", count($jobs)));
-		    send_end_tag(false);
-		} elseif($_SERVER['REQUEST_METHOD'] == "GET") {
-		    send_start_tag("success", "link");
-		    send_link(sprintf("%s/queue/all?format=list", $request->base), "link");
-		    send_link(sprintf("%s/queue/all?format=data", $request->base), "job");
-		    send_end_tag();
-		}
-	    }
-	    break;
-	 case "sort":
-	    if(isset($request->childs[1])) {
-		if(isset($request->childs[2])) {
-		    send_queue_helper($request, $request->childs[2], $request->childs[1], $request->filter);
-		} elseif(isset($request->format)) {
-		    send_queue_helper($request, $request->format, $request->childs[1], $request->filter);
-		} else {
-		    send_start_tag("success", "link");
-		    send_link(sprintf("%s/queue/sort/%s?format=list", 
-				      $request->base,
-				      $request->childs[1]), "link");
-		    send_link(sprintf("%s/queue/sort/%s?format=data", 
-				      $request->base, 
-				      $request->childs[1]), "job");
-		    send_end_tag();
-		}
-	    } else {
-		send_start_tag("success", "link");
-		send_link(sprintf("%s/queue/sort/none", $request->base), "link");
-		send_link(sprintf("%s/queue/sort/started", $request->base), "link");
-		send_link(sprintf("%s/queue/sort/jobid", $request->base), "link");
-		send_link(sprintf("%s/queue/sort/state", $request->base), "link");
-		send_link(sprintf("%s/queue/sort/name", $request->base), "link");
-		send_end_tag();
-	    }
-	    break;
-	 case "filter":
-	    if(isset($request->childs[1])) {
-		if(isset($request->childs[2])) {
-		    send_queue_helper($request, $request->childs[2], $request->sort, $request->childs[1]);
-		} elseif(isset($request->format)) {
-		    send_queue_helper($request, $request->format, $request->sort, $request->childs[1]);
-		} else {
-		    send_start_tag("success", "link");
-		    send_link(sprintf("%s/queue/filter/%s?format=list", 
-				      $request->base,
-				      $request->childs[1]), "link");
-		    send_link(sprintf("%s/queue/filter/%s?format=data", 
-				      $request->base, 
-				      $request->childs[1]), "job");
-		    send_end_tag();
-		}
-	    } else {
-		send_start_tag("success", "link");
-		send_link(sprintf("%s/queue/filter/all", $request->base), 
-			  array("get" => "link", "delete" => "status"));
-		send_link(sprintf("%s/queue/filter/waiting", $request->base), 
-			  array("get" => "link", "delete" => "status"));
-		send_link(sprintf("%s/queue/filter/pending", $request->base), 
-			  array("get" => "link", "delete" => "status"));
-		send_link(sprintf("%s/queue/filter/running", $request->base), 
-			  array("get" => "link", "delete" => "status"));
-		send_link(sprintf("%s/queue/filter/finished", $request->base), 
-			  array("get" => "link", "delete" => "status"));
-		send_link(sprintf("%s/queue/filter/warning", $request->base), 
-			  array("get" => "link", "delete" => "status"));
-		send_link(sprintf("%s/queue/filter/error", $request->base), 
-			  array("get" => "link", "delete" => "status"));
-		send_link(sprintf("%s/queue/filter/crashed", $request->base), 
-			  array("get" => "link", "delete" => "status"));
-		send_end_tag();
-	    }
-	    break;
-	 default:
-	    if(isset($request->childs[1])) {
-		if($_SERVER['REQUEST_METHOD'] == "DELETE") {
-		    if(!ws_dequeue($request->childs[0],
-				   $request->childs[1])) {
-			send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-		    }
-		    send_start_tag("success", "status", false);
-		    send_status(sprintf("Removed job %s", $request->childs[1]));
-		    send_end_tag(false);
-		} elseif($_SERVER['REQUEST_METHOD'] == "GET") {
-		    // 
-		    // Send a single job:
-		    // 
-		    $jobs = array();
-		    if(!ws_queue($jobs)) {
-			send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-		    }
-		    send_start_tag("success", "job");
-		    foreach($jobs as $result => $job) {
-			if($request->childs[0] == $result &&
-			   $request->childs[1] == $job['jobid']) {
-			    $job['result'] = $result;
-			    send_job($job, $request);
-			}
-		    }
-		    send_end_tag();
-		}
-	    } else {
-		send_error(WS_ERROR_MISSING_PARAMETER, null);
-	    }
-	    break;
-	}
-    } else {
-	if($_SERVER['REQUEST_METHOD'] == "PUT" || 
-	   $_SERVER['REQUEST_METHOD'] == "POST") {
-	    $jobs = array();
-	    $data = null;
-	    if($_SERVER['REQUEST_METHOD'] == "PUT") {
-		rest_http_put_file();
-	    }	    
-	    if(!ws_enqueue($data, $jobs)) {
-		send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	    }
-	    send_start_tag("success", "job");
-	    foreach($jobs as $job) {
-		send_job($job, $request);
-	    }
-	    send_end_tag();
-	} elseif($_SERVER['REQUEST_METHOD'] == "GET") {
-	    // 
-	    // Send all top nodes (links).
-	    // 
-	    send_start_tag("success", "link");
-	    send_link(sprintf("%s/queue/all", $request->base), array("get" => "link", "delete" => "status"));
-	    send_link(sprintf("%s/queue/sort", $request->base), "link");
-	    send_link(sprintf("%s/queue/filter", $request->base), "link");
-	    send_end_tag();
-	} else {
-	    send_error(WS_ERROR_REQUEST_METHOD, null);
-	}
-    }
+        if (isset($request->childs)) {
+                switch ($request->childs[0]) {
+                        case "all":
+                                if (isset($request->childs[1])) {
+                                        send_queue_helper($request, $request->childs[1], "none", "all");
+                                } elseif (isset($request->format)) {
+                                        send_queue_helper($request, $request->format, "none", "all");
+                                } else {
+                                        if ($_SERVER['REQUEST_METHOD'] != "GET" &&
+                                                $_SERVER['REQUEST_METHOD'] != "DELETE") {
+                                                send_error(WS_ERROR_REQUEST_METHOD, null);
+                                        }
+                                        if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
+                                                $jobs = array();
+                                                if (!ws_queue($jobs)) {
+                                                        send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                                                }
+                                                foreach ($jobs as $result => $job) {
+                                                        if (!ws_dequeue($result, $job['jobid'])) {
+                                                                send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                                                        }
+                                                }
+                                                send_start_tag("success", "status", false);
+                                                send_status(sprintf("Removed %d jobs", count($jobs)));
+                                                send_end_tag(false);
+                                        } elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
+                                                send_start_tag("success", "link");
+                                                send_link(sprintf("%s/queue/all?format=list", $request->base), "link");
+                                                send_link(sprintf("%s/queue/all?format=data", $request->base), "job");
+                                                send_end_tag();
+                                        }
+                                }
+                                break;
+                        case "sort":
+                                if (isset($request->childs[1])) {
+                                        if (isset($request->childs[2])) {
+                                                send_queue_helper($request, $request->childs[2], $request->childs[1], $request->filter);
+                                        } elseif (isset($request->format)) {
+                                                send_queue_helper($request, $request->format, $request->childs[1], $request->filter);
+                                        } else {
+                                                send_start_tag("success", "link");
+                                                send_link(sprintf("%s/queue/sort/%s?format=list", $request->base, $request->childs[1]), "link");
+                                                send_link(sprintf("%s/queue/sort/%s?format=data", $request->base, $request->childs[1]), "job");
+                                                send_end_tag();
+                                        }
+                                } else {
+                                        send_start_tag("success", "link");
+                                        send_link(sprintf("%s/queue/sort/none", $request->base), "link");
+                                        send_link(sprintf("%s/queue/sort/started", $request->base), "link");
+                                        send_link(sprintf("%s/queue/sort/jobid", $request->base), "link");
+                                        send_link(sprintf("%s/queue/sort/state", $request->base), "link");
+                                        send_link(sprintf("%s/queue/sort/name", $request->base), "link");
+                                        send_end_tag();
+                                }
+                                break;
+                        case "filter":
+                                if (isset($request->childs[1])) {
+                                        if (isset($request->childs[2])) {
+                                                send_queue_helper($request, $request->childs[2], $request->sort, $request->childs[1]);
+                                        } elseif (isset($request->format)) {
+                                                send_queue_helper($request, $request->format, $request->sort, $request->childs[1]);
+                                        } else {
+                                                send_start_tag("success", "link");
+                                                send_link(sprintf("%s/queue/filter/%s?format=list", $request->base, $request->childs[1]), "link");
+                                                send_link(sprintf("%s/queue/filter/%s?format=data", $request->base, $request->childs[1]), "job");
+                                                send_end_tag();
+                                        }
+                                } else {
+                                        send_start_tag("success", "link");
+                                        send_link(sprintf("%s/queue/filter/all", $request->base), array("get" => "link", "delete" => "status"));
+                                        send_link(sprintf("%s/queue/filter/waiting", $request->base), array("get" => "link", "delete" => "status"));
+                                        send_link(sprintf("%s/queue/filter/pending", $request->base), array("get" => "link", "delete" => "status"));
+                                        send_link(sprintf("%s/queue/filter/running", $request->base), array("get" => "link", "delete" => "status"));
+                                        send_link(sprintf("%s/queue/filter/finished", $request->base), array("get" => "link", "delete" => "status"));
+                                        send_link(sprintf("%s/queue/filter/warning", $request->base), array("get" => "link", "delete" => "status"));
+                                        send_link(sprintf("%s/queue/filter/error", $request->base), array("get" => "link", "delete" => "status"));
+                                        send_link(sprintf("%s/queue/filter/crashed", $request->base), array("get" => "link", "delete" => "status"));
+                                        send_end_tag();
+                                }
+                                break;
+                        default:
+                                if (isset($request->childs[1])) {
+                                        if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
+                                                if (!ws_dequeue($request->childs[0], $request->childs[1])) {
+                                                        send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                                                }
+                                                send_start_tag("success", "status", false);
+                                                send_status(sprintf("Removed job %s", $request->childs[1]));
+                                                send_end_tag(false);
+                                        } elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
+                                                // 
+                                                // Send a single job:
+                                                // 
+                                                $jobs = array();
+                                                if (!ws_queue($jobs)) {
+                                                        send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                                                }
+                                                send_start_tag("success", "job");
+                                                foreach ($jobs as $result => $job) {
+                                                        if ($request->childs[0] == $result &&
+                                                                $request->childs[1] == $job['jobid']) {
+                                                                $job['result'] = $result;
+                                                                send_job($job, $request);
+                                                        }
+                                                }
+                                                send_end_tag();
+                                        }
+                                } else {
+                                        send_error(WS_ERROR_MISSING_PARAMETER, null);
+                                }
+                                break;
+                }
+        } else {
+                if ($_SERVER['REQUEST_METHOD'] == "PUT" ||
+                        $_SERVER['REQUEST_METHOD'] == "POST") {
+                        $jobs = array();
+                        $data = null;
+                        if ($_SERVER['REQUEST_METHOD'] == "PUT") {
+                                rest_http_put_file();
+                        }
+                        if (!ws_enqueue($data, $jobs)) {
+                                send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                        }
+                        send_start_tag("success", "job");
+                        foreach ($jobs as $job) {
+                                send_job($job, $request);
+                        }
+                        send_end_tag();
+                } elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
+                        // 
+                        // Send all top nodes (links).
+                        // 
+                        send_start_tag("success", "link");
+                        send_link(sprintf("%s/queue/all", $request->base), array("get" => "link", "delete" => "status"));
+                        send_link(sprintf("%s/queue/sort", $request->base), "link");
+                        send_link(sprintf("%s/queue/filter", $request->base), "link");
+                        send_end_tag();
+                } else {
+                        send_error(WS_ERROR_REQUEST_METHOD, null);
+                }
+        }
 }
 
 // 
@@ -746,75 +715,61 @@ function send_queue($request)
 // 
 function send_result($request)
 {
-    if(!isset($request->childs)) {
-	$out = array();
-	if(!ws_opendir($out)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	}
-	send_start_tag("success", "link");
-	foreach($out as $result => $jobid) {
-	    send_link(sprintf("%s/result/%s/%s", 
-			      $request->base,
-			      $result, 
-			      $jobid),
-		      "link");
-	}
-	send_end_tag();
-    } elseif(count($request->childs) == 2) {
-	$out = array();
-	if(!ws_readdir($request->childs[0], 
-		       $request->childs[1], 
-		       $out)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	}
-	send_start_tag("success", "link");
-	foreach($out as $file) {
-	    send_link(sprintf("%s/result/%s/%s/%s", 
-			      $request->base,
-			      $request->childs[0], 
-			      $request->childs[1], 
-			      $file),
-		      "file");
-	}
-	send_end_tag();
-    } elseif(count($request->childs) > "2") {
-	$frequest = implode("/", array_slice($request->childs, 2));
-	$filename = "";
-	if(!ws_fopen($request->childs[0], 
-		     $request->childs[1], 
-		     $frequest, 
-		     $filename)) {
-	    send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-	}
-	if(!file_exists($filename)) {
-	    send_error(WS_ERROR_INVALID_REQUEST, null);
-	} elseif(is_dir($filename)) {
-	    send_error(WS_ERROR_INVALID_REQUEST, null);
-	} else {
-	    send_start_tag("success", "file", false);
-	    send_file($filename);
-	    send_end_tag(false);
-	}
-    }
+        if (!isset($request->childs)) {
+                $out = array();
+                if (!ws_opendir($out)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                }
+                send_start_tag("success", "link");
+                foreach ($out as $result => $jobid) {
+                        send_link(sprintf("%s/result/%s/%s", $request->base, $result, $jobid), "link");
+                }
+                send_end_tag();
+        } elseif (count($request->childs) == 2) {
+                $out = array();
+                if (!ws_readdir($request->childs[0], $request->childs[1], $out)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                }
+                send_start_tag("success", "link");
+                foreach ($out as $file) {
+                        send_link(sprintf("%s/result/%s/%s/%s", $request->base, $request->childs[0], $request->childs[1], $file), "file");
+                }
+                send_end_tag();
+        } elseif (count($request->childs) > "2") {
+                $frequest = implode("/", array_slice($request->childs, 2));
+                $filename = "";
+                if (!ws_fopen($request->childs[0], $request->childs[1], $frequest, $filename)) {
+                        send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+                }
+                if (!file_exists($filename)) {
+                        send_error(WS_ERROR_INVALID_REQUEST, null);
+                } elseif (is_dir($filename)) {
+                        send_error(WS_ERROR_INVALID_REQUEST, null);
+                } else {
+                        send_start_tag("success", "file", false);
+                        send_file($filename);
+                        send_end_tag(false);
+                }
+        }
 }
 
 // 
 // The watch method. In parameter is a single timestamp.
 // 
-function send_watch($request) 
+function send_watch($request)
 {
-    if($_SERVER['REQUEST_METHOD'] != "POST") {
-	send_error(WS_ERROR_REQUEST_METHOD, null);
-    }
-    
-    $stamp  = isset($request->stamp) ? $request->stamp : 0;
-    $format = isset($request->format) ? $request->format : "list";
-    $jobs = array();
-    
-    if(!ws_watch($jobs, $stamp)) {
-	send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
-    }
-    send_queue_jobs($request, $format, $jobs);
+        if ($_SERVER['REQUEST_METHOD'] != "POST") {
+                send_error(WS_ERROR_REQUEST_METHOD, null);
+        }
+
+        $stamp = isset($request->stamp) ? $request->stamp : 0;
+        $format = isset($request->format) ? $request->format : "list";
+        $jobs = array();
+
+        if (!ws_watch($jobs, $stamp)) {
+                send_error(WS_ERROR_FAILED_CALL_METHOD, get_last_error());
+        }
+        send_queue_jobs($request, $format, $jobs);
 }
 
 // 
@@ -822,37 +777,37 @@ function send_watch($request)
 // 
 function send_response($request)
 {
-    switch($request->method) {
-     case "errors":
-	send_errors($request);
-	break;
-     case "suspend":
-	send_suspend($request);
-	break;
-     case "resume":
-	send_resume($request);
-	break;
-     case "queue":
-	send_queue($request);
-	break;
-     case "result":
-	send_result($request);
-	break;
-     case "watch":
-	send_watch($request);
-	break;
-     case "version":
-	send_start_tag("success", "version", false);
-	send_version("1.0");
-	send_end_tag(false);
-	break;
-     default:
-	if(isset($request->method) && $request->method != "root") {
-	    send_error(WS_ERROR_UNEXPECTED_METHOD, null);
-	} else {
-	    send_root($request);
-	}
-    }
+        switch ($request->method) {
+                case "errors":
+                        send_errors($request);
+                        break;
+                case "suspend":
+                        send_suspend($request);
+                        break;
+                case "resume":
+                        send_resume($request);
+                        break;
+                case "queue":
+                        send_queue($request);
+                        break;
+                case "result":
+                        send_result($request);
+                        break;
+                case "watch":
+                        send_watch($request);
+                        break;
+                case "version":
+                        send_start_tag("success", "version", false);
+                        send_version("1.0");
+                        send_end_tag(false);
+                        break;
+                default:
+                        if (isset($request->method) && $request->method != "root") {
+                                send_error(WS_ERROR_UNEXPECTED_METHOD, null);
+                        } else {
+                                send_root($request);
+                        }
+        }
 }
 
 // 
@@ -863,8 +818,8 @@ ws_rest_session_setup();
 header(sprintf("Content-Type: %s", ws_get_mime_type()));
 header("Connection: close");
 
-if($GLOBALS['format'] == "xml") {
-    printf("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+if ($GLOBALS['format'] == "xml") {
+        printf("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
 }
 
 // 
@@ -876,5 +831,4 @@ $request = decode_request();
 // Send response:
 // 
 send_response($request);
-
 ?>

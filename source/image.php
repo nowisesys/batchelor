@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // A script for sending a picture from the statistics directory to peer.
 // 
@@ -26,14 +25,13 @@ include "../include/common.inc";
 // don't match the pattern.
 // 
 function check_request_param($name, $pattern)
-{    
-    if(isset($_REQUEST[$name])) {
-	if(!preg_match("/^$pattern$/", $_REQUEST[$name])) {
-	    error_log(sprintf("Request parameter %s do not match regexp pattern %s",
-			      $name, $pattern));
-	    exit(1);
-	}
-    }
+{
+        if (isset($_REQUEST[$name])) {
+                if (!preg_match("/^$pattern$/", $_REQUEST[$name])) {
+                        error_log(sprintf("Request parameter %s do not match regexp pattern %s", $name, $pattern));
+                        exit(1);
+                }
+        }
 }
 
 // 
@@ -44,10 +42,10 @@ update_hostid_cookie();
 // 
 // Validate request parameters.
 // 
-check_request_param("stat",  "(glob|pers|load)");
-check_request_param("year",  "(19|20)\\d{2}");
+check_request_param("stat", "(glob|pers|load)");
+check_request_param("year", "(19|20)\\d{2}");
 check_request_param("month", "(0[1-9]|1[0-2])");
-check_request_param("day",   "(0[1-9]|[12][0-9]|3[0-1])");
+check_request_param("day", "(0[1-9]|[12][0-9]|3[0-1])");
 check_request_param("image", "\w+");
 
 // 
@@ -55,22 +53,22 @@ check_request_param("image", "\w+");
 // 
 $image = sprintf("%s/stat", CACHE_DIRECTORY);
 
-if(isset($_REQUEST['stat'])) {
-    switch($_REQUEST['stat']) {
-     case "glob":
-     case "load":
-	$image = sprintf("%s/all", $image);
-	break;
-     case "pers":
-	$image = sprintf("%s/%s", $image, $GLOBALS['hostid']);
-	break;
-    }
+if (isset($_REQUEST['stat'])) {
+        switch ($_REQUEST['stat']) {
+                case "glob":
+                case "load":
+                        $image = sprintf("%s/all", $image);
+                        break;
+                case "pers":
+                        $image = sprintf("%s/%s", $image, $GLOBALS['hostid']);
+                        break;
+        }
 }
 
-foreach(array( "year", "month", "day" ) as $subdir) {
-    if(isset($_REQUEST[$subdir])) {
-	$image = sprintf("%s/%s", $image, $_REQUEST[$subdir]);
-    }
+foreach (array("year", "month", "day") as $subdir) {
+        if (isset($_REQUEST[$subdir])) {
+                $image = sprintf("%s/%s", $image, $_REQUEST[$subdir]);
+        }
 }
 
 $image = sprintf("%s/%s.png", $image, $_REQUEST['image']);
@@ -78,14 +76,12 @@ $image = sprintf("%s/%s.png", $image, $_REQUEST['image']);
 // 
 // Send file to browser:
 // 
-if(file_exists($image)) {
-    header(sprintf("Content-Type: %s", "image/png"));
-    header(sprintf("Content-Length: %d", filesize($image)));
-    readfile($image);
+if (file_exists($image)) {
+        header(sprintf("Content-Type: %s", "image/png"));
+        header(sprintf("Content-Length: %d", filesize($image)));
+        readfile($image);
+} else {
+        error_log(sprintf("The image file %s do not exist", $image));
+        exit(1);
 }
-else {
-    error_log(sprintf("The image file %s do not exist", $image));
-    exit(1);
-}
-
 ?>

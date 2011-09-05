@@ -26,23 +26,25 @@
 #define MAX_RUN_LENGTH 20
 
 #ifdef  EXIT_SUCESS
-# undef EXIT_SUCESS
+#undef EXIT_SUCESS
 #endif
 #ifdef  EXIT_FAILED
-# undef EXIT_FAILED
+#undef EXIT_FAILED
 #endif
 #ifdef  EXIT_CRASH
-# undef EXIT_CRASH
+#undef EXIT_CRASH
 #endif
 #define EXIT_SUCESS 0
 #define EXIT_FAILED 1
 #define EXIT_CRASH  255
 
-enum { STATUS_SUCCESS, 
-       STATUS_WARNING, 
-       STATUS_ERROR, 
-       STATUS_CRASH, 
-       STATUS_LAST };
+enum {
+	STATUS_SUCCESS,
+	STATUS_WARNING,
+	STATUS_ERROR,
+	STATUS_CRASH,
+	STATUS_LAST
+};
 
 static int simulate_success(const char *indata, const char *resdir);
 static int simulate_error(const char *indata, const char *resdir);
@@ -65,20 +67,20 @@ int main(int argc, char **argv)
 	const char *indata = NULL;
 	const char *resdir = NULL;
 
-	if(argc == 1) {
+	if (argc == 1) {
 		usage();
 		return 1;
 	}
-		
+
 	srand(time(NULL));
-	
-	status   = rand() % STATUS_LAST;
+
+	status = rand() % STATUS_LAST;
 	duration = MIN_RUN_LENGTH + rand() % (MAX_RUN_LENGTH - MIN_RUN_LENGTH);
-	
+
 	busy = rand() % 2;
-	
-	while((c = getopt(argc, argv, "bd:hi:r:s:V")) != -1) {
-		switch(c) {
+
+	while ((c = getopt(argc, argv, "bd:hi:r:s:V")) != -1) {
+		switch (c) {
 		case 'b':
 			busy = 1;
 			break;
@@ -95,19 +97,15 @@ int main(int argc, char **argv)
 			resdir = optarg;
 			break;
 		case 's':
-			if(strcmp(optarg, "success") == 0) {
+			if (strcmp(optarg, "success") == 0) {
 				status = STATUS_SUCCESS;
-			}
-			else if(strcmp(optarg, "warning") == 0) {
+			} else if (strcmp(optarg, "warning") == 0) {
 				status = STATUS_WARNING;
-			}
-			else if(strcmp(optarg, "error") == 0) {
+			} else if (strcmp(optarg, "error") == 0) {
 				status = STATUS_ERROR;
-			}
-			else if(strcmp(optarg, "crash") == 0) {
+			} else if (strcmp(optarg, "crash") == 0) {
 				status = STATUS_CRASH;
-			}
-			else {
+			} else {
 				fprintf(stderr, "unknown option value %s for '-s'\n", optarg);
 				exit(1);
 			}
@@ -121,22 +119,21 @@ int main(int argc, char **argv)
 		}
 	}
 	endtime = time(NULL) + duration;
-	
+
 	dump_options(indata, resdir, status, duration, endtime, busy);
-	
-	if(chdir(resdir) == 0) {
-		if(busy) {
-			while(1) {
-				if(time(NULL) > endtime) {
+
+	if (chdir(resdir) == 0) {
+		if (busy) {
+			while (1) {
+				if (time(NULL) > endtime) {
 					break;
 				}
 			}
-		}
-		else {
+		} else {
 			sleep(duration);
 		}
-		
-		switch(status) {
+
+		switch (status) {
 		case STATUS_SUCCESS:
 			code = simulate_success(indata, resdir);
 			break;
@@ -150,18 +147,17 @@ int main(int argc, char **argv)
 			code = simulate_crash(indata, resdir);
 			break;
 		}
-	}
-	else {
+	} else {
 		fprintf(stderr, "Failed change diretory to %s\n", resdir);
 	}
-	
+
 	exit(code);
 }
 
 int simulate_success(const char *indata, const char *resdir)
 {
 	write_files(resdir);
-	
+
 	printf("This message should be captured as stdout\n");
 	printf("Exiting with status %d\n", EXIT_SUCCESS);
 	return EXIT_SUCESS;
@@ -177,7 +173,7 @@ int simulate_error(const char *indata, const char *resdir)
 int simulate_warning(const char *indata, const char *resdir)
 {
 	write_files(resdir);
-	
+
 	fprintf(stderr, "This message should be captured as stderr (warning message)\n");
 	fprintf(stderr, "Exiting with status %d\n", EXIT_SUCCESS);
 	return EXIT_SUCCESS;
@@ -202,22 +198,22 @@ void dump_options(const char *indata, const char *resdir, int status, int durati
 int write_file(const char *path, const char *msg)
 {
 	FILE *fs = fopen(path, "w");
-	if(!fs) {
+	if (!fs) {
 		fprintf(stderr, "Failed create file %s\n", path);
 		return -1;
 	}
-	
+
 	fprintf(fs, "%s", msg);
 	fclose(fs);
-	
+
 	printf("Created file %s\n", path);
 	return 0;
 }
 
 void write_files(const char *resdir)
-{	
+{
 	char path[PATH_MAX];
-	
+
 	sprintf(path, "%s/file1", resdir);
 	write_file(path, "Some text..., ");
 

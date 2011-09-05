@@ -13,17 +13,15 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // Cache management. This script should be runned either from the 
 // command line or as a cron job.
 // 
-
 //
 // The script should only be run in CLI mode.
 //
-if(isset($_SERVER['SERVER_ADDR'])) {
-    die("This script should be runned in CLI mode.\n");
+if (isset($_SERVER['SERVER_ADDR'])) {
+        die("This script should be runned in CLI mode.\n");
 }
 
 include "../conf/config.inc";
@@ -33,81 +31,81 @@ include "../include/getopt.inc";
 // Show basic usage.
 //
 function cache_usage($prog, $sect)
-{    
-    if(!isset($sect)) {
-	$sect = "general";
-    }
-    
-    switch($sect) {
-     case "general":
-	print "$prog - job cache management tool\n";
-	print "\n";      
-	print "Usage: $prog options...\n";
-	print "Options:\n";
-	print "\n";    
-	print "  Actions:\n";
-	print "    -c,--cleanup:         Delete job directories.\n";
-	print "    -l,--list:            List job directories.\n";
-	print "    -f,--find:            Used with -x or -i for lookups.\n";
-	print "\n";      
-	print "  Filters:\n";
-	print "    -x,--hostid=str:      Filter on hostid.\n";
-	print "    -i,--ipaddr=str:      Filter on ip-address or hostname.\n";
-	print "    -a,--age=timespec:    Filter on timespec (see examples and timespec belove).\n";
-	print "\n";
-	print "  Miscellanous options:\n";
-	print "    --dry-run:            Just print what should have be done, but do not perform\n";
-	print "                          any modifications. Useful together with -c\n";
-	print "    -m,--machine:         Generate output for parsing by other program or scripts.\n";
-	print "\n";      
-	print "  Standard options:\n";
-	print "    -d,--debug:           Enable debug.\n";
-	print "    -v,--verbose:         Be more verbose.\n";
-	print "    -h,--help{=sect}:     This help or use sect={example,timespec}.\n";
-	print "    -V,--version:         Show version info.\n";
-	print "\n";
-	print "Warning:\n";
-	print "    If no filter (-a, -i or -x) is in effect, then the action (-c or -l) is\n";
-	print "    applied to all. Use --dry-run to test.\n";
-	break;
-     case "timespec":
-	print "\n";
-	print "Timespec:\n";
-	print "-------------------------\n";
-	print "\n";
-	print "The timespec string for option -a filters directories on their creation time.\n";
-	print "If no -a filter is specified, then no directories are filtered out and the\n";
-	print "selected actions (-c or -l) is applied to all directories.\n";
-	print "\n";
-	print "The timespec consist of a number and a suffix, i.e. 36h (36 hours). The following\n";
-	print "suffixes can be used:\n";
-	print "\n";
-	print "    s = second, m = minute, h = hour,\n";
-	print "    D = day,    W = week,   M = month, Y = year\n";
-	print "\n";
-	break;
-     case "example":
-	print "\n";
-	print "Examples:\n";
-	print "-------------------------\n";
-	print "\n";
-	print "    * Delete all job directories older than seven days:\n";
-	print "    bash$> $prog -c -a 7D\n";
-	print "\n";      
-	print "    * Get hostid for host host.domain.com:\n";
-	print "    bash$> $prog -f -i host.domain.com\n";
-	print "\n";
-	print "    * Reverse lookup from hostid 837ec5754f503cfaaee0929fd48974e7:\n";
-	print "    bash$> $prog -f -x 837ec5754f503cfaaee0929fd48974e7\n";
-	print "\n";
-	print "    * List all jobs created from host host.domain.com:\n";
-	print "    bash$> $prog -l -i host.domain.com\n";
-	print "\n";    
-	print "    * Delete all jobs older than three months created from ip-address 192.168.10.56\n";
-	print "    bash$> $prog -c -a 3M -i 192.168.10.56\n";
-	print "\n";
-	break;
-    }
+{
+        if (!isset($sect)) {
+                $sect = "general";
+        }
+
+        switch ($sect) {
+                case "general":
+                        print "$prog - job cache management tool\n";
+                        print "\n";
+                        print "Usage: $prog options...\n";
+                        print "Options:\n";
+                        print "\n";
+                        print "  Actions:\n";
+                        print "    -c,--cleanup:         Delete job directories.\n";
+                        print "    -l,--list:            List job directories.\n";
+                        print "    -f,--find:            Used with -x or -i for lookups.\n";
+                        print "\n";
+                        print "  Filters:\n";
+                        print "    -x,--hostid=str:      Filter on hostid.\n";
+                        print "    -i,--ipaddr=str:      Filter on ip-address or hostname.\n";
+                        print "    -a,--age=timespec:    Filter on timespec (see examples and timespec belove).\n";
+                        print "\n";
+                        print "  Miscellanous options:\n";
+                        print "    --dry-run:            Just print what should have be done, but do not perform\n";
+                        print "                          any modifications. Useful together with -c\n";
+                        print "    -m,--machine:         Generate output for parsing by other program or scripts.\n";
+                        print "\n";
+                        print "  Standard options:\n";
+                        print "    -d,--debug:           Enable debug.\n";
+                        print "    -v,--verbose:         Be more verbose.\n";
+                        print "    -h,--help{=sect}:     This help or use sect={example,timespec}.\n";
+                        print "    -V,--version:         Show version info.\n";
+                        print "\n";
+                        print "Warning:\n";
+                        print "    If no filter (-a, -i or -x) is in effect, then the action (-c or -l) is\n";
+                        print "    applied to all. Use --dry-run to test.\n";
+                        break;
+                case "timespec":
+                        print "\n";
+                        print "Timespec:\n";
+                        print "-------------------------\n";
+                        print "\n";
+                        print "The timespec string for option -a filters directories on their creation time.\n";
+                        print "If no -a filter is specified, then no directories are filtered out and the\n";
+                        print "selected actions (-c or -l) is applied to all directories.\n";
+                        print "\n";
+                        print "The timespec consist of a number and a suffix, i.e. 36h (36 hours). The following\n";
+                        print "suffixes can be used:\n";
+                        print "\n";
+                        print "    s = second, m = minute, h = hour,\n";
+                        print "    D = day,    W = week,   M = month, Y = year\n";
+                        print "\n";
+                        break;
+                case "example":
+                        print "\n";
+                        print "Examples:\n";
+                        print "-------------------------\n";
+                        print "\n";
+                        print "    * Delete all job directories older than seven days:\n";
+                        print "    bash$> $prog -c -a 7D\n";
+                        print "\n";
+                        print "    * Get hostid for host host.domain.com:\n";
+                        print "    bash$> $prog -f -i host.domain.com\n";
+                        print "\n";
+                        print "    * Reverse lookup from hostid 837ec5754f503cfaaee0929fd48974e7:\n";
+                        print "    bash$> $prog -f -x 837ec5754f503cfaaee0929fd48974e7\n";
+                        print "\n";
+                        print "    * List all jobs created from host host.domain.com:\n";
+                        print "    bash$> $prog -l -i host.domain.com\n";
+                        print "\n";
+                        print "    * Delete all jobs older than three months created from ip-address 192.168.10.56\n";
+                        print "    bash$> $prog -c -a 3M -i 192.168.10.56\n";
+                        print "\n";
+                        break;
+        }
 }
 
 //
@@ -115,7 +113,7 @@ function cache_usage($prog, $sect)
 //
 function cache_version($prog, $vers)
 {
-    print "$prog - job cache management tool ($vers)\n";
+        print "$prog - job cache management tool ($vers)\n";
 }
 
 // 
@@ -123,16 +121,15 @@ function cache_version($prog, $vers)
 // 
 function check_arg($key, $val, $required, $prog)
 {
-    if($required) {
-	if(!isset($val)) {
-	    die(sprintf("%s: option '%s' requires an argument\n", $prog, $key));
-	}
-    }
-    else {
-	if(isset($val)) {
-	    die(sprintf("%s: option '%s' do not take an argument\n", $prog, $key));
-	}	
-    }
+        if ($required) {
+                if (!isset($val)) {
+                        die(sprintf("%s: option '%s' requires an argument\n", $prog, $key));
+                }
+        } else {
+                if (isset($val)) {
+                        die(sprintf("%s: option '%s' do not take an argument\n", $prog, $key));
+                }
+        }
 }
 
 // 
@@ -140,92 +137,92 @@ function check_arg($key, $val, $required, $prog)
 // 
 function parse_options(&$argv, $argc, &$options)
 {
-    // 
-    // Get command line options.
-    // 
-    $args = array();
-    get_opt($argv, $argc, $args);
-    foreach($args as $key => $val) {
-    	switch($key) {
-	 case "-c":
-	 case "--cleanup":         // Delete job directories.
-	    check_arg($key, $val, false, $options->prog);
-	    $options['cleanup'] = true;
-	    break;	    
-	 case "-l":
-	 case "--list":            // List job directories.
-	    check_arg($key, $val, false, $options->prog);
-	    $options['list'] = true;
-	    break;
-	 case "-f":
-	 case "--find":            // Perform hostid or ip-address/hostname lookup.
-	    check_arg($key, $val, false, $options->prog);
-	    $options['find'] = true;
-	    break;
-	 case "-x":
-	 case "--hostid":          // Filter on hostid.
-	    check_arg($key, $val, true, $options->prog);
-	    $options['hostid'] = $val;
-	    break;
-	 case "-i":
-	 case "--ipaddr":          // Filter on ip-address or hostname.
-	    check_arg($key, $val, true, $options->prog);
-	    $ipaddr = val;
-	    if(!is_numeric($val[0])) {
-		$ipaddr = gethostbyname($val);
-		if($ipaddr == $val) {
-		    die(sprintf("%s: failed resolve hostname %s\n", $options->prog, $val));
-		}
-	    }
-	    $options['ipaddr'] = $val;	
-	    break;
-	 case "-a":
-	 case "--age":             // Filter on timespec. The timespec string is a number and
-	    check_arg($key, $val, true, $options->prog);
-	    $match = array();
-	    if(!preg_match("/^(\d+)([smhDWMY])$/", $val, $match)) {
-		die(sprintf("%s: wrong format for argument to option '%s', see --help\n", $options->prog, $key));
-	    }
-	    // 
-	    // Calculate the timestamp used when comparing modification times.
-	    // 
-	    $map = array( "s" => "second", "m" => "minute", "h" => "hour",
-			  "D" => "day", "W" => "week", "M" => "month", "Y" => "year" );
-	    $timespec = sprintf("-%s %s", $match[1], $map[$match[2]]);
-	    $options['age'] = strtotime($timespec);
-	    break;
-	 case "--dry-run":         // Just print what should have be done.
-	    check_arg($key, $val, false, $options->prog);
-	    $options['dry_run'] = true;
-	    break;
-	 case "-m":
-	 case "--machine":         // Generate output for parsing by other program or scripts.
-	    check_arg($key, $val, false, $options->prog);
-	    $options['machine'] = true;
-	    break;
-	 case "-d":
-	 case "--debug":           // Enable debug.
-	    check_arg($key, $val, false, $options->prog);
-	    $options['debug'] = true;
-	    break;
-	 case "-v":
-	 case "--verbose":         // Be more verbose.
-	    check_arg($key, $val, false, $options->prog);
-	    $options['verbose']++;
-	    break;
-	 case "-h":
-	 case "--help":            // Show help.
-	    cache_usage($options['prog'], $val);
-	    exit(0);
-	 case "-V":
-	 case "--version":         // Show version info.
-	    check_arg($key, $val, false, $options->prog);
-	    cache_version($options['prog'], $options['version']);
-	    exit(0);	      
-	 default:
-	    die(sprintf("%s: unknown option '%s', see --help\n", $options->prog, $key));
-	}
-    }	      
+        // 
+        // Get command line options.
+        // 
+        $args = array();
+        get_opt($argv, $argc, $args);
+        foreach ($args as $key => $val) {
+                switch ($key) {
+                        case "-c":
+                        case "--cleanup":         // Delete job directories.
+                                check_arg($key, $val, false, $options->prog);
+                                $options['cleanup'] = true;
+                                break;
+                        case "-l":
+                        case "--list":            // List job directories.
+                                check_arg($key, $val, false, $options->prog);
+                                $options['list'] = true;
+                                break;
+                        case "-f":
+                        case "--find":            // Perform hostid or ip-address/hostname lookup.
+                                check_arg($key, $val, false, $options->prog);
+                                $options['find'] = true;
+                                break;
+                        case "-x":
+                        case "--hostid":          // Filter on hostid.
+                                check_arg($key, $val, true, $options->prog);
+                                $options['hostid'] = $val;
+                                break;
+                        case "-i":
+                        case "--ipaddr":          // Filter on ip-address or hostname.
+                                check_arg($key, $val, true, $options->prog);
+                                $ipaddr = val;
+                                if (!is_numeric($val[0])) {
+                                        $ipaddr = gethostbyname($val);
+                                        if ($ipaddr == $val) {
+                                                die(sprintf("%s: failed resolve hostname %s\n", $options->prog, $val));
+                                        }
+                                }
+                                $options['ipaddr'] = $val;
+                                break;
+                        case "-a":
+                        case "--age":             // Filter on timespec. The timespec string is a number and
+                                check_arg($key, $val, true, $options->prog);
+                                $match = array();
+                                if (!preg_match("/^(\d+)([smhDWMY])$/", $val, $match)) {
+                                        die(sprintf("%s: wrong format for argument to option '%s', see --help\n", $options->prog, $key));
+                                }
+                                // 
+                                // Calculate the timestamp used when comparing modification times.
+                                // 
+                                $map = array("s" => "second", "m" => "minute", "h" => "hour",
+                                        "D" => "day", "W" => "week", "M" => "month", "Y" => "year");
+                                $timespec = sprintf("-%s %s", $match[1], $map[$match[2]]);
+                                $options['age'] = strtotime($timespec);
+                                break;
+                        case "--dry-run":         // Just print what should have be done.
+                                check_arg($key, $val, false, $options->prog);
+                                $options['dry_run'] = true;
+                                break;
+                        case "-m":
+                        case "--machine":         // Generate output for parsing by other program or scripts.
+                                check_arg($key, $val, false, $options->prog);
+                                $options['machine'] = true;
+                                break;
+                        case "-d":
+                        case "--debug":           // Enable debug.
+                                check_arg($key, $val, false, $options->prog);
+                                $options['debug'] = true;
+                                break;
+                        case "-v":
+                        case "--verbose":         // Be more verbose.
+                                check_arg($key, $val, false, $options->prog);
+                                $options['verbose']++;
+                                break;
+                        case "-h":
+                        case "--help":            // Show help.
+                                cache_usage($options['prog'], $val);
+                                exit(0);
+                        case "-V":
+                        case "--version":         // Show version info.
+                                check_arg($key, $val, false, $options->prog);
+                                cache_version($options['prog'], $options['version']);
+                                exit(0);
+                        default:
+                                die(sprintf("%s: unknown option '%s', see --help\n", $options->prog, $key));
+                }
+        }
 }
 
 // 
@@ -233,16 +230,15 @@ function parse_options(&$argv, $argc, &$options)
 // 
 function cache_get_hostid($ipaddr, $options)
 {
-    $mapfile = sprintf("%s/map/inaddr/%s", CACHE_DIRECTORY, $ipaddr);
-    if($options->debug) {
-	printf("debug: looking for hostid in file %s\n", $mapfile);
-    }
-    if(file_exists($mapfile)) {
-	return trim(file_get_contents($mapfile));
-    }
-    else {
-	die(sprintf("%s: failed find hostid for '%s' (maybe its using ipv6?)\n", $options->prog, $ipaddr));
-    }
+        $mapfile = sprintf("%s/map/inaddr/%s", CACHE_DIRECTORY, $ipaddr);
+        if ($options->debug) {
+                printf("debug: looking for hostid in file %s\n", $mapfile);
+        }
+        if (file_exists($mapfile)) {
+                return trim(file_get_contents($mapfile));
+        } else {
+                die(sprintf("%s: failed find hostid for '%s' (maybe its using ipv6?)\n", $options->prog, $ipaddr));
+        }
 }
 
 // 
@@ -250,16 +246,15 @@ function cache_get_hostid($ipaddr, $options)
 // 
 function cache_get_ipaddr($hostid, $options)
 {
-    $mapfile = sprintf("%s/map/hostid/%s", CACHE_DIRECTORY, $hostid);
-    if($options->debug) {
-	printf("debug: looking for ip-address in file %s\n", $mapfile);
-    }
-    if(file_exists($mapfile)) {
-	return trim(file_get_contents($mapfile));
-    }
-    else {
-	die(sprintf("%s: failed find ip-address for '%s'\n", $options->prog, $hostid));
-    }
+        $mapfile = sprintf("%s/map/hostid/%s", CACHE_DIRECTORY, $hostid);
+        if ($options->debug) {
+                printf("debug: looking for ip-address in file %s\n", $mapfile);
+        }
+        if (file_exists($mapfile)) {
+                return trim(file_get_contents($mapfile));
+        } else {
+                die(sprintf("%s: failed find ip-address for '%s'\n", $options->prog, $hostid));
+        }
 }
 
 // 
@@ -267,43 +262,41 @@ function cache_get_ipaddr($hostid, $options)
 // 
 function cache_find_jobs($hostid, $options)
 {
-    $dirname = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $hostid);
+        $dirname = sprintf("%s/jobs/%s", CACHE_DIRECTORY, $hostid);
 
-    if($options->debug) {
-	printf("debug: processing job dirctories of hostid %s\n", $hostid);
-    }
-    
-    $handle = opendir($dirname);
-    if($handle) {
-	$result = array();
-	while(false !== ($dir = readdir($handle))) {
-	    if($dir != "." && $dir != "..") {
-		if($options->age) {
-		    // 
-		    // Only append directories older than age filter.
-		    // 
-		    if(intval($dir) > $options->age) {
-			if($options->debug) {
-			    printf("debug: directory %s is newer than %d (skipped)\n", 
-				   $dir, $options->age);
-			}
-			continue;
-		    }
-		}
-		if(is_dir($dir)) {
-		    if($options->debug) {
-			printf("debug: appending %s to list of job directories.\n", $dir);
-		    }
-		    array_push($result, $dir);
-		}
-	    }
-	}
-	closedir($handle);
-	return $result;
-    }
-    else {
-	die(sprintf("%s: failed open directory %s\n", $options->prog, $dirname));
-    }
+        if ($options->debug) {
+                printf("debug: processing job dirctories of hostid %s\n", $hostid);
+        }
+
+        $handle = opendir($dirname);
+        if ($handle) {
+                $result = array();
+                while (false !== ($dir = readdir($handle))) {
+                        if ($dir != "." && $dir != "..") {
+                                if ($options->age) {
+                                        // 
+                                        // Only append directories older than age filter.
+                                        // 
+                                        if (intval($dir) > $options->age) {
+                                                if ($options->debug) {
+                                                        printf("debug: directory %s is newer than %d (skipped)\n", $dir, $options->age);
+                                                }
+                                                continue;
+                                        }
+                                }
+                                if (is_dir($dir)) {
+                                        if ($options->debug) {
+                                                printf("debug: appending %s to list of job directories.\n", $dir);
+                                        }
+                                        array_push($result, $dir);
+                                }
+                        }
+                }
+                closedir($handle);
+                return $result;
+        } else {
+                die(sprintf("%s: failed open directory %s\n", $options->prog, $dirname));
+        }
 }
 
 // 
@@ -311,46 +304,42 @@ function cache_find_jobs($hostid, $options)
 // 
 function cache_find_job_dirs($options)
 {
-    if(isset($options->ipaddr)) {
-	$options->hostid = cache_get_hostid($options->ipaddr, $options);
-	if($options->debug) {
-	    printf("debug: resolved ip-address %s to hostid %s\n", 
-		   $options->ipaddr, 
-		   $options->hostid);
-	}
-    }
-    
-    // 
-    // Begin find directories in job cache.
-    // 
-    if(isset($options->hostid)) {
-	// 
-	// Only consider this single hostid.
-	//
+        if (isset($options->ipaddr)) {
+                $options->hostid = cache_get_hostid($options->ipaddr, $options);
+                if ($options->debug) {
+                        printf("debug: resolved ip-address %s to hostid %s\n", $options->ipaddr, $options->hostid);
+                }
+        }
+
+        // 
+        // Begin find directories in job cache.
+        // 
+        if (isset($options->hostid)) {
+                // 
+                // Only consider this single hostid.
+                //
 	$result = array();
-	$result[$options->hostid] = cache_find_jobs($options->hostid, $options);
-	return $result;
-    }
-    else {
-	// 
-	// Process multiple hostid's.
-	// 
-	$jobsdir = sprintf("%s/jobs", CACHE_DIRECTORY);
-	$handle = opendir($jobsdir);
-	if($handle) {
-	    $result = array();
-	    while(false !== ($dir = readdir($handle))) {
-		if($dir != "." && $dir != "..") {
-		    $result[$dir] = cache_find_jobs($dir, $options);
-		}
-	    }
-	    closedir($handle);
-	    return $result;
-	}
-	else {
-	    die(sprintf("%s: failed open directory %s\n", $options->prog, $jobsdir));
-	}
-    }
+                $result[$options->hostid] = cache_find_jobs($options->hostid, $options);
+                return $result;
+        } else {
+                // 
+                // Process multiple hostid's.
+                // 
+                $jobsdir = sprintf("%s/jobs", CACHE_DIRECTORY);
+                $handle = opendir($jobsdir);
+                if ($handle) {
+                        $result = array();
+                        while (false !== ($dir = readdir($handle))) {
+                                if ($dir != "." && $dir != "..") {
+                                        $result[$dir] = cache_find_jobs($dir, $options);
+                                }
+                        }
+                        closedir($handle);
+                        return $result;
+                } else {
+                        die(sprintf("%s: failed open directory %s\n", $options->prog, $jobsdir));
+                }
+        }
 }
 
 // 
@@ -358,81 +347,78 @@ function cache_find_job_dirs($options)
 //
 function cache_get_job_size($path, &$data)
 {
-    if(file_exists($path)) {
-	$handle = opendir($path);
-	if($handle) {
-	    while(false !== ($file = readdir($handle))) {
-		if($file != "." && $file != "..") {
-		    if(is_dir($file)) {
-			$data['size'] += cache_get_job_size(sprintf("%s/%s", $path, $file));
-			return;
-		    }
-		    else {
-			$data['files']++;
-			$data['size'] += filesize(sprintf("%s/%s", $path, $file));
-		    }
-		}
-	    }
-	    closedir($handle);
-	}	
-    }
-    
-    $data['size'] += filesize($path);
+        if (file_exists($path)) {
+                $handle = opendir($path);
+                if ($handle) {
+                        while (false !== ($file = readdir($handle))) {
+                                if ($file != "." && $file != "..") {
+                                        if (is_dir($file)) {
+                                                $data['size'] += cache_get_job_size(sprintf("%s/%s", $path, $file));
+                                                return;
+                                        } else {
+                                                $data['files']++;
+                                                $data['size'] += filesize(sprintf("%s/%s", $path, $file));
+                                        }
+                                }
+                        }
+                        closedir($handle);
+                }
+        }
+
+        $data['size'] += filesize($path);
 }
 
 // 
 // Recursive delete a job directory.
 // 
 function cache_delete_directory($path, $options)
-{  
-    if($options->debug) {
-	printf(sprintf("debug: deleting in directory %s\n", basename($path)));
-    }
-    
-    $handle = opendir($path);
-    if($handle) {
-	while(false !== ($file = readdir($handle))) {
-	    if($file != "." && $file != "..") {
-		$curr = sprintf("%s/%s", $path, $file);
-		if(is_dir($curr)) {
-		    $result = cache_delete_directory($curr, $options);
-		    if(!rmdir($curr)) {
-			printf("%s: failed remove directory %s\n", $options->prog, $file);
-			return false;
-		    }
-		    return $result;
-		}
-		else {
-		    if($options->dry_run) {
-			printf(sprintf("debug: whould have deleted file %s (dry-run mode)\n", $file));
-		    }
-		    else {
-			if($options->debug) {
-			    printf("debug: deleting file %s\n", $file);
-			}
-			if(!unlink($curr)) {
-			    printf(sprintf("%s: failed unlink file %s\n", $options->prog, $file));
-			    return false;
-			}
-		    }
-		}
-	    }
-	}
-	closedir($handle);
-    }
-    
-    if($options->debug) {
-	printf("debug: deleting directory %s\n", basename($path));
-    }
-    if(!rmdir($path)) {
-	printf(sprintf("%s: failed remove directory %s\n", $options->prog, basename($path)));
-	return false;
-    }
-    if($options->verbose) {
-	printf("deleted directory %s\n", $path);
-    }
-    
-    return true;
+{
+        if ($options->debug) {
+                printf(sprintf("debug: deleting in directory %s\n", basename($path)));
+        }
+
+        $handle = opendir($path);
+        if ($handle) {
+                while (false !== ($file = readdir($handle))) {
+                        if ($file != "." && $file != "..") {
+                                $curr = sprintf("%s/%s", $path, $file);
+                                if (is_dir($curr)) {
+                                        $result = cache_delete_directory($curr, $options);
+                                        if (!rmdir($curr)) {
+                                                printf("%s: failed remove directory %s\n", $options->prog, $file);
+                                                return false;
+                                        }
+                                        return $result;
+                                } else {
+                                        if ($options->dry_run) {
+                                                printf(sprintf("debug: whould have deleted file %s (dry-run mode)\n", $file));
+                                        } else {
+                                                if ($options->debug) {
+                                                        printf("debug: deleting file %s\n", $file);
+                                                }
+                                                if (!unlink($curr)) {
+                                                        printf(sprintf("%s: failed unlink file %s\n", $options->prog, $file));
+                                                        return false;
+                                                }
+                                        }
+                                }
+                        }
+                }
+                closedir($handle);
+        }
+
+        if ($options->debug) {
+                printf("debug: deleting directory %s\n", basename($path));
+        }
+        if (!rmdir($path)) {
+                printf(sprintf("%s: failed remove directory %s\n", $options->prog, basename($path)));
+                return false;
+        }
+        if ($options->verbose) {
+                printf("deleted directory %s\n", $path);
+        }
+
+        return true;
 }
 
 // 
@@ -440,114 +426,108 @@ function cache_delete_directory($path, $options)
 //
 function main(&$argv, $argc)
 {
-    $prog = basename(array_shift($argv));
-    $vers = trim(file_get_contents("../VERSION"));
-    
-    // 
-    // Setup defaults in options array:
-    // 
-    $options = array( "cleanup" => false,
-		      "list" => false,
-		      "find" => false,
-		      "hostid" => null,
-		      "ipaddr" => null,
-		      "age" => 0,
-		      "now" => time(),
-		      "dry_run" => false,
-		      "machine" => false,
-		      "debug" => false, 
-		      "verbose" => 0,
-		      "prog"  => $prog, 
-		      "version" => $vers );
-    
-    // 
-    // Fill $options with command line options.
-    // 
-    parse_options($argv, $argc, $options);
-    $options = (object)$options;
-    
-    // 
-    // Dump options:
-    //
-    if($options->debug) {
-	var_dump($options);
-    }
+        $prog = basename(array_shift($argv));
+        $vers = trim(file_get_contents("../VERSION"));
 
-    // 
-    // Perform sanity check on options.
-    // 
-    if(isset($options->hostid) && isset($options->ipaddr)) {
-	die(sprintf("%s: option '--hostid' should not be used together with option '--ipaddr'\n", $options->prog));
-    }
+        // 
+        // Setup defaults in options array:
+        // 
+        $options = array("cleanup" => false,
+                "list" => false,
+                "find" => false,
+                "hostid" => null,
+                "ipaddr" => null,
+                "age" => 0,
+                "now" => time(),
+                "dry_run" => false,
+                "machine" => false,
+                "debug" => false,
+                "verbose" => 0,
+                "prog" => $prog,
+                "version" => $vers);
 
-    // 
-    // Process options.
-    // 
-    if(isset($options->find)) {
-	if(isset($options->ipaddr)) {
-	    $options->hostid = cache_get_hostid($options->ipaddr, $options);
-	    printf("%s: %s\n", $options->ipaddr, $options->hostid);
-	}
-	if(isset($options->hostid)) {
-	    $options->ipaddr = cache_get_ipaddr($options->hostid, $options);
-	    printf("%s: %s\n", $options->hostid, $options->ipaddr);
-	}	    
-    }
+        // 
+        // Fill $options with command line options.
+        // 
+        parse_options($argv, $argc, $options);
+        $options = (object) $options;
 
-    if($options->list) {
-	// 
-	// Get all job directories matching filter preferences.
-	// 
-	$dirs = cache_find_job_dirs($options);
-	foreach($dirs as $hostid => $jobdirs) { 
-	    if($options->machine) {
-		foreach($jobdirs as $jobdir) {
-		    printf("%s/jobs/%s/%s\n", CACHE_DIRECTORY, $hostid, $jobdir);
-		}
-	    }
-	    else {
-		printf("%s (hostid)\n", $hostid);
-		foreach($jobdirs as $jobdir) {
-		    if($options->verbose) {
-			$path = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
-			$data = array();
-			cache_get_job_size($path, $data);
-			printf("  %s (size = %d, files = %d, created = %s, modified = %s) (jobdir)\n", $jobdir,
-			       $data['size'], $data['files'], 
-			       strftime(TIMESTAMP_FORMAT, $jobdir),
-			       strftime(TIMESTAMP_FORMAT, filemtime($path)));
-		    }
-		    else {
-			printf("  %s (jobdir)\n", $jobdir);
-		    }
-		}
-	    }
-	}
-    }
+        // 
+        // Dump options:
+        //
+    if ($options->debug) {
+                var_dump($options);
+        }
 
-    if($options->cleanup) {
-	// 
-	// Get all job directories matching filter preferences.
-	// 
-	$dirs = cache_find_job_dirs($options);	
-	foreach($dirs as $hostid => $jobdirs) { 
-	    foreach($jobdirs as $jobdir) {
-		$path = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
-		if($options->debug || $options->dry_run) {
-		    printf("debug: about to delete directory %s (hostid = %s)\n", $jobdir, $hostid);
-		}
-		if($options->debug || $options->verbose) {
-		    printf("%sdeleting directory %s (hostid = %s)\n", ($options->debug ? "debug: " : ""), $jobdir, $hostid);
-		}
-		cache_delete_directory($path, $options);
-	    }
-	}
-    }
+        // 
+        // Perform sanity check on options.
+        // 
+        if (isset($options->hostid) && isset($options->ipaddr)) {
+                die(sprintf("%s: option '--hostid' should not be used together with option '--ipaddr'\n", $options->prog));
+        }
+
+        // 
+        // Process options.
+        // 
+        if (isset($options->find)) {
+                if (isset($options->ipaddr)) {
+                        $options->hostid = cache_get_hostid($options->ipaddr, $options);
+                        printf("%s: %s\n", $options->ipaddr, $options->hostid);
+                }
+                if (isset($options->hostid)) {
+                        $options->ipaddr = cache_get_ipaddr($options->hostid, $options);
+                        printf("%s: %s\n", $options->hostid, $options->ipaddr);
+                }
+        }
+
+        if ($options->list) {
+                // 
+                // Get all job directories matching filter preferences.
+                // 
+                $dirs = cache_find_job_dirs($options);
+                foreach ($dirs as $hostid => $jobdirs) {
+                        if ($options->machine) {
+                                foreach ($jobdirs as $jobdir) {
+                                        printf("%s/jobs/%s/%s\n", CACHE_DIRECTORY, $hostid, $jobdir);
+                                }
+                        } else {
+                                printf("%s (hostid)\n", $hostid);
+                                foreach ($jobdirs as $jobdir) {
+                                        if ($options->verbose) {
+                                                $path = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
+                                                $data = array();
+                                                cache_get_job_size($path, $data);
+                                                printf("  %s (size = %d, files = %d, created = %s, modified = %s) (jobdir)\n", $jobdir, $data['size'], $data['files'], strftime(TIMESTAMP_FORMAT, $jobdir), strftime(TIMESTAMP_FORMAT, filemtime($path)));
+                                        } else {
+                                                printf("  %s (jobdir)\n", $jobdir);
+                                        }
+                                }
+                        }
+                }
+        }
+
+        if ($options->cleanup) {
+                // 
+                // Get all job directories matching filter preferences.
+                // 
+                $dirs = cache_find_job_dirs($options);
+                foreach ($dirs as $hostid => $jobdirs) {
+                        foreach ($jobdirs as $jobdir) {
+                                $path = sprintf("%s/jobs/%s/%s", CACHE_DIRECTORY, $hostid, $jobdir);
+                                if ($options->debug || $options->dry_run) {
+                                        printf("debug: about to delete directory %s (hostid = %s)\n", $jobdir, $hostid);
+                                }
+                                if ($options->debug || $options->verbose) {
+                                        printf("%sdeleting directory %s (hostid = %s)\n", ($options->debug ? "debug: " : ""), $jobdir, $hostid);
+                                }
+                                cache_delete_directory($path, $options);
+                        }
+                }
+        }
 }
 
 // 
 // Start normal script execution.
 // 
 main($_SERVER['argv'], $_SERVER['argc']);
-
 ?>

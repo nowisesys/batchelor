@@ -23,12 +23,12 @@ static void usage(const char *prog)
 int main(int argc, char **argv)
 {
 	char *prog = basename(argv[0]);
-   
-	if(argc != 3) {
+
+	if (argc != 3) {
 		usage(prog);
 		exit(1);
 	}
-   
+
 	/*
 	 * OK, we cheated a bit ;-)
 	 */

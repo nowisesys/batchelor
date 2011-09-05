@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This script is part of the lightweight HTTP web service interface. This script
 // is the request broker that act as a bridge between logical names and physical
@@ -39,20 +38,20 @@ include "include/common.inc";
 // 
 $GLOBALS['name'] = basename($_SERVER['SCRIPT_NAME']);
 
-foreach(ws_get_rpc_method_by_index() as $entry) {
-    if($entry['name'] == $name) {
-	$GLOBALS['script'] = $entry['script'];
-	unset($entry);
-	break;
-    }
+foreach (ws_get_rpc_method_by_index() as $entry) {
+        if ($entry['name'] == $name) {
+                $GLOBALS['script'] = $entry['script'];
+                unset($entry);
+                break;
+        }
 }
 
 // 
 // Include script if found.
 // 
-if(isset($GLOBALS['script'])) {
-    include $GLOBALS['script'];
-    exit(0);
+if (isset($GLOBALS['script'])) {
+        include $GLOBALS['script'];
+        exit(0);
 }
 
 // 
@@ -60,5 +59,4 @@ if(isset($GLOBALS['script'])) {
 // 
 put_error("Failed map logical name to script");
 ws_http_error_handler(404, WS_ERROR_REQUEST_BROKER);
-
 ?>

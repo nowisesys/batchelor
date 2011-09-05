@@ -13,37 +13,34 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This file adds zip archive handling.
 // 
-
 // 
 // This function will recursive add any file or directory in
 // subdir to the zipfile represented by the objzip object.
 // 
 function add_zipfile(&$objzip, $subdir)
 {
-    $handle = opendir($subdir);
-    if($handle) {
-	while(false !== ($file = readdir($handle))) {
-	    if($file != "." && $file != "..") {
-		$path = sprintf("%s/%s", $subdir, $file);
-		if(is_dir($path)) {
-		    if(!add_zipfile($objzip, $path)) {
-			return false;
-		    }
-		}
-		else {
-		    if(!$objzip->addFile($path)) {
-			return false;
-		    }
-		}
-	    }
-	}
-	closedir($handle);
-    }
-    return true;
+        $handle = opendir($subdir);
+        if ($handle) {
+                while (false !== ($file = readdir($handle))) {
+                        if ($file != "." && $file != "..") {
+                                $path = sprintf("%s/%s", $subdir, $file);
+                                if (is_dir($path)) {
+                                        if (!add_zipfile($objzip, $path)) {
+                                                return false;
+                                        }
+                                } else {
+                                        if (!$objzip->addFile($path)) {
+                                                return false;
+                                        }
+                                }
+                        }
+                }
+                closedir($handle);
+        }
+        return true;
 }
 
 // 
@@ -51,16 +48,16 @@ function add_zipfile(&$objzip, $subdir)
 // 
 function create_zipfile($zipfile, $zipdir)
 {
-    $objzip =& new ZipArchive();	 	
-    if($objzip->open($zipfile, ZipArchive::CREATE)) {
-	if(!add_zipfile($objzip, $zipdir)) {
-	    $objzip->close();
-	    unlink($zipfile);
-	    return false;
-	}
-    }
-    $objzip->close();
-    return true;
+        $objzip = & new ZipArchive();
+        if ($objzip->open($zipfile, ZipArchive::CREATE)) {
+                if (!add_zipfile($objzip, $zipdir)) {
+                        $objzip->close();
+                        unlink($zipfile);
+                        return false;
+                }
+        }
+        $objzip->close();
+        return true;
 }
 
 ?>

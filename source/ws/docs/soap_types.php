@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // Shows information on the web service ... 
 // 
@@ -29,23 +28,23 @@ include "conf/config.inc";
 include "include/ui.inc";
 include "include/soap.inc";
 
-function print_title() 
+function print_title()
 {
-    printf("%s - Web Services API (%s) - Method and types", HTML_PAGE_TITLE, WS_NAME);
+        printf("%s - Web Services API (%s) - Method and types", HTML_PAGE_TITLE, WS_NAME);
 }
 
 function print_body()
 {
-    printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services API (%s) - Methods and Types</h2>\n", HTML_PAGE_TITLE, WS_NAME);    
-    echo "<span id=\"secthead\">Introduction:</span>\n";
-    echo "<p>The types passed as argument to methods and the result from the called method are <u>always</u> ";
-    echo "wrapped in an object structure (possibly empty, see the version method). If you are using a language ";
-    echo "with object to XML mapping, then this list can be rather helpful to use as a guideline.</p>\n";
-    
-    echo "<span id=\"secthead\">Types:</span>\n";
-    echo "<p>These are the method argument and response types:</p>\n";
-    echo "<p><div class=\"code\"><pre>\n";
-    echo <<< EOF
+        printf("<h2><img src=\"../../icons/nuvola/info.png\"> %s - Web Services API (%s) - Methods and Types</h2>\n", HTML_PAGE_TITLE, WS_NAME);
+        echo "<span id=\"secthead\">Introduction:</span>\n";
+        echo "<p>The types passed as argument to methods and the result from the called method are <u>always</u> ";
+        echo "wrapped in an object structure (possibly empty, see the version method). If you are using a language ";
+        echo "with object to XML mapping, then this list can be rather helpful to use as a guideline.</p>\n";
+
+        echo "<span id=\"secthead\">Types:</span>\n";
+        echo "<p>These are the method argument and response types:</p>\n";
+        echo "<p><div class=\"code\"><pre>\n";
+        echo <<< EOF
     struct resume {
 	 jobidentity job;
     }
@@ -152,12 +151,12 @@ function print_body()
 	 string return;
     }
 EOF;
-    echo "</pre></div></p>\n";
-    
-    echo "<span id=\"secthead\">Methods:</span>\n";
-    echo "<p>These are the methods showing their argument and response types:</p>\n";
-    echo "<p><div class=\"code\"><pre>\n";
-    echo <<< EOF
+        echo "</pre></div></p>\n";
+
+        echo "<span id=\"secthead\">Methods:</span>\n";
+        echo "<p>These are the methods showing their argument and response types:</p>\n";
+        echo "<p><div class=\"code\"><pre>\n";
+        echo <<< EOF
     enqueue_response enqueue(enqueue obj)
     queue_response queue(queue obj)
     resume_response resume(resume obj)
@@ -170,25 +169,24 @@ EOF;
     fopen_response fopen(fopen obj)
     stat_response stat(stat obj)
 EOF;
-    echo "</pre></div></p>\n";
+        echo "</pre></div></p>\n";
 }
 
 function print_html($what)
 {
-    switch($what) {
-     case "body":
-	print_body();
-	break;
-     case "title":
-	print_title();
-	break;
-     default:
-	print_common_html($what);    // Use default callback.
-	break;
-    }
+        switch ($what) {
+                case "body":
+                        print_body();
+                        break;
+                case "title":
+                        print_title();
+                        break;
+                default:
+                        print_common_html($what);    // Use default callback.
+                        break;
+        }
 }
 
 chdir("../..");
 load_ui_template("apidoc");
-
 ?>

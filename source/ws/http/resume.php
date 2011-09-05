@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This script is part of the lightweight HTTP web service interface. This script
 // implements the RPC method resume.
@@ -34,15 +33,15 @@ include "include/queue.inc";
 // Setup HTTP web service session. This will terminate the script if any 
 // problem is detected.
 // 
-ws_http_session_setup(array( "result", "jobid" ));
+ws_http_session_setup(array("result", "jobid"));
 
 // 
 // Send result in XML format.
 // 
 function send_result_xml($result)
 {
-    print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
-    printf("<boolean>%s</boolean>\n", $result ? "true" : "false");
+        print "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+        printf("<boolean>%s</boolean>\n", $result ? "true" : "false");
 }
 
 // 
@@ -50,7 +49,7 @@ function send_result_xml($result)
 // 
 function send_result_foa($result)
 {
-    printf("%s\n", $result ? "true" : "false");
+        printf("%s\n", $result ? "true" : "false");
 }
 
 // 
@@ -58,7 +57,7 @@ function send_result_foa($result)
 // 
 function send_result_php($result)
 {
-    printf("%s", serialize($result));
+        printf("%s", serialize($result));
 }
 
 // 
@@ -66,15 +65,15 @@ function send_result_php($result)
 // 
 function send_result_json($result)
 {
-    printf("%s", json_encode($result));
+        printf("%s", json_encode($result));
 }
 
 // 
 // Send result as WDDX packet.
 // 
-function send_result_wddx($result) 
+function send_result_wddx($result)
 {
-    printf("%s", wddx_serialize_value($result));
+        printf("%s", wddx_serialize_value($result));
 }
 
 // 
@@ -82,26 +81,26 @@ function send_result_wddx($result)
 // 
 function send_result($result)
 {
-    switch($GLOBALS['format']) {
-     case "xml":
-	send_result_xml($result);
-	break;
-     case "foa":
-     	send_result_foa($result);
-     	break;
-     case "php":
-     	send_result_php($result);
-     	break;
-     case "json":
-     	send_result_json($result);
-     	break;
-     case "wddx":
-	send_result_wddx($result);
-	break;
-     default:
-	put_error(sprintf("Method resume don't implements format %s", $GLOBALS['format']));
-	ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
-    }
+        switch ($GLOBALS['format']) {
+                case "xml":
+                        send_result_xml($result);
+                        break;
+                case "foa":
+                        send_result_foa($result);
+                        break;
+                case "php":
+                        send_result_php($result);
+                        break;
+                case "json":
+                        send_result_json($result);
+                        break;
+                case "wddx":
+                        send_result_wddx($result);
+                        break;
+                default:
+                        put_error(sprintf("Method resume don't implements format %s", $GLOBALS['format']));
+                        ws_http_error_handler(400, WS_ERROR_INVALID_FORMAT);
+        }
 }
 
 // 
@@ -112,9 +111,9 @@ ob_start();
 // 
 // Call requested method.
 // 
-if(!ws_resume($_REQUEST['result'], $_REQUEST['jobid'])) {
-    send_result(false);
-    ws_http_error_handler(409, WS_ERROR_FAILED_CALL_METHOD);
+if (!ws_resume($_REQUEST['result'], $_REQUEST['jobid'])) {
+        send_result(false);
+        ws_http_error_handler(409, WS_ERROR_FAILED_CALL_METHOD);
 }
 send_result(true);
 
@@ -125,5 +124,4 @@ header(sprintf("Content-Type: %s; charset=%s", ws_get_mime_type(), "UTF-8"));
 header("Connection: close");
 
 ob_end_flush();
-
 ?>

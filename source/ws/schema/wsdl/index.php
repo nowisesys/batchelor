@@ -13,7 +13,6 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // This script serves WSDL (port definitions) and XSD (type definitions) 
 // to SOAP service consumers (clients).
@@ -31,57 +30,56 @@ include "include/ws.inc";
 // creating a pre-parsed WSDL named batchelor.wsdl.cache, in that case it is
 // sent "as is" without any substitutions.
 // 
-function send_port_definitions() 
+function send_port_definitions()
 {
-    if(file_exists("batchelor.wsdl.cache")) {
-	readfile("batchelor.wsdl.cache");
-    } else {
-	$root = get_server_url();
-	$addr = array( 
-		       "@soapaddr@" => "$root/soap/",
-		       "@wsdladdr@" => "$root/schema/wsdl/" 
-		       );
-    
-	$fs = fopen("batchelor.wsdl", "r");
-	if($fs) {
-	    while($str = fgets($fs)) {
-		printf("%s\n", str_replace(array_keys($addr), array_values($addr), $str));
-	    }
-	    fclose($fs);
-	}
-    }
+        if (file_exists("batchelor.wsdl.cache")) {
+                readfile("batchelor.wsdl.cache");
+        } else {
+                $root = get_server_url();
+                $addr = array(
+                        "@soapaddr@" => "$root/soap/",
+                        "@wsdladdr@" => "$root/schema/wsdl/"
+                );
+
+                $fs = fopen("batchelor.wsdl", "r");
+                if ($fs) {
+                        while ($str = fgets($fs)) {
+                                printf("%s\n", str_replace(array_keys($addr), array_values($addr), $str));
+                        }
+                        fclose($fs);
+                }
+        }
 }
 
 // 
 // Send XSD document.
 // 
-function send_type_definitions() 
+function send_type_definitions()
 {
-    readfile("batchelor.xsd");
+        readfile("batchelor.xsd");
 }
 
 // 
 // This function gets called to handle an invalid request.
 // 
-function send_service_usage() 
+function send_service_usage()
 {
-    $addr = get_server_url();
-    $wsdl = sprintf("%s/schema/wsdl/?wsdl", $addr);
-    
-    print "<html><head><title>Batchelor Web Service (SOAP)</title>\n";
-    print "<body>\n";
-    print "<h1>Batchelor Web Service (SOAP)</h1>\n";
-    print "<p>WSDL for the SOAP service: <a href=\"${wsdl}\">${wsdl}</a></p>\n";
-    print "</body>\n";
-    print "</html>\n";
+        $addr = get_server_url();
+        $wsdl = sprintf("%s/schema/wsdl/?wsdl", $addr);
+
+        print "<html><head><title>Batchelor Web Service (SOAP)</title>\n";
+        print "<body>\n";
+        print "<h1>Batchelor Web Service (SOAP)</h1>\n";
+        print "<p>WSDL for the SOAP service: <a href=\"${wsdl}\">${wsdl}</a></p>\n";
+        print "</body>\n";
+        print "</html>\n";
 }
 
-if(isset($_REQUEST['wsdl'])) {
-    send_port_definitions();
-} elseif(isset($_REQUEST['xsd'])) {
-    send_type_definitions();
+if (isset($_REQUEST['wsdl'])) {
+        send_port_definitions();
+} elseif (isset($_REQUEST['xsd'])) {
+        send_type_definitions();
 } else {
-    send_service_usage();
+        send_service_usage();
 }
-
 ?>

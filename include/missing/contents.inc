@@ -13,21 +13,19 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // Replacement versions for the following functions:
 // * file_put_contents()        // PHP >= 5.0.0
 // * stream_get_contents()      // PHP >= 5.0.0
 // 
-
 // 
 // Required constants (from ext/standard/file.h in PHP 5):
 // 
-if(!defined("FILE_USE_INCLUDE_PATH")) {
-    define ("FILE_USE_INCLUDE_PATH", 1);
+if (!defined("FILE_USE_INCLUDE_PATH")) {
+        define("FILE_USE_INCLUDE_PATH", 1);
 }
-if(!defined("FILE_APPEND")) {
-    define ("FILE_APPEND", 8);
+if (!defined("FILE_APPEND")) {
+        define("FILE_APPEND", 8);
 }
 
 // 
@@ -36,50 +34,48 @@ if(!defined("FILE_APPEND")) {
 // 
 function file_put_contents($filename, $data, $flags = 0, $context = null)
 {
-    $include = false;
-    $mode = "w";
-    $bytes = 0;
-    
-    if($flags & FILE_USE_INCLUDE_PATH) {
-	$include = true;
-    }
-    if($flags & FILE_APPEND) {
-	$mode = "a";
-    }
-    
-    if(isset($context)) {
-	$handle = fopen($filename, $mode, $include, $context);
-    }
-    else {
-	$handle = fopen($filename, $mode, $include);
-    }
-    
-    if($handle) {
-	if($flags & LOCK_EX) {
-	    if(!flock($handle, LOCK_EX)) {
-		fclose($handle);
-		return false;
-	    }
-	}
-	if(is_array($data)) {
-	    $data = implode('', $data);
-	}
-	$bytes = fwrite($handle, $data);
-	if(!$bytes) {
-	    fclose($handle);
-	    return false;
-	}
-	if($bytes != strlen($data)) {
-	    fclose($handle);
-	    return false;
-	}
-	fclose($handle);
-    }
-    else {
-	return false;
-    }
-    
-    return $bytes;
+        $include = false;
+        $mode = "w";
+        $bytes = 0;
+
+        if ($flags & FILE_USE_INCLUDE_PATH) {
+                $include = true;
+        }
+        if ($flags & FILE_APPEND) {
+                $mode = "a";
+        }
+
+        if (isset($context)) {
+                $handle = fopen($filename, $mode, $include, $context);
+        } else {
+                $handle = fopen($filename, $mode, $include);
+        }
+
+        if ($handle) {
+                if ($flags & LOCK_EX) {
+                        if (!flock($handle, LOCK_EX)) {
+                                fclose($handle);
+                                return false;
+                        }
+                }
+                if (is_array($data)) {
+                        $data = implode('', $data);
+                }
+                $bytes = fwrite($handle, $data);
+                if (!$bytes) {
+                        fclose($handle);
+                        return false;
+                }
+                if ($bytes != strlen($data)) {
+                        fclose($handle);
+                        return false;
+                }
+                fclose($handle);
+        } else {
+                return false;
+        }
+
+        return $bytes;
 }
 
 // 
@@ -88,24 +84,23 @@ function file_put_contents($filename, $data, $flags = 0, $context = null)
 //
 function stream_get_contents($handle, $length = -1, $offset = 0)
 {
-    if($offset != 0) {
-	if(fseek($handle, $offset, SEEK_CUR) < 0) {
-	    return false;
-	}
-    }
-    if($length != -1) {
-	return fread($handle, $length);
-    }
-    else {
-	$result = "";
-	while(!feof($handle)) {
-	    $str = fread($handle, 4096);
-	    if($str) {
-		$result .= $str;
-	    }
-	}
-	return $result;
-    }
+        if ($offset != 0) {
+                if (fseek($handle, $offset, SEEK_CUR) < 0) {
+                        return false;
+                }
+        }
+        if ($length != -1) {
+                return fread($handle, $length);
+        } else {
+                $result = "";
+                while (!feof($handle)) {
+                        $str = fread($handle, 4096);
+                        if ($str) {
+                                $result .= $str;
+                        }
+                }
+                return $result;
+        }
 }
 
 ?>
