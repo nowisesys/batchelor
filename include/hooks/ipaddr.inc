@@ -120,11 +120,16 @@ function graph_data_hook($graphdir, $hostid, $options, $datetime, $data, $type)
         $labels = array();
         $total = 0;
         $hosts = 0;
-        $colors = array("color" => array("start" => "red",
+        $colors = array(
+                "color" => array(
+                        "start" => "red",
                         "end" => "orange",
-                        "outline" => "darkred"),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                        "outline" => "darkred"
+                ),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         // 

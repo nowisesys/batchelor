@@ -725,16 +725,22 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors
 // 
 function graph_total_submit($graphdir, $hostid, $options, $data)
 {
-        $image = sprintf("%s/submit.png", $graphdir);
-        $values = array();
-        $labels = array();
         $title = "Total number of submits";
         $total = 0;
-        $colors = array("color" => array("start" => "navy",
+        $image = sprintf("%s/submit.png", $graphdir);
+        
+        $labels = array();
+        $values = array();
+        $colors = array(
+                "color" => array(
+                        "start" => "navy",
                         "end" => "lightsteelblue",
-                        "outline" => "darkblue"),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                        "outline" => "darkblue"
+                ),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         foreach ($data as $year => $data1) {
@@ -776,16 +782,22 @@ function graph_total_submit($graphdir, $hostid, $options, $data)
 // 
 function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $image = sprintf("%s/submit.png", $graphdir);
-        $values = array();
-        $labels = array();
         $title = sprintf("Number of submits %s", strftime("%G", $timestamp));
         $total = 0;
-        $colors = array("color" => array("start" => "orange",
+        $image = sprintf("%s/submit.png", $graphdir);
+        
+        $labels = array();
+        $values = array();
+        $colors = array(
+                "color" => array(
+                        "start" => "orange",
                         "end" => "yellow",
-                        "outline" => "red"),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                        "outline" => "red"
+                ),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         // 
@@ -818,16 +830,22 @@ function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $image = sprintf("%s/submit.png", $graphdir);
-        $values = array();
-        $labels = array();
         $title = sprintf("Number of submits for %s", strftime("%B %G", $timestamp));
         $total = 0;
-        $colors = array("color" => array("start" => "green",
+        $image = sprintf("%s/submit.png", $graphdir);
+        
+        $labels = array();
+        $values = array();
+        $colors = array(
+                "color" => array(
+                        "start" => "green",
                         "end" => "yellow",
-                        "outline" => "darkgreen"),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                        "outline" => "darkgreen"
+                ),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         // 
@@ -860,16 +878,22 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $image = sprintf("%s/submit.png", $graphdir);
-        $values = array();
-        $labels = array();
         $title = sprintf("Number of submits for %s", strftime("%G-%m-%d", $timestamp));
         $total = 0;
-        $colors = array("color" => array("start" => "purple",
+        $image = sprintf("%s/submit.png", $graphdir);
+        
+        $labels = array();
+        $values = array();
+        $colors = array(
+                "color" => array(
+                        "start" => "purple",
                         "end" => "red",
-                        "outline" => "pink"),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                        "outline" => "pink"
+                ),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         // 
@@ -1038,21 +1062,32 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $color
 // 
 function proctime_colors()
 {
-        $colors = array("waiting" => array("start" => "orange",
+        $colors = array(
+                "waiting" => array(
+                        "start" => "orange",
                         "end" => "yellow",
-                        "outline" => "red"),
-                "running" => array("start" => "darkgreen",
+                        "outline" => "red"
+                ),
+                "running" => array(
+                        "start" => "darkgreen",
                         "end" => "green",
-                        "outline" => "darkgreen"),
-                "minimum" => array("start" => "darkgray",
+                        "outline" => "darkgreen"
+                ),
+                "minimum" => array(
+                        "start" => "darkgray",
                         "end" => "gray",
-                        "outline" => "darkgray"),
-                "maximum" => array("start" => "red",
+                        "outline" => "darkgray"
+                ),
+                "maximum" => array(
+                        "start" => "red",
                         "end" => "orange",
-                        "outline" => "darkred"),
-                "count" => array("start" => "darkblue",
+                        "outline" => "darkred"
+                ),
+                "count" => array(
+                        "start" => "darkblue",
                         "end" => "blue",
-                        "outline" => "lightblue")
+                        "outline" => "lightblue"
+                )
         );
         return $colors;
 }
@@ -1063,18 +1098,24 @@ function proctime_colors()
 // 
 function graph_total_proctime($graphdir, $hostid, $options, $data)
 {
+        $title = "Total process time (avarage)";
+        $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
-        $values = array("waiting" => array(),
+        
+        $labels = array();
+        $values = array(
+                "waiting" => array(),
                 "running" => array(),
                 "count" => array(),
                 "minimum" => array(),
-                "maximum" => array());
-        $labels = array();
-        $title = "Total process time (avarage)";
-        $total = 0;
-        $colors = array("color" => proctime_colors(),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                "maximum" => array()
+        );
+        $colors = array(
+                "color" => proctime_colors(),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         // 
@@ -1126,18 +1167,24 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
 // 
 function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
+        $title = sprintf("Process time %s (avarage)", strftime("%G", $timestamp));
+        $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
-        $values = array("waiting" => array(),
+        
+        $labels = array();
+        $values = array(
+                "waiting" => array(),
                 "running" => array(),
                 "count" => array(),
                 "minimum" => array(),
-                "maximum" => array());
-        $labels = array();
-        $title = sprintf("Process time %s (avarage)", strftime("%G", $timestamp));
-        $total = 0;
-        $colors = array("color" => proctime_colors(),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                "maximum" => array()
+        );
+        $colors = array(
+                "color" => proctime_colors(),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         // 
@@ -1175,18 +1222,24 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
+        $title = sprintf("Process time %s (avarage)", strftime("%B %G", $timestamp));
+        $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
-        $values = array("waiting" => array(),
+        
+        $labels = array();
+        $values = array(
+                "waiting" => array(),
                 "running" => array(),
                 "count" => array(),
                 "minimum" => array(),
-                "maximum" => array());
-        $labels = array();
-        $title = sprintf("Process time %s (avarage)", strftime("%B %G", $timestamp));
-        $total = 0;
-        $colors = array("color" => proctime_colors(),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                "maximum" => array()
+        );
+        $colors = array(
+                "color" => proctime_colors(),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         // 
@@ -1224,18 +1277,24 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
+        $title = sprintf("Process time %s (avarage)", strftime("%G-%m-%d", $timestamp));
+        $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
-        $values = array("waiting" => array(),
+        
+        $labels = array();
+        $values = array(
+                "waiting" => array(),
                 "running" => array(),
                 "count" => array(),
                 "minimum" => array(),
-                "maximum" => array());
-        $labels = array();
-        $title = sprintf("Process time %s (avarage)", strftime("%G-%m-%d", $timestamp));
-        $total = 0;
-        $colors = array("color" => proctime_colors(),
-                "text" => array("positive" => "black",
-                        "negative" => "lightgray")
+                "maximum" => array()
+        );
+        $colors = array(
+                "color" => proctime_colors(),
+                "text" => array(
+                        "positive" => "black",
+                        "negative" => "lightgray"
+                )
         );
 
         // 
@@ -1301,12 +1360,19 @@ function graph_draw_pieplot($labels, $values, $image, $title, $colors)
 // 
 function graph_total_state($graphdir, $hostid, $options, $data)
 {
-        $image = sprintf("%s/state.png", $graphdir);
         $title = "Exit status of jobs";
-        $piecol = array("success" => "green", "warning" => "yellow", "error" => "red", "crashed" => "gray");
-        $colors = array();
+        $image = sprintf("%s/state.png", $graphdir);
+        
         $labels = array();
         $values = array();
+        $colors = array();
+        
+        $piecol = array(
+                "success" => "green",
+                "warning" => "yellow",
+                "error" => "red",
+                "crashed" => "gray"
+        );
 
         foreach ($data['state'] as $key => $val) {
                 array_push($colors, $piecol[$key]);
@@ -2080,12 +2146,14 @@ function main(&$argc, $argv)
         // 
         // Setup defaults in options array:
         // 
-        $options = array("force" => false,
+        $options = array(
+                "force" => false,
                 "qmode" => LIST_QUEUE_ONCE,
                 "debug" => false,
                 "verbose" => 0,
                 "prog" => $prog,
-                "version" => $vers);
+                "version" => $vers
+        );
 
         // 
         // Fill $options with command line options.

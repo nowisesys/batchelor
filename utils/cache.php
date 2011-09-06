@@ -432,7 +432,8 @@ function main(&$argv, $argc)
         // 
         // Setup defaults in options array:
         // 
-        $options = array("cleanup" => false,
+        $options = array(
+                "cleanup" => false,
                 "list" => false,
                 "find" => false,
                 "hostid" => null,
@@ -444,7 +445,8 @@ function main(&$argv, $argc)
                 "debug" => false,
                 "verbose" => 0,
                 "prog" => $prog,
-                "version" => $vers);
+                "version" => $vers
+        );
 
         // 
         // Fill $options with command line options.

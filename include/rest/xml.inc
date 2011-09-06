@@ -106,9 +106,11 @@ function send_status($message)
 function send_job(&$job, $request)
 {
         printf("  <job timezone=\"%s\">\n", date('T'));
-        foreach (array("jobid", "result", "date", "time", "stamp",
+        foreach (array(
+        "jobid", "result", "date", "time", "stamp",
         "queued", "started", "finished",
-        "stdout", "stderr", "state", "name") as $key) {
+        "stdout", "stderr", "state", "name"
+        ) as $key) {
                 if (isset($job[$key])) {
                         if ($key == "name") {
                                 printf("    <%s>%s</%s>\n", $key, utf8_encode($job[$key]), $key);

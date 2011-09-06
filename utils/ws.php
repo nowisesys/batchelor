@@ -528,7 +528,8 @@ function main(&$argc, $argv)
         // 
         // Setup defaults in options array:
         // 
-        $options = array("baseurl" => "http://localhost/batchelor/ws",
+        $options = array(
+                "baseurl" => "http://localhost/batchelor/ws",
                 "type" => "http",
                 "func" => null,
                 "file" => null,
@@ -537,7 +538,8 @@ function main(&$argc, $argv)
                 "debug" => false,
                 "verbose" => 0,
                 "prog" => $prog,
-                "version" => $vers);
+                "version" => $vers
+        );
 
         // 
         // Fill $options with command line options.

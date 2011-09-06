@@ -85,12 +85,15 @@ function print_select($label, $name, $values)
 // 
 function show_jobs_table(&$jobs)
 {
-        $sort = array("None" => "none",
+        $sort = array(
+                "None" => "none",
                 "Started" => "started",
                 "Job ID" => "jobid",
-                "Status" => "state");
+                "Status" => "state"
+        );
 
-        $filter = array("All" => "all",
+        $filter = array(
+                "All" => "all",
                 "Unfinished" => "waiting",
                 "Pending" => "pending",
                 "Running" => "running",
@@ -298,12 +301,14 @@ function show_jobs_table_plain(&$jobs)
         // 
         // Font colors:
         // 
-        $color = array("pending" => "#000066",
+        $color = array(
+                "pending" => "#000066",
                 "running" => "#0000bb",
                 "finished" => "#006600",
                 "warning" => "#0000ff",
                 "error" => "#990000",
-                "crashed" => "#666666");
+                "crashed" => "#666666"
+        );
 
         print "<div class=\"indent\"><table width=\"50%\"><tr><th>Started</th><th>Job</th><th>Status</th><th>Links</th></tr>\n";
         foreach ($jobs as $jobdir => $job) {

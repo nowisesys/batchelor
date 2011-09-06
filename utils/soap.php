@@ -28,6 +28,7 @@ ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache
 // 
 // This function generates SOAP type classes.
 // 
+
 function generate_classes($wsdl)
 {
         $soap = new SoapClient($wsdl);
@@ -83,8 +84,10 @@ function generate_classes($wsdl)
 
 function usage($prog)
 {
-        $wsdl = array("remote" => "http://localhost/batchelor/ws/schema/wsdl/?wsdl",
-                "local" => "../source/ws/schema/wsdl/batchelor.wsdl.cache");
+        $wsdl = array(
+                "remote" => "http://localhost/batchelor/ws/schema/wsdl/?wsdl",
+                "local" => "../source/ws/schema/wsdl/batchelor.wsdl.cache"
+        );
 
         printf("%s - generates PHP classes from SOAP types\n", $prog);
         printf("\n");

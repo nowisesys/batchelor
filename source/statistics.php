@@ -143,7 +143,12 @@ function print_links_section($data, $subdirs, $child, $parent)
         printf("<span id=\"secthead\">Navigator:</span>\n");
         printf("<p><ul>\n");
         if ($parent) {
-                $map = array("root" => "year", "year" => "month", "month" => "day", "day" => "hour");
+                $map = array(
+                        "root" => "year",
+                        "year" => "month",
+                        "month" => "day",
+                        "day" => "hour"
+                );
                 printf("<li>Up to <a href=\"statistics.php?%s\">parent</a> directory</li>\n", request_params(array(), array($map[$parent])));
         }
         if ($child) {

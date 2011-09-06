@@ -229,22 +229,31 @@ function print_about()
         if (defined("HTML_PAGE_TITLE") && HTML_PAGE_TITLE != "Batchelor") {
                 $appname = HTML_PAGE_TITLE;
         }
-        $tabmenu = array("appname" => array("desc" => $appname,
+        $tabmenu = array(
+                "appname" => array(
+                        "desc" => $appname,
                         "func" => null,
                         "page" => "about_app.html",
-                        "show" => true),
-                "batchelor" => array("desc" => "Batchelor",
+                        "show" => true
+                ),
+                "batchelor" => array(
+                        "desc" => "Batchelor",
                         "func" => "print_about_batchelor",
                         "page" => null,
-                        "show" => true),
-                "webservice" => array("desc" => "Web Services",
+                        "show" => true
+                ),
+                "webservice" => array(
+                        "desc" => "Web Services",
                         "func" => "print_webservices",
                         "page" => null,
-                        "show" => true),
-                "license" => array("desc" => "GNU Public License",
+                        "show" => true
+                ),
+                "license" => array(
+                        "desc" => "GNU Public License",
                         "func" => "print_license",
                         "page" => null,
-                        "show" => false));
+                        "show" => false
+                ));
 
         $selected = "appname";
         if (isset($_REQUEST['sect'])) {

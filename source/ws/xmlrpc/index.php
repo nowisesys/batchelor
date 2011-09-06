@@ -420,7 +420,9 @@ function send_method_descr($name)
                 // 
                 switch ($entry['name']) {
                         case "info":
-                                $entries = array(array("long" => "name"));
+                                $entries = array(array(
+                                                "long" => "name"
+                                        ));
                                 $status = send_methods_list($entries);
                                 break;
                         case "func":
@@ -440,7 +442,12 @@ function send_method_descr($name)
                                 send_boolean_response(true);
                                 break;
                         case "enqueue":
-                                $result = array(array("jobid" => "integer", "date" => "string", "time" => "string", "stamp" => "integer"));
+                                $result = array(array(
+                                                "jobid" => "integer",
+                                                "date" => "string",
+                                                "time" => "string",
+                                                "stamp" => "integer"
+                                        ));
                                 send_enqueue_response($result);
                                 break;
                         case "queue":

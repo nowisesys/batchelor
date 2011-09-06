@@ -129,7 +129,8 @@ define("WS_STATUS_MISSING_EXTENSION", 4);
 // 
 function get_error($code = null)
 {
-        $errors = array("Missing parameter for script",
+        $errors = array(
+                "Missing parameter for script",
                 "Invalid or unsupported format",
                 "No such method",
                 "Can't continue due to server problem",
@@ -139,7 +140,8 @@ function get_error($code = null)
                 "Calling this RPC interface or method is not allowed",
                 "Missmatch between script/method name and/or parameters",
                 "Request method is not accepted",
-                "Method is not yet implemented/supported");
+                "Method is not yet implemented/supported"
+        );
 
         if (isset($code)) {
                 if ($code >= 1 && $code <= count($errors)) {
@@ -200,7 +202,13 @@ function get_server_url()
 // 
 function ws_get_rpc_method_by_name($name)
 {
-        $names = array("info", "func", "docs", "errors", "errmsg", "suspend", "resume", "enqueue", "dequeue", "queue", "watch", "opendir", "readdir", "fopen", "stat");
+        $names = array(
+                "info", "func", "docs", "errors", "errmsg",
+                "suspend", "resume",
+                "enqueue", "dequeue", "queue", "watch",
+                "opendir", "readdir", "fopen", "stat"
+        );
+
         for ($i = 0; $i < count($names); $i++) {
                 if ($names[$i] == $name) {
                         return ws_get_rpc_method_by_index($i);
@@ -248,7 +256,9 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "func",
                         "long" => "batchelor.func",
                         "desc" => "Show detailed information about a single RPC method. This method returns an object (with mixed values) describing the method.",
-                        "params" => array("name" => "string"),
+                        "params" => array(
+                                "name" => "string"
+                        ),
                         "return" => "object=()",
                         "script" => "api.php"
                 ),
@@ -275,7 +285,9 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "errmsg",
                         "long" => "batchelor.errmsg",
                         "desc" => "Return error message string for an given error code.",
-                        "params" => array("code" => "integer"),
+                        "params" => array(
+                                "code" => "integer"
+                        ),
                         "return" => "string",
                         "script" => "error.php"
                 ),
@@ -284,8 +296,10 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "suspend",
                         "long" => "batchelor.suspend",
                         "desc" => "Suspend an already running job. Returns true on success and false on failure.",
-                        "params" => array("result" => "string",
-                                "jobid" => "string"),
+                        "params" => array(
+                                "result" => "string",
+                                "jobid" => "string"
+                        ),
                         "return" => "boolean",
                         "script" => "suspend.php"
                 ),
@@ -294,8 +308,10 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "resume",
                         "long" => "batchelor.resume",
                         "desc" => "Resume a job thats in paused or stopped state. Returns true on success and false on failure.",
-                        "params" => array("result" => "string",
-                                "jobid" => "string"),
+                        "params" => array(
+                                "result" => "string",
+                                "jobid" => "string"
+                        ),
                         "return" => "boolean",
                         "script" => "resume.php"
                 ),
@@ -304,7 +320,9 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "enqueue",
                         "long" => "batchelor.enqueue",
                         "desc" => "Enqueue (start) new job(s). Returns a list of job objects for the newly started jobs. The indata parameter is optional. If its missing, then its assumed that job data where uploaded thru HTTP POST (multipart/form-data). The result may contain multiple jobs.",
-                        "params" => array("indata" => "string"),
+                        "params" => array(
+                                "indata" => "string"
+                        ),
                         "return" => "array=[object=(jobid=integer,date=string,time=string,stamp=integer)]",
                         "script" => "enqueue.php"
                 ),
@@ -313,8 +331,10 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "dequeue",
                         "long" => "batchelor.dequeue",
                         "desc" => "Delete an running or finished job. Returns true on success and false on failure.",
-                        "params" => array("result" => "string",
-                                "jobid" => "string"),
+                        "params" => array(
+                                "result" => "string",
+                                "jobid" => "string"
+                        ),
                         "return" => "boolean",
                         "script" => "dequeue.php"
                 ),
@@ -323,8 +343,10 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "queue",
                         "long" => "batchelor.queue",
                         "desc" => "List pending, running and finished jobs. Returns an array of objects describing the jobs and their state. The sort and filer parameter is optional. Possible parameter values are the same as used in the queue viewer (in the web interface).",
-                        "params" => array("sort" => "string",
-                                "filter" => "string"),
+                        "params" => array(
+                                "sort" => "string",
+                                "filter" => "string"
+                        ),
                         "return" => "array=[object=()]",
                         "script" => "queue.php"
                 ),
@@ -333,7 +355,9 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "watch",
                         "long" => "batchelor.watch",
                         "desc" => "This method returns a list of jobs that has finished execute since last called by this method (the stamp parameter).",
-                        "params" => array("stamp" => "integer"),
+                        "params" => array(
+                                "stamp" => "integer"
+                        ),
                         "return" => "array=[object=()]",
                         "script" => "watch.php"
                 ),
@@ -351,8 +375,10 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "readdir",
                         "long" => "batchelor.readdir",
                         "desc" => "List files in a specific result directory. Returns an list of all files in the specific result directory pointed out by the method parameters (result and jobid). Also see the opendir and fopen method",
-                        "params" => array("result" => "string",
-                                "jobid" => "string"),
+                        "params" => array(
+                                "result" => "string",
+                                "jobid" => "string"
+                        ),
                         "return" => "array=[string]",
                         "script" => "result.php"
                 ),
@@ -361,9 +387,11 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "fopen",
                         "long" => "batchelor.fopen",
                         "desc" => "Get content of an result file. The content is returned with MIME-type application/octet-stream (binary format). Call the opendir method to obtain values for the result and jobid parameters.",
-                        "params" => array("result" => "string",
+                        "params" => array(
+                                "result" => "string",
                                 "jobid" => "string",
-                                "file" => "string"),
+                                "file" => "string"
+                        ),
                         "return" => WS_FOPEN_RETURN_FORMAT,
                         "script" => "result.php"
                 ),
@@ -372,8 +400,10 @@ function ws_get_rpc_method_by_index($index = -1)
                         "name" => "stat",
                         "long" => "batchelor.stat",
                         "desc" => "This method lets the caller check the status of a single job. This could be useful for monitoring an enqueued job for completion (polling).",
-                        "params" => array("result" => "string",
-                                "jobid" => "string"),
+                        "params" => array(
+                                "result" => "string",
+                                "jobid" => "string"
+                        ),
                         "return" => "object=()",
                         "script" => "stat.php"
                 )
@@ -1018,22 +1048,30 @@ function ws_soap_session_setup($hostid = null)
 function ws_print_services_status($relative = "")
 {
         $service = array(
-                "rest" => array("status" => WS_ENABLE_REST,
+                "rest" => array(
+                        "status" => WS_ENABLE_REST,
                         "name" => "REST",
                         "extension" => null,
-                        "link" => "${relative}ws/docs/rest.php"),
-                "soap" => array("status" => WS_ENABLE_SOAP,
+                        "link" => "${relative}ws/docs/rest.php"
+                ),
+                "soap" => array(
+                        "status" => WS_ENABLE_SOAP,
                         "name" => "SOAP",
                         "extension" => "soap",
-                        "link" => "${relative}ws/docs/soap.php"),
-                "http" => array("status" => WS_ENABLE_HTTP,
+                        "link" => "${relative}ws/docs/soap.php"
+                ),
+                "http" => array(
+                        "status" => WS_ENABLE_HTTP,
                         "name" => "HTTP RPC",
                         "extension" => null,
-                        "link" => "${relative}ws/docs/http.php"),
-                "xmlrpc" => array("status" => WS_ENABLE_XMLRPC,
+                        "link" => "${relative}ws/docs/http.php"
+                ),
+                "xmlrpc" => array(
+                        "status" => WS_ENABLE_XMLRPC,
                         "name" => "XML-RPC",
                         "extension" => null,
-                        "link" => "${relative}ws/docs/xmlrpc.php")
+                        "link" => "${relative}ws/docs/xmlrpc.php"
+                )
         );
         echo "<p>\n";
         foreach ($service as $name => $data) {

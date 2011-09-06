@@ -18,8 +18,10 @@
 // either 'index.php?schema' (default) or 'index.php?xlink'.
 // 
 
-$files = array("schema" => "result.xsd",
-        "xlink" => "xlink.xsd");
+$files = array(
+        "schema" => "result.xsd",
+        "xlink" => "xlink.xsd"
+);
 
 header("Content-type: text/xml");
 

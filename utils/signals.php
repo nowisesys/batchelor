@@ -70,7 +70,8 @@ function parse_options(&$argv, $argc, &$options)
         //
         // Get command line options.
         //
-    $args = array();
+        
+        $args = array();
         get_opt($argv, $argc, $args);
         foreach ($args as $key => $val) {
                 switch ($key) {
@@ -160,11 +161,13 @@ function main($argc, &$argv)
         //
         // Setup defaults in options array:
         //
-    $options = array("os" => "linux",
+        $options = array(
+                "os" => "linux",
                 "debug" => false,
                 "verbose" => 0,
                 "prog" => $prog,
-                "version" => $vers);
+                "version" => $vers
+        );
 
         //
         // Fill $options with command line options.

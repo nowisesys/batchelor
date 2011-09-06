@@ -310,7 +310,8 @@ function check_builtin_functions(&$failed)
 {
         print_section_header("Checking required functions");
 
-        $functions = array("printf", "count", "setcookie", "file_exists", "strftime",
+        $functions = array(
+                "printf", "count", "setcookie", "file_exists", "strftime",
                 "sprintf", "array_push", "implode", "mkdir", "file_put_contents",
                 "is_uploaded_file", "filesize", "unlink", "rmdir", "realpath",
                 "dirname", "file_get_contents", "header", "opendir", "readdir",
@@ -320,7 +321,8 @@ function check_builtin_functions(&$failed)
                 "stream_get_contents", "fclose", "proc_close", "preg_match",
                 "strtotime", "filemtime", "error_log", "rename", "array_shift",
                 "array_unshift", "basename", "posix_getpwuid", "posix_getuid",
-                "posix_geteuid", "posix_kill", "ob_start", "ob_end_flush");
+                "posix_geteuid", "posix_kill", "ob_start", "ob_end_flush"
+        );
         sort($functions);
 
         foreach ($functions as $func) {
@@ -331,8 +333,13 @@ function check_builtin_functions(&$failed)
 
         print_section_header("Checking recommended functions");
 
-        $functions = array("date_default_timezone_get", "timezone_offset_get", "timezone_open",
-                "sys_get_temp_dir", "strpbrk");
+        $functions = array(
+                "date_default_timezone_get",
+                "timezone_offset_get",
+                "timezone_open",
+                "sys_get_temp_dir",
+                "strpbrk"
+        );
         sort($functions);
 
         foreach ($functions as $func) {

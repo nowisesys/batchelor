@@ -272,10 +272,12 @@ function rest_http_put_file()
         $chunk = 8192;
         $bytes = 0;
         $size = 0;
-        $mult = array("K" => 1024,
+        $mult = array(
+                "K" => 1024,
                 "M" => 1024 * 1024,
                 "G" => 1024 * 1024 * 1024,
-                "T" => 1024 * 1024 * 1024 * 1024);
+                "T" => 1024 * 1024 * 1024 * 1024
+        );
         $max = ini_get("upload_max_filesize");
         $suffix = strpbrk($max, "KkMmGgTt");
 
