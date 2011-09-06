@@ -20,7 +20,11 @@
    All jobs (pending, running and finished) are kept under the cache directory
    in a filesystem "database". Each peer has its private namespace (with job
    directories) under cache. Batchelor uses cookies to associate the peer with
-   its job directories. 
+   its job directories.
+   
+   Custom scripts to run before a job is started or after it has completed
+   can be defined globally or per user (submitter). See cache/README for more 
+   information.
 
 ** USER INTERFACE:
 

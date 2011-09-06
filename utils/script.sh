@@ -69,6 +69,17 @@ QUEUE_PIDFILE="$jobdir/pid"
 
 export QUEUE_JOBDIR QUEUE_INDATA QUEUE_RESDIR QUEUE_STDOUT QUEUE_STDERR QUEUE_PIDFILE
 
+## 
+## Variables defining the location for prerun.sh and postrun.sh scripts. 
+## 
+## These scripts (if existing) can be used to perform custom tasks for a single
+## submitter or for all before a job starts or when it has completed.
+##
+## The QUEUE_ROOTDIR is equivalent to the root for all job directories.
+## 
+QUEUE_USERDIR="$(dirname $jobdir)"
+QUEUE_ROOTDIR="$(dirname $(dirname $jobdir))"
+
 ##
 ## The meta data gets saved in the root directory of all job directories:
 ##
@@ -143,9 +154,13 @@ scriptinc="$(dirname $0)/script.inc"
 if ! [ -e $scriptinc ]; then
   qsignal "fatal" "The user defined job execution script (utils/script.inc) do not exist"
   exit $status
-else 
+else
+  [ -e "${QUEUE_ROOTDIR}/prerun.sh" -a -x "${QUEUE_ROOTDIR}/prerun.sh" ] && "${QUEUE_ROOTDIR}/prerun.sh"
+  [ -e "${QUEUE_USERDIR}/prerun.sh" -a -x "${QUEUE_USERDIR}/prerun.sh" ] && "${QUEUE_USERDIR}/prerun.sh"
   source $scriptinc
   jobexec
+  [ -e "${QUEUE_USERDIR}/postrun.sh" -a -x "${QUEUE_USERDIR}/postrun.sh" ] && "${QUEUE_USERDIR}/postrun.sh"
+  [ -e "${QUEUE_ROOTDIR}/postrun.sh" -a -x "${QUEUE_ROOTDIR}/postrun.sh" ] && "${QUEUE_ROOTDIR}/postrun.sh"
 fi
 
 ##

@@ -1,4 +1,38 @@
-This directory is used as cache by default, unless another directory is
-defined by CACHE_DIRECTORY in conf/config.inc. Make sure to change
-permissions on this directory to make it writable by the user the web server
-is running as (usually nobody or a dedicated user named apache or http).
+About the cache directory:
+------------------------------
+
+** GENERAL:
+
+   This directory is used as cache by default, unless another directory is
+   defined by CACHE_DIRECTORY in conf/config.inc. Make sure to change
+   permissions on this directory to make it writable by the user the web server
+   is running as (usually nobody or a dedicated user named apache or http).
+
+** PRE/POST EXECUTION SCRIPTS:
+
+   To run tasks before or after a queued job is executed, create a script
+   named prerun.sh or postrun.sh inside cache/jobs (executed for all jobs) or
+   in a specific user directory:
+
+     cache/
+       +-- jobs/
+             +-- prerun.sh         (for all pre-run script)
+	     +-- postrun.sh        (for all post-run script)
+	     +-- xxx1/             (user directory 1)
+	     +-- xxx2/             (user directory 2)
+             |    +-- prerun.sh    (per user pre-run script)
+             |    +-- postrun.sh   (per user post-run script)
+            ...
+	     +-- xxxN/             (user directory N)
+
+   The pre/post run script should have the executable bit set (+x) or it will 
+   be silent ignored. All variables exported by utils/script.sh are available 
+   for these scripts.
+
+   Typical reasons for using pre/post execution scripts could be: 
+   
+     o) Process accounting
+     o) Backup of result
+     o) Extraction of intermediate files
+
+// Anders Lövgren, 2011-09-06

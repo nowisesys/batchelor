@@ -5,6 +5,9 @@ Version 0.8.11 (2011-09-06):
     * The project source is managed using the netbeans IDE. The formatting is 
       using Linux kernel source (C) rules (eight chars indent).
 
+    * Added support for custom pre/post execution scripts. These scripts can
+      be defined per user or globally, see cache/README for more information.
+
 Version 0.8.10 (2010-08-10):
 
 	* Maintenance release for web services. Fixed zero job ID for
