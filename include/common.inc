@@ -448,6 +448,10 @@ function update_hostid_cookie()
         // Clear cookie if requested:
         // 
         if (isset($_REQUEST['hostid'])) {
+                if (!QUEUE_ALLOW_SHARING) {
+                        put_error("Shared job queues is disabled by configuration");
+                        return false;
+                }
                 if (strlen($_REQUEST['hostid']) == 0) {
                         $GLOBALS['hostid'] = md5($_SERVER['REMOTE_ADDR']);
                         $GLOBALS['pqname'] = '';
