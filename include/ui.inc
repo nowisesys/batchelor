@@ -16,6 +16,44 @@
 // 
 // Common user interface functions.
 // 
+
+if (!defined("PAGE_REFRESH_RATE")) {
+        define("PAGE_REFRESH_RATE", 15);
+}
+if (!defined("QUEUE_ALLOW_SHARING")) {
+        define("QUEUE_ALLOW_SHARING", true);
+}
+if (!defined("MENU_STYLE")) {
+        define("MENU_STYLE", "graphic");
+}
+if (!defined("MENU_STYLE")) {
+        define("MENU_ORIENTATION", "vertical");
+}
+if (!defined("STATISTICS_EXPOSED")) {
+        define("STATISTICS_EXPOSED", "public");
+}
+if (!defined("FOOTER_SHOW_NOTES")) {
+        define("FOOTER_SHOW_NOTES", true);
+}
+if (!defined("FOOTER_SHOW_COPYING")) {
+        define("FOOTER_SHOW_COPYING", true);
+}
+if (!defined("HELP_LEVEL")) {
+        define("HELP_LEVEL", 2);
+}
+if (!defined("UPLOAD_MIN_FILESIZE")) {
+        define("UPLOAD_MIN_FILESIZE", 5000);
+}
+if (!defined("UPLOAD_MIN_FILESIZE")) {
+        define("UPLOAD_MAX_FILESIZE", 0);
+}
+if (!defined("HELP_ICON_INFO")) {
+        define("HELP_ICON_INFO", true);
+}
+if (!defined("USE_ICONIZED_QUEUE")) {
+        define("USE_ICONIZED_QUEUE", true);
+}
+
 // 
 // Output additional HTTP headers.
 // 
@@ -36,6 +74,19 @@ function print_header()
                         // 
                         printf("<meta http-equiv=\"refresh\" content=\"%d\" />", PAGE_REFRESH_RATE);
                 }
+        }
+}
+
+// 
+// Print the form for setting custom per user queue name.
+// 
+function print_hostid_define()
+{
+        if (QUEUE_ALLOW_SHARING) {
+                printf("<form action=\"%s\">\n", $_SERVER['REQUEST_URI']);
+                printf("<input type=\"text\" name=\"hostid\" value=\"%s\" title=\"Input name of queue to use. Use empty string for default queue.\"/>\n", $GLOBALS['pqname']);
+                printf("<input type=\"submit\" value=\"Change\"/>\n");
+                printf("</form>\n");
         }
 }
 
@@ -307,6 +358,9 @@ function print_common_html($what)
                         break;
                 case "footer":
                         print_footer();
+                        break;
+                case "hostid":
+                        print_hostid_define();
                         break;
                 case "help":
                         if (HELP_STYLE == "graphic") {

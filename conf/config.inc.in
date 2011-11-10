@@ -203,6 +203,15 @@ define("QUEUE_FORMAT_COMPACT", false);
 define("QUEUE_SORT_ORDER", "desc");
 
 // 
+// Allow multiple queues per user and queue sharing. If false, only queues with 
+// hostid based on peers IP-address is allowed. 
+// 
+// This setting makes it possible to share a queue among different users at a 
+// slight risk of other users hijacking the queue.
+// 
+define ("QUEUE_ALLOW_SHARING", true);
+
+// 
 // Configure the menu style. Use either "graphic", "text" or "compact".
 // 
 define("MENU_STYLE", "graphic");

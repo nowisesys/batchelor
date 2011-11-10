@@ -20,10 +20,7 @@
                                 <td class="logo"><img src="images/batchelor.png" height="64" width="64"></td>
                                 <td class="banner"><h1>Batchelor - batch job queue manager</h1></td>
                                 <td class="hostid">
-                                        <form action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-                                                <input type="text" name="hostid" value="<?php echo $GLOBALS['pqname']; ?>" title="Input name of queue to use. Use empty string for default queue."/>
-                                                <input type="submit" value="Change"/>
-                                        </form>
+                                        <?php print_html("hostid"); ?>
                                 </td>
                         </tr>
                 </table>
