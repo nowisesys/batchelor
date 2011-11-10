@@ -574,10 +574,10 @@ function print_body()
                         print_message_box("error", "The last operation caused an error.<br>Please retry with new data and parameters.");
                 }
         }
-        if (isset($GLOBALS['error'])) {
-                print_message_box("error", $GLOBALS['error']);
-        } elseif (isset($GLOBALS['warning'])) {
-                print_message_box("warning", $GLOBALS['warning']);
+        if (has_errors()) {
+                print_message_box("error", get_last_error());
+        } elseif (has_warnings()) {
+                print_message_box("warning", get_last_warning());
         } elseif (isset($_REQUEST['queued'])) {
                 print_message_box("info", "The submitted job has been queued.<br>Click on <a href=\"queue.php?show=queue\" onclick=\"this.href+='&js=on';\">Show Queue</a> to view its status and download the result.");
         }
@@ -617,10 +617,10 @@ function show_page($error = null, $warning = null)
         global $jobs;
 
         if (isset($error)) {
-                $GLOBALS['error'] = $error;
+                put_error($error);
         }
         if (isset($warning)) {
-                $GLOBALS['warning'] = $warning;
+                put_warning($warning);
         }
 
         if (isset($_REQUEST['show']) && $_REQUEST['show'] == "queue") {
