@@ -264,15 +264,19 @@ function save_hostid_mapping($mapdir, $hostid, $peer)
         }
 
         // 
-        // Save peer address <=> hostid mapping.
+        // Save peer address <=> hostid mapping. Note that $afile (containing
+        // peer addresses) are multiline.
         // 
-        $file = sprintf("%s/%s", $adir, $peer);
-        if (!file_put_contents($file, $hostid)) {
-                error_exit("Failed save peer => hostid map");
-        }
-        $file = sprintf("%s/%s", $hdir, $hostid);
-        if (!file_put_contents($file, $peer)) {
-                error_exit("Failed save hostid => peer address map");
+        $afile = sprintf("%s/%s", $adir, $peer);
+        $hfile = sprintf("%s/%s", $hdir, $hostid);
+
+        if (!file_exists($hfile)) {
+                if (!file_put_contents($afile, sprintf("%s\n", $hostid), FILE_APPEND)) {
+                        error_exit("Failed save peer => hostid map");
+                }
+                if (!file_put_contents($hfile, sprintf("%s\n", $peer))) {
+                        error_exit("Failed save hostid => peer address map");
+                }
         }
 }
 
@@ -440,21 +444,38 @@ function create_directory($path, $mode, $recursive)
 // 
 function update_hostid_cookie()
 {
+        // 
+        // Clear cookie if requested:
+        // 
+        if (isset($_REQUEST['hostid'])) {
+                if (strlen($_REQUEST['hostid']) == 0) {
+                        $GLOBALS['hostid'] = md5($_SERVER['REMOTE_ADDR']);
+                } else {
+                        $GLOBALS['hostid'] = md5($_REQUEST['hostid']);
+                }
+                if (isset($_COOKIE['hostid'])) {
+                        unset($_COOKIE['hostid']);
+                }
+        }
+
         if (isset($_COOKIE['hostid'])) {
                 $GLOBALS['hostid'] = $_COOKIE['hostid'];
-        } else {
+                return;
+        }
+
+        if (!isset($GLOBALS['hostid'])) {
                 $GLOBALS['hostid'] = md5($_SERVER['REMOTE_ADDR']);
-                if (USE_SESSION_COOKIES) {
-                        // 
-                        // Set a session cookie.
-                        // 
-                        setcookie("hostid", $GLOBALS['hostid']);
-                } else {
-                        // 
-                        // Set a persistent cookie.
-                        // 
-                        setcookie("hostid", $GLOBALS['hostid'], time() + COOKIE_LIFE_TIME);
-                }
+        }
+        if (USE_SESSION_COOKIES) {
+                // 
+                // Set a session cookie.
+                // 
+                setcookie("hostid", $GLOBALS['hostid']);
+        } else {
+                // 
+                // Set a persistent cookie.
+                // 
+                setcookie("hostid", $GLOBALS['hostid'], time() + COOKIE_LIFE_TIME);
         }
 }
 

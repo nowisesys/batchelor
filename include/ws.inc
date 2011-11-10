@@ -800,14 +800,14 @@ function ws_http_session_setup($params = null)
 
         switch ($source) {
                 case "param":                           // request param
-                        $GLOBALS['hostid'] = $_REQUEST['hostid'];
+                        $GLOBALS['hostid'] = md5($_REQUEST['hostid']);
                         break;
                 case "cookie":                          // use cookie
                         if (!isset($_COOKIES['hostid'])) {
                                 put_error("The <u>hostid</u> cookie is unset");
                                 ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
                         }
-                        $GLOBALS['hostid'] = $_COOKIES['hostid'];
+                        $GLOBALS['hostid'] = md5($_COOKIES['hostid']);
                         break;
                 case "auto":                            // set cookie
                         update_hostid_cookie();
@@ -883,14 +883,14 @@ function ws_xmlrpc_session_setup($hostid = null)
 
         switch ($source) {
                 case "param":                           // request param
-                        $GLOBALS['hostid'] = $hostid;
+                        $GLOBALS['hostid'] = md5($hostid);
                         break;
                 case "cookie":                          // use cookie
                         if (!isset($_COOKIES['hostid'])) {
                                 put_error("The hostid cookie is unset");
                                 ws_http_error_handler(400, WS_ERROR_MISSING_PARAMETER);
                         }
-                        $GLOBALS['hostid'] = $_COOKIES['hostid'];
+                        $GLOBALS['hostid'] = md5($_COOKIES['hostid']);
                         break;
                 case "auto":                            // set cookie
                         update_hostid_cookie();
@@ -963,14 +963,14 @@ function ws_rest_session_setup($hostid = null)
 
         switch ($source) {
                 case "param":                           // request param
-                        $GLOBALS['hostid'] = $hostid;
+                        $GLOBALS['hostid'] = md5($hostid);
                         break;
                 case "cookie":                          // use cookie
                         if (!isset($_COOKIES['hostid'])) {
                                 put_error("The hostid cookie is unset");
                                 send_error(WS_ERROR_MISSING_PARAMETER, null, true);
                         }
-                        $GLOBALS['hostid'] = $_COOKIES['hostid'];
+                        $GLOBALS['hostid'] = md5($_COOKIES['hostid']);
                         break;
                 case "auto":                            // set cookie
                         update_hostid_cookie();
@@ -1023,14 +1023,14 @@ function ws_soap_session_setup($hostid = null)
 
         switch ($source) {
                 case "param":                           // request param
-                        $GLOBALS['hostid'] = $hostid;
+                        $GLOBALS['hostid'] = md5($hostid);
                         break;
                 case "cookie":                          // use cookie
                         if (!isset($_COOKIES['hostid'])) {
                                 put_error("The hostid cookie is unset");
                                 send_error(WS_ERROR_MISSING_PARAMETER);
                         }
-                        $GLOBALS['hostid'] = $_COOKIES['hostid'];
+                        $GLOBALS['hostid'] = md5($_COOKIES['hostid']);
                         break;
                 case "auto":                            // set cookie
                         update_hostid_cookie();
