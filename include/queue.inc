@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2011 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -457,21 +457,21 @@ function enqueue_job($formdata, &$jobs)
                                                 // 
                                                 // Value: 1; The uploaded file exceeds the upload_max_filesize directive in php.ini. 
                                                 //
-		    put_error("The uploaded file exceeds PHP's maximum allowed filesize");
+                                                put_error("The uploaded file exceeds PHP's maximum allowed filesize");
                                                 return false;
                                                 break;
                                         case UPLOAD_ERR_FORM_SIZE:
                                                 // 
                                                 // Value: 2; The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. 
                                                 //
-		    put_error("The uploaded file exceeds the maximum allowed filesize.");
+                                                put_error("The uploaded file exceeds the maximum allowed filesize.");
                                                 return false;
                                                 break;
                                         case UPLOAD_ERR_PARTIAL:
                                                 //
                                                 // Value: 3; The uploaded file was only partially uploaded. 
                                                 //
-		    put_error("The uploaded file was only partially uploaded");
+                                                put_error("The uploaded file was only partially uploaded");
                                                 return false;
                                                 break;
                                         case UPLOAD_ERR_NO_FILE:
@@ -492,14 +492,14 @@ function enqueue_job($formdata, &$jobs)
                                                 // 
                                                 // Value: 7; Failed to write file to disk. Introduced in PHP 5.1.0. 
                                                 //
-		    put_error(sprintf("Failed to write file to disk, contact %s", CONTACT_STRING));
+                                                put_error(sprintf("Failed to write file to disk, contact %s", CONTACT_STRING));
                                                 return false;
                                                 break;
                                         case UPLOAD_ERR_EXTENSION:
                                                 // 
                                                 // Value: 8; File upload stopped by extension. Introduced in PHP 5.2.0.
                                                 //
-		    put_error("File upload stopped by extension");
+                                                put_error("File upload stopped by extension");
                                                 return false;
                                                 break;
                                 }
