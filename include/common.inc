@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007 Anders Lövgren
+//  Copyright (C) 2007-2011 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -450,32 +450,39 @@ function update_hostid_cookie()
         if (isset($_REQUEST['hostid'])) {
                 if (strlen($_REQUEST['hostid']) == 0) {
                         $GLOBALS['hostid'] = md5($_SERVER['REMOTE_ADDR']);
+                        $GLOBALS['pqname'] = '';
                 } else {
                         $GLOBALS['hostid'] = md5($_REQUEST['hostid']);
+                        $GLOBALS['pqname'] = $_REQUEST['hostid'];
                 }
                 if (isset($_COOKIE['hostid'])) {
                         unset($_COOKIE['hostid']);
+                        unset($_COOKIE['qname']);
                 }
         }
 
         if (isset($_COOKIE['hostid'])) {
                 $GLOBALS['hostid'] = $_COOKIE['hostid'];
+                $GLOBALS['pqname'] = $_COOKIE['pqname'];
                 return;
         }
 
         if (!isset($GLOBALS['hostid'])) {
                 $GLOBALS['hostid'] = md5($_SERVER['REMOTE_ADDR']);
+                $GLOBALS['pqname'] = '';
         }
         if (USE_SESSION_COOKIES) {
                 // 
                 // Set a session cookie.
                 // 
                 setcookie("hostid", $GLOBALS['hostid']);
+                setcookie("pqname", $GLOBALS['pqname']);
         } else {
                 // 
                 // Set a persistent cookie.
                 // 
                 setcookie("hostid", $GLOBALS['hostid'], time() + COOKIE_LIFE_TIME);
+                setcookie("pqname", $GLOBALS['pqname']);
         }
 }
 
