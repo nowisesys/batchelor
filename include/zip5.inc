@@ -48,7 +48,9 @@ function add_zipfile(&$objzip, $subdir)
 // 
 function create_zipfile($zipfile, $zipdir)
 {
-        $objzip = & new ZipArchive();
+        $objzip = new ZipArchive();
+        $objzip->addEmptyDir($zipdir);  // Must contain at least an empty directory.
+        
         if ($objzip->open($zipfile, ZipArchive::CREATE)) {
                 if (!add_zipfile($objzip, $zipdir)) {
                         $objzip->close();
@@ -56,6 +58,7 @@ function create_zipfile($zipfile, $zipdir)
                         return false;
                 }
         }
+        
         $objzip->close();
         return true;
 }
