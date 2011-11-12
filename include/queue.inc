@@ -154,7 +154,7 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
                                                                                         // 
                                                                                         // Process all files inside $root/$dir
                                                                                         //
-					    switch ($file) {
+                                                                                        switch ($file) {
                                                                                                 case "indata":
                                                                                                         // ignore
                                                                                                         break;
@@ -166,6 +166,7 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
                                                                                                         break;
                                                                                                 case "stdout":
                                                                                                 case "stderr":
+                                                                                                case "published":
                                                                                                         if (filesize($file)) {
                                                                                                                 $job[$file] = filemtime($file);   // save timestamp if filesize > 0 bytes
                                                                                                         }

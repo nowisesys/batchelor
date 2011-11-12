@@ -51,12 +51,20 @@ function delete_single_job($hostid, $resdir, $jobid)
         // Record all deleted job directories to the queue cache
         // will be properly updated.
         //
-    $status = sprintf("%s/jobs/%s/status.log", CACHE_DIRECTORY, $hostid);
+        $status = sprintf("%s/jobs/%s/status.log", CACHE_DIRECTORY, $hostid);
 
         // 
         // The resdir argument is actually the name of the jobdir.
         // 
         $jobdir = $resdir;
+
+        // 
+        // Refuse to delete published jobs.
+        // 
+        if (file_exists(sprintf("%s/published", $jobdir))) {
+                put_error("This job is published and can't be deleted");
+                return false;
+        }
 
         // 
         // Build path to result directory:
@@ -115,6 +123,9 @@ function delete_multiple_jobs($hostid, $filter)
 {
         $jobs = get_jobs($hostid, "none", $filter);
         foreach ($jobs as $jobdir => $job) {
+                if (isset($job['published'])) {
+                        continue;       // Don't delete published jobs.
+                }
                 if ($job['state'] != "running") {
                         if (!delete_single_job($hostid, $jobdir, $job['jobid'])) {
                                 return false;

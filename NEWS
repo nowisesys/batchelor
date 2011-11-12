@@ -1,7 +1,10 @@
 Version 0.8.12 (yyyy-mm-dd):
 
-    * Addded support for multiple queues per user. This will also fix issues
+    * Added support for multiple queues per user. This will also fix issues
       when the system is used by computers behind an NAT firewall.
+
+    * Publishing of job result is now possible. Published jobs have metadata
+      associated with them and is protected against accidental deletion.
 
 Version 0.8.11 (2011-09-06):
 

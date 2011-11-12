@@ -121,6 +121,12 @@
 // {
 // }
 // 
+// This function can be used to override how published job data is formatted.
+// 
+// function published_job_hook($path, $title, $descr)
+// {
+// }
+// 
 // This function can be used to add extra request parameters to the submit 
 // form. It should print HTML defining extra checkboxes or droplists to be
 // included in the submit form.

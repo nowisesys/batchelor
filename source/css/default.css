@@ -29,6 +29,14 @@ fieldset {
     border: 1px solid #b9b9b9;
 }
 
+label {
+    width: 12em;
+    float: left;
+    text-align: right;
+    margin-right: 0.5em;
+    display: block
+}
+
 a {
     color: #000099;
 }
@@ -197,6 +205,10 @@ div.menuhead img {
 div.submit {
     border: 1px solid #dddddd;
     background: #e9e9e9;
+}
+
+div.publish {
+    width: 800px;
 }
 
 ul.menu {

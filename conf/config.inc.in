@@ -212,6 +212,11 @@ define("QUEUE_SORT_ORDER", "desc");
 define ("QUEUE_ALLOW_SHARING", true);
 
 // 
+// Enable publishing of job queue result.
+// 
+define ("QUEUE_ENABLE_PUBLISH", true);
+
+// 
 // Configure the menu style. Use either "graphic", "text" or "compact".
 // 
 define("MENU_STYLE", "graphic");

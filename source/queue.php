@@ -26,6 +26,9 @@
 // 
 include "../conf/config.inc";
 
+if (!defined("QUEUE_ENABLE_PUBLISH")) {
+        define("QUEUE_ENABLE_PUBLISH", true);
+}
 if (!defined("QUEUE_FORMAT_COMPACT")) {
         define("QUEUE_FORMAT_COMPACT", false);
 }
@@ -108,6 +111,12 @@ function show_jobs_table(&$jobs)
         if (QUEUE_SHOW_NAMES) {
                 $sort["Name"] = "name";
         }
+        // 
+        // Provide sort on publish status too:
+        // 
+        if (QUEUE_ENABLE_PUBLISH) {
+                $sort["Published"] = "published";
+        }
 
         print "<h2><img src=\"icons/nuvola/services.png\"> Job Queue:</h2>\n";
         print "<table><tr><td align=\"left\"><span id=\"secthead\">Filter Options:</span></td>\n";
@@ -153,6 +162,9 @@ function show_jobs_table_icons(&$jobs)
                 }
         } else {
                 $headers = array("Queued", "Finished", "Started", "Job", "Notice", "Download", "Delete");
+                if (QUEUE_ENABLE_PUBLISH) {
+                        array_push($headers, "Publish");
+                }
                 if (ENABLE_JOB_CONTROL == "advanced") {
                         array_push($headers, "Job Control");
                 }
@@ -229,7 +241,22 @@ function show_jobs_table_icons(&$jobs)
                         printf("<td>&nbsp;</td>\n");
                 }
                 if (SHOW_JOB_DELETE_LINK && $job['state'] != "running") {
-                        printf("<td nowrap><a href=\"delete.php?jobid=%s&result=%s&sort=%s&filter=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td></tr>", $job['jobid'], $jobdir, $_REQUEST['sort'], $_REQUEST['filter']);
+                        if (!isset($job['published'])) {
+                                printf("<td nowrap><a href=\"delete.php?jobid=%s&result=%s&sort=%s&filter=%s\" title=\"delete job\"><img src=\"icons/nuvola/delete.png\" alt=\"delete\"></a></td>", $job['jobid'], $jobdir, $_REQUEST['sort'], $_REQUEST['filter']);
+                        } else {
+                                printf("<td>&nbsp;</td>\n");
+                        }
+                }
+                if (QUEUE_ENABLE_PUBLISH) {
+                        if ($job['state'] == "finished" || $job['state'] == "warning") {
+                                if (isset($job['published'])) {
+                                        printf("<td><a href=\"publish.php?action=edit&jobid=%s&result=%s\" title=\"edit published result\" target=\"_blank\"><img src=\"icons/nuvola/published.png\" alt=\"publish\"></a></td>", $job['jobid'], $jobdir);
+                                } else {
+                                        printf("<td><a href=\"publish.php?action=add&jobid=%s&result=%s\" title=\"publish result\" target=\"_blank\"><img src=\"icons/nuvola/publish.png\" alt=\"publish\"></a></td>", $job['jobid'], $jobdir);
+                                }
+                        } else {
+                                printf("<td>&nbsp;</td>\n");
+                        }
                 }
                 if (ENABLE_JOB_CONTROL != "off" && $job['state'] == "running") {
                         if (ENABLE_JOB_CONTROL == "simple") {
@@ -280,6 +307,7 @@ function show_jobs_table_icons(&$jobs)
                                 printf("</form></td>\n");
                         }
                 }
+                printf("</tr>\n");
                 // 
                 // Job name (below and indented)
                 // 
@@ -708,7 +736,7 @@ if (isset($_FILES['file']['name']) || isset($_REQUEST['data'])) {
 // Validate request parameters.
 // 
 if (isset($_REQUEST['sort'])) {
-        check_request_param("sort", array("none", "started", "jobid", "state", "name"));
+        check_request_param("sort", array("none", "started", "jobid", "state", "name", "published"));
 } else {
         $_REQUEST['sort'] = "none";
 }
