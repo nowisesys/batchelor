@@ -49,8 +49,7 @@ function add_zipfile(&$objzip, $subdir)
 function create_zipfile($zipfile, $zipdir)
 {
         $objzip = new ZipArchive();
-        $objzip->addEmptyDir($zipdir);  // Must contain at least an empty directory.
-        
+
         if ($objzip->open($zipfile, ZipArchive::CREATE)) {
                 if (!add_zipfile($objzip, $zipdir)) {
                         $objzip->close();
@@ -58,7 +57,16 @@ function create_zipfile($zipfile, $zipdir)
                         return false;
                 }
         }
-        
+
+        // 
+        // The root directory will be missing in the zip-file if it is an
+        // empty directory. An zip-archive must have at least one entry, or
+        // it will never be written to disk.
+        // 
+        if (!$objzip->statName($zipdir)) {
+                $objzip->addEmptyDir($zipdir);
+        }
+
         $objzip->close();
         return true;
 }
