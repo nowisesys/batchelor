@@ -180,13 +180,13 @@ if (!isset($_COOKIE['hostid'])) {
 // 
 // Get request parameters.
 // 
-$jobid = $_REQUEST['jobid'];    // Job ID.
-$jobdir = $_REQUEST['result'];   // Job directory.
+$jobid = $_REQUEST['jobid'];            // Job ID.
+$jobdir = $_REQUEST['result'];          // Job directory.
 if (isset($_REQUEST['data'])) {
-        $indata = $_REQUEST['data']; // Show indata.
+        $indata = $_REQUEST['data'];    // Show indata.
 }
 if (isset($_REQUEST['warn'])) {
-        $warning = $_REQUEST['warn']; // Show warning
+        $warning = $_REQUEST['warn'];   // Show warning
 }
 
 // 
