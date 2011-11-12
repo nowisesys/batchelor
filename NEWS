@@ -1,4 +1,4 @@
-Version 0.8.12 (yyyy-mm-dd):
+Version 0.8.12 (2011-11-12):
 
     * Added support for multiple queues per user. This will also fix issues
       when the system is used by computers behind an NAT firewall.
