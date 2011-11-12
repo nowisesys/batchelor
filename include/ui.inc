@@ -137,6 +137,11 @@ function print_menu()
                         "href" => "help.php",
                         "attr" => "target=\"_blank\"",
                         "icon" => "help.png"
+                ),
+                "Published" => array(
+                        "href" => "publish.php",
+                        "attr" => "target=\"_blank\"",
+                        "icon" => "published.png"
                 )
         );
 
@@ -178,6 +183,9 @@ function print_menu_vertical($queue, $utils)
         }
         foreach ($utils as $name => $link) {
                 if ($name == "Statistics" && STATISTICS_EXPOSED == "hidden") {
+                        continue;
+                }
+                if ($name == "Published" && QUEUE_ENABLE_PUBLISH != true) {
                         continue;
                 }
                 printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
