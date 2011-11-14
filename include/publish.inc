@@ -235,6 +235,18 @@ function publish_get_name($jobdir)
 }
 
 // 
+// Get URL for showing job details.
+// 
+function publish_get_url($jobdir)
+{
+        if (($name = publish_get_name($jobdir))) {
+                return sprintf("publish.php?action=show&name=%s", $name);
+        } else {
+                return null;
+        }
+}
+
+// 
 // Get description for this published job.
 // 
 function publish_get_description($name)
@@ -313,7 +325,7 @@ function publish_is_owner($hostid, $name)
 {
         $link = sprintf("%s/publish/%s/jobdir", CACHE_DIRECTORY, $name);
         $path = readlink($link);
-        
+
         // 
         // Extract hostid from path:
         // 

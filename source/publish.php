@@ -147,6 +147,9 @@ function publish_result_form()
                 printf("<label for=\"submit\">&nbsp;</label>\n");
                 printf("<input type=\"submit\" name=\"submit\" value=\"Remove\"/>\n");
                 printf("</form>\n");
+                
+                $url = publish_get_url($GLOBALS['jobdir']);
+                printf("<hr><p>The direct link (URL) <a href=\"%s\">showing details</a> for this published job are:<br>%s</p>\n", $url, $url);
         }
 }
 
