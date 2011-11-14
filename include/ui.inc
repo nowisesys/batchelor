@@ -87,8 +87,8 @@ function print_hostid_define()
 {
         if (QUEUE_ALLOW_SHARING) {
                 printf("<form action=\"%s\">\n", $_SERVER['REQUEST_URI']);
-                printf("<input type=\"text\" name=\"hostid\" value=\"%s\" title=\"Input name of queue to use. Use empty string for default queue.\"/>\n", $GLOBALS['pqname']);
-                printf("<input type=\"submit\" value=\"Change\"/>\n");
+                printf("<input type=\"text\" name=\"hostid\" value=\"%s\" title=\"Input name of queue to use. Use empty string for default queue. New queues will be created on demand.\"/>\n", $GLOBALS['pqname']);
+                printf("<input type=\"submit\" value=\"Switch\"/>\n");
                 foreach ($_REQUEST as $key => $val) {
                         if ($key != "hostid") {
                                 printf("<input type=\"hidden\" name=\"%s\" value=\"%s\"/>\n", $key, $val);
