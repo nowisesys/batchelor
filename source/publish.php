@@ -48,6 +48,9 @@ function error_handler($type)
         header("Location: queue.php?show=queue&error=details&type=$type");
 }
 
+// 
+// The event handler were all action (i.e. modify) takes place.
+// 
 function publish_action_handler()
 {
         if ($_REQUEST['action'] == "add") {
@@ -147,19 +150,62 @@ function publish_result_form()
         }
 }
 
+// 
+// List all published jobs.
+// 
 function publish_list()
 {
+        $options = array(
+                "none" => "None", "edit" => "Editable", "others" => "Others"
+        );
+
+        if (isset($_REQUEST['filter'])) {
+                $filter = $_REQUEST['filter'];
+        } else {
+                $filter = "none";
+        }
+
+        if ($filter != "none") {
+                printf("<h2><img src=\"icons/nuvola/published.png\"> %s published jobs:</h2>\n", $options[$filter]);
+        } else {
+                printf("<h2><img src=\"icons/nuvola/published.png\"> All published jobs:</h2>\n");
+        }
+
         $data = publish_get_data();
 
-        printf("<h2><img src=\"icons/nuvola/published.png\"> All published jobs:</h2>\n");
+        printf("<p><form action=\"publish.php\">\n");
+        printf("<input type=\"hidden\" name=\"action\" value=\"list\">\n");
+        printf("<label for=\"filter\">Filter:</label>\n");
+        printf("<select name=\"filter\">\n");
+        foreach ($options as $name => $value) {
+                if ($filter == $name) {
+                        printf("<option value=\"%s\" selected>%s</option>\n", $name, $value);
+                } else {
+                        printf("<option value=\"%s\">%s</option>\n", $name, $value);
+                }
+        }
+        printf("</select>\n");
+        printf("<input type=\"submit\" value=\"Refresh\">\n");
+        printf("</form>\n");
 
         printf("<ul>\n");
         foreach ($data as $name => $title) {
-                printf("<li>%s<br/><a href=\"?action=show&name=%s\">Details</a></li><br/>\n", $title, $name);
+                if (publish_is_owner($_COOKIE['hostid'], $name)) {
+                        if ($filter == "none" || $filter == "edit") {
+                                printf("<li>%s<br/><a href=\"?action=show&name=%s\">Details</a></li><br/>\n", $title, $name);
+                        }
+                } else {
+                        if ($filter != "edit") {
+                                printf("<li>%s<br/><a href=\"?action=show&name=%s\">Details</a></li><br/>\n", $title, $name);
+                        }
+                }
         }
         printf("</ul>\n");
 }
 
+// 
+// Show details for an individual published job.
+// 
 function publish_show()
 {
         $path = publish_get_path($_REQUEST['name']);
