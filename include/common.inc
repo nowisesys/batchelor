@@ -439,8 +439,12 @@ function create_directory($path, $mode, $recursive)
 }
 
 // 
-// Set cookie so we can associate peer with submitted, running
-// and finished jobs.
+// Set cookie so we can associate peer with submitted, running and finished 
+// jobs. 
+// 
+// The hostid is the hashed queue name (by default based on the ip-address of
+// peer) and the pqname (personal queue name) is the plain text queue name. If 
+// hostid is based on the ip-address, then pqname is empty.
 // 
 function update_hostid_cookie()
 {
@@ -461,11 +465,16 @@ function update_hostid_cookie()
                 }
                 if (isset($_COOKIE['hostid'])) {
                         unset($_COOKIE['hostid']);
-                        unset($_COOKIE['qname']);
+                        unset($_COOKIE['pqname']);
                 }
         }
 
         if (isset($_COOKIE['hostid'])) {
+                if (!isset($_COOKIE['pqname'])) {
+                        if (md5($_SERVER['REMOTE_ADDR']) == $_COOKIE['hostid']) {
+                                $_COOKIE['pqname'] = '';
+                        }
+                }
                 $GLOBALS['hostid'] = $_COOKIE['hostid'];
                 $GLOBALS['pqname'] = $_COOKIE['pqname'];
                 return;
