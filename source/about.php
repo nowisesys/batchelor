@@ -22,8 +22,8 @@
 // 
 // Include configuration and libs.
 // 
-include "../include/ui.inc";
 include "../conf/config.inc";
+include "../include/ui.inc";
 
 // 
 // Set defaults for web service status.
