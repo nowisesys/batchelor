@@ -209,12 +209,18 @@ define("QUEUE_SORT_ORDER", "desc");
 // This setting makes it possible to share a queue among different users at a 
 // slight risk of other users hijacking the queue.
 // 
-define ("QUEUE_ALLOW_SHARING", true);
+define("QUEUE_ALLOW_SHARING", true);
 
 // 
 // Enable publishing of job queue result.
 // 
-define ("QUEUE_ENABLE_PUBLISH", true);
+define("QUEUE_ENABLE_PUBLISH", true);
+
+// 
+// Prevent browsing of published results. It is still possible to publish
+// results, only the browsing is prevented.
+// 
+define("PUBLISH_PREVENT_BROWSING", false);
 
 // 
 // Configure the menu style. Use either "graphic", "text" or "compact".

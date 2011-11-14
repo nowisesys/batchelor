@@ -23,6 +23,9 @@ if (!defined("PAGE_REFRESH_RATE")) {
 if (!defined("QUEUE_ALLOW_SHARING")) {
         define("QUEUE_ALLOW_SHARING", true);
 }
+if (!defined("PUBLISH_PREVENT_BROWSING")) {
+        define("PUBLISH_PREVENT_BROWSING", false);
+}
 if (!defined("MENU_STYLE")) {
         define("MENU_STYLE", "graphic");
 }
@@ -123,11 +126,6 @@ function print_menu()
                 )
         );
         $utils = array(
-                "Statistics" => array(
-                        "href" => "statistics.php",
-                        "attr" => "",
-                        "icon" => "statistics.png"
-                ),
                 "About" => array(
                         "href" => "about.php",
                         "attr" => "target=\"_blank\"",
@@ -138,12 +136,25 @@ function print_menu()
                         "attr" => "target=\"_blank\"",
                         "icon" => "help.png"
                 ),
-                "Published" => array(
+        );
+
+        // 
+        // Conditional displayed links:
+        // 
+        if (STATISTICS_EXPOSED == "public") {
+                $utils["Statistics"] = array(
+                        "href" => "statistics.php",
+                        "attr" => "",
+                        "icon" => "statistics.png"
+                );
+        }
+        if (PUBLISH_PREVENT_BROWSING == false) {
+                $utils["Published"] = array(
                         "href" => "publish.php",
                         "attr" => "target=\"_blank\"",
                         "icon" => "published.png"
-                )
-        );
+                );
+        }
 
         if (!defined("MENU_ORIENTATION")) {
                 define("MENU_ORIENTATION", "vertical");
@@ -182,12 +193,6 @@ function print_menu_vertical($queue, $utils)
                 echo "<ul class=\"menu\">\n";
         }
         foreach ($utils as $name => $link) {
-                if ($name == "Statistics" && STATISTICS_EXPOSED == "hidden") {
-                        continue;
-                }
-                if ($name == "Published" && QUEUE_ENABLE_PUBLISH != true) {
-                        continue;
-                }
                 printf("<li><a href=\"%s\" %s>%s</a></li>\n", $link['href'], $link['attr'], $name);
         }
         echo "</ul>\n";

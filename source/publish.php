@@ -37,6 +37,10 @@ if (file_exists("../include/hooks.inc")) {
         include("../include/hooks.inc");
 }
 
+if (!defined("PUBLISH_PREVENT_BROWSING")) {
+        define("PUBLISH_PREVENT_BROWSING", false);
+}
+
 // 
 // The error handler.
 // 
@@ -147,7 +151,7 @@ function publish_result_form()
                 printf("<label for=\"submit\">&nbsp;</label>\n");
                 printf("<input type=\"submit\" name=\"submit\" value=\"Remove\"/>\n");
                 printf("</form>\n");
-                
+
                 $url = publish_get_url($GLOBALS['jobdir']);
                 printf("<hr><p>The direct link (URL) <a href=\"%s\">showing details</a> for this published job are:<br>%s</p>\n", $url, $url);
         }
@@ -174,6 +178,11 @@ function publish_list()
                 printf("<h2><img src=\"icons/nuvola/published.png\"> All published jobs:</h2>\n");
         }
 
+        if (PUBLISH_PREVENT_BROWSING) {
+                put_error("Browsing of published results is forbidden by the system configuration.");
+                return false;
+        }
+        
         $data = publish_get_data();
 
         printf("<p><form action=\"publish.php\">\n");
