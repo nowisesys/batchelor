@@ -2285,6 +2285,13 @@ function collect_statistics($jobsdir, $statdir, $options)
         }
 
         // 
+        // Discard crashed job data (mapped to year 1970).
+        // 
+        if (isset($statdata['1970'])) {
+                unset($statdata['1970']);
+        }
+
+        // 
         // Save statistics for next run:
         // 
         if ($options->debug) {
