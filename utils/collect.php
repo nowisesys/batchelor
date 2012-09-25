@@ -678,6 +678,7 @@ function collect_file_check_insert($isset, $mode)
 function collect_file_insert(&$entry, $file, $options)
 {
         if (($handle = fopen($file, "r"))) {
+                $sect = null;
                 while ($str = fgets($handle)) {
                         $pattern = array(
                                 "%\[(.*)\]%",
@@ -692,6 +693,9 @@ function collect_file_insert(&$entry, $file, $options)
                                                         printf("debug: matched section '%s'.\n", $sect);
                                                 }
                                         } elseif (count($match) == 3) {
+                                                if (!isset($sect)) {
+                                                        die(sprintf("%s: section is not set.\n", $options->prog));
+                                                }
                                                 if ($options->debug) {
                                                         printf("debug: inserting [%s][%s] = %d.\n", $sect, $match[1], $match[2]);
                                                 }
