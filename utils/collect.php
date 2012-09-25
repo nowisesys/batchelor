@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007 Anders Lövgren
+//  Copyright (C) 2007-2012 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -102,6 +102,12 @@ define("LIST_QUEUE_PER_HOSTID", 1);
 define("LIST_QUEUE_PER_JOBDIR", 2);
 
 // 
+// Repair mode:
+// 
+define("REPAIR_MODE_MISSING", 1);
+define("REPAIR_MODE_REPLACE", 2);
+
+// 
 // Filter types:
 // 
 define("FILTER_TYPE_PARABLE", 1);
@@ -130,12 +136,13 @@ function collect_usage($prog, $sect)
         print "Options:\n";
         print "\n";
         print "  Standard options:\n";
-        print "    -f,--force:      Recollect already collected statistics.\n";
-        print "    -q,--qmode=val:  Set queue list mode (0-2, default 0)\n";
-        print "    -d,--debug:      Enable debug.\n";
-        print "    -v,--verbose:    Be more verbose.\n";
-        print "    -h,--help:       This help.\n";
-        print "    -V,--version:    Show version info.\n";
+        print "    -f,--force:       Recollect already collected statistics.\n";
+        print "    -q,--qmode=val:   Set queue list mode (0-2, default 0)\n";
+        print "    -r,--repair=mode: Repair statistics (see notes below).\n";
+        print "    -d,--debug:       Enable debug.\n";
+        print "    -v,--verbose:     Be more verbose.\n";
+        print "    -h,--help:        This help.\n";
+        print "    -V,--version:     Show version info.\n";
         print "\n";
         print "Notes:\n";
         print "  1. The --qmode value let users trade accuracy against processing time\n";
@@ -143,6 +150,12 @@ function collect_usage($prog, $sect)
         print "     Possible values are: 0 == once, 1 == per hostid, 2 == per jobdir.\n";
         print "     Lower values gives better performance at the slight chance of getting\n";
         print "     finished jobs classified as pending/running (thus ignored).\n";
+        print "\n";
+        print "  2. The --repair option processes existing summary.dat, using them to\n";
+        print "     recreate the cache.ser that is used for generating graphics or\n";
+        print "     statistics cache files (summary.dat). The mode argument is either\n";
+        print "     'missing' or 'replace' and defines how data from summary.dat files\n";
+        print "     is merged with entries in cache.ser.\n";
 }
 
 //
@@ -193,6 +206,14 @@ function parse_options(&$argc, $argv, &$options)
                                         die(sprintf("%s: value for '%s' is out of range, see --help\n", $options->prog, $key));
                                 }
                                 $options->qmode = $val;
+                                break;
+                        case "-r":
+                        case "--repair":
+                                check_arg($key, $val, true, $options->prog);
+                                if ($val != "missing" && $val != "replace") {
+                                        die(sprintf("%s: value for '%s' is out of range, see --help\n", $options->prog, $key));
+                                }
+                                $options->repair = $val == "missing" ? REPAIR_MODE_MISSING : REPAIR_MODE_REPLACE;
                                 break;
                         case "-d":
                         case "--debug":           // Enable debug.
@@ -559,6 +580,132 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 }
 
 // 
+// Process summary.dat files and store entries in the data array. Duplicate
+// entries merge mode is defined in options->repair.
+// 
+// $statdir:  the statistics directory root path.
+// $options:  program options.
+// $data:     statistics data array.
+// 
+function collect_read_data($topdir, &$data, $options)
+{
+        if (($handle = opendir($topdir))) {
+                while (($file = readdir($handle)) !== false) {
+                        $path = sprintf("%s/%s", $topdir, $file);
+                        if ($file == "." || $file == "..") {
+                                continue;
+                        }
+                        if (is_dir($path)) {
+                                collect_read_data($path, $data, $options);
+                        }
+                        if ($file == "summary.dat") {
+                                collect_file_data($path, $data, $options);
+                        }
+                }
+                closedir($handle);
+        } else {
+                die(sprintf("%s: failed reading directory %s\n", $options->prog, $topdir));
+        }
+}
+
+// 
+// Read content from summary.dat file.
+// 
+function collect_file_data($file, &$data, $options)
+{
+        if ($options->debug) {
+                printf("debug: processing data from %s\n", $file);
+        }
+
+        // 
+        // Get sect/year/month/day/hour from file path:
+        // 
+        $pattern = "%stat/(.*?)/summary.dat%";
+        $matches = array();
+        if (!preg_match($pattern, $file, $matches)) {
+                die(sprintf("%s: failed match '%s' against pattern '%s'\n", $options->prog, $file, $pattern));
+        }
+
+        $p = explode("/", $matches[1]);
+        switch (count($p)) {
+                case 1:
+                        if (collect_file_check_insert(isset($data[$p[0]]), $options->repair)) {
+                                collect_file_insert($data[$p[0]], $file, $options);
+                        }
+                        break;
+                case 2:
+                        if (collect_file_check_insert(isset($data[$p[0]][$p[1]]), $options->repair)) {
+                                collect_file_insert($data[$p[0]][$p[1]], $file, $options);
+                        }
+                        break;
+                case 3:
+                        if (collect_file_check_insert(isset($data[$p[0]][$p[1]][$p[2]]), $options->repair)) {
+                                collect_file_insert($data[$p[0]][$p[1]][$p[2]], $file, $options);
+                        }
+                        break;
+                case 4:
+                        if (collect_file_check_insert(isset($data[$p[0]][$p[1]][$p[2]][$p[3]]), $options->repair)) {
+                                collect_file_insert($data[$p[0]][$p[1]][$p[2]][$p[3]], $file, $options);
+                        }
+                        break;
+                case 5:
+                        if (collect_file_check_insert(isset($data[$p[0]][$p[1]][$p[2]][$p[3]][$p[4]]), $options->repair)) {
+                                collect_file_insert($data[$p[0]][$p[1]][$p[2]][$p[3]][$p[4]], $file, $options);
+                        }
+                        break;
+                default:
+                        die(sprintf("%s: too many parts in stated filename.\n", $options->prog));
+        }
+}
+
+// 
+// Return true if entry in data array should be set.
+// 
+function collect_file_check_insert($isset, $mode)
+{
+        if ($isset && $mode == REPAIR_MODE_REPLACE) {
+                return true;
+        }
+        if (!$isset && $mode == REPAIR_MODE_MISSING) {
+                return true;
+        }
+        return false;
+}
+
+// 
+// Insert content of file (summary.dat) in data array entry.
+// 
+function collect_file_insert(&$entry, $file, $options)
+{
+        if (($handle = fopen($file, "r"))) {
+                while ($str = fgets($handle)) {
+                        $pattern = array(
+                                "%\[(.*)\]%",
+                                "%(\w+)\s*=\s*(\w+)%"
+                        );
+                        foreach ($pattern as $p) {
+                                $match = array();
+                                if (preg_match($p, $str, $match)) {
+                                        if (count($match) == 2) {
+                                                $sect = $match[1];
+                                                if ($options->debug) {
+                                                        printf("debug: matched section '%s'.\n", $sect);
+                                                }
+                                        } elseif (count($match) == 3) {
+                                                if ($options->debug) {
+                                                        printf("debug: inserting [%s][%s] = %d.\n", $sect, $match[1], $match[2]);
+                                                }
+                                                $entry[$sect][$match[1]] = $match[2];
+                                        }
+                                }
+                        }
+                }
+        } else {
+                die(sprintf("%s: failed open %s\n", $options->prog, $file));
+        }
+}
+
+// 
 // Recursive write data files (text) from collected statistics.
 // 
 function collect_flush_data($topdir, $data, $options)
@@ -728,16 +875,16 @@ function graph_total_submit($graphdir, $hostid, $options, $data)
         $title = "Total number of submits";
         $total = 0;
         $image = sprintf("%s/submit.png", $graphdir);
-        
+
         $labels = array();
         $values = array();
         $colors = array(
                 "color" => array(
-                        "start" => "navy",
-                        "end" => "lightsteelblue",
+                        "start"   => "navy",
+                        "end"     => "lightsteelblue",
                         "outline" => "darkblue"
                 ),
-                "text" => array(
+                "text"    => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -785,16 +932,16 @@ function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
         $title = sprintf("Number of submits %s", strftime("%G", $timestamp));
         $total = 0;
         $image = sprintf("%s/submit.png", $graphdir);
-        
+
         $labels = array();
         $values = array();
         $colors = array(
                 "color" => array(
-                        "start" => "orange",
-                        "end" => "yellow",
+                        "start"   => "orange",
+                        "end"     => "yellow",
                         "outline" => "red"
                 ),
-                "text" => array(
+                "text"    => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -833,16 +980,16 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
         $title = sprintf("Number of submits for %s", strftime("%B %G", $timestamp));
         $total = 0;
         $image = sprintf("%s/submit.png", $graphdir);
-        
+
         $labels = array();
         $values = array();
         $colors = array(
                 "color" => array(
-                        "start" => "green",
-                        "end" => "yellow",
+                        "start"   => "green",
+                        "end"     => "yellow",
                         "outline" => "darkgreen"
                 ),
-                "text" => array(
+                "text"    => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -881,16 +1028,16 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
         $title = sprintf("Number of submits for %s", strftime("%G-%m-%d", $timestamp));
         $total = 0;
         $image = sprintf("%s/submit.png", $graphdir);
-        
+
         $labels = array();
         $values = array();
         $colors = array(
                 "color" => array(
-                        "start" => "purple",
-                        "end" => "red",
+                        "start"   => "purple",
+                        "end"     => "red",
                         "outline" => "pink"
                 ),
-                "text" => array(
+                "text"    => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1064,28 +1211,28 @@ function proctime_colors()
 {
         $colors = array(
                 "waiting" => array(
-                        "start" => "orange",
-                        "end" => "yellow",
+                        "start"   => "orange",
+                        "end"     => "yellow",
                         "outline" => "red"
                 ),
                 "running" => array(
-                        "start" => "darkgreen",
-                        "end" => "green",
+                        "start"   => "darkgreen",
+                        "end"     => "green",
                         "outline" => "darkgreen"
                 ),
                 "minimum" => array(
-                        "start" => "darkgray",
-                        "end" => "gray",
+                        "start"   => "darkgray",
+                        "end"     => "gray",
                         "outline" => "darkgray"
                 ),
                 "maximum" => array(
-                        "start" => "red",
-                        "end" => "orange",
+                        "start"   => "red",
+                        "end"     => "orange",
                         "outline" => "darkred"
                 ),
-                "count" => array(
-                        "start" => "darkblue",
-                        "end" => "blue",
+                "count"   => array(
+                        "start"   => "darkblue",
+                        "end"     => "blue",
                         "outline" => "lightblue"
                 )
         );
@@ -1101,7 +1248,7 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
         $title = "Total process time (avarage)";
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
-        
+
         $labels = array();
         $values = array(
                 "waiting" => array(),
@@ -1112,7 +1259,7 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
         );
         $colors = array(
                 "color" => proctime_colors(),
-                "text" => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1170,7 +1317,7 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
         $title = sprintf("Process time %s (avarage)", strftime("%G", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
-        
+
         $labels = array();
         $values = array(
                 "waiting" => array(),
@@ -1181,7 +1328,7 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
         );
         $colors = array(
                 "color" => proctime_colors(),
-                "text" => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1225,7 +1372,7 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
         $title = sprintf("Process time %s (avarage)", strftime("%B %G", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
-        
+
         $labels = array();
         $values = array(
                 "waiting" => array(),
@@ -1236,7 +1383,7 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
         );
         $colors = array(
                 "color" => proctime_colors(),
-                "text" => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1280,7 +1427,7 @@ function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
         $title = sprintf("Process time %s (avarage)", strftime("%G-%m-%d", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
-        
+
         $labels = array();
         $values = array(
                 "waiting" => array(),
@@ -1291,7 +1438,7 @@ function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
         );
         $colors = array(
                 "color" => proctime_colors(),
-                "text" => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1362,15 +1509,15 @@ function graph_total_state($graphdir, $hostid, $options, $data)
 {
         $title = "Exit status of jobs";
         $image = sprintf("%s/state.png", $graphdir);
-        
+
         $labels = array();
         $values = array();
         $colors = array();
-        
+
         $piecol = array(
                 "success" => "green",
                 "warning" => "yellow",
-                "error" => "red",
+                "error"   => "red",
                 "crashed" => "gray"
         );
 
@@ -2097,6 +2244,13 @@ function collect_statistics($jobsdir, $statdir, $options)
         }
 
         // 
+        // Repair statistics(?):
+        // 
+        if ($options->repair) {
+                collect_read_data($statdir, $statdata, $options);
+        }
+
+        // 
         // Collect statistics:
         // 
         $handle = @opendir($jobsdir);
@@ -2105,7 +2259,16 @@ function collect_statistics($jobsdir, $statdir, $options)
                         printf("debug: processing host ID directories under %s\n", $jobsdir);
                 }
                 while (($file = readdir($handle)) !== false) {
-                        if ($file != "." && $file != "..") {
+                        $path = sprintf("%s/%s", $jobsdir, $file);
+                        if ($file == "." || $file == "..") {
+                                continue;
+                        }
+                        if (!is_dir($path)) {
+                                if ($options->debug) {
+                                        printf("debug: skipping non-directory %s\n", $path);
+                                }
+                                continue;
+                        } else {
                                 if ($options->debug) {
                                         printf("debug: processing host ID directory %s\n", $file);
                                 }
@@ -2147,11 +2310,12 @@ function main(&$argc, $argv)
         // Setup defaults in options array:
         // 
         $options = array(
-                "force" => false,
-                "qmode" => LIST_QUEUE_ONCE,
-                "debug" => false,
+                "force"   => false,
+                "qmode"   => LIST_QUEUE_ONCE,
+                "repair"  => false,
+                "debug"   => false,
                 "verbose" => 0,
-                "prog" => $prog,
+                "prog"    => $prog,
                 "version" => $vers
         );
 

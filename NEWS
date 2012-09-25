@@ -1,3 +1,12 @@
+Version 0.8.13 (yyyy-mm-dd):
+
+    * Browsing of published results can now be disabled in configuration. It's 
+      still possible to publish result (using source/publish.php) even when 
+      browsing is disabled.
+
+    * Added --repair option to utils/collect.php allowing the statistics cache
+      to be recreated from summary.dat files.
+
 Version 0.8.12 (2011-11-12):
 
     * Added support for multiple queues per user. This will also fix issues
