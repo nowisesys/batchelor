@@ -188,12 +188,12 @@ function print_proctime_section($data, $statdir, $subsect)
 {
         printf("<span id=\"secthead\">Process Time:</span>\n");
 
-        printf("<p>On avarage each job took <b>%.01f seconds</b> to complete (from submitted until it finished execute).<br>", $data['proctime']['waiting'] + $data['proctime']['running']);
-        printf("The jobs took between <b>%d</b> and <b>%d</b> seconds to complete (min/max).</p>\n", $data['proctime']['minimum'], $data['proctime']['maximum']);
+        printf("<p>On average each job took <b>%.01f seconds</b> to complete (from submitted until it finished execute).<br>", $data['proctime']['waiting'] + $data['proctime']['running']);
+        printf("Each job took between <b>%d</b> and <b>%d</b> seconds to complete (min/max).</p>\n", $data['proctime']['minimum'], $data['proctime']['maximum']);
 
         printf("<p><table>\n");
-        printf("<tr><td>Time waiting:</td><td>%.01f seconds (avarage)</td></tr>\n", $data['proctime']['waiting']);
-        printf("<tr><td>Time running:</td><td>%.01f seconds (avarage)</td></tr>\n", $data['proctime']['running']);
+        printf("<tr><td>Time waiting:</td><td>%.01f seconds (average)</td></tr>\n", $data['proctime']['waiting']);
+        printf("<tr><td>Time running:</td><td>%.01f seconds (average)</td></tr>\n", $data['proctime']['running']);
         printf("</table></p>\n");
 
         printf("<p>\n");
@@ -233,12 +233,12 @@ function print_sysload_section($data, $statdir, $images, $subsect)
         } else {
                 printf("<p>A total of <b>%d jobs</b> was submitted during this period and all jobs completed without errors.</p>\n", $data['submit']['count']);
         }
-        printf("<p>On avarage each job took <b>%.01f seconds</b> to complete (from submitted until it finished execute).<br>", $data['proctime']['waiting'] + $data['proctime']['running']);
+        printf("<p>On average each job took <b>%.01f seconds</b> to complete (from submitted until it finished execute).<br>", $data['proctime']['waiting'] + $data['proctime']['running']);
         printf("The jobs took between <b>%d</b> and <b>%d</b> seconds to complete (min/max).</p>\n", $data['proctime']['minimum'], $data['proctime']['maximum']);
 
         printf("<p><table>\n");
-        printf("<tr><td>Time waiting:</td><td>%.01f seconds (avarage)</td></tr>\n", $data['proctime']['waiting']);
-        printf("<tr><td>Time running:</td><td>%.01f seconds (avarage)</td></tr>\n", $data['proctime']['running']);
+        printf("<tr><td>Time waiting:</td><td>%.01f seconds (average)</td></tr>\n", $data['proctime']['waiting']);
+        printf("<tr><td>Time running:</td><td>%.01f seconds (average)</td></tr>\n", $data['proctime']['running']);
         printf("</table></p>\n");
 
         printf("<p>\n");

@@ -356,7 +356,7 @@ function collect_state_count($hostid, &$data, $state)
 }
 
 // 
-// Helper function for counting floating avarage (arithmetric mean value):
+// Helper function for counting floating average (arithmetric mean value):
 // fn(x) : R -> R x(n - 1) = 1/n * ((n - 1) * x(n) + x(n + 1)), n >= 1
 // 
 function floating_mean_value($count, $acc, $last)
@@ -1433,7 +1433,7 @@ function proctime_colors()
 // 
 function graph_total_proctime($graphdir, $hostid, $options, $data)
 {
-        $title = "Total process time (avarage)";
+        $title = "Total process time (average)";
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
 
@@ -1502,7 +1502,7 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
 // 
 function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Process time %s (avarage)", strftime("%Y", $timestamp));
+        $title = sprintf("Process time %s (average)", strftime("%Y", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
 
@@ -1557,7 +1557,7 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Process time %s (avarage)", strftime("%B %Y", $timestamp));
+        $title = sprintf("Process time %s (average)", strftime("%B %Y", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
 
@@ -1612,7 +1612,7 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Process time %s (avarage)", strftime("%Y-%m-%d", $timestamp));
+        $title = sprintf("Process time %s (average)", strftime("%Y-%m-%d", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
 
