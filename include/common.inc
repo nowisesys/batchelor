@@ -224,12 +224,12 @@ function split_batch_output($str)
                 } else if (preg_match('/job (\d+) at (.*)/', $row, $match)) {
                         $stamp = strtotime($match[2]) + $offset;
                         $time = strftime("%H:%M", $stamp);
-                        $date = strftime("%G-%m-%d", $stamp);
+                        $date = strftime("%Y-%m-%d", $stamp);
                         return array("jobid" => $match[1], "date" => $date, "time" => $time, "stamp" => $stamp);
                 } else if (preg_match('/job (.*?) at (.*)/', $row, $match)) {
                         $stamp = strtotime($match[2]) + $offset;
                         $time = strftime("%H:%M", $stamp);
-                        $date = strftime("%G-%m-%d", $stamp);
+                        $date = strftime("%Y-%m-%d", $stamp);
                         return array("jobid" => $match[1], "date" => $date, "time" => $time, "stamp" => $stamp);
                 }
         }
