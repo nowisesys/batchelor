@@ -106,6 +106,18 @@ define("LIST_QUEUE_PER_JOBDIR", 2);
 // 
 define("REPAIR_MODE_MISSING", 1);
 define("REPAIR_MODE_REPLACE", 2);
+define("REPAIR_MODE_DEFAULT", "missing");
+
+define("REPAIR_CHECK_DEFAULT", true);
+
+// 
+// Check mode for summary.dat files.
+// 
+define("REPAIR_CHECK_STRICT", 1);       // Die on missing keys
+define("REPAIR_CHECK_INSERT", 2);       // Add default values
+define("REPAIR_CHECK_IGNORE", 3);       // Ignore
+
+define("REPAIR_CHECK_DEFAULT", REPAIR_CHECK_STRICT);
 
 // 
 // Filter types:
@@ -138,7 +150,7 @@ function collect_usage($prog, $sect)
         print "  Standard options:\n";
         print "    -f,--force:       Recollect already collected statistics.\n";
         print "    -q,--qmode=val:   Set queue list mode (0-2, default 0)\n";
-        print "    -r,--repair=mode: Repair statistics (see notes below).\n";
+        print "    -r,--repair=mode: Repair statistics (defaults to missing).\n";
         print "    -d,--debug:       Enable debug.\n";
         print "    -v,--verbose:     Be more verbose.\n";
         print "    -h,--help:        This help.\n";
@@ -209,6 +221,9 @@ function parse_options(&$argc, $argv, &$options)
                                 break;
                         case "-r":
                         case "--repair":
+                                if (!isset($val)) {
+                                        $val = REPAIR_MODE_DEFAULT;
+                                }
                                 check_arg($key, $val, true, $options->prog);
                                 if ($val != "missing" && $val != "replace") {
                                         die(sprintf("%s: value for '%s' is out of range, see --help\n", $options->prog, $key));
@@ -580,6 +595,166 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 }
 
 // 
+// Recalculate the data array. When this function returns, the submit count
+// has been recalculated and the state should have been adjusted.
+// 
+// Some node data can only be accurate calculated from job directories, that
+// might be missing. Other data is custom (user defined) created from hooks,
+// that data is copied verbatime.
+// 
+function collect_recalc_data(&$data, $options)
+{
+        $arr = array();
+
+        foreach ($data as $key => $val) {       // key == hostid
+                if ($key == "all") {
+                        continue;
+                }
+                collect_recalc_hostid($arr, $key, $val, $options);
+        }
+}
+
+function collect_recalc_hostid(&$arr, $hostid, $data, $options)
+{
+        if ($options->debug) {
+                printf("debug: recalc hostid %s\n", $hostid);
+        }
+
+        foreach ($data as $key => $val) {
+                if ($key == "submit") {
+                        continue;
+                }
+                if (is_numeric($key)) {
+                        collect_recalc_year($arr, $hostid, $key, $val, $options);
+                } else {
+                        collect_recalc_validate($key, $val, $options);
+                        $arr[$hostid][$key] = $val;
+                }
+        }
+}
+
+function collect_recalc_year(&$arr, $hostid, $year, $data, $options)
+{
+        if ($options->debug) {
+                printf("debug: recalc year %s\n", $year);
+        }
+
+        foreach ($data as $key => $val) {
+                if ($key == "submit") {
+                        continue;
+                }
+                if (is_numeric($key)) {
+                        collect_recalc_month($arr, $hostid, $year, $key, $val, $options);
+                } else {
+                        collect_recalc_validate($key, $val, $options);
+                        $arr[$hostid][$year][$key] = $val;
+                }
+        }
+}
+
+function collect_recalc_month(&$arr, $hostid, $year, $month, $data, $options)
+{
+        if ($options->debug) {
+                printf("debug: recalc month %s\n", $month);
+        }
+
+        foreach ($data as $key => $val) {
+                if ($key == "submit") {
+                        continue;
+                }
+                if (is_numeric($key)) {
+                        collect_recalc_day($arr, $hostid, $year, $month, $key, $val, $options);
+                } else {
+                        collect_recalc_validate($key, $val, $options);
+                        $arr[$hostid][$year][$month][$key] = $val;
+                }
+        }
+}
+
+function collect_recalc_day(&$arr, $hostid, $year, $month, $day, $data, $options)
+{
+        if ($options->debug) {
+                printf("debug: recalc day %s\n", $day);
+        }
+
+        foreach ($data as $key => $val) {
+                if ($key == "submit") {
+                        continue;
+                }
+                if (is_numeric($key)) {
+                        collect_recalc_hour($arr, $hostid, $year, $month, $day, $key, $val, $options);
+                } else {
+                        collect_recalc_validate($key, $val, $options);
+                        $arr[$hostid][$year][$month][$day][$key] = $val;
+                }
+        }
+}
+
+function collect_recalc_hour(&$arr, $hostid, $year, $month, $day, $hour, $data, $options)
+{
+        if ($options->debug) {
+                printf("debug: recalc hour %s\n", $hour);
+        }
+
+        foreach ($data as $key => $val) {
+                if ($key == "submit") {
+                        collect_submit_count($hostid, $arr, $year, $month, $day, $hour);
+                        collect_submit_count("all", $arr, $year, $month, $day, $hour);
+                } else {
+                        collect_recalc_validate($key, $val, $options);
+                        $arr[$hostid][$year][$month][$day][$hour][$key] = $val;
+                }
+        }
+}
+
+// 
+// Check if hash array $val contains the required set of array keys for given
+// section $key. The $check value defines how missing keys are handled, see
+// REPAIR_CHECK_XXX konstants.
+// 
+function collect_recalc_validate($key, &$val, $options, $check = REPAIR_CHECK_STRICT)
+{
+        $req = array();
+
+        switch ($key) {
+                case "submit":
+                        $req = array("count" => 1);
+                        break;
+                case "proctime":
+                        $req = array("waiting" => 0, "running" => 0, "count"   => 1, "minimum" => 0, "maximum" => 0);
+                        break;
+                case "state":
+                        $check = REPAIR_CHECK_IGNORE;   // Only non-zero keys are usually set.
+                        $req = array("success" => 0, "warning" => 0, "crashed" => 0);
+                        break;
+                default:
+                        if ($options->verbose) {
+                                printf("Skip validation of section %s, probably custom data.\n", $key);
+                        }
+                        return;
+        }
+
+        foreach ($req as $k => $v) {
+                if (in_array($k, array_keys($val))) {
+                        continue;
+                }
+                switch ($check) {
+                        case REPAIR_CHECK_STRICT:
+                                die(sprintf("%s: missing key %s in section %s\n", $options->prog, $k, $key));
+                                break;
+                        case REPAIR_CHECK_INSERT:
+                                $val[$k] = $v;  // Set default value.
+                                break;
+                        case REPAIR_CHECK_IGNORE:
+                                if ($options->verbose) {
+                                        printf("Ignoring missing key %s in section %s\n", $k, $key);
+                                }
+                                break;
+                }
+        }
+}
+
+// 
 // Process summary.dat files and store entries in the data array. Duplicate
 // entries merge mode is defined in options->repair.
 // 
@@ -587,24 +762,29 @@ function collect_hostid_data($hostid, $statdir, $options, &$data, &$jobqueue)
 // $options:  program options.
 // $data:     statistics data array.
 // 
-function collect_read_data($topdir, &$data, $options)
+function collect_read_data($statdir, &$data, $options)
 {
-        if (($handle = opendir($topdir))) {
+        // 
+        // Process summary.dat before any sub directories.
+        // 
+        $path = sprintf("%s/summary.dat", $statdir);
+        if (file_exists($path)) {
+                collect_file_data($path, $data, $options);
+        }
+
+        if (($handle = opendir($statdir))) {
                 while (($file = readdir($handle)) !== false) {
-                        $path = sprintf("%s/%s", $topdir, $file);
+                        $path = sprintf("%s/%s", $statdir, $file);
                         if ($file == "." || $file == "..") {
                                 continue;
                         }
                         if (is_dir($path)) {
                                 collect_read_data($path, $data, $options);
                         }
-                        if ($file == "summary.dat") {
-                                collect_file_data($path, $data, $options);
-                        }
                 }
                 closedir($handle);
         } else {
-                die(sprintf("%s: failed reading directory %s\n", $options->prog, $topdir));
+                die(sprintf("%s: failed reading directory %s\n", $options->prog, $statdir));
         }
 }
 
@@ -614,7 +794,7 @@ function collect_read_data($topdir, &$data, $options)
 function collect_file_data($file, &$data, $options)
 {
         if ($options->debug) {
-                printf("debug: processing data from %s\n", $file);
+                printf("debug: checking data from %s\n", $file);
         }
 
         // 
@@ -663,10 +843,10 @@ function collect_file_data($file, &$data, $options)
 // 
 function collect_file_check_insert($isset, $mode)
 {
-        if ($isset && $mode == REPAIR_MODE_REPLACE) {
+        if ($mode == REPAIR_MODE_REPLACE && $isset == true) {
                 return true;
         }
-        if (!$isset && $mode == REPAIR_MODE_MISSING) {
+        if ($mode == REPAIR_MODE_MISSING && $isset == false) {
                 return true;
         }
         return false;
@@ -677,6 +857,10 @@ function collect_file_check_insert($isset, $mode)
 // 
 function collect_file_insert(&$entry, $file, $options)
 {
+        if ($options->debug) {
+                printf("debug: inserting data from %s\n", $file);
+        }
+
         if (($handle = fopen($file, "r"))) {
                 $sect = null;
                 while ($str = fgets($handle)) {
@@ -2252,6 +2436,7 @@ function collect_statistics($jobsdir, $statdir, $options)
         // 
         if ($options->repair) {
                 collect_read_data($statdir, $statdata, $options);
+                collect_recalc_data($statdata, $options);
         }
 
         // 
