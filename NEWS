@@ -1,4 +1,4 @@
-Version 0.8.13 (yyyy-mm-dd):
+Version 0.8.13 (2012-09-27):
 
     * Browsing of published results can now be disabled in configuration. It's 
       still possible to publish result (using source/publish.php) even when 
