@@ -976,7 +976,7 @@ function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors
         $graph->SetMarginColor(JPGRAPH_FRAME_BACKGROUND_COLOR);
         $graph->legend->SetFillColor(JPGRAPH_LEGEND_BACKGROUND_COLOR);
         $graph->legend->SetColor(JPGRAPH_LEGEND_FOREGROUND_COLOR, JPGRAPH_LEGEND_BORDER_COLOR);
-        $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+        $graph->footer->right->Set(sprintf("Generated: %s", strftime("%Y-%m-%d")));
         $graph->footer->right->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
 
         // 
@@ -1117,7 +1117,7 @@ function graph_total_submit($graphdir, $hostid, $options, $data)
 // 
 function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Number of submits %s", strftime("%G", $timestamp));
+        $title = sprintf("Number of submits %s", strftime("%Y", $timestamp));
         $total = 0;
         $image = sprintf("%s/submit.png", $graphdir);
 
@@ -1165,7 +1165,7 @@ function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Number of submits for %s", strftime("%B %G", $timestamp));
+        $title = sprintf("Number of submits for %s", strftime("%B %Y", $timestamp));
         $total = 0;
         $image = sprintf("%s/submit.png", $graphdir);
 
@@ -1213,7 +1213,7 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Number of submits for %s", strftime("%G-%m-%d", $timestamp));
+        $title = sprintf("Number of submits for %s", strftime("%Y-%m-%d", $timestamp));
         $total = 0;
         $image = sprintf("%s/submit.png", $graphdir);
 
@@ -1292,7 +1292,7 @@ function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $color
         $graph->legend->Pos(0.03, 0.1);
         $graph->legend->SetFillColor(JPGRAPH_LEGEND_BACKGROUND_COLOR);
         $graph->legend->SetColor(JPGRAPH_LEGEND_FOREGROUND_COLOR, JPGRAPH_LEGEND_BORDER_COLOR);
-        $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+        $graph->footer->right->Set(sprintf("Generated: %s", strftime("%Y-%m-%d")));
         $graph->footer->right->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
 
         // 
@@ -1502,7 +1502,7 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
 // 
 function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Process time %s (avarage)", strftime("%G", $timestamp));
+        $title = sprintf("Process time %s (avarage)", strftime("%Y", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
 
@@ -1557,7 +1557,7 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Process time %s (avarage)", strftime("%B %G", $timestamp));
+        $title = sprintf("Process time %s (avarage)", strftime("%B %Y", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
 
@@ -1612,7 +1612,7 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
 {
-        $title = sprintf("Process time %s (avarage)", strftime("%G-%m-%d", $timestamp));
+        $title = sprintf("Process time %s (avarage)", strftime("%Y-%m-%d", $timestamp));
         $total = 0;
         $image = sprintf("%s/proctime.png", $graphdir);
 
@@ -1670,7 +1670,7 @@ function graph_draw_pieplot($labels, $values, $image, $title, $colors)
 
         $graph->title->Set($title);
         $graph->title->SetFont(FF_FONT2, FS_BOLD);
-        $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+        $graph->footer->right->Set(sprintf("Generated: %s", strftime("%Y-%m-%d")));
         $graph->footer->right->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
         $graph->legend->SetFillColor(JPGRAPH_LEGEND_BACKGROUND_COLOR);
         $graph->legend->SetColor(JPGRAPH_LEGEND_FOREGROUND_COLOR, JPGRAPH_LEGEND_BORDER_COLOR);
@@ -1904,7 +1904,7 @@ function graph_draw_system_load($data, $image, $title, $mode, $options)
         $graph->legend->Pos(0.03, 0.1);
         $graph->legend->SetFillColor(JPGRAPH_LEGEND_BACKGROUND_COLOR);
         $graph->legend->SetColor(JPGRAPH_LEGEND_FOREGROUND_COLOR, JPGRAPH_LEGEND_BORDER_COLOR);
-        $graph->footer->right->Set(sprintf("Generated: %s", strftime("%G-%m-%d")));
+        $graph->footer->right->Set(sprintf("Generated: %s", strftime("%Y-%m-%d")));
         $graph->footer->right->SetColor(JPGRAPH_NOTES_FOREGROUND_COLOR);
 
         //
@@ -2040,7 +2040,7 @@ function graph_draw_system_load($data, $image, $title, $mode, $options)
 function graph_system_load_daily($graphdir, $options, $timestamp, $data)
 {
         $image = sprintf("%s/sysload.png", $graphdir);
-        $title = sprintf("System load (%s)", strftime("%G-%m-%d", $timestamp));
+        $title = sprintf("System load (%s)", strftime("%Y-%m-%d", $timestamp));
 
         if ($options->debug) {
                 printf("debug: creating graphic file %s\n", $image);
@@ -2054,7 +2054,7 @@ function graph_system_load_daily($graphdir, $options, $timestamp, $data)
 function graph_system_load_monthly($graphdir, $options, $timestamp, $data)
 {
         $image = sprintf("%s/sysload.png", $graphdir);
-        $title = sprintf("System load (%s)", strftime("%B %G", $timestamp));
+        $title = sprintf("System load (%s)", strftime("%B %Y", $timestamp));
 
         if ($options->debug) {
                 printf("debug: creating graphic file %s\n", $image);
@@ -2068,7 +2068,7 @@ function graph_system_load_monthly($graphdir, $options, $timestamp, $data)
 function graph_system_load_yearly($graphdir, $options, $timestamp, $data)
 {
         $image = sprintf("%s/sysload.png", $graphdir);
-        $title = sprintf("System load (year %s)", strftime("%G", $timestamp));
+        $title = sprintf("System load (year %s)", strftime("%Y", $timestamp));
         if ($options->debug) {
                 printf("debug: creating graphic file %s\n", $image);
         }
@@ -2330,7 +2330,7 @@ function collect_flush_graphics($statdir, $data, $options)
                         $graphdir = sprintf("%s/%s/%s", $statdir, $hostid, $sect1);
                         $datetime = mktime(0, 0, 0, 1, 1, $sect1);
                         if ($options->debug) {
-                                printf("debug: generate yearly (%s) graphics:\n", strftime("%G-%m-%d", $datetime));
+                                printf("debug: generate yearly (%s) graphics:\n", strftime("%Y-%m-%d", $datetime));
                                 printf("debug:   hostid = %s\n", $hostid);
                                 printf("debug:   resdir = %s\n", $graphdir);
                         }
@@ -2348,7 +2348,7 @@ function collect_flush_graphics($statdir, $data, $options)
                                 $graphdir = sprintf("%s/%s/%s/%s", $statdir, $hostid, $sect1, $sect2);
                                 $datetime = mktime(0, 0, 0, $sect2, 1, $sect1);
                                 if ($options->debug) {
-                                        printf("debug: generate monthly (%s) graphics:\n", strftime("%G-%m-%d", $datetime));
+                                        printf("debug: generate monthly (%s) graphics:\n", strftime("%Y-%m-%d", $datetime));
                                         printf("debug:   hostid = %s\n", $hostid);
                                         printf("debug:   resdir = %s\n", $graphdir);
                                 }
@@ -2366,7 +2366,7 @@ function collect_flush_graphics($statdir, $data, $options)
                                         $graphdir = sprintf("%s/%s/%s/%s/%s", $statdir, $hostid, $sect1, $sect2, $sect3);
                                         $datetime = mktime(0, 0, 0, $sect2, $sect3, $sect1);
                                         if ($options->debug) {
-                                                printf("debug: generate daily (%s) graphics:\n", strftime("%G-%m-%d", $datetime));
+                                                printf("debug: generate daily (%s) graphics:\n", strftime("%Y-%m-%d", $datetime));
                                                 printf("debug:   hostid = %s\n", $hostid);
                                                 printf("debug:   resdir = %s\n", $graphdir);
                                         }
