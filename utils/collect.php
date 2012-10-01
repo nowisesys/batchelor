@@ -108,15 +108,15 @@ define("REPAIR_MODE_MISSING", 1);
 define("REPAIR_MODE_REPLACE", 2);
 define("REPAIR_MODE_DEFAULT", "missing");
 
-define("REPAIR_CHECK_DEFAULT", true);
-
 // 
-// Check mode for summary.dat files.
+// Check mode for summary.dat files:
 // 
 define("REPAIR_CHECK_STRICT", 1);       // Die on missing keys
 define("REPAIR_CHECK_INSERT", 2);       // Add default values
 define("REPAIR_CHECK_IGNORE", 3);       // Ignore
-
+// 
+// Default check mode:
+// 
 define("REPAIR_CHECK_DEFAULT", REPAIR_CHECK_STRICT);
 
 // 
