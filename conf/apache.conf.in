@@ -26,79 +26,55 @@
 Alias /batchelor/ /var/www/localhost/apps/batchelor/source/
 
 <DirectoryMatch ".*/\.svn/">
-    Order allow,deny
-    Deny from all
+    Require all denied
 </DirectoryMatch>
 	
 <Directory /var/www/localhost/apps/batchelor/source/>
-    Order deny,allow
-    Deny from all
     # Allow from localhost (ipv4/ipv6) by default:
-    Allow from 127.0.0.1 ::1
+    Require local
+    
     Options Indexes FollowSymLinks MultiViews
     DirectoryIndex index.php index.html
-    # Files that should not be readable as plain text by world.
-    # For Apache version < 1.3:
-    #   <Files ~ "\.(inc|js)$">
-    #       Order allow,deny
-    #       Deny from all
-    #   </Files>
-    # For Apache version >= 1.3:
-    #   <FilesMatch "\.(inc|bak|*~)$">
-    #       Order allow,deny
-    #       Deny from all
-    #   </FilesMatch>
-    # For Apache version >= 2.0.x:
+    
     <FilesMatch "\.(inc|bak|conf|.*~)$">
-        Order allow,deny
-	Deny from all
+	Require all denied
     </FilesMatch>
 </Directory>
 
 <IfDefine WEB_SERVICE>
     # Directory for the XML-RPC protocol:
     <Directory /var/www/localhost/apps/batchelor/source/ws/xmlrpc/>
-        Order deny,allow
-    	Deny from all
-    	Allow from 127.0.0.1 ::1
+	Require local
     	Options Indexes FollowSymLinks MultiViews
     </Directory>
 
     # Directory for the HTTP RPC protocol:
     <Directory /var/www/localhost/apps/batchelor/source/ws/http/>
-        Order deny,allow
-    	Deny from all
-    	Allow from 127.0.0.1 ::1
+	Require local
     	Options Indexes FollowSymLinks MultiViews
     </Directory>
     
     # Directory for the REST protocol:
     <Directory /var/www/localhost/apps/batchelor/source/ws/rest/>
-        Order deny,allow
-    	Deny from all
-    	Allow from 127.0.0.1 ::1
+	Require local
     	Options Indexes FollowSymLinks MultiViews
     </Directory>
 
     # Directory for the SOAP protocol:
     <Directory /var/www/localhost/apps/batchelor/source/ws/soap/>
-        Order deny,allow
-    	Deny from all
-    	Allow from 127.0.0.1 ::1
+	Require local
     	Options Indexes FollowSymLinks MultiViews
     </Directory>
 
     # Directory for XML Schemas (WSDL and REST XSD):
     <Directory /var/www/localhost/apps/batchelor/source/ws/schema/>
-        Order deny,allow
-    	Deny from all
-    	Allow from 127.0.0.1 ::1
+	Require local
     	Options Indexes FollowSymLinks MultiViews
     </Directory>
 </IfDefine>
 
 <IfDefine !WEB_SERVICE>
     <Directory /var/www/localhost/apps/batchelor/source/ws/>
-    	Deny from all
+	Require all denied
     </Directory>
 </IfDefine>
