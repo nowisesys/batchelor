@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007 Anders Lövgren
+//  Copyright (C) 2007-2017 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -361,7 +361,7 @@ function cache_get_job_size($path, &$data)
                                                 $data['size'] += cache_get_job_size(sprintf("%s/%s", $path, $file));
                                                 return;
                                         } else {
-                                                $data['files']++;
+                                                $data['files'] ++;
                                                 $data['size'] += filesize(sprintf("%s/%s", $path, $file));
                                         }
                                 }
@@ -433,26 +433,25 @@ function main(&$argv, $argc)
         // 
         // Setup defaults in options array:
         // 
-        $options = array(
-                "cleanup" => false,
-                "list" => false,
-                "find" => false,
-                "hostid" => null,
-                "ipaddr" => null,
-                "age" => 0,
-                "now" => time(),
-                "dry_run" => false,
-                "machine" => false,
-                "debug" => false,
-                "verbose" => 0,
-                "prog" => $prog,
-                "version" => $vers
+        $options = (object) array(
+                    "cleanup" => false,
+                    "list"    => false,
+                    "find"    => false,
+                    "hostid"  => null,
+                    "ipaddr"  => null,
+                    "age"     => 0,
+                    "now"     => time(),
+                    "dry_run" => false,
+                    "machine" => false,
+                    "debug"   => false,
+                    "verbose" => 0,
+                    "prog"    => $prog,
+                    "version" => $vers
         );
 
         // 
         // Fill $options with command line options.
         // 
-        $options = (object) $options;
         parse_options($argv, $argc, $options);
 
         // 
@@ -539,4 +538,5 @@ function main(&$argv, $argc)
 // Start normal script execution.
 // 
 main($_SERVER['argv'], $_SERVER['argc']);
+
 ?>

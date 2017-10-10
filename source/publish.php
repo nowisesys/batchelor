@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2011 Anders Lövgren
+//  Copyright (C) 2011-2017 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -162,8 +162,8 @@ function publish_result_form()
 // 
 function publish_list()
 {
-        $options = array(
-                "none" => "None", "edit" => "Editable", "others" => "Others"
+        $options = (object) array(
+                    "none"   => "None", "edit"   => "Editable", "others" => "Others"
         );
 
         if (isset($_REQUEST['filter'])) {
@@ -173,7 +173,7 @@ function publish_list()
         }
 
         if ($filter != "none") {
-                printf("<h2><img src=\"icons/nuvola/published.png\"> %s published jobs:</h2>\n", $options[$filter]);
+                printf("<h2><img src=\"icons/nuvola/published.png\"> %s published jobs:</h2>\n", $options->$filter);
         } else {
                 printf("<h2><img src=\"icons/nuvola/published.png\"> All published jobs:</h2>\n");
         }
@@ -182,7 +182,7 @@ function publish_list()
                 put_error("Browsing of published results is forbidden by the system configuration.");
                 return false;
         }
-        
+
         $data = publish_get_data();
 
         printf("<p><form action=\"publish.php\">\n");
@@ -356,4 +356,5 @@ if (isset($_REQUEST['action'])) {
         }
 }
 load_ui_template("popup");
+
 ?>

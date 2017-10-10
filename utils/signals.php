@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2008 Anders Lövgren
+//  Copyright (C) 2007-2017 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -78,25 +78,25 @@ function parse_options(&$argv, $argc, &$options)
                         case "-d":
                         case "--debug":           // Enable debug.
                                 check_arg($key, $val, false, $options->prog);
-                                $options['debug'] = true;
+                                $options->debug = true;
                                 break;
                         case "-v":
                         case "--verbose":         // Be more verbose.
                                 check_arg($key, $val, false, $options->prog);
-                                $options['verbose']++;
+                                $options->verbose ++;
                                 break;
                         case "-h":
                         case "--help":            // Show help.
-                                usage($options['prog'], $val);
+                                usage($options->prog, $val);
                                 exit(0);
                         case "-V":
                         case "--version":         // Show version info.
                                 check_arg($key, $val, false, $options->prog);
-                                version($options['prog'], $options['version']);
+                                version($options->prog, $options->version);
                                 exit(0);
                         case "--os":
                                 check_arg($key, $val, true, $options->prog);
-                                $options['os'] = $val;
+                                $options->os = $val;
                                 break;
                         default:
                                 die(sprintf("%s: unknown option '%s', see --help\n", $options->prog, $key));
@@ -161,24 +161,23 @@ function main($argc, &$argv)
         //
         // Setup defaults in options array:
         //
-        $options = array(
-                "os" => "linux",
-                "debug" => false,
-                "verbose" => 0,
-                "prog" => $prog,
-                "version" => $vers
+        $options = (object) array(
+                    "os"      => "linux",
+                    "debug"   => false,
+                    "verbose" => 0,
+                    "prog"    => $prog,
+                    "version" => $vers
         );
 
         //
         // Fill $options with command line options.
         //
-    parse_options($argv, $argc, $options);
-        $options = (object) $options;
+        parse_options($argv, $argc, $options);
 
         //
         // Dump options:
         //
-    if ($options->debug) {
+        if ($options->debug) {
                 var_dump($options);
         }
 
@@ -190,4 +189,5 @@ function main($argc, &$argv)
 // Start normal script execution.
 //
 main($_SERVER['argc'], $_SERVER['argv']);
+
 ?>
