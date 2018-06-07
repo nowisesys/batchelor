@@ -17,10 +17,15 @@
         {
             "type": "composer",
             "url": "https://it.bmc.uu.se/andlov/php/uup-web-component/"
+        },
+        {
+            "type": "composer",
+            "url": "https://it.bmc.uu.se/andlov/php/uup-auth/"
         }
     ],
     "require": {
-        "bmc/uup-site": ">=1.0.20",
-        "bmc/uup-web-component": ">=1.2.15"
+        "bmc/uup-site": ">=1.0.21",
+        "bmc/uup-web-component": ">=1.2.15",
+        "bmc/uup-auth": ">=2.3.18"
     }
 }
