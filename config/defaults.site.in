@@ -61,7 +61,7 @@ return array(
 //        /**
 //         * Default theme.
 //         */
-//        'theme' => 'default',
+          'theme' => 'batchelor',
 //        /**
 //         * The root directory (virtual host).
 //         */
