@@ -2,7 +2,7 @@
     "name": "bmc/batchelor",
     "description": "batch job queue manager",
     "type": "project",
-    "license": "GPL2",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Anders Lövgren",
