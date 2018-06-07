@@ -7,6 +7,10 @@
         {
             "name": "Anders Lövgren",
             "email": "anders.lovgren@bmc.uu.se"
+        },
+        {
+            "name": "Anders Lövgren",
+            "email": "andlov@nowise.se"
         }
     ],
     "repositories": [
@@ -27,5 +31,10 @@
         "bmc/uup-site": ">=1.0.21",
         "bmc/uup-web-component": ">=1.2.15",
         "bmc/uup-auth": ">=2.3.18"
+    },
+    "autoload": {
+        "psr-0": {
+            "Batchelor\\": "source"
+        }
     }
 }
