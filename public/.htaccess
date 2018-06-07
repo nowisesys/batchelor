@@ -1,0 +1,11 @@
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} "/batchelor2/(theme|assets)"
+RewriteRule "(.*)" - [L]
+
+RewriteCond %{REQUEST_FILENAME} ^.*/$
+RewriteRule ^(.*)$ /batchelor2/dispatch.php?uri=$1index [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /batchelor2/dispatch.php?uri=$1 [QSA,L]

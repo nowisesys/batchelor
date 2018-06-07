@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * Configuration file for application/site authentication.
+ * 
+ * Four things has to be done to enable authentication:
+ * 
+ *   1. Copy this file to auth.inc to make it config protected.
+ *   2. Enable authentication in defaults.site.
+ *   3. Install bmc/uup-auth using composer (run composer require bmc/uup-auth).
+ *   4. Edit the array below to setup authenticators and restrictors.
+ * 
+ * The default configuration has prepared an authentication stack for you, use
+ * it as an inspiration. Some authenticators requires external extensions (like PAM).
+ * 
+ * Implementors are encourage to use forms instead of Basic HTTP Auth as frontend
+ * for gathering users password. Future releases of bmc/uup-site might include this 
+ * in the default theme.
+ * 
+ * More examples is bundled with bmc/uup-auth. Remember to add use statements for 
+ * the auto-loader when changing the list.
+ */
+use UUP\Authentication\Authenticator\Authenticator;
+use UUP\Authentication\Authenticator\CasAuthenticator;
+use UUP\Authentication\Authenticator\RequestAuthenticator;
+use UUP\Authentication\Restrictor\AddressRestrictor;
+use UUP\Authentication\Validator\LdapBindValidator;
+use UUP\Authentication\Validator\PamValidator;
+
+// 
+// Redirect behavior for request authenticators.
+// 
+abstract class FormAuthenticator extends RequestAuthenticator
+{
+
+        public function __construct($validator, $options)
+        {
+                $options['return'] = false;
+                parent::__construct($validator, $options);
+        }
+
+        public function login()
+        {
+                if (!parent::accepted()) {
+                        parent::login();
+                        exit(0);
+                }
+        }
+
+}
+
+// 
+// Authenticate against LDAP server.
+// 
+class LdapAuthenticator extends FormAuthenticator
+{
+
+        public function __construct($host, $port = 636)
+        {
+                parent::__construct(
+                    new LdapBindValidator($host, $port), array(
+                        'name'  => 'ldap',
+                        'login' => '?form=ldap',
+                        'user'  => 'user',
+                        'pass'  => 'pass'
+                    )
+                );
+        }
+
+}
+
+// 
+// Authenticate against local PAM-stack (UNIX only).
+// 
+class SystemAuthenticator extends FormAuthenticator
+{
+
+        public function __construct()
+        {
+                parent::__construct(
+                    new PamValidator(), array(
+                        'name'  => 'pam',
+                        'login' => '?form=pam',
+                        'user'  => 'user',
+                        'pass'  => 'pass'
+                    )
+                );
+        }
+
+}
+
+// 
+// The chain is split in authenticators and restrictors. 
+// 
+// Hint: If you want to make part of the application/site public available without 
+//       authentication from within the corporate network, simply add an address
+//       restrictor as sufficient or use the domain authenticator.
+// 
+return array(
+        // 
+        // Plugin account authenticator objects in stack:
+        // 
+        'auth'   => array(
+                'pam'  => (new SystemAuthenticator())
+                    ->visible(true)
+                    ->control(Authenticator::SUFFICIENT)
+                    ->name('System')
+                    ->description('System Account (PAM)'),
+                'cas'  => (new CasAuthenticator('cas.example.com'))
+                    ->visible(true)
+                    ->control(Authenticator::SUFFICIENT)
+                    ->name('CAS')
+                    ->description('CAS Server Login'),
+                'ldap' => (new LdapAuthenticator('ldaps://ldap.example.com'))
+                    ->visible(true)
+                    ->control(Authenticator::SUFFICIENT)
+                    ->name('LDAP')
+                    ->description('LDAP Authentication')
+        ),
+        // 
+        // Add some login restrictions:
+        // 
+        'access' => array(
+                'addr' => (new AddressRestrictor(array('::1', '127.0.0.1', '192.168.0.0/16')))
+                    ->visible(false)
+                    ->control(Authenticator::REQUIRED)
+        )
+);

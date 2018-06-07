@@ -1,0 +1,268 @@
+<?php
+
+/* 
+ * Default options for this site. 
+ * 
+ * This array gets passed to Config. Undefined options will be assigned a value
+ * detected from server environment or from pre-defined defaults.
+ * 
+ * The directory structure are assumed to be:
+ * 
+ * Directory:           Option:
+ * -----------          ----------
+ * vhost/               // root
+ *   +-- config/        // configuration
+ *   +-- cgi-bin/       
+ *   +-- public/        // public files and documents (htdocs)
+ *   |     +-- theme/   // theme suport (css, js, img, fonts)
+ *   +-- locale/        // translation files (gettext)
+ *   +-- template/      // template
+ *   +-- vendor/        // composer directory
+ * 
+ * Default values:
+ * 
+ * Options:             Value:
+ * ----------           -----------
+ * theme                default
+ * location             /
+ * docs                 Using $_SERVER['DOCUMENT_ROOT']
+ * root                 Parent directory of docs
+ * 
+ * The site settings (this file) is provided to the page in the following search order:
+ * 
+ * 1. Path argument to page class constructor.
+ * 2. By UUP_SITE_DEFAULTS defined PHP constant.
+ * 3. By UUP_SITE_DEFAULTS environment variable.
+ * 4. Looking in pre-defined location relative virtual host root:
+ *    a) config
+ *    b) vendor/bmc/uup-site/config
+ * 
+ * The detected settings for a complete unconfigured site are:
+ * 
+ * Array
+ * (
+ *         [theme]    => default
+ *         [root]     => /var/www/localhost
+ *         [docs]     => /var/www/localhost/htdocs
+ *         [template] => /var/www/localhost/vendor/bmc/uup-site/template
+ *         [location] => /
+ *         [css]      => /css/default
+ *         [js]       => /js/default
+ *         [img]      => /img/default
+ *         [fonts]    => /fonts/default
+ * )
+ */
+
+return array(
+//        /**
+//         * Common site name.
+//         */
+//        'name' => 'Default site name',
+//        /**
+//         * Default theme.
+//         */
+//        'theme' => 'default',
+//        /**
+//         * The root directory (virtual host).
+//         */
+//        'root'  => null,
+//        /**
+//         * The document root.
+//         */
+//        'docs'  => null,
+//        /**
+//         * The templates directory.
+//         */
+//        'template' => null,
+//        /**
+//         * The site URI (must start with '/').
+//         */
+//        'location' => '/uup-site',
+//        /**
+//         * The fortune cookie (use string for static message).
+//         */
+//         'fortune' => true,
+//        /**
+//         * The CSS location or sub directory name.
+//         */
+//        'css' => 'css',
+//        /**
+//         * The JS location or sub directory name.
+//         */
+//        'js'  => 'js',
+//        /**
+//         * The images location or sub directory name.
+//         */
+//        'img' => 'img',
+//        /**
+//         * The fonts location or sub directory name.
+//         */
+//        'fonts' => 'fonts',
+//        /**
+//         * Enable session management. Use boolean (enable/disable) or string (session name).
+//         */
+//        'session' => true,
+//        /**
+//         * The authentication options. Enables session and suggests config->tools->auth.
+//         */
+//        'auth'      => array(
+//                'start'  => '/',                      // Start page after successful logon
+//                'logon'  => '/logon',                 // The logon page
+//                'logoff' => '/logoff',                // The logoff page
+//                'config' => __DIR__ . '/auth.inc',    // Config file for authenticators
+//                'sso'    => true                      // Enable SSO login
+//        ),
+//        /**
+//         * The page/site edit options. Enables session and suggests config->tools->auth.
+//         */
+//        'edit' => array(
+//                'view' => '/edit/view',               // The editor frontend
+//                'ajax' => '/edit/ajax',               // The editor backend
+//                'user' => array('webmaster'),         // Allowed editors
+//                'host' => 'localhost'                 // The edit host
+//        ),
+//        /**
+//         * License options for files created from templates.
+//         */
+//        'license' => array(
+//                'file' => 'apache-2.0.txt',     // See directory edit/templates/license
+//                'project' => '',                // The project name.
+//                'company' => ''                 // The company name.
+//        ),
+//        /**
+//         * The toolbox plugins to expose. Themes can choose whether to show them or not.
+//         */
+//        'tools' => array(
+//                'home'      => false,    // Enable home navigation icon.
+//                'auth'      => false,    // Enable authentication box.
+//                'search'    => false,    // Enable Google search box.
+//                'translate' => false,    // Enable Google translate box.
+//                'edit'      => false     // Enable online page/site editor.
+//        ),
+//        /**
+//         * Locale support (gettext). Comment to disable locale support.
+//         */
+//        'locale' => array(
+//                /**
+//                 * The absolute path.
+//                 */
+//                'directory'  => 'locale',
+//                /**
+//                 * The text domain name.
+//                 */
+//                'textdomain' => 'messages',
+//                /**
+//                 * Default language.
+//                 */
+//                'default'    => 'en-us',
+//                /**
+//                 * Available translations and locales.
+//                 */
+//                'map'  => array(
+//                        "sv-se" => array(
+//                                "locale"  => "sv_SE", // Swedish
+//                                "lang"    => _("Swedish"),
+//                                "country" => _("Sweden")
+//                        ),
+//                        "en-gb" => array(
+//                                "locale"  => "en_GB", // English (GB)
+//                                "lang"    => _("English (GB)"),
+//                                "country" => _("United Kingdom")
+//                        ),
+//                        "en-us" => array(
+//                                "locale"  => "en_US", // English (US)
+//                                "lang"    => _("English (US)"),
+//                                "country" => _("United States")
+//                        ),
+//                        "c"  => array(
+//                                "locale"  => "C", // Browser default
+//                                "lang"    => _("Browser Default"),
+//                                "country" => _("Automatic")
+//                        )
+//                ), 
+//                /**
+//                 * Alias to language code mapping.
+//                 */
+//                'alias' => array(
+//                        "sv"    => "sv-se",
+//                        "se"    => "sv-se",
+//                        "en"    => "en-us"
+//                ),
+//                /**
+//                 * The locale categories to apply.
+//                 */
+//                'categories' => array(
+//                        LC_MESSAGES, LC_CTYPE, LC_TIME, LC_NUMERIC
+//                )
+//        ),
+//        /**
+//         * Static defined HTTP headers (array) or dynamic fetched from headers.inc 
+//         * files in script dir if true. Use false to completely disable.
+//         */
+//        'headers' => array(
+//                'meta' => array(
+//                        array(
+//                                'name'    => 'robots',
+//                                'content' => 'index, follow'
+//                        ),
+//                        array(
+//                                'name'    => 'keywords',
+//                                'content' => 'some,tags,for,site'
+//                        ),
+//                        array(
+//                                'name'    => 'author',
+//                                'content' => 'Anders Lövgren'
+//                        )
+//                )
+//        ),
+//        /**
+//         * Use footer file. Search for named file (defaults to 'footer.inc') in
+//         * some standard locations. Defaults to true, use false to disable.
+//         */
+//        'footer' => true,
+//        /**
+//         * Static defined top menu (array) or dynamic build from topmenu.menu files
+//         * if true. Use false to completely disable.
+//         */
+//        'topmenu'   => false,
+//        /**
+//         * Static defined navigation menu (array) or dynamic build from standard.menu 
+//         * files unless false.
+//         */
+//        'navmenu'   => true,
+//        /**
+//         * Static defined sidebar menu (array) or dynamic build from sidebar.menu 
+//         * files. Use false to completely disable.
+//         */
+//        'sidebar'   => true,
+//        /**
+//         * Content specification (array) or dynamic fetched from content.spec files
+//         * if true. Use false to completely disable.
+//         */
+//         'content'  => false,
+//        /**
+//         * Publisher information. Can be overridden by publish.inc in page directory or
+//         * template/publish.inc defined for all pages.
+//         */
+//        'publish' => array(
+//                "contact" => array(
+//                        "href" => "http://directory.example.com/info/?id=4775",
+//                        "name" => "Page Responsible"
+//                ),
+//                "editor"  => array(
+//                        "href" => "http://www.example.com/webmaster",
+//                        "name" => "Webmaster"
+//                ),
+//                "copying" => "2016",
+//                "updated" => getlastmod()
+//        ),
+//        /**
+//         * The exception handling mode (bitmask of one or more UUP_SITE_EXCEPT_XXX constants).
+//         */
+//        'exception' => UUP_SITE_EXCEPT_BRIEF | UUP_SITE_EXCEPT_LOG,
+//        /**
+//         * Dump parsed config to error log.
+//         */
+//        'debug' => false,
+
+);
