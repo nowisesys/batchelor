@@ -24,7 +24,7 @@ $output = new format($this);
     <body>
         <style>
             .header-container {
-                background-image: url('<?= $config->img("pexels-photo-312419.jpeg") ?>');
+                background-image: url('<?= $config->img("pexels-photo-1020315.jpeg") ?>');
                 background-repeat: no-repeat;
                 background-size: cover;
                 background-position: center;
@@ -46,10 +46,10 @@ $output = new format($this);
         <!-- Site logotype etc. -->
         <div id='header'>
             <div class="w3-hide-small w3-hide-medium header-container" style='text-align: center'>
-                <div class="w3-xxlarge w3-padding-16"><?= $output->title() ?></div>
+                <div class="w3-xxlarge w3-padding-16 w3-text-light-grey"><?= $output->title() ?></div>
             </div>
             <div class="w3-hide-small w3-hide-large header-container" style='text-align: center'>
-                <div class="w3-large w3-padding-16"><?= $output->title() ?></div>
+                <div class="w3-xlarge w3-padding-16 w3-text-light-grey"><?= $output->title() ?></div>
             </div>
         </div>
 
