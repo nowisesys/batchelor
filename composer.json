@@ -1,0 +1,26 @@
+{
+    "name": "bmc/batchelor",
+    "description": "batch job queue manager",
+    "type": "project",
+    "license": "GPL2",
+    "authors": [
+        {
+            "name": "Anders Lövgren",
+            "email": "anders.lovgren@bmc.uu.se"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://it.bmc.uu.se/andlov/php/uup-site/"
+        },
+        {
+            "type": "composer",
+            "url": "https://it.bmc.uu.se/andlov/php/uup-web-component/"
+        }
+    ],
+    "require": {
+        "bmc/uup-site": ">=1.0.20",
+        "bmc/uup-web-component": ">=1.2.15"
+    }
+}
