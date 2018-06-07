@@ -57,7 +57,7 @@ return array(
 //        /**
 //         * Common site name.
 //         */
-//        'name' => 'Default site name',
+          'name' => 'Batchelor',
 //        /**
 //         * Default theme.
 //         */
@@ -77,7 +77,7 @@ return array(
 //        /**
 //         * The site URI (must start with '/').
 //         */
-//        'location' => '/uup-site',
+          'location' => '/batchelor2',
 //        /**
 //         * The fortune cookie (use string for static message).
 //         */
@@ -101,7 +101,7 @@ return array(
 //        /**
 //         * Enable session management. Use boolean (enable/disable) or string (session name).
 //         */
-//        'session' => true,
+          'session' => true,
 //        /**
 //         * The authentication options. Enables session and suggests config->tools->auth.
 //         */
