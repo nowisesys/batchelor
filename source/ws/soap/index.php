@@ -36,8 +36,8 @@
 // // 
 // class VersionResponse {
 //   var $versionReturn;
-//   function VersionResponse() {
-//     $this->versionReturn = WS_SOAP_INTERFACE_VERSION;
+//   function VersionResponse($version) {
+//     $this->versionReturn = $version;
 //   }
 // }
 // function version() {
