@@ -25,16 +25,22 @@
         {
             "type": "composer",
             "url": "https://it.bmc.uu.se/andlov/php/uup-auth/"
+        },
+        {
+            "type": "composer",
+            "url": "https://it.bmc.uu.se/andlov/php/uup-soap/"
         }
     ],
     "require": {
         "bmc/uup-site": ">=1.0.21",
         "bmc/uup-web-component": ">=1.2.15",
-        "bmc/uup-auth": ">=2.3.18"
+        "bmc/uup-auth": ">=2.3.18",
+        "bmc/uup-soap": ">=1.1.3"
     },
     "autoload": {
         "psr-0": {
-            "Batchelor\\": "source"
+            "Batchelor\\": "source",
+            "Extern\\": "source"
         }
     }
 }
