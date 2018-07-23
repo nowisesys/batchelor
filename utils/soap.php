@@ -40,7 +40,7 @@ function generate_classes($wsdl)
         // var_dump($soap->__getTypes());
 
         foreach ($soap->__getTypes() as $type) {
-                $lines = split("\n", $type);
+                $lines = explode("\n", $type);
                 $class = "";
                 $param = array();
                 foreach ($lines as $line) {
@@ -63,12 +63,12 @@ function generate_classes($wsdl)
                                 printf("//\n");
                                 printf("class %s {\n", $class);
                                 foreach ($param as $name => $type) {
-                                        printf("    var \$%s;\t// %s\n", $name, $type);
+                                        printf("    public \$%s;\t// %s\n", $name, $type);
                                 }
                                 if (count($param)) {
-                                        printf("    function %s($%s) {\n", $class, implode(", $", array_keys($param)));
+                                        printf("    public function __constructor($%s) {\n", implode(", $", array_keys($param)));
                                 } else {
-                                        printf("    function %s() {\n", $class);
+                                        printf("    public function __constructor() {\n");
                                 }
                                 foreach ($param as $name => $type) {
                                         printf("        \$this->%s = \$%s;\n", $name, $name);
@@ -125,4 +125,4 @@ function main($argc, &$argv)
 }
 
 main($_SERVER['argc'], $_SERVER['argv']);
-?>
+

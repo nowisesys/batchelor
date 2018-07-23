@@ -1,7 +1,7 @@
 <?php
 
 // -------------------------------------------------------------------------------
-//  Copyright (C) 2007-2009 Anders Lövgren
+//  Copyright (C) 2007-2018 Anders Lövgren
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -34,9 +34,9 @@ function get_wsdl_url()
         // 
         $opts = array(
                 "scheme" => "http",
-                "addr" => "localhost",
-                "port" => 80,
-                "path" => "/batchelor/ws"
+                "addr"   => "localhost",
+                "port"   => 80,
+                "path"   => "/batchelor/ws"
         );
 
         // 
@@ -72,9 +72,9 @@ function get_wsdl_url()
 class ResumeParams
 {
 
-        var $job; // jobIdentity
+        public $job;        // jobIdentity
 
-        function ResumeParams($job)
+        public function __construct($job)
         {
                 $this->job = $job;
         }
@@ -87,10 +87,10 @@ class ResumeParams
 class JobIdentity
 {
 
-        var $jobID; // string
-        var $result; // string
+        public $jobID;      // string
+        public $result;     // string
 
-        function JobIdentity($jobID, $result)
+        public function __construct($jobID, $result)
         {
                 $this->jobID = $jobID;
                 $this->result = $result;
@@ -104,9 +104,9 @@ class JobIdentity
 class ResumeResponse
 {
 
-        var $return; // boolean
+        public $return;     // boolean
 
-        function ResumeResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -119,9 +119,9 @@ class ResumeResponse
 class SuspendParams
 {
 
-        var $job; // jobIdentity
+        public $job;        // jobIdentity
 
-        function SuspendParams($job)
+        public function __construct($job)
         {
                 $this->job = $job;
         }
@@ -134,9 +134,9 @@ class SuspendParams
 class SuspendResponse
 {
 
-        var $return; // boolean
+        public $return;     // boolean
 
-        function SuspendResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -149,10 +149,10 @@ class SuspendResponse
 class QueueParams
 {
 
-        var $sort; // string
-        var $filter; // string
+        public $sort;       // string
+        public $filter;     // string
 
-        function QueueParams($sort, $filter)
+        public function __construct($sort, $filter)
         {
                 $this->sort = $sort;
                 $this->filter = $filter;
@@ -166,9 +166,9 @@ class QueueParams
 class QueueResponse
 {
 
-        var $return; // queuedJob
+        public $return;     // queuedJob
 
-        function QueueResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -181,10 +181,10 @@ class QueueResponse
 class QueuedJob
 {
 
-        var $jobIdentity; // jobIdentity
-        var $state; // string
+        public $jobIdentity;        // jobIdentity
+        public $state;      // string
 
-        function QueuedJob($jobIdentity, $state)
+        public function __construct($jobIdentity, $state)
         {
                 $this->jobIdentity = $jobIdentity;
                 $this->state = $state;
@@ -198,9 +198,9 @@ class QueuedJob
 class EnqueueParams
 {
 
-        var $indata; // string
+        public $indata;     // string
 
-        function EnqueueParams($indata)
+        public function __construct($indata)
         {
                 $this->indata = $indata;
         }
@@ -213,9 +213,9 @@ class EnqueueParams
 class EnqueueResponse
 {
 
-        var $return; // enqueueResult
+        public $return;     // enqueueResult
 
-        function EnqueueResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -228,13 +228,13 @@ class EnqueueResponse
 class EnqueueResult
 {
 
-        var $date; // string
-        var $jobID; // string
-        var $result; // string
-        var $stamp; // int
-        var $time; // string
+        public $date;       // string
+        public $jobID;      // string
+        public $result;     // string
+        public $stamp;      // int
+        public $time;       // string
 
-        function EnqueueResult($date, $jobID, $result, $stamp, $time)
+        public function __construct($date, $jobID, $result, $stamp, $time)
         {
                 $this->date = $date;
                 $this->jobID = $jobID;
@@ -251,9 +251,9 @@ class EnqueueResult
 class WatchParams
 {
 
-        var $stamp; // int
+        public $stamp;      // int
 
-        function WatchParams($stamp)
+        public function __construct($stamp)
         {
                 $this->stamp = $stamp;
         }
@@ -266,9 +266,9 @@ class WatchParams
 class WatchResponse
 {
 
-        var $return; // queuedJob
+        public $return;     // queuedJob
 
-        function WatchResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -281,10 +281,10 @@ class WatchResponse
 class FopenParams
 {
 
-        var $job; // jobIdentity
-        var $file; // string
+        public $job;        // jobIdentity
+        public $file;       // string
 
-        function FopenParams($job, $file)
+        public function __construct($job, $file)
         {
                 $this->job = $job;
                 $this->file = $file;
@@ -298,9 +298,9 @@ class FopenParams
 class FopenResponse
 {
 
-        var $return; // base64Binary
+        public $return;     // base64Binary
 
-        function FopenResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -313,7 +313,7 @@ class FopenResponse
 class OpendirParams
 {
 
-        function OpendirParams()
+        public function __construct()
         {
                 
         }
@@ -326,9 +326,9 @@ class OpendirParams
 class OpendirResponse
 {
 
-        var $return; // jobIdentity
+        public $return;     // jobIdentity
 
-        function OpendirResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -341,9 +341,9 @@ class OpendirResponse
 class StatParams
 {
 
-        var $job; // jobIdentity
+        public $job;        // jobIdentity
 
-        function StatParams($job)
+        public function __construct($job)
         {
                 $this->job = $job;
         }
@@ -356,9 +356,9 @@ class StatParams
 class StatResponse
 {
 
-        var $return; // queuedJob
+        public $return;     // queuedJob
 
-        function StatResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -371,9 +371,9 @@ class StatResponse
 class ReaddirParams
 {
 
-        var $job; // jobIdentity
+        public $job;        // jobIdentity
 
-        function ReaddirParams($job)
+        public function __construct($job)
         {
                 $this->job = $job;
         }
@@ -386,9 +386,9 @@ class ReaddirParams
 class ReaddirResponse
 {
 
-        var $return; // string
+        public $return;     // string
 
-        function ReaddirResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -401,9 +401,9 @@ class ReaddirResponse
 class DequeueParams
 {
 
-        var $job; // jobIdentity
+        public $job;        // jobIdentity
 
-        function DequeueParams($job)
+        public function __construct($job)
         {
                 $this->job = $job;
         }
@@ -416,9 +416,9 @@ class DequeueParams
 class DequeueResponse
 {
 
-        var $return; // boolean
+        public $return;     // boolean
 
-        function DequeueResponse($return)
+        public function __construct($return)
         {
                 $this->return = $return;
         }
@@ -431,7 +431,7 @@ class DequeueResponse
 class VersionParams
 {
 
-        function VersionParams()
+        public function __construct()
         {
                 
         }
@@ -444,13 +444,13 @@ class VersionParams
 class VersionResponse
 {
 
-        var $return; // string
-
-        function VersionResponse($return)
+        public $return;     // string
+        
+        public function __construct($return)
         {
                 $this->return = $return;
         }
 
 }
 
-?>
+
