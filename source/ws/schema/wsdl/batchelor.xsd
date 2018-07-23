@@ -54,7 +54,7 @@
     <xs:complexType name="jobIdentity">
         <xs:sequence>
             <xs:element name="jobID" type="xs:string" minOccurs="0"></xs:element>
-            <xs:element name="result" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name="result" type="xs:int" minOccurs="0"></xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -112,7 +112,7 @@
         <xs:sequence>
             <xs:element name="date" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="jobID" type="xs:string" minOccurs="0"></xs:element>
-            <xs:element name="result" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name="result" type="xs:int" minOccurs="0"></xs:element>
             <xs:element name="stamp" type="xs:int"></xs:element>
             <xs:element name="time" type="xs:string" minOccurs="0"></xs:element>
         </xs:sequence>
