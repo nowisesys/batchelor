@@ -59,4 +59,4 @@ if (isset($GLOBALS['script'])) {
 // 
 put_error("Failed map logical name to script");
 ws_http_error_handler(404, WS_ERROR_REQUEST_BROKER);
-?>
+

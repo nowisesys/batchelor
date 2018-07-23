@@ -77,8 +77,8 @@ function delete_single_job($hostid, $resdir, $jobid)
         if (file_exists($resdir)) {
                 $jobfile = sprintf("%s/jobid", $resdir);
                 if (file_exists($jobfile)) {
-                        if (file_get_contents($jobfile) != $jobid) {
-                                put_error("Job ID don't match recorded Job ID");
+                        if (($jobreal = file_get_contents($jobfile)) != $jobid) {
+                                put_error("Job ID don't match recorded Job ID (expected jobid=$jobid, was=$jobreal)");
                                 return false;
                         }
 
@@ -135,4 +135,4 @@ function delete_multiple_jobs($hostid, $filter)
         return true;
 }
 
-?>
+

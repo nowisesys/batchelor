@@ -61,7 +61,7 @@ if (!isset($_REQUEST['signal'])) {
 // 
 $error = null;
 if (!process_control($_COOKIE['hostid'], $_REQUEST['result'], $_REQUEST['jobid'], $_REQUEST['signal'], $error)) {
-        error_handle($error['where'], $error['reason']);
+        error_handler($error['where'], $error['reason']);
 }
 
 // 
@@ -71,4 +71,4 @@ $sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : "none";
 $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "all";
 
 header(sprintf("Location: queue.php?show=queue&sort=%s&filter=%s", $sort, $filter));
-?>
+

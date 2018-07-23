@@ -133,7 +133,7 @@ function check_config_files(&$failed)
                 warning("No, if you are planning to use the JpGraph graphics library (used when generating statistics graphs), then copy 'conf/jpgraph.inc.in' to 'conf/jpgraph.inc' and edit the file, then rerun the test");
         }
 
-        return $failed == false;
+        return $failed === false;
 }
 
 // 
@@ -636,4 +636,4 @@ function run_all_tests()
         }
 }
 
-?>
+

@@ -66,7 +66,7 @@ function print_body()
         echo "<p>The response encoding is either XML or FOA selectable by appending ";
         echo "encode={xml|foa} to the request string. The default response encoding is XML. ";
         echo "The XML encoded response is formalized by the <a href=\"../schema/rest/\">XML Schema</a>  for REST responses. ";
-        echo "The <a href=\"http://it.bmc.uu.se/andlov/proj/libfoa/spec.php\">FOA specification</a> describes the FOA encoded response format.</p>\n";
+        echo "The <a href=\"http://it.bmc.uu.se/andlov/proj/codecs/foa/spec\">FOA specification</a> describes the FOA encoded response format.</p>\n";
 
         echo "<span id=\"secthead\">Ouput format:</span>\n";
         echo "<p>The output format from a GET request on an URI is either an list (of ";
@@ -202,4 +202,4 @@ function print_html($what)
 
 chdir("../..");
 load_ui_template("apidoc");
-?>
+

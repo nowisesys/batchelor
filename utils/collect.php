@@ -2538,4 +2538,4 @@ function main(&$argc, $argv)
 // Start normal script execution.
 // 
 main($_SERVER['argc'], $_SERVER['argv']);
-?>
+

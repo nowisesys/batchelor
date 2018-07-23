@@ -148,5 +148,3 @@ function send_version($version)
 {
         printf("  version = %s\n", $version);
 }
-
-?>

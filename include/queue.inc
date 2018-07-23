@@ -51,7 +51,7 @@ function sort_jobs($a, $b)
 function filter_jobs($a)
 {
         if ($GLOBALS['filter'] == "waiting") {
-                return $a['state'] == "pending" || $a['state'] == "running";
+                return $a['state'] == "pending";
         }
         return $a['state'] == $GLOBALS['filter'];
 }
@@ -111,7 +111,7 @@ function get_jobs($hostid, $sort = "none", $filter = "all")
                 // only process these directories. If no serialized queue or status
                 // update exist, the process all sub directories.
                 //
-	if (file_exists("queue.ser")) {
+                if (file_exists("queue.ser")) {
                         $jobs = unserialize(file_get_contents("queue.ser"));
                 }
                 $update = null;
@@ -382,7 +382,7 @@ function enqueue_job($formdata, &$jobs)
                 }
         }
 
-        $jobdir = sprintf("%s/%d", $jobdir, time());
+        $jobdir = sprintf("%s/%d", $jobdir, time() + rand(100, 999));
         if (!create_directory($jobdir, CACHE_PERMISSION, true)) {
                 put_error("Failed create output directory");
                 return false;
@@ -430,10 +430,10 @@ function enqueue_job($formdata, &$jobs)
                 // system file, i.e. /etc/passwd
                 // 
                 if (($_SERVER['REQUEST_METHOD'] == "POST" &&
-                        isset($_FILES['file']) &&
-                        is_uploaded_file($_FILES['file']['tmp_name'])) ||
-                        ($_SERVER['REQUEST_METHOD'] == "PUT" &&
-                        isset($_FILES['file']['tmp_name']))) {
+                    isset($_FILES['file']) &&
+                    is_uploaded_file($_FILES['file']['tmp_name'])) ||
+                    ($_SERVER['REQUEST_METHOD'] == "PUT" &&
+                    isset($_FILES['file']['tmp_name']))) {
                         if (!rename($_FILES['file']['tmp_name'], $indata)) {
                                 if (!cleanup_jobdir($jobdir, $_FILES['file']['tmp_name'])) {
                                         return false;
@@ -699,5 +699,3 @@ function cleanup_jobdir($root, $indata = null)
         }
         return true;
 }
-
-?>

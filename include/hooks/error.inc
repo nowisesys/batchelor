@@ -64,5 +64,3 @@ function pre_enqueue_hook(&$file, $jobdir, &$handled, &$jobs)
 
         return true;
 }
-
-?>

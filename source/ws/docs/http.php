@@ -48,7 +48,7 @@ function print_body()
         echo "<tr><td><b>JSON</b>:</td><td>JavaScript Object Notation (JSON) data-interchange format.</td></tr>\n";
         echo "<tr><td><b>WDDX</b>:</td><td>Web Distributed Data eXchange (WDDX) mechanism.</td></tr>\n";
         echo "</table></div>\n";
-        echo "<p>The default format is <a href=\"http://it.bmc.uu.se/andlov/proj/foa/\">FOA</a>.</p>\n";
+        echo "<p>The default format is <a href=\"http://it.bmc.uu.se/andlov/proj/codecs/foa/\">FOA</a>.</p>\n";
 
         echo "<span id=\"secthead\">Manual:</span>\n";
         echo "<p>The full manual is available and browsable online by visiting: <a href=\"../http/docs?format=html\">ws/http/docs?format=html</a></p>\n";
@@ -166,4 +166,4 @@ function print_html($what)
 
 chdir("../..");
 load_ui_template("apidoc");
-?>
+

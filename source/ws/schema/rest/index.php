@@ -32,4 +32,4 @@ if (isset($_REQUEST['schema']) || isset($_REQUEST['result'])) {
 } else {
         readfile($files['schema']);
 }
-?>
+

@@ -568,4 +568,4 @@ if ($_REQUEST['stat'] == "glob" || $_REQUEST['stat'] == "load") {
 }
 
 load_ui_template("standard");
-?>
+

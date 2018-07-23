@@ -151,4 +151,4 @@ function send_version($version)
         printf("  <version>%s</version>\n", $version);
 }
 
-?>
+

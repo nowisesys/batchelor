@@ -84,4 +84,4 @@ if (file_exists($image)) {
         error_log(sprintf("The image file %s do not exist", $image));
         exit(1);
 }
-?>
+

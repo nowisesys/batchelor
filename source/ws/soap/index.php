@@ -107,9 +107,7 @@ class batchelor
 
                 $result = array();
                 foreach ($jobs as $job) {
-                        array_push($result, new EnqueueResult($job['date'], $job['jobid'],
-                                        $job['result'], $job['stamp'],
-                                        $job['time']));
+                        array_push($result, new EnqueueResult($job['date'], $job['jobid'], $job['result'], $job['stamp'], $job['time']));
                 }
                 return new EnqueueResponse($result);
         }
@@ -139,8 +137,11 @@ class batchelor
 
                 $result = array();
                 foreach ($jobs as $resdir => $job) {
-                        if (isset($job['jobid'])) {
-                                $job['jobid'] = 0;   // Assign 0 as jobid for crashed jobs, see delete_single_job() for reference.
+                        // 
+                        // Assign 0 as jobid for crashed jobs, see delete_single_job() for reference.
+                        // 
+                        if (!isset($job['jobid']) || $job['state'] == 'crashed') {
+                                $job['jobid'] = 0;
                         }
                         array_push($result, new QueuedJob(new JobIdentity($job['jobid'], $resdir), $job['state']));
                 }
@@ -358,4 +359,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo $func . "<br />\n";
         }
 }
-?>
+
+

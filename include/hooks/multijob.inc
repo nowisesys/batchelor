@@ -57,5 +57,3 @@ function pre_enqueue_hook(&$file, $jobdir, &$handled, &$jobs)
         fclose($fs);
         return true;
 }
-
-?>

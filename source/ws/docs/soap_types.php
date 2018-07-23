@@ -189,4 +189,4 @@ function print_html($what)
 
 chdir("../..");
 load_ui_template("apidoc");
-?>
+

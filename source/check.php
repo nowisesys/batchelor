@@ -87,4 +87,4 @@ if ($mode == "www") {
 } else {
         run_all_tests();
 }
-?>
+

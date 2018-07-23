@@ -207,4 +207,4 @@ if (!file_exists($jobdir)) {
 }
 
 load_ui_template("popup");
-?>
+

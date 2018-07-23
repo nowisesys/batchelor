@@ -102,5 +102,3 @@ function stream_get_contents($handle, $length = -1, $offset = 0)
                 return $result;
         }
 }
-
-?>

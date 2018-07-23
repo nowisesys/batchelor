@@ -297,4 +297,4 @@ function print_html($what)
 }
 
 load_ui_template("popup");
-?>
+

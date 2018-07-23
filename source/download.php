@@ -78,4 +78,4 @@ if (isset($_REQUEST['what'])) {
 } else {
         download_result($resdir, $jobid);
 }
-?>
+

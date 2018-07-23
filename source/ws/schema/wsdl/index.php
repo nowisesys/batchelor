@@ -82,4 +82,4 @@ if (isset($_REQUEST['wsdl'])) {
 } else {
         send_service_usage();
 }
-?>
+

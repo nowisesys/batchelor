@@ -144,4 +144,4 @@ if (!file_exists("index.html")) {
 // Show getting started help.
 // 
 load_ui_template("popup");
-?>
+

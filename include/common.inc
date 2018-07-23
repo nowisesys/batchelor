@@ -22,7 +22,7 @@
 // stream_get_contents(). This is required if PHP < 5.0.0
 // 
 if (!function_exists("stream_get_contents") &&
-        !function_exists("file_put_contents")) {
+    !function_exists("file_put_contents")) {
         include "missing/contents.inc";
 }
 
@@ -416,7 +416,11 @@ function number_to_digits($num)
 //
 function create_directory($path, $mode, $recursive)
 {
-        if (version_compare(phpversion(), "5.0.0") < 0) {
+        if (file_exists($path)) {
+                return chmod($path, $mode);
+        } elseif (version_compare(phpversion(), "5.0.0") >= 0) {
+                return mkdir($path, $mode, $recursive);
+        } else {
                 // 
                 // mkdir() in PHP < 5.0.0 don't handle recursive.
                 // 
@@ -433,8 +437,6 @@ function create_directory($path, $mode, $recursive)
                         }
                 }
                 return $result;
-        } else {
-                return mkdir($path, $mode, $recursive);
         }
 }
 
@@ -649,4 +651,4 @@ function get_last_warning()
         }
 }
 
-?>
+

@@ -392,9 +392,10 @@ function usage($prog, $defaults)
         print "  php ws.php --func=enqueue --type=xmlrpc --params='indata=test'\n";
         print "  php ws.php --func=enqueue --http --post=file.txt --format=json\n";
         print "  php ws.php --func=func --params='name=suspend' --format=human\n";
+        print "  php ws.php --func=queue --rest --params='filter/pending?format=data'\n";
         print "\n";
         print "This tool is released under GNU General Public License version 2\n";
-        print "Copyright (C) 2007-2009 Anders Lövgren\n";
+        print "Copyright (C) 2007-2018 Anders Lövgren\n";
 }
 
 //
@@ -575,4 +576,4 @@ function main(&$argc, $argv)
 // Start normal script execution.
 // 
 main($_SERVER['argc'], $_SERVER['argv']);
-?>
+

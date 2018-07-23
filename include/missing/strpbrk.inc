@@ -33,5 +33,3 @@ function strpbrk($haystack, $accept)
                 }
         }
 }
-
-?>

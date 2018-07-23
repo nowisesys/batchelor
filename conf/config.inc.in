@@ -432,4 +432,4 @@ define("WS_HTTP_OUTPUT_FORMAT", "foa");
 // 
 define("BATCHELOR_CONFIGURED", false);
 define("BATCHELOR_START_PAGE", "submit");
-?>
+

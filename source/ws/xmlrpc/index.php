@@ -716,4 +716,4 @@ $request = decode_request();
 // Send response:
 // 
 send_response($request);
-?>
+
