@@ -134,7 +134,7 @@ function print_about_batchelor()
         }
 
         print "<span id=\"secthead\">Download</span>\n";
-        print "<p>The latest version of Batchelor can be downloaded from <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor/\">http://it.bmc.uu.se/andlov/proj/batchelor/</a></p>\n";
+        print "<p>The latest version of Batchelor can be downloaded from <a href=\"http://it.bmc.uu.se/andlov/proj/sci/batchelor/download\">http://it.bmc.uu.se/andlov/proj/batchelor/</a></p>\n";
 
         print "<span id=\"secthead\">Bug reports</span>\n";
         print "<p>If you think you have found a bug in the batch queue manager (Batchelor), ";

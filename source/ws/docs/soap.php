@@ -59,7 +59,7 @@ function print_body()
         echo "<p>\n";
         echo "<span id=\"subsect\">The Java library:</span>\n";
         echo "<p>\n";
-        echo "You can download the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor-java/\" title=\"The BatchelorWebService library for Java developers\">client side Java (tm) library batchelor-java</a>. ";
+        echo "You can download the <a href=\"http://it.bmc.uu.se/andlov/proj/sci/batchelor-java/" title=\"The BatchelorWebService library for Java developers\">client side Java (tm) library batchelor-java</a>. ";
         echo "The library is fully documented using javadoc comments.</p>\n";
 
         echo "<span id=\"secthead\">Example:</span>\n";
@@ -85,7 +85,7 @@ function print_body()
 
         echo "<span id=\"secthead\">Method description:</span>\n";
         echo "<p>This section documents the various methods and their purpose. For those using the ";
-        echo "batchelor-java library, its better to read the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor-java/javadoc/se/uu/bmc/it/batchelor/soap/BatchelorSoapClient.html\">Javadoc API documentation</a>.</p>\n";
+        echo "batchelor-java library, its better to read the <a href=\"http://it.bmc.uu.se/andlov/proj/sci/batchelor-java/javadoc/se/uu/bmc/it/batchelor/soap/BatchelorSoapClient.html\">Javadoc API documentation</a>.</p>\n";
         echo "<p><span id=\"subsect\"><a name=\"running\">Running jobs:</a></span></p>\n";
         echo "<ul><li><b>enqueue</b>: queues a new job for later execution.</li>\n";
         echo "    <li><b>dequeue</b>: removes an existing job.</li>\n";
@@ -112,7 +112,7 @@ function print_body()
         echo "sent \"as is\".</p>\n";
 
         echo "<span id=\"secthead\">Testing:</span>\n";
-        echo "<p>The SOAP service can be tested by using the CLI web service utility (included with the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor/download.php\">source code</a> for batchelor). Run ";
+        echo "<p>The SOAP service can be tested by using the CLI web service utility (included with the <a href=\"http://it.bmc.uu.se/andlov/proj/sci/batchelor/download\">source code</a> for batchelor). Run ";
         echo "the utility like this to dump the queue sorted on job ID:</p>\n";
         echo "<p><div class=\"code\"><pre>\n";
         echo "<code>bash$> cd utils</code>\n";

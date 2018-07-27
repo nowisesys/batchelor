@@ -117,7 +117,7 @@ function send_job(&$job, $request)
 
 // 
 // Send a single file using requested encoding. See the specification at
-// http://it.bmc.uu.se/andlov/proj/libfoa/spec.php for an explanation of
+// http://it.bmc.uu.se/andlov/proj/codecs/foa/spec for an explanation of
 // this funky piece of code.
 // 
 function send_file($filename)

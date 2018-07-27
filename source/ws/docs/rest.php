@@ -161,7 +161,7 @@ function print_body()
         echo "</pre></div></p>\n";
 
         echo "<span id=\"secthead\">Java library:</span>\n";
-        echo "<p>You can download the <a href=\"http://it.bmc.uu.se/andlov/proj/batchelor-java/\" title=\"The BatchelorWebService library for Java developers\">client side Java (tm) library batchelor-java</a>. ";
+        echo "<p>You can download the <a href=\"http://it.bmc.uu.se/andlov/proj/sci/batchelor-java/\" title=\"The BatchelorWebService library for Java developers\">client side Java (tm) library batchelor-java</a>. ";
         echo "Both SOAP and REST is supported by the library. However, the REST implementation contains more features, including using FOA for stream oriented downloads of result files. \n";
         echo "The library is fully documented using javadoc comments.</p>\n";
 
