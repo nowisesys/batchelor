@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # The wrapper script. Runs as a batch job under atd (started by batch).
 # The script receives three arguments:

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # User defined job execution. This file is sourced by script.sh (called from
 # the queue handler) that calls the function jobexec() defined here. 
