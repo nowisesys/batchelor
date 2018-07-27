@@ -27,21 +27,27 @@
 // // 
 // // Example: Using array as response type
 // // 
-// function version() {
-//   return array("versionReturn" => "1.0");
+// function version() 
+// {
+//      return array("return" => "1.0");
 // }
 // 
 // // 
 // // Example: Using class as response type
 // // 
-// class VersionResponse {
-//   var $versionReturn;
-//   function VersionResponse($version) {
-//     $this->versionReturn = $version;
-//   }
+// class VersionResponse 
+// {
+//      public $return;
+//   
+//      function VersionResponse($version) 
+//      {
+//              $this->return = $version;
+//      }
 // }
-// function version() {
-//   return new VersionResponse("1.0");
+// 
+// function version() 
+// {
+//      return new VersionResponse("1.0");
 // }
 // 
 // Even though using arrays would be a simple solution, it's not our prefered
