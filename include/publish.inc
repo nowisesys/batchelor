@@ -384,5 +384,3 @@ function publish_send_indata($name)
         download_indata($path);
         return true;
 }
-
-

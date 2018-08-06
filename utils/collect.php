@@ -309,7 +309,7 @@ function collect_submit_count($hostid, &$data, $year, $month, $day, $hour)
         if (!isset($data[$hostid]['submit']['count'])) {
                 $data[$hostid]['submit']['count'] = 0;
         }
-        $data[$hostid]['submit']['count']++;
+        $data[$hostid]['submit']['count'] ++;
 
         // 
         // Submit by year:
@@ -317,7 +317,7 @@ function collect_submit_count($hostid, &$data, $year, $month, $day, $hour)
         if (!isset($data[$hostid][$year]['submit']['count'])) {
                 $data[$hostid][$year]['submit']['count'] = 0;
         }
-        $data[$hostid][$year]['submit']['count']++;
+        $data[$hostid][$year]['submit']['count'] ++;
 
         // 
         // Submit by month:
@@ -325,7 +325,7 @@ function collect_submit_count($hostid, &$data, $year, $month, $day, $hour)
         if (!isset($data[$hostid][$year][$month]['submit']['count'])) {
                 $data[$hostid][$year][$month]['submit']['count'] = 0;
         }
-        $data[$hostid][$year][$month]['submit']['count']++;
+        $data[$hostid][$year][$month]['submit']['count'] ++;
 
         // 
         // Submit by day:
@@ -333,7 +333,7 @@ function collect_submit_count($hostid, &$data, $year, $month, $day, $hour)
         if (!isset($data[$hostid][$year][$month][$day]['submit']['count'])) {
                 $data[$hostid][$year][$month][$day]['submit']['count'] = 0;
         }
-        $data[$hostid][$year][$month][$day]['submit']['count']++;
+        $data[$hostid][$year][$month][$day]['submit']['count'] ++;
 
         // 
         // Submit by hour:
@@ -341,7 +341,7 @@ function collect_submit_count($hostid, &$data, $year, $month, $day, $hour)
         if (!isset($data[$hostid][$year][$month][$day][$hour]['submit']['count'])) {
                 $data[$hostid][$year][$month][$day][$hour]['submit']['count'] = 0;
         }
-        $data[$hostid][$year][$month][$day][$hour]['submit']['count']++;
+        $data[$hostid][$year][$month][$day][$hour]['submit']['count'] ++;
 }
 
 // 
@@ -352,7 +352,7 @@ function collect_state_count($hostid, &$data, $state)
         if (!isset($data[$hostid]['state'][$state])) {
                 $data[$hostid]['state'][$state] = 0;
         }
-        $data[$hostid]['state'][$state]++;
+        $data[$hostid]['state'][$state] ++;
 }
 
 // 
@@ -383,7 +383,7 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
                 $data[$hostid]['proctime']['minimum'] = $process;  // minimum time from submit to finished
                 $data[$hostid]['proctime']['maximum'] = 0;         // maximum time from submit to finished
         }
-        $data[$hostid]['proctime']['count']++;
+        $data[$hostid]['proctime']['count'] ++;
         $data[$hostid]['proctime']['waiting'] = floating_mean_value($data[$hostid]['proctime']['count'], $data[$hostid]['proctime']['waiting'], $waiting);
         $data[$hostid]['proctime']['running'] = floating_mean_value($data[$hostid]['proctime']['count'], $data[$hostid]['proctime']['running'], $running);
         if ($process < $data[$hostid]['proctime']['minimum']) {
@@ -403,7 +403,7 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
                 $data[$hostid][$year]['proctime']['minimum'] = $process;  // minimum time from submit to finished
                 $data[$hostid][$year]['proctime']['maximum'] = 0;         // maximum time from submit to finished
         }
-        $data[$hostid][$year]['proctime']['count']++;
+        $data[$hostid][$year]['proctime']['count'] ++;
         $data[$hostid][$year]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year]['proctime']['count'], $data[$hostid][$year]['proctime']['waiting'], $waiting);
         $data[$hostid][$year]['proctime']['running'] = floating_mean_value($data[$hostid][$year]['proctime']['count'], $data[$hostid][$year]['proctime']['running'], $running);
         if ($process < $data[$hostid][$year]['proctime']['minimum']) {
@@ -423,7 +423,7 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
                 $data[$hostid][$year][$month]['proctime']['minimum'] = $process;   // minimum time from submit to finished
                 $data[$hostid][$year][$month]['proctime']['maximum'] = 0;          // maximum time from submit to finished
         }
-        $data[$hostid][$year][$month]['proctime']['count']++;
+        $data[$hostid][$year][$month]['proctime']['count'] ++;
         $data[$hostid][$year][$month]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year][$month]['proctime']['count'], $data[$hostid][$year][$month]['proctime']['waiting'], $waiting);
         $data[$hostid][$year][$month]['proctime']['running'] = floating_mean_value($data[$hostid][$year][$month]['proctime']['count'], $data[$hostid][$year][$month]['proctime']['running'], $running);
         if ($process < $data[$hostid][$year][$month]['proctime']['minimum']) {
@@ -443,7 +443,7 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
                 $data[$hostid][$year][$month][$day]['proctime']['minimum'] = $process;   // minimum time from submit to finished
                 $data[$hostid][$year][$month][$day]['proctime']['maximum'] = 0;          // maximum time from submit to finished
         }
-        $data[$hostid][$year][$month][$day]['proctime']['count']++;
+        $data[$hostid][$year][$month][$day]['proctime']['count'] ++;
         $data[$hostid][$year][$month][$day]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year][$month][$day]['proctime']['count'], $data[$hostid][$year][$month][$day]['proctime']['waiting'], $waiting);
         $data[$hostid][$year][$month][$day]['proctime']['running'] = floating_mean_value($data[$hostid][$year][$month][$day]['proctime']['count'], $data[$hostid][$year][$month][$day]['proctime']['running'], $running);
         if ($process < $data[$hostid][$year][$month][$day]['proctime']['minimum']) {
@@ -463,7 +463,7 @@ function collect_process_accounting($hostid, &$data, $queued, $started, $finishe
                 $data[$hostid][$year][$month][$day][$hour]['proctime']['minimum'] = $process;   // minimum time from submit to finished
                 $data[$hostid][$year][$month][$day][$hour]['proctime']['maximum'] = 0;          // maximum time from submit to finished
         }
-        $data[$hostid][$year][$month][$day][$hour]['proctime']['count']++;
+        $data[$hostid][$year][$month][$day][$hour]['proctime']['count'] ++;
         $data[$hostid][$year][$month][$day][$hour]['proctime']['waiting'] = floating_mean_value($data[$hostid][$year][$month][$day][$hour]['proctime']['count'], $data[$hostid][$year][$month][$day][$hour]['proctime']['waiting'], $waiting);
         $data[$hostid][$year][$month][$day][$hour]['proctime']['running'] = floating_mean_value($data[$hostid][$year][$month][$day][$hour]['proctime']['count'], $data[$hostid][$year][$month][$day][$hour]['proctime']['running'], $running);
         if ($process < $data[$hostid][$year][$month][$day][$hour]['proctime']['minimum']) {
@@ -721,7 +721,7 @@ function collect_recalc_validate($key, &$val, $options, $check = REPAIR_CHECK_ST
                         $req = array("count" => 1);
                         break;
                 case "proctime":
-                        $req = array("waiting" => 0, "running" => 0, "count"   => 1, "minimum" => 0, "maximum" => 0);
+                        $req = array("waiting" => 0, "running" => 0, "count" => 1, "minimum" => 0, "maximum" => 0);
                         break;
                 case "state":
                         $check = REPAIR_CHECK_IGNORE;   // Only non-zero keys are usually set.
@@ -1072,7 +1072,7 @@ function graph_total_submit($graphdir, $hostid, $options, $data)
                         "end"     => "lightsteelblue",
                         "outline" => "darkblue"
                 ),
-                "text"    => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1129,7 +1129,7 @@ function graph_yearly_submit($graphdir, $hostid, $options, $timestamp, $data)
                         "end"     => "yellow",
                         "outline" => "red"
                 ),
-                "text"    => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1177,7 +1177,7 @@ function graph_monthly_submit($graphdir, $hostid, $options, $timestamp, $data)
                         "end"     => "yellow",
                         "outline" => "darkgreen"
                 ),
-                "text"    => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1225,7 +1225,7 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
                         "end"     => "red",
                         "outline" => "pink"
                 ),
-                "text"    => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -1441,7 +1441,7 @@ function graph_total_proctime($graphdir, $hostid, $options, $data)
         $values = array(
                 "waiting" => array(),
                 "running" => array(),
-                "count" => array(),
+                "count"   => array(),
                 "minimum" => array(),
                 "maximum" => array()
         );
@@ -1510,7 +1510,7 @@ function graph_yearly_proctime($graphdir, $hostid, $options, $timestamp, $data)
         $values = array(
                 "waiting" => array(),
                 "running" => array(),
-                "count" => array(),
+                "count"   => array(),
                 "minimum" => array(),
                 "maximum" => array()
         );
@@ -1565,7 +1565,7 @@ function graph_monthly_proctime($graphdir, $hostid, $options, $timestamp, $data)
         $values = array(
                 "waiting" => array(),
                 "running" => array(),
-                "count" => array(),
+                "count"   => array(),
                 "minimum" => array(),
                 "maximum" => array()
         );
@@ -1620,7 +1620,7 @@ function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
         $values = array(
                 "waiting" => array(),
                 "running" => array(),
-                "count" => array(),
+                "count"   => array(),
                 "minimum" => array(),
                 "maximum" => array()
         );

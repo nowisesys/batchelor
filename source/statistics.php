@@ -144,10 +144,10 @@ function print_links_section($data, $subdirs, $child, $parent)
         printf("<p><ul>\n");
         if ($parent) {
                 $map = array(
-                        "root" => "year",
-                        "year" => "month",
+                        "root"  => "year",
+                        "year"  => "month",
                         "month" => "day",
-                        "day" => "hour"
+                        "day"   => "hour"
                 );
                 printf("<li>Up to <a href=\"statistics.php?%s\">parent</a> directory</li>\n", request_params(array(), array($map[$parent])));
         }

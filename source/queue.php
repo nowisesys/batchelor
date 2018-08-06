@@ -89,21 +89,21 @@ function print_select($label, $name, $values)
 function show_jobs_table(&$jobs)
 {
         $sort = array(
-                "None" => "none",
+                "None"    => "none",
                 "Started" => "started",
-                "Job ID" => "jobid",
-                "Status" => "state"
+                "Job ID"  => "jobid",
+                "Status"  => "state"
         );
 
         $filter = array(
-                "All" => "all",
+                "All"        => "all",
                 "Unfinished" => "waiting",
-                "Pending" => "pending",
-                "Running" => "running",
-                "Finished" => "finished",
-                "Warning" => "warning",
-                "Error" => "error",
-                "Crashed" => "crashed");
+                "Pending"    => "pending",
+                "Running"    => "running",
+                "Finished"   => "finished",
+                "Warning"    => "warning",
+                "Error"      => "error",
+                "Crashed"    => "crashed");
 
         // 
         // Provide sort on names too.
@@ -330,12 +330,12 @@ function show_jobs_table_plain(&$jobs)
         // Font colors:
         // 
         $color = array(
-                "pending" => "#000066",
-                "running" => "#0000bb",
+                "pending"  => "#000066",
+                "running"  => "#0000bb",
                 "finished" => "#006600",
-                "warning" => "#0000ff",
-                "error" => "#990000",
-                "crashed" => "#666666"
+                "warning"  => "#0000ff",
+                "error"    => "#990000",
+                "crashed"  => "#666666"
         );
 
         print "<div class=\"indent\"><table width=\"50%\"><tr><th>Started</th><th>Job</th><th>Status</th><th>Links</th></tr>\n";
@@ -438,7 +438,7 @@ function print_submit_file()
         }
         print "</tr>\n";
         if (function_exists("params_form_hook") &&
-                (FORM_PARAMS_LOCATION == "south" || FORM_PARAMS_LOCATION == "compact")) {
+            (FORM_PARAMS_LOCATION == "south" || FORM_PARAMS_LOCATION == "compact")) {
                 print_form_hook();
         }
         print "<tr><td>&nbsp;</td><td><input type=\"submit\" value=\"Send File\" /></td></tr>\n";
@@ -474,7 +474,7 @@ function print_submit_data()
         }
         print "</tr>\n";
         if (function_exists("params_form_hook") &&
-                (FORM_PARAMS_LOCATION == "south" || FORM_PARAMS_LOCATION == "compact")) {
+            (FORM_PARAMS_LOCATION == "south" || FORM_PARAMS_LOCATION == "compact")) {
                 print_form_hook();
         }
         print "<tr><td>&nbsp;</td><td><input type=\"submit\" value=\"Send Data\" /></td></tr>\n";

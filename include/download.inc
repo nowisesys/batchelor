@@ -13,13 +13,11 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 // -------------------------------------------------------------------------------
-
 // 
 // Support functions for downloading result and indata. These functions is
 // used both by the download function accessable from the queue and by the
 // publish function (if enabled by config).
 // 
-
 // 
 // Send result in zip-file.
 // 
@@ -100,5 +98,3 @@ function download_indata($resdir)
                 readfile($indata);
         }
 }
-
-

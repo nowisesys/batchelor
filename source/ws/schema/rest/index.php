@@ -20,7 +20,7 @@
 
 $files = array(
         "schema" => "result.xsd",
-        "xlink" => "xlink.xsd"
+        "xlink"  => "xlink.xsd"
 );
 
 header("Content-type: text/xml");

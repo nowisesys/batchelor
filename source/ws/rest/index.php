@@ -357,7 +357,7 @@ function send_errors($request)
 
         if (isset($request->childs) || isset($request->format)) {
                 if ((isset($request->childs) && $request->childs[0] == "list") ||
-                        (isset($request->format) && $request->format == "list")) {
+                    (isset($request->format) && $request->format == "list")) {
                         $errors = get_error();
                         send_start_tag("success", "link");
                         for ($i = 0; $i < count($errors); $i++) {
@@ -365,7 +365,7 @@ function send_errors($request)
                         }
                         send_end_tag();
                 } elseif ((isset($request->childs) && $request->childs[0] == "data") ||
-                        (isset($request->format) && $request->format == "data")) {
+                    (isset($request->format) && $request->format == "data")) {
                         $errors = get_error();
                         send_start_tag("success", "error");
                         for ($i = 0; $i < count($errors); $i++) {
@@ -400,7 +400,7 @@ function send_suspend($request)
         }
         if (isset($request->childs)) {
                 if ($_SERVER['REQUEST_METHOD'] != "GET" &&
-                        $_SERVER['REQUEST_METHOD'] != "POST") {
+                    $_SERVER['REQUEST_METHOD'] != "POST") {
                         send_error(WS_ERROR_REQUEST_METHOD, null);
                 }
                 if ($_SERVER['REQUEST_METHOD'] == "GET") {
@@ -414,7 +414,7 @@ function send_suspend($request)
                         send_start_tag("success", "job");
                         foreach ($jobs as $result => $job) {
                                 if ($request->childs[0] == $result &&
-                                        $request->childs[1] == $job['jobid']) {
+                                    $request->childs[1] == $job['jobid']) {
                                         $job['result'] = $result;
                                         send_job($job, $request);
                                 }
@@ -470,7 +470,7 @@ function send_resume($request)
         }
         if (isset($request->childs)) {
                 if ($_SERVER['REQUEST_METHOD'] != "GET" &&
-                        $_SERVER['REQUEST_METHOD'] != "POST") {
+                    $_SERVER['REQUEST_METHOD'] != "POST") {
                         send_error(WS_ERROR_REQUEST_METHOD, null);
                 }
                 if ($_SERVER['REQUEST_METHOD'] == "GET") {
@@ -484,7 +484,7 @@ function send_resume($request)
                         send_start_tag("success", "job");
                         foreach ($jobs as $result => $job) {
                                 if ($request->childs[0] == $result &&
-                                        $request->childs[1] == $job['jobid']) {
+                                    $request->childs[1] == $job['jobid']) {
                                         $job['result'] = $result;
                                         send_job($job, $request);
                                 }
@@ -578,7 +578,7 @@ function send_queue($request)
                                         send_queue_helper($request, $request->format, "none", "all");
                                 } else {
                                         if ($_SERVER['REQUEST_METHOD'] != "GET" &&
-                                                $_SERVER['REQUEST_METHOD'] != "DELETE") {
+                                            $_SERVER['REQUEST_METHOD'] != "DELETE") {
                                                 send_error(WS_ERROR_REQUEST_METHOD, null);
                                         }
                                         if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
@@ -669,7 +669,7 @@ function send_queue($request)
                                                 send_start_tag("success", "job");
                                                 foreach ($jobs as $result => $job) {
                                                         if ($request->childs[0] == $result &&
-                                                                $request->childs[1] == $job['jobid']) {
+                                                            $request->childs[1] == $job['jobid']) {
                                                                 $job['result'] = $result;
                                                                 send_job($job, $request);
                                                         }
@@ -683,7 +683,7 @@ function send_queue($request)
                 }
         } else {
                 if ($_SERVER['REQUEST_METHOD'] == "PUT" ||
-                        $_SERVER['REQUEST_METHOD'] == "POST") {
+                    $_SERVER['REQUEST_METHOD'] == "POST") {
                         $jobs = array();
                         $data = null;
                         if ($_SERVER['REQUEST_METHOD'] == "PUT") {

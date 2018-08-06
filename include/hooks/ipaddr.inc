@@ -104,9 +104,9 @@ function collect_data_hook($hostid, &$data, $jobdir, $year, $month, $day, $hour)
                 // 
                 // Count this host:
                 // 
-                $data[$hostid][$sect][$addr]++;
-                $data[$hostid][$year][$sect][$addr]++;
-                $data[$hostid][$year][$month][$sect][$addr]++;
+                $data[$hostid][$sect][$addr] ++;
+                $data[$hostid][$year][$sect][$addr] ++;
+                $data[$hostid][$year][$month][$sect][$addr] ++;
         }
 }
 
@@ -122,11 +122,11 @@ function graph_data_hook($graphdir, $hostid, $options, $datetime, $data, $type)
         $hosts = 0;
         $colors = array(
                 "color" => array(
-                        "start" => "red",
-                        "end" => "orange",
+                        "start"   => "red",
+                        "end"     => "orange",
                         "outline" => "darkred"
                 ),
-                "text" => array(
+                "text"  => array(
                         "positive" => "black",
                         "negative" => "lightgray"
                 )
@@ -210,5 +210,3 @@ function show_data_hook($data, $statdir, $subsect)
                 printf("</p>\n");
         }
 }
-
-

@@ -164,9 +164,9 @@ function get_server_url()
         // 
         $opts = array(
                 "scheme" => "http",
-                "addr" => "localhost",
-                "port" => 80,
-                "path" => "/batchelor/ws"
+                "addr"   => "localhost",
+                "port"   => 80,
+                "path"   => "/batchelor/ws"
         );
 
         // 
@@ -243,19 +243,19 @@ function ws_get_rpc_method_by_index($index = -1)
         // 
         $functions = array(
                 array(
-                        "func" => null,
-                        "name" => "info",
-                        "long" => "batchelor.info",
-                        "desc" => "List all methods thats part of the API. This method returns an array of strings.",
+                        "func"   => null,
+                        "name"   => "info",
+                        "long"   => "batchelor.info",
+                        "desc"   => "List all methods thats part of the API. This method returns an array of strings.",
                         "params" => null,
                         "return" => "array=[string]",
                         "script" => "api.php"
                 ),
                 array(
-                        "func" => null,
-                        "name" => "func",
-                        "long" => "batchelor.func",
-                        "desc" => "Show detailed information about a single RPC method. This method returns an object (with mixed values) describing the method.",
+                        "func"   => null,
+                        "name"   => "func",
+                        "long"   => "batchelor.func",
+                        "desc"   => "Show detailed information about a single RPC method. This method returns an object (with mixed values) describing the method.",
                         "params" => array(
                                 "name" => "string"
                         ),
@@ -263,28 +263,28 @@ function ws_get_rpc_method_by_index($index = -1)
                         "script" => "api.php"
                 ),
                 array(
-                        "func" => null,
-                        "name" => "docs",
-                        "long" => "batchelor.docs",
-                        "desc" => "Show the HTTP RPC method API as manual. This method can only be used with HTML format.",
+                        "func"   => null,
+                        "name"   => "docs",
+                        "long"   => "batchelor.docs",
+                        "desc"   => "Show the HTTP RPC method API as manual. This method can only be used with HTML format.",
                         "params" => null,
                         "return" => null,
                         "script" => "api.php"
                 ),
                 array(
-                        "func" => null,
-                        "name" => "errors",
-                        "long" => "batchelor.errors",
-                        "desc" => "Return an collection of all errors defined (codes and messages).",
+                        "func"   => null,
+                        "name"   => "errors",
+                        "long"   => "batchelor.errors",
+                        "desc"   => "Return an collection of all errors defined (codes and messages).",
                         "params" => null,
                         "return" => "array=[object=(integer,string)]",
                         "script" => "error.php"
                 ),
                 array(
-                        "func" => null,
-                        "name" => "errmsg",
-                        "long" => "batchelor.errmsg",
-                        "desc" => "Return error message string for an given error code.",
+                        "func"   => null,
+                        "name"   => "errmsg",
+                        "long"   => "batchelor.errmsg",
+                        "desc"   => "Return error message string for an given error code.",
                         "params" => array(
                                 "code" => "integer"
                         ),
@@ -292,34 +292,34 @@ function ws_get_rpc_method_by_index($index = -1)
                         "script" => "error.php"
                 ),
                 array(
-                        "func" => "ws_suspend",
-                        "name" => "suspend",
-                        "long" => "batchelor.suspend",
-                        "desc" => "Suspend an already running job. Returns true on success and false on failure.",
+                        "func"   => "ws_suspend",
+                        "name"   => "suspend",
+                        "long"   => "batchelor.suspend",
+                        "desc"   => "Suspend an already running job. Returns true on success and false on failure.",
                         "params" => array(
                                 "result" => "string",
-                                "jobid" => "string"
+                                "jobid"  => "string"
                         ),
                         "return" => "boolean",
                         "script" => "suspend.php"
                 ),
                 array(
-                        "func" => "ws_resume",
-                        "name" => "resume",
-                        "long" => "batchelor.resume",
-                        "desc" => "Resume a job thats in paused or stopped state. Returns true on success and false on failure.",
+                        "func"   => "ws_resume",
+                        "name"   => "resume",
+                        "long"   => "batchelor.resume",
+                        "desc"   => "Resume a job thats in paused or stopped state. Returns true on success and false on failure.",
                         "params" => array(
                                 "result" => "string",
-                                "jobid" => "string"
+                                "jobid"  => "string"
                         ),
                         "return" => "boolean",
                         "script" => "resume.php"
                 ),
                 array(
-                        "func" => "ws_enqueue",
-                        "name" => "enqueue",
-                        "long" => "batchelor.enqueue",
-                        "desc" => "Enqueue (start) new job(s). Returns a list of job objects for the newly started jobs. The indata parameter is optional. If its missing, then its assumed that job data where uploaded thru HTTP POST (multipart/form-data). The result may contain multiple jobs.",
+                        "func"   => "ws_enqueue",
+                        "name"   => "enqueue",
+                        "long"   => "batchelor.enqueue",
+                        "desc"   => "Enqueue (start) new job(s). Returns a list of job objects for the newly started jobs. The indata parameter is optional. If its missing, then its assumed that job data where uploaded thru HTTP POST (multipart/form-data). The result may contain multiple jobs.",
                         "params" => array(
                                 "indata" => "string"
                         ),
@@ -327,34 +327,34 @@ function ws_get_rpc_method_by_index($index = -1)
                         "script" => "enqueue.php"
                 ),
                 array(
-                        "func" => "ws_dequeue",
-                        "name" => "dequeue",
-                        "long" => "batchelor.dequeue",
-                        "desc" => "Delete an running or finished job. Returns true on success and false on failure.",
+                        "func"   => "ws_dequeue",
+                        "name"   => "dequeue",
+                        "long"   => "batchelor.dequeue",
+                        "desc"   => "Delete an running or finished job. Returns true on success and false on failure.",
                         "params" => array(
                                 "result" => "string",
-                                "jobid" => "string"
+                                "jobid"  => "string"
                         ),
                         "return" => "boolean",
                         "script" => "dequeue.php"
                 ),
                 array(
-                        "func" => "ws_queue",
-                        "name" => "queue",
-                        "long" => "batchelor.queue",
-                        "desc" => "List pending, running and finished jobs. Returns an array of objects describing the jobs and their state. The sort and filer parameter is optional. Possible parameter values are the same as used in the queue viewer (in the web interface).",
+                        "func"   => "ws_queue",
+                        "name"   => "queue",
+                        "long"   => "batchelor.queue",
+                        "desc"   => "List pending, running and finished jobs. Returns an array of objects describing the jobs and their state. The sort and filer parameter is optional. Possible parameter values are the same as used in the queue viewer (in the web interface).",
                         "params" => array(
-                                "sort" => "string",
+                                "sort"   => "string",
                                 "filter" => "string"
                         ),
                         "return" => "array=[object=()]",
                         "script" => "queue.php"
                 ),
                 array(
-                        "func" => "ws_watch",
-                        "name" => "watch",
-                        "long" => "batchelor.watch",
-                        "desc" => "This method returns a list of jobs that has finished execute since last called by this method (the stamp parameter).",
+                        "func"   => "ws_watch",
+                        "name"   => "watch",
+                        "long"   => "batchelor.watch",
+                        "desc"   => "This method returns a list of jobs that has finished execute since last called by this method (the stamp parameter).",
                         "params" => array(
                                 "stamp" => "integer"
                         ),
@@ -362,47 +362,47 @@ function ws_get_rpc_method_by_index($index = -1)
                         "script" => "watch.php"
                 ),
                 array(
-                        "func" => "ws_result",
-                        "name" => "opendir",
-                        "long" => "batchelor.opendir",
-                        "desc" => "List result directories. Returns an list of directory objects that can be used when calling the readdir method.",
+                        "func"   => "ws_result",
+                        "name"   => "opendir",
+                        "long"   => "batchelor.opendir",
+                        "desc"   => "List result directories. Returns an list of directory objects that can be used when calling the readdir method.",
                         "params" => null,
                         "return" => "array=[object=(result=string,jobid=string)]",
                         "script" => "result.php"
                 ),
                 array(
-                        "func" => "ws_result",
-                        "name" => "readdir",
-                        "long" => "batchelor.readdir",
-                        "desc" => "List files in a specific result directory. Returns an list of all files in the specific result directory pointed out by the method parameters (result and jobid). Also see the opendir and fopen method",
+                        "func"   => "ws_result",
+                        "name"   => "readdir",
+                        "long"   => "batchelor.readdir",
+                        "desc"   => "List files in a specific result directory. Returns an list of all files in the specific result directory pointed out by the method parameters (result and jobid). Also see the opendir and fopen method",
                         "params" => array(
                                 "result" => "string",
-                                "jobid" => "string"
+                                "jobid"  => "string"
                         ),
                         "return" => "array=[string]",
                         "script" => "result.php"
                 ),
                 array(
-                        "func" => "ws_result",
-                        "name" => "fopen",
-                        "long" => "batchelor.fopen",
-                        "desc" => "Get content of an result file. The content is returned with MIME-type application/octet-stream (binary format). Call the opendir method to obtain values for the result and jobid parameters.",
+                        "func"   => "ws_result",
+                        "name"   => "fopen",
+                        "long"   => "batchelor.fopen",
+                        "desc"   => "Get content of an result file. The content is returned with MIME-type application/octet-stream (binary format). Call the opendir method to obtain values for the result and jobid parameters.",
                         "params" => array(
                                 "result" => "string",
-                                "jobid" => "string",
-                                "file" => "string"
+                                "jobid"  => "string",
+                                "file"   => "string"
                         ),
                         "return" => WS_FOPEN_RETURN_FORMAT,
                         "script" => "result.php"
                 ),
                 array(
-                        "func" => "ws_stat",
-                        "name" => "stat",
-                        "long" => "batchelor.stat",
-                        "desc" => "This method lets the caller check the status of a single job. This could be useful for monitoring an enqueued job for completion (polling).",
+                        "func"   => "ws_stat",
+                        "name"   => "stat",
+                        "long"   => "batchelor.stat",
+                        "desc"   => "This method lets the caller check the status of a single job. This could be useful for monitoring an enqueued job for completion (polling).",
                         "params" => array(
                                 "result" => "string",
-                                "jobid" => "string"
+                                "jobid"  => "string"
                         ),
                         "return" => "object=()",
                         "script" => "stat.php"
@@ -823,8 +823,8 @@ function ws_http_session_setup($params = null)
         }
         if (isset($_REQUEST['format'])) {
                 if ($_REQUEST['format'] == "xml" ||
-                        $_REQUEST['format'] == "foa" ||
-                        $_REQUEST['format'] == "php") {
+                    $_REQUEST['format'] == "foa" ||
+                    $_REQUEST['format'] == "php") {
                         $GLOBALS['format'] = $_REQUEST['format'];
                 } elseif ($_REQUEST['format'] == "json") {
                         if (!extension_loaded("json")) {
@@ -839,8 +839,8 @@ function ws_http_session_setup($params = null)
                         }
                         $GLOBALS['format'] = "wddx";
                 } elseif ($_REQUEST['format'] == "plain" ||
-                        $_REQUEST['format'] == "human" ||
-                        $_REQUEST['format'] == "text") {
+                    $_REQUEST['format'] == "human" ||
+                    $_REQUEST['format'] == "text") {
                         $GLOBALS['format'] = "human";
                 } elseif ($_REQUEST['format'] == "html") {
                         $GLOBALS['format'] = "html";
@@ -914,7 +914,7 @@ function ws_rest_session_setup($hostid = null)
         if (!isset($_REQUEST['encode'])) {
                 $GLOBALS['format'] = "xml";
         } elseif ($_REQUEST['encode'] == "xml" ||
-                $_REQUEST['encode'] == "foa") {
+            $_REQUEST['encode'] == "foa") {
                 $GLOBALS['format'] = $_REQUEST['encode'];
                 unset($_REQUEST['encode']);
         } else {
@@ -1048,29 +1048,29 @@ function ws_soap_session_setup($hostid = null)
 function ws_print_services_status($relative = "")
 {
         $service = array(
-                "rest" => array(
-                        "status" => WS_ENABLE_REST,
-                        "name" => "REST",
+                "rest"   => array(
+                        "status"    => WS_ENABLE_REST,
+                        "name"      => "REST",
                         "extension" => null,
-                        "link" => "${relative}ws/docs/rest.php"
+                        "link"      => "${relative}ws/docs/rest.php"
                 ),
-                "soap" => array(
-                        "status" => WS_ENABLE_SOAP,
-                        "name" => "SOAP",
+                "soap"   => array(
+                        "status"    => WS_ENABLE_SOAP,
+                        "name"      => "SOAP",
                         "extension" => "soap",
-                        "link" => "${relative}ws/docs/soap.php"
+                        "link"      => "${relative}ws/docs/soap.php"
                 ),
-                "http" => array(
-                        "status" => WS_ENABLE_HTTP,
-                        "name" => "HTTP RPC",
+                "http"   => array(
+                        "status"    => WS_ENABLE_HTTP,
+                        "name"      => "HTTP RPC",
                         "extension" => null,
-                        "link" => "${relative}ws/docs/http.php"
+                        "link"      => "${relative}ws/docs/http.php"
                 ),
                 "xmlrpc" => array(
-                        "status" => WS_ENABLE_XMLRPC,
-                        "name" => "XML-RPC",
+                        "status"    => WS_ENABLE_XMLRPC,
+                        "name"      => "XML-RPC",
                         "extension" => null,
-                        "link" => "${relative}ws/docs/xmlrpc.php"
+                        "link"      => "${relative}ws/docs/xmlrpc.php"
                 )
         );
         echo "<p>\n";
@@ -1106,5 +1106,3 @@ function ws_print_services_status($relative = "")
         }
         echo "</p>\n";
 }
-
-

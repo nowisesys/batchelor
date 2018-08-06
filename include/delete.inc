@@ -134,5 +134,3 @@ function delete_multiple_jobs($hostid, $filter)
         }
         return true;
 }
-
-

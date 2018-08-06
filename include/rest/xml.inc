@@ -107,9 +107,9 @@ function send_job(&$job, $request)
 {
         printf("  <job timezone=\"%s\">\n", date('T'));
         foreach (array(
-        "jobid", "result", "date", "time", "stamp",
-        "queued", "started", "finished",
-        "stdout", "stderr", "state", "name"
+            "jobid", "result", "date", "time", "stamp",
+            "queued", "started", "finished",
+            "stdout", "stderr", "state", "name"
         ) as $key) {
                 if (isset($job[$key])) {
                         if ($key == "name") {
@@ -150,5 +150,3 @@ function send_version($version)
 {
         printf("  <version>%s</version>\n", $version);
 }
-
-

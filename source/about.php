@@ -230,13 +230,13 @@ function print_about()
                 $appname = HTML_PAGE_TITLE;
         }
         $tabmenu = array(
-                "appname" => array(
+                "appname"    => array(
                         "desc" => $appname,
                         "func" => null,
                         "page" => "about_app.html",
                         "show" => true
                 ),
-                "batchelor" => array(
+                "batchelor"  => array(
                         "desc" => "Batchelor",
                         "func" => "print_about_batchelor",
                         "page" => null,
@@ -248,12 +248,12 @@ function print_about()
                         "page" => null,
                         "show" => true
                 ),
-                "license" => array(
+                "license"    => array(
                         "desc" => "GNU Public License",
                         "func" => "print_license",
                         "page" => null,
                         "show" => false
-                ));
+        ));
 
         $selected = "appname";
         if (isset($_REQUEST['sect'])) {

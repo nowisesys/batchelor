@@ -15,14 +15,14 @@
   the response message (result) wrapping up error message or object data.
   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  Author: Anders Lövgren
-  Date:   2009-04-17
-  -->
+Author: Anders Lövgren
+Date:   2009-04-17
+-->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="http://it.bmc.uu.se/batchelor/rest/200901"
-    xmlns:tns="http://it.bmc.uu.se/batchelor/rest/200901"
-    xmlns:xlink="http://it.bmc.uu.se/batchelor/xlink/200901">
+            targetNamespace="http://it.bmc.uu.se/batchelor/rest/200901"
+            xmlns:tns="http://it.bmc.uu.se/batchelor/rest/200901"
+            xmlns:xlink="http://it.bmc.uu.se/batchelor/xlink/200901">
     
     <!-- Import XLink attributes: -->
     <xsd:import schemaLocation="xlink.xsd" namespace="http://it.bmc.uu.se/batchelor/xlink/200901"/>
@@ -91,10 +91,10 @@
             <xsd:element name="content" type="xsd:string" minOccurs="0"/>
         </xsd:sequence>
         <!--
-        <xsd:sequence>
-            <xsd:byte maxOccurs="unbounded" minOccurs="0"/>
-        </xsd:sequence>
-          -->
+      <xsd:sequence>
+          <xsd:byte maxOccurs="unbounded" minOccurs="0"/>
+      </xsd:sequence>
+        -->
         <xsd:attribute ref="tns:encoding"/>
         <xsd:attribute name="name" type="xsd:string"/>
         <xsd:attribute name="size" type="xsd:long"/>

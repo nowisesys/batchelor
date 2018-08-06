@@ -1,37 +1,37 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
      Template used when displaying popup HTML pages.
-     -->
+-->
 <html>
-  <head>
-    <title><?php print_html("title"); ?></title>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <link rel="icon" type="image/gif" href="../../icons/batchelor.gif">
-    <link rel="stylesheet" type="text/css" href="../../css/default.css">
-    <?php print_html("header"); ?>
-  </head>
-<body>
-<!--
-     A simple page layout showing just a page banner and the page body.
-     -->
-  <table>
-    <tr>
-      <td class="logo"><img src="../../images/batchelor.png" height="64" width="64"></td>
-      <td class="banner"><h1>Batchelor - batch job queue manager</h1></td>
-    </tr>
-  </table>  
-  <div class="top"></div>
-  <?php print_html("body"); ?>
-  <br><hr>
-  <p><a href="../docs/index.php">Index</a> :: 
-     <a href="../docs/intro.php">Introduction</a> :: 
-     <a href="../docs/setup.php">Setup</a> :: 
-     <a href="../docs/soap.php">SOAP</a> :: 
-     <a href="../docs/rest.php">REST</a> :: 
-     <a href="../docs/http.php">HTTP RPC</a> :: 
-     <a href="../docs/xmlrpc.php">XML-RPC</a>
-  </p>
-  <hr>
-  <p id="footer"><span id="copyright">Batchelor - Web Service manual - Copyright &copy; 2008-2011 Anders L&oumlvgren and Computing Department at BMC, Uppsala Biomedical Center, Uppsala University.</span></p>
-</body>
+    <head>
+        <title><?php print_html("title"); ?></title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <link rel="icon" type="image/gif" href="../../icons/batchelor.gif">
+        <link rel="stylesheet" type="text/css" href="../../css/default.css">
+        <?php print_html("header"); ?>
+    </head>
+    <body>
+        <!--
+             A simple page layout showing just a page banner and the page body.
+        -->
+        <table>
+            <tr>
+                <td class="logo"><img src="../../images/batchelor.png" height="64" width="64"></td>
+                <td class="banner"><h1>Batchelor - batch job queue manager</h1></td>
+            </tr>
+        </table>  
+        <div class="top"></div>
+        <?php print_html("body"); ?>
+        <br><hr>
+        <p><a href="../docs/index.php">Index</a> :: 
+            <a href="../docs/intro.php">Introduction</a> :: 
+            <a href="../docs/setup.php">Setup</a> :: 
+            <a href="../docs/soap.php">SOAP</a> :: 
+            <a href="../docs/rest.php">REST</a> :: 
+            <a href="../docs/http.php">HTTP RPC</a> :: 
+            <a href="../docs/xmlrpc.php">XML-RPC</a>
+        </p>
+        <hr>
+        <p id="footer"><span id="copyright">Batchelor - Web Service manual - Copyright &copy; 2008-2018 Anders L&oumlvgren and Computing Department at BMC, Uppsala Biomedical Center, Uppsala University.</span></p>
+    </body>
 </html>

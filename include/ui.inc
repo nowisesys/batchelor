@@ -119,7 +119,7 @@ function print_menu()
                         "attr" => "onclick=\"this.href+='&js=on';\"",
                         "icon" => "services.png"
                 ),
-                "Show Queue" => array(
+                "Show Queue"  => array(
                         "href" => "queue.php?show=queue",
                         "attr" => "onclick=\"this.href+='&js=on';\"",
                         "icon" => "services.png"
@@ -131,7 +131,7 @@ function print_menu()
                         "attr" => "target=\"_blank\"",
                         "icon" => "info.png"
                 ),
-                "Help" => array(
+                "Help"  => array(
                         "href" => "help.php",
                         "attr" => "target=\"_blank\"",
                         "icon" => "help.png"

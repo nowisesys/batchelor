@@ -128,13 +128,13 @@ function print_body()
                         if (isset($stdout)) {
                                 printf("<span id=\"secthead\">Output from job:</span>\n");
                                 printf("<p>%s</p>\n", preg_replace(
-                                                array(
-                                                '/\n/',
-                                                '/(using|options|defaults|created|exiting)/i'
-                                                ), array(
-                                                '<br>',
-                                                '<b>$1</b>'
-                                                ), $stdout));
+                                        array(
+                                        '/\n/',
+                                        '/(using|options|defaults|created|exiting)/i'
+                                        ), array(
+                                        '<br>',
+                                        '<b>$1</b>'
+                                        ), $stdout));
                         }
                         if (isset($stderr)) {
                                 printf("<span id=\"secthead\">Error log:</span>\n");

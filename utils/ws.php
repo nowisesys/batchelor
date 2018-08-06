@@ -190,7 +190,7 @@ function get_rest_response($options)
                 }
                 curl_setopt($curl, CURLOPT_URL, $url);
                 if ($options->action == "post" ||
-                        $options->action == "put") {
+                    $options->action == "put") {
                         if (!isset($options->file)) {
                                 die(sprintf("(-) error: using --action=%s requires an --file option.\n", $options->action));
                         }
@@ -531,14 +531,14 @@ function main(&$argc, $argv)
         // 
         $options = array(
                 "baseurl" => "http://localhost/batchelor/ws",
-                "type" => "http",
-                "func" => null,
-                "file" => null,
-                "params" => null,
-                "action" => "get", // for REST service
-                "debug" => false,
+                "type"    => "http",
+                "func"    => null,
+                "file"    => null,
+                "params"  => null,
+                "action"  => "get", // for REST service
+                "debug"   => false,
                 "verbose" => 0,
-                "prog" => $prog,
+                "prog"    => $prog,
                 "version" => $vers
         );
 

@@ -70,5 +70,3 @@ function create_zipfile($zipfile, $zipdir)
         $objzip->close();
         return true;
 }
-
-

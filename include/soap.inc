@@ -445,12 +445,10 @@ class VersionResponse
 {
 
         public $return;     // string
-        
+
         public function __construct($return)
         {
                 $this->return = $return;
         }
 
 }
-
-

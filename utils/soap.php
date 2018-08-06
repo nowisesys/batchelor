@@ -86,7 +86,7 @@ function usage($prog)
 {
         $wsdl = array(
                 "remote" => "http://localhost/batchelor/ws/schema/wsdl/?wsdl",
-                "local" => "../source/ws/schema/wsdl/batchelor.wsdl.cache"
+                "local"  => "../source/ws/schema/wsdl/batchelor.wsdl.cache"
         );
 
         printf("%s - generates PHP classes from SOAP types\n", $prog);

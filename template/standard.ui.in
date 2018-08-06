@@ -3,41 +3,41 @@
      Template used when displaying normal HTML pages
 -->
 <html>
-        <head>
-                <title><?php print_html("title"); ?></title>
-                <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-                <link rel="icon" type="image/gif" href="icons/batchelor.gif">
-                <link rel="stylesheet" type="text/css" href="css/default.css">
+    <head>
+        <title><?php print_html("title"); ?></title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <link rel="icon" type="image/gif" href="icons/batchelor.gif">
+        <link rel="stylesheet" type="text/css" href="css/default.css">
                 <?php print_html("header"); ?>
-        </head>
-        <body>
-                <!--
-                     A simple page layout showing a page banner, a left-side meny,
-                     the page body, context help at right and address links at bottom.
-                -->
-                <table>
-                        <tr>
-                                <td class="logo"><img src="images/batchelor.png" height="64" width="64"></td>
-                                <td class="banner"><h1>Batchelor - batch job queue manager</h1></td>
-                                <td class="hostid">
+    </head>
+    <body>
+        <!--
+             A simple page layout showing a page banner, a left-side meny,
+             the page body, context help at right and address links at bottom.
+        -->
+        <table>
+            <tr>
+                <td class="logo"><img src="images/batchelor.png" height="64" width="64"></td>
+                <td class="banner"><h1>Batchelor - batch job queue manager</h1></td>
+                <td class="hostid">
                                         <?php print_html("hostid"); ?>
-                                </td>
-                        </tr>
-                </table>
-                <div class="top"></div>
-                <table width="960">
-                        <tr>
-                                <td class="menu"><?php print_html("menu"); ?></td>
-                                <td class="body"><?php print_html("body"); ?></td>
-                                <td class="help"><?php print_html("help"); ?></td>
-                        </tr>
-                </table>
-                <br>
-                <hr>
-                <table width="960">
-                        <tr>
-                                <td class="footer"><?php print_html("footer"); ?></td>
-                        </tr>
-                </table>
-        </body>
+                </td>
+            </tr>
+        </table>
+        <div class="top"></div>
+        <table width="960">
+            <tr>
+                <td class="menu"><?php print_html("menu"); ?></td>
+                <td class="body"><?php print_html("body"); ?></td>
+                <td class="help"><?php print_html("help"); ?></td>
+            </tr>
+        </table>
+        <br>
+        <hr>
+        <table width="960">
+            <tr>
+                <td class="footer"><?php print_html("footer"); ?></td>
+            </tr>
+        </table>
+    </body>
 </html>

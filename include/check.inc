@@ -635,5 +635,3 @@ function run_all_tests()
                 output("Your PHP installation seems to be OK. Your system seems to be ready for running Batchelor.\n");
         }
 }
-
-

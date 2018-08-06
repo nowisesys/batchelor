@@ -650,5 +650,3 @@ function get_last_warning()
                 return $GLOBALS['warning'][$last];
         }
 }
-
-

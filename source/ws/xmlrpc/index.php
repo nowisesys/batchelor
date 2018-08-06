@@ -58,9 +58,9 @@ function decode_request()
         if (extension_loaded("domxml")) {
                 $errors = array();
                 $xmlopt = DOMXML_LOAD_PARSING |
-                        DOMXML_LOAD_COMPLETE_ATTRS |
-                        DOMXML_LOAD_SUBSTITUTE_ENTITIES |
-                        DOMXML_LOAD_DONT_KEEP_BLANKS;
+                    DOMXML_LOAD_COMPLETE_ATTRS |
+                    DOMXML_LOAD_SUBSTITUTE_ENTITIES |
+                    DOMXML_LOAD_DONT_KEEP_BLANKS;
                 $xmldoc = @domxml_open_mem($xmldata, $xmlopt, $errors);
                 if (!$xmldoc) {
                         send_error(WS_ERROR_INVALID_FORMAT, "Failed open XML");
@@ -422,7 +422,7 @@ function send_method_descr($name)
                         case "info":
                                 $entries = array(array(
                                                 "long" => "name"
-                                        ));
+                                ));
                                 $status = send_methods_list($entries);
                                 break;
                         case "func":
@@ -444,10 +444,10 @@ function send_method_descr($name)
                         case "enqueue":
                                 $result = array(array(
                                                 "jobid" => "integer",
-                                                "date" => "string",
-                                                "time" => "string",
+                                                "date"  => "string",
+                                                "time"  => "string",
                                                 "stamp" => "integer"
-                                        ));
+                                ));
                                 send_enqueue_response($result);
                                 break;
                         case "queue":

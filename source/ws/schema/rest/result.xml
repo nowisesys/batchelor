@@ -11,10 +11,10 @@
 -->
 
 <tns:result  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-   xmlns:tns='http://it.bmc.uu.se/batchelor/rest/200901'
-   xmlns:xlink='http://it.bmc.uu.se/batchelor/xlink/200901'
-   xsi:schemaLocation='http://it.bmc.uu.se/batchelor/rest/200901 http://localhost/batchelor/ws/schema/rest/result.xsd'
-   tns:state="success" tns:type="version">
+             xmlns:tns='http://it.bmc.uu.se/batchelor/rest/200901'
+             xmlns:xlink='http://it.bmc.uu.se/batchelor/xlink/200901'
+             xsi:schemaLocation='http://it.bmc.uu.se/batchelor/rest/200901 http://localhost/batchelor/ws/schema/rest/result.xsd'
+             tns:state="success" tns:type="version">
     <version>1.0</version>
     <status>Hello World!</status>
     <error>

@@ -168,5 +168,3 @@ function get_opt($argv, $argc, &$opts)
                 $opts[$key] = $val;
         }
 }
-
-
