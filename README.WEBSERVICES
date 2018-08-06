@@ -7,6 +7,10 @@
    
    The XML Schemas for SOAP and REST can be found under source/ws/schema/,
    use a browser to review them.
+
+   If using the Apache config (conf/apache.conf), remember to define the 
+   runtime define -D WEB_SERVICE for the web server or the web service endpoints 
+   will not be accessable.
    
 Anders Lövgren,
 2009-04-15
