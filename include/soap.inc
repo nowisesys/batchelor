@@ -54,8 +54,12 @@ function get_wsdl_url()
         if (isset($_SERVER['SCRIPT_NAME'])) {
                 $opts['path'] = dirname(dirname($_SERVER['SCRIPT_NAME']));
         }
+
         if ($opts['path'][0] == '/') {
                 $opts['path'] = substr($opts['path'], 1);
+        }
+        if (strncmp($opts['addr'], "::", 2) == 0) {
+                $opts['addr'] = "[" . $opts['addr'] . "]";      // IPv6 address need brackets
         }
 
         $wsdl = sprintf("%s://%s:%d/%s/schema/wsdl/?wsdl", $opts['scheme'], $opts['addr'], $opts['port'], $opts['path']);

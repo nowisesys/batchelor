@@ -193,6 +193,10 @@ function get_server_url()
                 $opts['path'] = implode("/", $parts);
         }
 
+        if (strncmp($opts['addr'], "::", 2) == 0) {
+                $opts['addr'] = "[" . $opts['addr'] . "]";      // IPv6 address need brackets
+        }
+
         $root = sprintf("%s://%s:%d/%s", $opts['scheme'], $opts['addr'], $opts['port'], $opts['path']);
         return $root;
 }
