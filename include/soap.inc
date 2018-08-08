@@ -19,7 +19,7 @@ define("WS_SOAP_INTERFACE_VERSION", "1.0");
 // 
 // Get WSDL URL.
 // 
-function get_wsdl_url()
+function get_wsdl_url($resolve = true)
 {
         // 
         // Use the cached WSDL if it exists:
@@ -57,6 +57,9 @@ function get_wsdl_url()
 
         if ($opts['path'][0] == '/') {
                 $opts['path'] = substr($opts['path'], 1);
+        }
+        if ($resolve) {
+                $opts['addr'] = gethostbyaddr($opts['addr']);
         }
         if (strncmp($opts['addr'], "::", 2) == 0) {
                 $opts['addr'] = "[" . $opts['addr'] . "]";      // IPv6 address need brackets

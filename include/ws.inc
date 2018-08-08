@@ -157,7 +157,7 @@ function get_error($code = null)
 // 
 // Get URL of the web service directory.
 // 
-function get_server_url()
+function get_server_url($resolve = true)
 {
         // 
         // Default options:
@@ -193,6 +193,9 @@ function get_server_url()
                 $opts['path'] = implode("/", $parts);
         }
 
+        if ($resolve) {
+                $opts['addr'] = gethostbyaddr($opts['addr']);
+        }
         if (strncmp($opts['addr'], "::", 2) == 0) {
                 $opts['addr'] = "[" . $opts['addr'] . "]";      // IPv6 address need brackets
         }
