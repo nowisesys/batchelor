@@ -27,7 +27,7 @@ use UUP\Site\Page\Web\WelcomePage;
  */
 class IndexPage extends WelcomePage
 {
-        
+
         public function __construct()
         {
                 parent::__construct(_("Welcome"));
