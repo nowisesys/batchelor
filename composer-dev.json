@@ -15,27 +15,27 @@
     ],
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/php/uup-site/"
+            "type": "path",
+            "url": "../uup-auth/"
         },
         {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/php/uup-soap/"
+            "type": "path",
+            "url": "../uup-site"
         },
         {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/php/uup-auth/"
+            "type": "path",
+            "url": "../uup-soap"
         },
         {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/php/uup-web-component/"
+            "type": "path",
+            "url": "../uup-web-component/"
         }
     ],
     "require": {
-        "bmc/uup-site": "^1.0",
-        "bmc/uup-soap": "^1.2",
-        "bmc/uup-auth": "^2.3",
-        "bmc/uup-web-component": "^2.0",
+        "bmc/uup-site": "@dev",
+        "bmc/uup-soap": "@dev",
+        "bmc/uup-auth": "@dev",
+        "bmc/uup-web-component": "@dev",
         "etconsilium/php-recursive-array-object": "^0.1.0"
     },
     "autoload": {
