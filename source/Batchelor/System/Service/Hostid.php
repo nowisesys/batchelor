@@ -20,6 +20,8 @@
 
 namespace Batchelor\System\Service;
 
+use RuntimeException;
+
 /**
  * The host ID.
  * 
@@ -31,9 +33,9 @@ namespace Batchelor\System\Service;
  * be used for HTTP header. The order for detecting the hostid will be:
  * 
  *      1. Constructor argument.
- *      2. Request parameter.
- *      3. HTTP header.
- *      4. Session cookie.
+ *      2. Request parameter (GET and POST).
+ *      3. From custom HTTP header.
+ *      4. From session cookie.
  * 
  * If none of the sources above supplie the hostid value, then the hostid gets
  * computed based on remote address.
@@ -51,6 +53,10 @@ class Hostid
          * The HTTP header provided by web server.
          */
         const SERVER_HTTP_HEADER_HOSTID = 'HTTP_X_BATCHELOR_HOSTID';
+        /**
+         * The default queue name.
+         */
+        const DEFAULT_QUEUE_NAME = 'default-queue';
 
         /**
          * The hostid value.
@@ -64,19 +70,21 @@ class Hostid
          */
         public function __construct($value = null)
         {
-                if (isset($value)) {
-                        $this->_value = $value;
-                } elseif (filter_has_var(INPUT_REQUEST, 'hostid')) {
-                        $this->_value = filter_input(INPUT_REQUEST, 'hostid');
-                } elseif (filter_has_var(INPUT_SERVER, 'HTTP_X_BATCHELOR_HOSTID')) {
-                        $this->_value = filter_input(INPUT_SERVER, 'HTTP_X_BATCHELOR_HOSTID');
-                } elseif (filter_has_var(INPUT_COOKIE, 'hostid')) {
-                        $this->_value = filter_input(INPUT_COOKIE, 'hostid');
-                } elseif (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-                        $this->_value = md5(filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR'));
-                } else {
-                        $this->_value = md5(filter_input(INPUT_SERVER, 'REMOTE_ADDR'));
+                $requested = $this->getRequested($value);
+                $persisted = $this->getPersisted();
+
+                if ($requested != $persisted) {
+                        if (empty($requested)) {
+                                $this->clearCookie();
+                        } else {
+                                $this->setCookie($requested);
+                        }
                 }
+                if (empty($requested)) {
+                        $requested = $this->getDefault();
+                }
+
+                $this->_value = $requested;
         }
 
         /**
@@ -107,8 +115,96 @@ class Hostid
          */
         public function setQueue($name)
         {
-                if (setcookie("hostid", $this->_value, 0)) {
-                        $this->_value = md5($name);
+                if (empty($name)) {
+                        $this->clearCookie();
+                        $this->setDefault();
+                } else {
+                        $this->setCookie(md5($name));
+                        $this->setValue(md5($name));
+                }
+        }
+
+        /**
+         * Set hostid session cookie.
+         * @param string $value The hostid value.
+         */
+        private function setCookie($value)
+        {
+                if (!setcookie("hostid", $value, 0)) {
+                        throw new RuntimeException("Failed set hostid session cookie");
+                }
+        }
+
+        /**
+         * Clear hostid session cookie.
+         */
+        private function clearCookie()
+        {
+                if (!setcookie('hostid', "", time() - 3600)) {
+                        throw new RuntimeException("Failed clear hostid session cookie");
+                }
+        }
+
+        /**
+         * Set default hostid.
+         */
+        private function setDefault()
+        {
+                $this->_value = $this->getDefault();
+        }
+
+        /**
+         * Get default hostid.
+         * 
+         * The default hostid is either based on remote address (possibly proxied).
+         * If remote address is missing (i.e. from CLI), then default queue name is
+         * used.
+         * 
+         * @return string
+         */
+        private function getDefault()
+        {
+                if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
+                        return md5(filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR'));
+                } elseif (filter_has_var(INPUT_SERVER, 'REMOTE_ADDR')) {
+                        return md5(filter_input(INPUT_SERVER, 'REMOTE_ADDR'));
+                } else {
+                        return md5(self::DEFAULT_QUEUE_NAME);
+                }
+        }
+
+        /**
+         * Get requested hostid.
+         * 
+         * @param string $value The local value.
+         * @param string $default The default value.
+         * @return string
+         */
+        private function getRequested($value = null, $default = null)
+        {
+                if (isset($value)) {
+                        return $value;
+                } elseif (filter_has_var(INPUT_GET, 'hostid')) {
+                        return filter_input(INPUT_GET, 'hostid');
+                } elseif (filter_has_var(INPUT_POST, 'hostid')) {
+                        return filter_input(INPUT_POST, 'hostid');
+                } elseif (filter_has_var(INPUT_SERVER, 'HTTP_X_BATCHELOR_HOSTID')) {
+                        return filter_input(INPUT_SERVER, 'HTTP_X_BATCHELOR_HOSTID');
+                } elseif (filter_has_var(INPUT_COOKIE, 'hostid')) {
+                        return filter_input(INPUT_COOKIE, 'hostid');
+                } else {
+                        return $default;
+                }
+        }
+
+        /**
+         * Get persisted hostid.
+         * @return string
+         */
+        private function getPersisted()
+        {
+                if (filter_has_var(INPUT_COOKIE, 'hostid')) {
+                        return filter_input(INPUT_COOKIE, 'hostid');
                 }
         }
 
