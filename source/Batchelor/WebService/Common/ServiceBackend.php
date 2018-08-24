@@ -31,7 +31,7 @@ use Batchelor\WebService\Types\QueueSortResult;
  * 
  * All web service frontends should use this class for interaction with
  * the batch queue. This class function as an common API.
- *
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
 class ServiceBackend
@@ -171,7 +171,7 @@ class ServiceBackend
          * default queue.
          * 
          * @param string $queue The queue name.
-         * @return bool
+         * @return string The new hostid
          */
         public function select($queue)
         {
