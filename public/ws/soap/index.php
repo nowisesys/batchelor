@@ -23,10 +23,10 @@ use Batchelor\WebService\SoapServiceFrontend;
 class IndexPage extends SoapServiceFrontend
 {
 
-        public function render()
+        public function __construct($config = null)
         {
+                parent::__construct($config);
                 parent::setLocation($this->config->getUrl("ws/soap", true));
-                parent::render();
         }
 
 }
