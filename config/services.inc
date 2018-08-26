@@ -33,5 +33,9 @@ return [
         // 
         // The hostid service providing job queue mapping:
         // 
-        'hostid' => new Service(Hostid::class)
+        'hostid'      => new Service(Hostid::class),
+        // 
+        // The persistance service for storing data in cookies or session:
+        // 
+        'persistance' => new Service(Service\Persistance::class)
 ];
