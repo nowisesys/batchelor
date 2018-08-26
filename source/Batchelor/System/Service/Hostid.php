@@ -39,6 +39,14 @@ use RuntimeException;
  * 
  * If none of the sources above supplie the hostid value, then the hostid gets
  * computed based on remote address.
+ * 
+ * <code>
+ * // 
+ * // Cookie will only be set if requested or explicit switching queue:
+ * // 
+ * $hostid = new Hostid();
+ * $hostid->setQueue('my-queue');
+ * </code>
  *
  * @author Anders Lövgren (Nowise Systems)
  */
