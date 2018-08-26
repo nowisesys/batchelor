@@ -20,6 +20,7 @@
 
 namespace Batchelor\WebService\Common;
 
+use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
@@ -34,7 +35,7 @@ use Batchelor\WebService\Types\QueueSortResult;
  * 
  * @author Anders Lövgren (Nowise Systems)
  */
-class ServiceBackend
+class ServiceBackend extends Component
 {
 
         /**
@@ -164,18 +165,19 @@ class ServiceBackend
         }
 
         /**
-         * Switch currently selected job queue.
+         * Switch selected job queue.
          * 
-         * Pass $queue as the name of the job queue to select it as current job
-         * qeuue for next operations. Use null as argument for reverting back to
-         * default queue.
+         * Pass name of the queue to select as current queue for comming operations. 
+         * Revert back to default queue by passing null. The returned string is the
+         * hostid for the activated queue.
          * 
          * @param string $queue The queue name.
          * @return string The new hostid
          */
         public function select($queue)
         {
-                
+                $this->hostid->setQueue($queue);
+                return $this->hostid->getValue();
         }
 
         /**
