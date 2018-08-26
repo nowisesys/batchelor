@@ -1,0 +1,9 @@
+<?php
+
+return array(
+        'head' => _('Examples'),
+        'data' => array(
+                'Persistance' => 'persistance',
+                'Service'     => 'service'
+        )
+);

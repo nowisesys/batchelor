@@ -1,0 +1,9 @@
+<?php
+
+return array(
+        'head' => _('Service'),
+        'data' => array(
+                'Persistance' => 'persistance',
+                'Host ID'     => 'hostid'
+        )
+);
