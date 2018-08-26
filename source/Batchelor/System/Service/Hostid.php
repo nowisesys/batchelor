@@ -21,7 +21,6 @@
 namespace Batchelor\System\Service;
 
 use Batchelor\System\Component;
-use RuntimeException;
 
 /**
  * The host ID.
@@ -83,17 +82,12 @@ class Hostid extends Component
                 $persisted = $this->getPersisted();
 
                 if ($requested != $persisted) {
-                        if (empty($requested)) {
-                                $this->clearPersisted();
-                        } else {
-                                $this->setPersisted($requested);
-                        }
+                        $this->onChanged($requested);
+                } if (!empty($requested)) {
+                        $this->setValue($requested);
+                } else {
+                        $this->setDefault();
                 }
-                if (empty($requested)) {
-                        $requested = $this->getDefault();
-                }
-
-                $this->_value = $requested;
         }
 
         /**
@@ -125,11 +119,9 @@ class Hostid extends Component
         public function setQueue($name)
         {
                 if (empty($name)) {
-                        $this->clearPersisted();
-                        $this->setDefault();
+                        $this->onChanged(null);
                 } else {
-                        $this->setPersisted(md5($name));
-                        $this->setValue(md5($name));
+                        $this->onChanged(md5($name));
                 }
         }
 
@@ -193,6 +185,21 @@ class Hostid extends Component
         {
                 if ($this->persistance->exists('hostid')) {
                         return $this->persistance->read('hostid');
+                }
+        }
+
+        /**
+         * Called on changed hostid value.
+         * @param string $value The hostid value.
+         */
+        private function onChanged($value)
+        {
+                if (empty($value)) {
+                        $this->clearPersisted();
+                        $this->setDefault();
+                } else {
+                        $this->setPersisted($value);
+                        $this->setValue($value);
                 }
         }
 
