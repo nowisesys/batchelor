@@ -98,7 +98,7 @@ class SoapServiceHandler implements SoapHandler
          * default queue.
          * 
          * @param string $queue The queue name.
-         * @return bool
+         * @return string
          */
         public function select($queue)
         {
