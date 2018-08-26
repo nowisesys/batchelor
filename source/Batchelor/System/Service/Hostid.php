@@ -20,6 +20,7 @@
 
 namespace Batchelor\System\Service;
 
+use Batchelor\System\Component;
 use RuntimeException;
 
 /**
@@ -50,7 +51,7 @@ use RuntimeException;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class Hostid
+class Hostid extends Component
 {
 
         /**
@@ -83,9 +84,9 @@ class Hostid
 
                 if ($requested != $persisted) {
                         if (empty($requested)) {
-                                $this->clearCookie();
+                                $this->clearPersisted();
                         } else {
-                                $this->setCookie($requested);
+                                $this->setPersisted($requested);
                         }
                 }
                 if (empty($requested)) {
@@ -124,32 +125,11 @@ class Hostid
         public function setQueue($name)
         {
                 if (empty($name)) {
-                        $this->clearCookie();
+                        $this->clearPersisted();
                         $this->setDefault();
                 } else {
-                        $this->setCookie(md5($name));
+                        $this->setPersisted(md5($name));
                         $this->setValue(md5($name));
-                }
-        }
-
-        /**
-         * Set hostid session cookie.
-         * @param string $value The hostid value.
-         */
-        private function setCookie($value)
-        {
-                if (!setcookie("hostid", $value, 0)) {
-                        throw new RuntimeException("Failed set hostid session cookie");
-                }
-        }
-
-        /**
-         * Clear hostid session cookie.
-         */
-        private function clearCookie()
-        {
-                if (!setcookie('hostid', "", time() - 3600)) {
-                        throw new RuntimeException("Failed clear hostid session cookie");
                 }
         }
 
@@ -211,9 +191,26 @@ class Hostid
          */
         private function getPersisted()
         {
-                if (filter_has_var(INPUT_COOKIE, 'hostid')) {
-                        return filter_input(INPUT_COOKIE, 'hostid');
+                if ($this->persistance->exists('hostid')) {
+                        return $this->persistance->read('hostid');
                 }
+        }
+
+        /**
+         * Set persisted hostid.
+         * @param string $value The hostid value.
+         */
+        private function setPersisted($value)
+        {
+                $this->persistance->save('hostid', $value);
+        }
+
+        /**
+         * Clear persisted hostid.
+         */
+        private function clearPersisted()
+        {
+                $this->persistance->delete('hostid');
         }
 
 }
