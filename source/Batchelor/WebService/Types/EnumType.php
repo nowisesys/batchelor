@@ -21,6 +21,7 @@
 namespace Batchelor\WebService\Types;
 
 use InvalidArgumentException;
+use JsonSerializable;
 use ReflectionClass;
 
 /**
@@ -68,7 +69,7 @@ use ReflectionClass;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class EnumType
+abstract class EnumType implements JsonSerializable
 {
 
         /**
@@ -189,6 +190,15 @@ abstract class EnumType
                 }
 
                 return ['key' => null, 'val' => null];
+        }
+
+        /**
+         * Get data for JSON encoding.
+         * @return array
+         */
+        public function jsonSerialize()
+        {
+                return ['value' => $this->_value];
         }
 
 }
