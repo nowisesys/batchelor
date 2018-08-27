@@ -20,12 +20,14 @@
 
 namespace Batchelor\Web;
 
+use UUP\Site\Page\Web\StandardPage;
+
 /**
  * The example page.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class ExamplePage extends \UUP\Site\Page\Web\StandardPage
+class ExamplePage extends StandardPage
 {
 
         /**
