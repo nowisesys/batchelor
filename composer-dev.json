@@ -36,7 +36,8 @@
         "bmc/uup-soap": "@dev",
         "bmc/uup-auth": "@dev",
         "bmc/uup-web-component": "@dev",
-        "etconsilium/php-recursive-array-object": "^0.1.0"
+        "etconsilium/php-recursive-array-object": "^0.1.0",
+        "symfony/console": "^4.1"
     },
     "autoload": {
         "psr-0": {
