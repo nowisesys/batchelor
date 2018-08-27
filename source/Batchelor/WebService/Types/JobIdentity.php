@@ -24,7 +24,7 @@ namespace Batchelor\WebService\Types;
  * The job identity class.
  *
  * Contains the data for identifying a queued job relative to the current used 
- * batch job queue. The jobID is the assigned execution order in the batch queue 
+ * batch job queue. The jobid is the assigned execution order in the batch queue 
  * and the result is physical root directory.
  * 
  * This class should be used as a message passed from peer when performing tasks
@@ -40,7 +40,7 @@ class JobIdentity
          * The job identity.
          * @var string 
          */
-        public $jobID;
+        public $jobid;
         /**
          * The root directory.
          * @var string
@@ -49,12 +49,12 @@ class JobIdentity
 
         /**
          * Constructor.
-         * @param string $jobId The job identity.
+         * @param string $jobid The job identity.
          * @param string $result The root directory.
          */
-        public function __construct($jobId, $result)
+        public function __construct($jobid, $result)
         {
-                $this->jobID = $jobId;
+                $this->jobid = $jobid;
                 $this->result = $result;
         }
 
