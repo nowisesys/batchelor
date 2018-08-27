@@ -55,6 +55,11 @@ class SoapClientHandler
                 'trace'        => 0,
                 'cache_wsdl'   => WSDL_CACHE_BOTH
         ];
+        /**
+         * The trace data.
+         * @var array
+         */
+        private $_tracing;
 
         /**
          * Constructor.
@@ -112,6 +117,15 @@ class SoapClientHandler
         }
 
         /**
+         * Get tracing data.
+         * @return array
+         */
+        public function getTracing()
+        {
+                return $this->_tracing;
+        }
+
+        /**
          * Enable trace mode.
          */
         public function setTracing()
@@ -142,7 +156,7 @@ class SoapClientHandler
                 $result = $client->__soapCall($func, array($params));
 
                 if ($this->useTracing()) {
-                        print_r([
+                        $this->_tracing = [
                                 'action'   => [
                                         'method' => $func,
                                         'params' => $params
@@ -155,8 +169,8 @@ class SoapClientHandler
                                         'head' => $client->__getLastResponseHeaders(),
                                         'body' => $client->__getLastResponse()
                                 ],
-                                'result' => $result
-                        ]);
+                                'result'   => $result
+                        ];
                 }
 
                 return $result;

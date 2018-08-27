@@ -24,6 +24,7 @@ use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\QueueFilterResult;
 use Batchelor\WebService\Types\QueueSortResult;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,6 +48,16 @@ abstract class BaseCommand extends Command
                 $this->addOption("trace", null, InputOption::VALUE_NONE, "Enable client request tracing");
 
                 $this->addusage("--func=<method> --base=http://localhost/batchelor2/ws/soap");
+        }
+
+        protected function initialize(InputInterface $input, OutputInterface $output)
+        {
+                parent::initialize($input, $output);
+
+                $output->getFormatter()->setStyle('result', new OutputFormatterStyle('black', null, array('bold')));
+                $output->getFormatter()->setStyle('head', new OutputFormatterStyle('green', null, array('bold')));
+                $output->getFormatter()->setStyle('data', new OutputFormatterStyle('blue', null, array('bold')));
+                $output->getFormatter()->setStyle('type', new OutputFormatterStyle('black', null, array('bold')));
         }
 
         protected function execute(InputInterface $input, OutputInterface $output)
@@ -110,6 +121,17 @@ abstract class BaseCommand extends Command
 
                         $output->writeln(sprintf("\t--func=%s --params='%s'", $method, json_encode($methods->getParams($method))));
                 }
+        }
+
+        protected function showTrace($trace, OutputInterface $output)
+        {
+                $text = print_r($trace, true);
+
+                $text = str_replace(["[", "]"], ["[<head>", "</head>]"], $text);
+                $text = str_replace(["(", ")"], ["<data>(</data>", "<data>)</data>"], $text);
+                $text = preg_replace("/(Array|stdClass Object)/", "<type>$1</type>", $text);
+
+                $output->write($text);
         }
 
 }

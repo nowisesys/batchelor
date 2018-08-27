@@ -39,7 +39,7 @@ class SoapCommand extends BaseCommand
                 $this->setName("soap");
                 $this->setDescription("SOAP service client");
         }
-
+        
         protected function execute(InputInterface $input, OutputInterface $output)
         {
                 parent::execute($input, $output);
@@ -60,8 +60,12 @@ class SoapCommand extends BaseCommand
                         $response = $client->callMethod($func);
                 }
 
+                if ($input->getOption("trace")) {
+                        $this->showTrace($client->getTracing(), $output);
+                }
+
                 if ($response) {
-                        $output->write(json_encode($response));
+                        $output->writeln(sprintf("<result>Result:</result> %s", json_encode($response)));
                 }
         }
 
