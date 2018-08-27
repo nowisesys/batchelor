@@ -100,7 +100,7 @@ class SoapServiceHandler implements SoapHandler
          * @param string $queue The queue name.
          * @return string
          */
-        public function select($queue)
+        public function select(string $queue)
         {
                 return $this->_backend->select($queue);
         }
@@ -111,7 +111,7 @@ class SoapServiceHandler implements SoapHandler
          * @param string $indata The input data.
          * @return QueuedJob[]
          */
-        public function enqueue($indata)
+        public function enqueue(string $indata)
         {
                 return $this->_backend->enqueue($indata);
         }
@@ -164,7 +164,7 @@ class SoapServiceHandler implements SoapHandler
          * @param int $stamp The UNIX timestamp.
          * @return QueuedJob[]
          */
-        public function watch($stamp)
+        public function watch(int $stamp)
         {
                 return $this->_backend->watch($stamp);
         }
@@ -206,7 +206,7 @@ class SoapServiceHandler implements SoapHandler
          * @param string $file The filename.
          * @return string
          */
-        public function fopen(JobIdentity $job, $file)
+        public function fopen(JobIdentity $job, string $file)
         {
                 return $this->_backend->fopen($job, $file);
         }

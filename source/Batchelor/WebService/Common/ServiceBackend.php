@@ -174,7 +174,7 @@ class ServiceBackend extends Component
          * @param string $queue The queue name.
          * @return string The new hostid
          */
-        public function select($queue)
+        public function select(string $queue)
         {
                 $this->hostid->setQueue($queue);
                 return $this->hostid->getValue();
