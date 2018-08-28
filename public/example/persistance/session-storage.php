@@ -7,7 +7,7 @@ class SessionStoragePage extends ExamplePage
 
         public function __construct()
         {
-                parent::__construct("Cookie Storage", "session-storage.inc");
+                parent::__construct("Session Storage", "session-storage.inc");
         }
 
 }
