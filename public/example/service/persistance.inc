@@ -5,6 +5,7 @@
 // be used with it are tested more thoroughly in separate examples.
 // 
 
+use Batchelor\System\Persistance\Storage\SessionStorage;
 use Batchelor\System\Service\Persistance;
 
 // 
@@ -41,7 +42,7 @@ print_r($service->fetch($name));
 // 
 // Change persistance backend:
 // 
-$service->setBackend(new Batchelor\System\Persistance\Storage\SessionStorage());
+$service->setBackend(new SessionStorage());
 
 // 
 // Stored in session:

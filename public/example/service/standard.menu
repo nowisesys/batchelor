@@ -3,6 +3,7 @@
 return array(
         'head' => _('Service'),
         'data' => array(
+                'Config'      => 'config',
                 'Persistance' => 'persistance',
                 'Host ID'     => 'hostid'
         )

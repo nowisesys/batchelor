@@ -154,7 +154,7 @@ class ServiceBackend extends Component
         }
 
         /**
-         * Get an list of jobs enqueued after the given timestamp,
+         * Get an list of jobs enqueued after the given timestamp.
          * 
          * @param int $stamp The UNIX timestamp.
          * @return QueuedJob[]
