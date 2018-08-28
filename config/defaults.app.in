@@ -1,0 +1,37 @@
+<?php
+
+// 
+// The TZ environment variable *has* to be set because its inherited by sub
+// processes (like at). It also affects the formatting of timestamps. Either 
+// set it here, or if safe_mode is enabled, in the apache config.
+// 
+if (!getenv("TZ")) {
+        putenv("TZ=Europe/Stockholm");
+}
+if (!getenv("TZ")) {
+        die("The environment variable TZ is not set!");
+}
+if (!ini_get("date.timezone")) {
+        ini_set("date.timezone", getenv("TZ"));
+}
+
+//
+// The application configuration (please modify to suite your preferences).
+//
+return [
+        // 
+        // The cache directory where i.e. job queues are stored.
+        // 
+        'cache'   => [
+                'directory'  => realpath(dirname(__FILE__) . "/../cache"),
+                'permission' => 0750
+        ],
+        // 
+        // The contact information.
+        // 
+        'contact' => [
+                'name' => 'System Manager',
+                'mail' => 'batchelor@localhost',
+                'page' => 'http://batchelor.example.com/contact.html'
+        ]
+];

@@ -1,7 +1,6 @@
 <?php
 
 use Batchelor\System\Service;
-use Batchelor\System\Service\Hostid;
 
 // 
 // This array contains entries identified by service name whos value is
@@ -33,9 +32,13 @@ return [
         // 
         // The hostid service providing job queue mapping:
         // 
-        'hostid'      => new Service(Hostid::class),
+        'hostid'      => new Service(Service\Hostid::class),
         // 
         // The persistance service for storing data in cookies or session:
         // 
-        'persistance' => new Service(Service\Persistance::class)
+        'persistance' => new Service(Service\Persistance::class),
+        // 
+        // The application config from defaults.app:
+        // 
+        'config'      => new Service(Service\Config::class)
 ];
