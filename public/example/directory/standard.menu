@@ -1,0 +1,9 @@
+<?php
+
+return array(
+        'head' => _('Directory'),
+        'data' => array(
+                'Filter'  => 'filter',
+                'Scanner' => 'scanner'
+        )
+);

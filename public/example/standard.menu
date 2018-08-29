@@ -4,6 +4,7 @@ return array(
         'head' => _('Examples'),
         'data' => array(
                 'Service'     => 'service',
-                'Persistance' => 'persistance'
+                'Persistance' => 'persistance',
+                'Directory'   => 'directory'
         )
 );
