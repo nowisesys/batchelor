@@ -40,5 +40,5 @@ return [
         // 
         // The application config from defaults.app:
         // 
-        'config'      => new Service(Service\Config::class)
+        'app'         => new Service(Service\Config::class)
 ];
