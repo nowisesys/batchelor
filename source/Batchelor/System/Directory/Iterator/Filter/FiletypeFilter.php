@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\System\Directory\Filter;
+namespace Batchelor\System\Directory\Iterator\Filter;
 
 use Batchelor\System\Directory\Scanner;
 use FilterIterator;
@@ -30,7 +30,7 @@ use SplFileInfo;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class FiletypeFilterIterator extends FilterIterator
+class FiletypeFilter extends FilterIterator
 {
 
         /**

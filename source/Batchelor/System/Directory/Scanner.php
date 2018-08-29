@@ -20,9 +20,10 @@
 
 namespace Batchelor\System\Directory;
 
-use Batchelor\System\Directory\Filter\ArrayFilterIterator;
-use Batchelor\System\Directory\Filter\FiletypeFilterIterator;
-use Batchelor\System\Directory\Filter\RegexFilterIterator;
+use Batchelor\System\Directory\Iterator\Filter\ArrayFilter;
+use Batchelor\System\Directory\Iterator\Filter\FiletypeFilter;
+use Batchelor\System\Directory\Iterator\Filter\RegexFilter;
+use Batchelor\System\Directory\Iterator\Format\ScannerFormat;
 use DirectoryIterator;
 use IteratorAggregate;
 use RecursiveDirectoryIterator;
@@ -238,11 +239,11 @@ class Scanner implements IteratorAggregate
 
         /**
          * Get result iterator.
-         * @return ScannerResult
+         * @return ScannerFormat
          */
         public function getResult()
         {
-                return new ScannerResult($this, $this->_format);
+                return new ScannerFormat($this, $this->_format);
         }
 
         /**
@@ -259,13 +260,13 @@ class Scanner implements IteratorAggregate
                 }
 
                 if (is_string($this->_filter)) {
-                        $iterator = new RegexFilterIterator($iterator, $this->_filter);
+                        $iterator = new RegexFilter($iterator, $this->_filter);
                 }
                 if (is_array($this->_filter)) {
-                        $iterator = new ArrayFilterIterator($iterator, $this->_filter);
+                        $iterator = new ArrayFilter($iterator, $this->_filter);
                 }
                 if ($this->_options) {
-                        $iterator = new FiletypeFilterIterator($iterator, $this->_options);
+                        $iterator = new FiletypeFilter($iterator, $this->_options);
                 }
 
                 return $iterator;

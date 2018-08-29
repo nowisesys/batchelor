@@ -4,13 +4,13 @@
 // Test directory iterator filter.
 // 
 
-use Batchelor\System\Directory\Filter\ArrayFilterIterator;
-use Batchelor\System\Directory\Filter\RegexFilterIterator;
+use Batchelor\System\Directory\Iterator\Filter\ArrayFilter;
+use Batchelor\System\Directory\Iterator\Filter\RegexFilter;
 
 // 
 // Filter using filenames:
 // 
-$iterator = new ArrayFilterIterator(
+$iterator = new ArrayFilter(
     new DirectoryIterator("."), ['index.php', 'index.inc']
 );
 
@@ -22,7 +22,7 @@ foreach ($iterator as $fileinfo) {
 // 
 // Filter using regex:
 // 
-$iterator = new RegexFilterIterator(
+$iterator = new RegexFilter(
     new DirectoryIterator("."), '/index\..*/'
 );
 
@@ -35,7 +35,7 @@ foreach ($iterator as $fileinfo) {
 // Filter recursive iterator:
 // 
 
-$iterator = new RegexFilterIterator(
+$iterator = new RegexFilter(
     new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator("..")
     ), '/index\..*/'
@@ -46,7 +46,7 @@ foreach ($iterator as $fileinfo) {
         printf("%s/%s\n", $fileinfo->getPath(), $fileinfo->getFilename());
 }
 
-$iterator = new RegexFilterIterator(
+$iterator = new RegexFilter(
     new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator("..")
     ), '/.*\.inc$/'

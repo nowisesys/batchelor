@@ -18,22 +18,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\System\Directory\Filter;
+namespace Batchelor\System\Directory\Iterator\Filter;
 
 use FilterIterator;
 use Iterator;
 
 /**
- * Regex filtering of iterator.
+ * Array filtering of iterator.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class RegexFilterIterator extends FilterIterator
+class ArrayFilter extends FilterIterator
 {
 
         /**
-         * The regex pattern.
-         * @var string 
+         * The filename array.
+         * @var array 
          */
         private $_filter;
 
@@ -41,9 +41,9 @@ class RegexFilterIterator extends FilterIterator
          * Constructor.
          * 
          * @param Iterator $iterator The inner iterator.
-         * @param string $filter The regex pattern.
+         * @param array $filter The filename array.
          */
-        public function __construct($iterator, string $filter)
+        public function __construct($iterator, array $filter)
         {
                 parent::__construct($iterator);
                 $this->_filter = $filter;
@@ -55,7 +55,7 @@ class RegexFilterIterator extends FilterIterator
          */
         public function accept(): bool
         {
-                return preg_match($this->_filter, $this->current()->getFilename());
+                return in_array($this->current()->getFilename(), $this->_filter, true);
         }
 
 }

@@ -18,29 +18,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\System\Directory;
+namespace Batchelor\System\Directory\Iterator\Format;
 
+use Batchelor\System\Directory\Scanner;
 use IteratorAggregate;
-use Traversable;
 
 /**
- * Description of ScannerResult
+ * Foramt directory scanner.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class ScannerResult implements IteratorAggregate
+class ScannerFormat extends GenericFormat implements IteratorAggregate
 {
-
-        /**
-         * The scanner object.
-         * @var Scanner
-         */
-        private $_scanner;
-        /**
-         * The filename formatter.
-         * @var callable 
-         */
-        private $_formatter;
 
         /**
          * Constructor.
@@ -49,37 +38,18 @@ class ScannerResult implements IteratorAggregate
          */
         public function __construct($scanner, $format)
         {
-                $this->_scanner = $scanner;
-                $this->_formatter = $this->getFormatter($format, $scanner);
-        }
-
-        /**
-         * Set custom callable.
-         * 
-         * <code>
-         * // 
-         * // Use simple formatter stripping leading '/':
-         * // 
-         * $formatter->setCallback(function($fileinfo) {
-         *      return substr($fileinfo->getRealpath(), 1);
-           }
-         * </code>
-         * 
-         * @param callable $callable The callable.
-         */
-        public function setCallback($callable)
-        {
-                $this->_formatter = $callable;
+                parent::__construct($scanner);
+                parent::setCallback($this->getFormatter($scanner, $format));
         }
 
         /**
          * Get fileinfo formatter.
          * 
-         * @param int $format The output format.
          * @param Scanner $scanner The scanner object.
+         * @param int $format The output format.
          * @return callable
          */
-        private function getFormatter($format, $scanner)
+        private function getFormatter($scanner, $format)
         {
                 $size = strlen(realpath($scanner->getPath())) + 1;
 
@@ -101,17 +71,6 @@ class ScannerResult implements IteratorAggregate
                                         return (string) $fileinfo;
                                 };
                 }
-        }
-
-        public function getIterator(): Traversable
-        {
-                $formatter = $this->_formatter;
-
-                return (function () use($formatter) {
-                            foreach ($this->_scanner as $fileinfo) {
-                                    yield $formatter($fileinfo);
-                            }
-                    })();
         }
 
 }

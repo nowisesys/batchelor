@@ -5,8 +5,8 @@
 // 
 
 
+use Batchelor\System\Directory\Iterator\Format\ScannerFormat;
 use Batchelor\System\Directory\Scanner;
-use Batchelor\System\Directory\ScannerResult;
 
 // 
 // List all files in current directory:
@@ -147,7 +147,7 @@ foreach ($scanner as $file) {
 // 
 $scanner = new Scanner("..");
 $scanner->setOptions(Scanner::SKIP_DOTS);
-$result = new ScannerResult($scanner, Scanner::FILENAME_ANCHORED);
+$result = new ScannerFormat($scanner, Scanner::FILENAME_ANCHORED);
 
 echo "(i) Use scanner result formatter:\n";
 foreach ($result as $file) {
