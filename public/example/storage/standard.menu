@@ -1,0 +1,17 @@
+<?php
+
+return array(
+        'head' => _('Storage'),
+        'data' => array(
+                'Filter'    => 'filter',
+                'Scanner'   => 'scanner',
+                false,
+                'Tree'      => 'tree',
+                'Iterator'  => 'iterator',
+                'Navigate'  => 'navigate',
+                false,
+                'Path'      => 'path',
+                'Directory' => 'directory',
+                'File'      => 'file',
+        )
+);

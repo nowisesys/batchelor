@@ -5,6 +5,6 @@ return array(
         'data' => array(
                 'Service'     => 'service',
                 'Persistance' => 'persistance',
-                'Directory'   => 'directory'
+                'Storage'     => 'storage'
         )
 );
