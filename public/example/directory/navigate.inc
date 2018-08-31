@@ -5,7 +5,7 @@
 // 
 
 
-use Batchelor\System\Directory;
+use Batchelor\Storage\Directory;
 
 function read_directory($directory)
 {

@@ -18,12 +18,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\System\Directory;
+namespace Batchelor\Storage\Directory;
 
-use Batchelor\System\Directory\Iterator\Filter\ArrayFilter;
-use Batchelor\System\Directory\Iterator\Filter\FiletypeFilter;
-use Batchelor\System\Directory\Iterator\Filter\RegexFilter;
-use Batchelor\System\Directory\Iterator\Format\ScannerFormat;
+use Batchelor\Storage\Directory\Iterator\Filter\ArrayFilter;
+use Batchelor\Storage\Directory\Iterator\Filter\FiletypeFilter;
+use Batchelor\Storage\Directory\Iterator\Filter\RegexFilter;
+use Batchelor\Storage\Directory\Iterator\Format\ScannerFormat;
 use DirectoryIterator;
 use IteratorAggregate;
 use RecursiveDirectoryIterator;

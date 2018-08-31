@@ -4,7 +4,7 @@
 // Test use iterator.
 // 
 
-use Batchelor\System\Directory;
+use Batchelor\Storage\Directory;
 
 // 
 // Create iterator only returning leavs (filenames):

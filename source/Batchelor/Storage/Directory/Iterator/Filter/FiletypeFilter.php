@@ -18,9 +18,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\System\Directory\Iterator\Filter;
+namespace Batchelor\Storage\Directory\Iterator\Filter;
 
-use Batchelor\System\Directory\Scanner;
+use Batchelor\Storage\Directory\Scanner;
 use FilterIterator;
 use Iterator;
 use SplFileInfo;

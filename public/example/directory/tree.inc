@@ -4,7 +4,7 @@
 // Test using ASCII tree iterator.
 // 
 
-use Batchelor\System\Directory;
+use Batchelor\Storage\Directory;
 
 $iter = new RecursiveDirectoryIterator("../..", FilesystemIterator::SKIP_DOTS);
 $tree = new RecursiveTreeIterator($iter);

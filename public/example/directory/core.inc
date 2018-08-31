@@ -1,6 +1,6 @@
 <?php
 
-use Batchelor\System\Directory;
+use Batchelor\Storage\Directory;
 
 // 
 // Test directory operations.

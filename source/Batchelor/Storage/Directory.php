@@ -18,11 +18,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\System;
+namespace Batchelor\Storage;
 
-use Batchelor\System\Directory\Cleanup;
-use Batchelor\System\Directory\Iterator\Decorator as RecursiveDirectoryIterator;
-use Batchelor\System\Directory\Scanner;
+use Batchelor\Storage\Directory\Cleanup;
+use Batchelor\Storage\Directory\Iterator\Decorator as RecursiveDirectoryIterator;
+use Batchelor\Storage\Directory\Scanner;
 use FilesystemIterator;
 use InvalidArgumentException;
 use IteratorAggregate;

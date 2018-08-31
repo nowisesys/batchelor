@@ -1,6 +1,6 @@
 <?php
 
-use Batchelor\System\File;
+use Batchelor\Storage\File;
 
 // 
 // Test file class.

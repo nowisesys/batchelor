@@ -1,6 +1,6 @@
 <?php
 
-use Batchelor\System\Directory;
+use Batchelor\Storage\Directory;
 
 function print_path($path, $directory)
 {

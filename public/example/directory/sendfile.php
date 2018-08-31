@@ -1,6 +1,6 @@
 <?php
 
-use Batchelor\System\File;
+use Batchelor\Storage\File;
 use UUP\Site\Page\Service\StandardService;
 
 // 

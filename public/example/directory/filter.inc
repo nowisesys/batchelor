@@ -4,8 +4,8 @@
 // Test directory iterator filter.
 // 
 
-use Batchelor\System\Directory\Iterator\Filter\ArrayFilter;
-use Batchelor\System\Directory\Iterator\Filter\RegexFilter;
+use Batchelor\Storage\Directory\Iterator\Filter\ArrayFilter;
+use Batchelor\Storage\Directory\Iterator\Filter\RegexFilter;
 
 // 
 // Filter using filenames:

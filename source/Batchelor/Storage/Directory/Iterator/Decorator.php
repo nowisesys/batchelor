@@ -18,44 +18,33 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\System\Directory\Iterator\Filter;
+namespace Batchelor\Storage\Directory\Iterator;
 
-use FilterIterator;
-use Iterator;
+use Batchelor\Storage\Directory;
+use Batchelor\Storage\File;
+use RecursiveDirectoryIterator;
 
 /**
- * Regex filtering of iterator.
+ * Decorator for recursive directory iterator.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class RegexFilter extends FilterIterator
+class Decorator extends RecursiveDirectoryIterator
 {
 
-        /**
-         * The regex pattern.
-         * @var string 
-         */
-        private $_filter;
-
-        /**
-         * Constructor.
-         * 
-         * @param Iterator $iterator The inner iterator.
-         * @param string $filter The regex pattern.
-         */
-        public function __construct($iterator, string $filter)
+        public function __construct(string $path, int $flags)
         {
-                parent::__construct($iterator);
-                $this->_filter = $filter;
+                parent::__construct($path, $flags);
+                parent::setInfoClass(File::class);
         }
 
         /**
-         * Check if pattern match.
-         * @return bool
+         * Get directory object.
+         * @return Directory
          */
-        public function accept(): bool
+        public function getDirectory()
         {
-                return preg_match($this->_filter, $this->current()->getFilename());
+                return new Directory($this->getPath(), $this->getFlags());
         }
 
 }

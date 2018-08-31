@@ -18,9 +18,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\System\Directory\Iterator\Format;
+namespace Batchelor\Storage\Directory\Iterator\Format;
 
-use Batchelor\System\Directory\Scanner;
+use Batchelor\Storage\Directory\Scanner;
 use IteratorAggregate;
 
 /**
