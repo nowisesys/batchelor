@@ -31,6 +31,16 @@ use SplFileInfo;
 class File extends SplFileInfo
 {
 
+        public function __construct(string $filename)
+        {
+                parent::__construct($filename);
+        }
+
+        public function __toString()
+        {
+                return str_replace("//", "/", $this->getPathname());    // Fix '// ' -> '/'
+        }
+
         /**
          * Get parent directory object.
          * 
