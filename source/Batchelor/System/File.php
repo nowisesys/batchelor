@@ -20,6 +20,7 @@
 
 namespace Batchelor\System;
 
+use RuntimeException;
 use SplFileInfo;
 
 /**
@@ -186,6 +187,20 @@ class File extends SplFileInfo
                         'Content-Length'      => $this->getSize(),
                         'ETag'                => md5($this->getMTime())
                 ];
+        }
+
+        /**
+         * Delete this file.
+         */
+        public function delete()
+        {
+                if (!file_exists($this->getRealPath())) {
+                        return;
+                } elseif (!is_file($this->getRealPath())) {
+                        throw new RuntimeException("The references path is not an file");
+                } elseif (!unlink($this->getRealPath())) {
+                        throw new RuntimeException("Failed delete this file");
+                }
         }
 
 }
