@@ -7,10 +7,11 @@ return array(
                 'Scanner'  => 'scanner',
                 false,
                 'Tree'     => 'tree',
-                'Iterator'  => 'iterator',
+                'Iterator' => 'iterator',
                 'Navigate' => 'navigate',
                 false,
                 'Path'     => 'path',
-                'Core'    => 'core',
+                'Core'     => 'core',
+                'File'     => 'file',
         )
 );
