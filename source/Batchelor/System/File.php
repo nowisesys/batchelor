@@ -103,7 +103,7 @@ class File extends SplFileInfo
          */
         public function getContent(): string
         {
-                return file_get_contents($this->getRealPath());
+                return file_get_contents($this->getPathname());
         }
 
         /**
@@ -115,7 +115,7 @@ class File extends SplFileInfo
          */
         public function putContent($data, $flags = 0)
         {
-                return file_put_contents($this->getRealPath(), $data, $flags);
+                return file_put_contents($this->getPathname(), $data, $flags);
         }
 
         /**
