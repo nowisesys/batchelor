@@ -21,6 +21,7 @@ foreach ([
     "/tmp/file.txt",
     "/var/tmp",
     "/var/tmp/file.txt",
+    "/",
     ".",
     "..",
     "../..",
