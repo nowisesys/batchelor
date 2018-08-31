@@ -3,15 +3,16 @@
 return array(
         'head' => _('Storage'),
         'data' => array(
-                'Filter'    => 'filter',
-                'Scanner'   => 'scanner',
+                'Filter'     => 'filter',
+                'Scanner'    => 'scanner',
                 false,
-                'Tree'      => 'tree',
-                'Iterator'  => 'iterator',
-                'Navigate'  => 'navigate',
+                'Tree'       => 'tree',
+                'Iterator'   => 'iterator',
+                'Navigate'   => 'navigate',
                 false,
-                'Path'      => 'path',
-                'Directory' => 'directory',
-                'File'      => 'file',
+                'Path'       => 'path',
+                'File'       => 'file',
+                'Directory'  => 'directory',
+                'Filesystem' => 'filesystem',
         )
 );

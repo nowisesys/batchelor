@@ -258,7 +258,7 @@ class Directory implements IteratorAggregate
          * @return Directory The created directory object.
          * @throws RuntimeException
          */
-        public function create(string $path = null, int $mode = 0755)
+        public function create(string $path = null, int $mode = 0755): Directory
         {
                 if (!isset($path)) {
                         $path = $this->getPathname();
