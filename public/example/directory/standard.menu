@@ -3,7 +3,14 @@
 return array(
         'head' => _('Directory'),
         'data' => array(
-                'Filter'  => 'filter',
-                'Scanner' => 'scanner'
+                'Filter'   => 'filter',
+                'Scanner'  => 'scanner',
+                false,
+                'Tree'     => 'tree',
+                'Iterator'  => 'iterator',
+                'Navigate' => 'navigate',
+                false,
+                'Path'     => 'path',
+                'Core'    => 'core',
         )
 );
