@@ -36,7 +36,7 @@ use RuntimeException;
  * // Load config file:
  * // 
  * $config = new Config("defaults.app");
- * $config->cache->directory;   // i.e. /var/data/batchelor
+ * $config->data->directory;   // i.e. /var/data/batchelor
  * 
  * // 
  * // Use absolute path:
@@ -49,7 +49,7 @@ use RuntimeException;
  * $config = new Config("system.conf", [ "/etc/myapp" ]);
  * </code>
  * 
- * @property-read RecursiveArrayObject $cache Cache directory settings.
+ * @property-read RecursiveArrayObject $data Data directory settings.
  * @property-read RecursiveArrayObject $contact Contact address settings.
  * 
  * @author Anders Lövgren (Nowise Systems)

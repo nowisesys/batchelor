@@ -20,10 +20,10 @@ if (!ini_get("date.timezone")) {
 //
 return [
         // 
-        // The cache directory where i.e. job queues are stored.
+        // The data directory where i.e. job queues are stored.
         // 
-        'cache'   => [
-                'directory'  => realpath(dirname(__FILE__) . "/../cache"),
+        'data'   => [
+                'directory'  => realpath(__DIR__ . "/../data"),
                 'permission' => 0750
         ],
         // 
@@ -33,5 +33,14 @@ return [
                 'name' => 'System Manager',
                 'mail' => 'batchelor@localhost',
                 'page' => 'http://batchelor.example.com/contact.html'
+        ],
+        // 
+        // The cache options.
+        // 
+        'cache' => [
+                'type' => 'file',
+                'options' => [
+                        
+                ]
         ]
 ];
