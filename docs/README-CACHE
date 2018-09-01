@@ -1,0 +1,62 @@
+
+    ** System cache **
+
+
+Cache is configured in config/defaults.app. By default the cache is using 
+files, but can be configured with i.e. apcu.
+
+** Single type cache:
+
+    The config entry is on this form, were the options array are passed as is to 
+    cache constructor for type xxx:
+
+        'cache' => [
+            'type'    => 'xxx',
+            'options' => [ ... ]
+        ]
+
+    Example:
+
+        'cache' => [
+            'type'    => 'apcu',
+            'options' => [
+                'prefix'    => 'batchelor',
+                'lifetime'  => 7200
+            ]
+        ]
+
+    Valid type options are: 
+
+        o) file     - Use file system.
+        o) memory   - Use RAM memory
+        o) shmem    - Use shared memory (IPC)
+        o) xcache   - Use the xcache extension
+        o) apcu     - Use the APCu extension
+        o) redis    - Use redis server
+        o) memcache - Use memcached server
+
+    For options, see classes under Batchelor\Cache\Backend under source. 
+
+** Stacked cache:
+
+    Theres also a special stacked cache that creates a priority queue of configured 
+    cache classes using each lifetime options as the priority (reversed). When caching
+    an entry with i.e. lifetime 3600, only configured cache objects with an lifetime
+    lower than 3600 will store the entry.
+
+    When reading entries, each cache object in the priority queue is checked top to
+    bottom for an existing value. If found, it is then populated up in the queue to
+    fill missing entries in cache objects with higher priority.
+
+** Recommendations:
+
+    The stacked cache is suitable for implementing an "eventual in sync" cache. For
+    most installations its sufficient with i.e. using redis. If running on a single
+    server, use apcu or redis as backend.
+
+** Service:
+
+    The configured cache is available as a service named cache. It's injected as a
+    property into classes deriving from the component class.
+
+// Anders Lövgren, 2018-09-01
