@@ -57,10 +57,25 @@ class Read extends Command
                 }
                 foreach ($keys as $key) {
                         $key = $backend->getCacheKey($key);
-                        $result[$key] = true;
+                        $result[$key] = false;
                 }
 
                 return $result;
+        }
+
+        /**
+         * Get command result.
+         * @return mixed
+         */
+        public function getResult()
+        {
+                if (($result = $this->getResults())) {
+                        if (count($result) == 1) {
+                                return current($result);
+                        } else {
+                                return $result;
+                        }
+                }
         }
 
 }

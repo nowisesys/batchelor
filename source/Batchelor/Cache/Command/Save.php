@@ -65,4 +65,19 @@ class Save extends Command
                 return $result;
         }
 
+        /**
+         * Get command result.
+         * @return mixed
+         */
+        public function getResult()
+        {
+                if (($result = $this->getResults())) {
+                        if (count($result) == 1) {
+                                return current($result);
+                        } else {
+                                return $result;
+                        }
+                }
+        }
+
 }

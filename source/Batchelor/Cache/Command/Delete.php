@@ -57,10 +57,25 @@ class Delete extends Command
                 }
                 foreach ($keys as $key) {
                         $key = $backend->getCacheKey($key);
-                        $result[$key] = true;
+                        $result[$key] = false;
                 }
 
                 return $result;
+        }
+
+        /**
+         * Get command result.
+         * 
+         * @param bool $single Retutn single result.
+         * @return boo|array
+         */
+        public function getResult(bool $single)
+        {
+                if ($single) {
+                        return $this->getSuccess();
+                } else {
+                        return $this->getCompleted();
+                }
         }
 
 }
