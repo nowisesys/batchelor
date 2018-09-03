@@ -53,6 +53,7 @@ use Batchelor\System\Service\Persistance;
  * @property-read Hostid $hostid The host ID service.
  * @property-read Persistance $persistance The data persistance service.
  * @property-read Config $app The application config.
+ * @property-read Service\DataStorage $data The data storage directory.
  * 
  * @author Anders Lövgren (Nowise Systems)
  */

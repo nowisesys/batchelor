@@ -14,7 +14,7 @@ use Batchelor\System\Service;
 // should always be instantiated (i.e. a session service).
 // 
 // [
-//      'qeuue' => new Qeuue()
+//      'qeuue' => new Queue()
 // ]
 // 
 // Example on using callable, in this case an closure. The name will be the
@@ -40,5 +40,9 @@ return [
         // 
         // The application config from defaults.app:
         // 
-        'app'         => new Service(Service\Config::class)
+        'app'         => new Service(Service\Config::class),
+        // 
+        // The data directory storage service. 
+        // 
+        'data'        => new Service(Service\DataStorage::class)
 ];
