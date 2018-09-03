@@ -209,6 +209,11 @@ class Directory implements IteratorAggregate
                         return new File($filename);
                 }
         }
+        
+        public function getPerms(): int
+        {
+                return $this->_finfo->getPerms();
+        }
 
         /**
          * Check if directory exists.
