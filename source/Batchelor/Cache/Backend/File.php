@@ -158,12 +158,8 @@ class File extends Base implements Backend
                                 return true;
                         }
                 });
-
-                if (is_string($key)) {
-                        return $command->getSuccess();
-                } else {
-                        return $command->getCompleted();
-                }
+                
+                return $command->getResult(is_string($key));
         }
 
         /**
@@ -182,13 +178,7 @@ class File extends Base implements Backend
                         }
                 });
 
-                if (($result = $command->getResults())) {
-                        if (count($result) == 1) {
-                                return current($result);
-                        } else {
-                                return $result;
-                        }
-                }
+                return $command->getResult();                
         }
 
         /**
@@ -207,13 +197,7 @@ class File extends Base implements Backend
                         }
                 });
 
-                if (($result = $command->getResults())) {
-                        if (count($result) == 1) {
-                                return current($result);
-                        } else {
-                                return $result;
-                        }
-                }
+                return $command->getResult();                
         }
 
         /**
