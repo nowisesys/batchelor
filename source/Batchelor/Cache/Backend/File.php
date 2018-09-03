@@ -126,6 +126,7 @@ class File extends Base implements Backend
                 } elseif ($mode == 'delete') {
                         return $file;
                 } elseif ($this->hasExpired($file, $lifetime)) {
+                        $file->delete();
                         return false;
                 } else {
                         return $file;
@@ -141,9 +142,10 @@ class File extends Base implements Backend
                 $command->applyOne(function($key, $val) {
                         if (!($file = $this->getFile($key, 0, 'delete'))) {
                                 return true;
+                        } else {
+                                $file->delete();
+                                return $file->isFile() == false;
                         }
-                        $file->delete();
-                        return $file->isFile() == false;
                 });
 
                 return $command->getResult(is_string($key));
@@ -152,8 +154,10 @@ class File extends Base implements Backend
         /**
          * {@inheritdoc}
          */
-        public function exists($key, int $lifetime = 0)
+        public function exists($key)
         {
+                $lifetime = $this->getLifetime();
+
                 $command = new Exists($this, $key);
                 $command->applyOne(function($key, $val) use($lifetime) {
                         if (($this->getFile($key, $lifetime))) {
@@ -167,9 +171,10 @@ class File extends Base implements Backend
         /**
          * {@inheritdoc}
          */
-        public function read($key, int $lifetime = 0)
+        public function read($key)
         {
                 $formatter = $this->getFormatter();
+                $lifetime = $this->getLifetime();
 
                 $command = new Read($this, $key);
                 $command->applyOne(function($key, $val) use($formatter, $lifetime) {
@@ -189,6 +194,7 @@ class File extends Base implements Backend
         public function save($key, $value = null, int $lifetime = 0)
         {
                 $formatter = $this->getFormatter();
+                $lifetime = $this->getLifetime($lifetime);
 
                 $command = new Save($this, $key, $value);
                 $command->applyOne(function($key, $val) use($formatter, $lifetime) {

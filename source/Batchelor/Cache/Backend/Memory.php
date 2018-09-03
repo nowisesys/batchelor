@@ -40,7 +40,7 @@ class MemoryDataEntry
          */
         public $value;
         /**
-         * The timestamp.
+         * The expire timestamp.
          * @var int 
          */
         public $stamp;
@@ -58,28 +58,26 @@ class MemoryDataEntry
 
         /**
          * Check if entry is valid.
-         * @param int $lifetime The cache lifetime.
+         * @param int $lifetime The entry lifetime.
          * @return boolean
          */
         public function isValid(int $lifetime = 0)
         {
-                if ($lifetime == 0) {
-                        return true;
-                } elseif ($this->hasExpired($lifetime)) {
-                        return false;
-                } else {
-                        return true;
-                }
+                return $this->hasExpired($lifetime) == false;
         }
 
         /**
          * Check if entry has expired.
-         * @param int $lifetime The cache lifetime.
+         * @param int $lifetime The entry lifetime.
          * @return boolean
          */
-        public function hasExpired(int $lifetime)
+        public function hasExpired(int $lifetime = 0)
         {
-                return $this->stamp > time() - $lifetime;
+                if ($lifetime == 0) {
+                        return false;
+                } else {
+                        return $this->stamp < time();
+                }
         }
 
 }
@@ -139,10 +137,11 @@ class Memory extends Base implements Backend, Serializable, ArrayAccess
          * Set cache entry.
          * @param string $key The cache key.
          * @param mixed $val The cache value.
+         * @param int $lifetime The entry lifetime.
          */
-        private function setEntry(string $key, $val)
+        private function setEntry(string $key, $val, int $lifetime = 0)
         {
-                return $this->_cached[$key] = new MemoryDataEntry($val, time());
+                return $this->_cached[$key] = new MemoryDataEntry($val, time() + $lifetime);
         }
 
         /**
@@ -174,8 +173,10 @@ class Memory extends Base implements Backend, Serializable, ArrayAccess
         /**
          * {@inheritdoc}
          */
-        public function exists($key, int $lifetime = 0)
+        public function exists($key)
         {
+                $lifetime = $this->getLifetime();
+
                 $command = new Exists($this, $key);
                 $command->applyAll(function($keys) use($lifetime) {
                         foreach (array_keys($keys) as $key) {
@@ -194,8 +195,10 @@ class Memory extends Base implements Backend, Serializable, ArrayAccess
         /**
          * {@inheritdoc}
          */
-        public function read($key, int $lifetime = 0)
+        public function read($key)
         {
+                $lifetime = $this->getLifetime();
+
                 $command = new Read($this, $key);
                 $command->applyAll(function($keys) use($lifetime) {
                         foreach (array_keys($keys) as $key) {
@@ -216,10 +219,12 @@ class Memory extends Base implements Backend, Serializable, ArrayAccess
          */
         public function save($key, $value = null, int $lifetime = 0)
         {
+                $lifetime = $this->getLifetime($lifetime);
+
                 $command = new Save($this, $key, $value);
                 $command->applyAll(function($keys) use($lifetime) {
                         foreach ($keys as $key => $val) {
-                                $this->setEntry($key, $val);
+                                $this->setEntry($key, $val, $lifetime);
                                 $keys[$key] = true;
                         }
                         return $keys;

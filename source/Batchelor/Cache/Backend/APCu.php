@@ -42,7 +42,7 @@ class APCu extends Base implements Backend
         public function __construct($options = [])
         {
                 if (!extension_loaded("apcu")) {
-                        throw new BadFunctionCallException("Extension APCu is not loaded");
+                        throw new BadFunctionCallException("The APCu extension is not loaded");
                 }
 
                 parent::__construct($options, [
@@ -60,14 +60,27 @@ class APCu extends Base implements Backend
                 $command = new Delete($this, $key);
                 $command->applyAll(function($keys) {
                         // 
-                        // The result array contains missing or failed keys.
+                        // The result is either boolean or an array containing
+                        // missing or failed keys:
                         // 
-                        if (!($result = apcu_delete(array_keys($keys)))) {
+                        if (($result = apcu_delete(array_keys($keys))) === false) {
                                 return array_fill_keys(array_keys($keys), false);
                         }
+                        
+                        // 
+                        // Check if failed key still exists. Delete an missing key
+                        // should be considered successful, but deleting a key that
+                        // still exist should be an error.
+                        // 
                         foreach ($result as $key) {
                                 $keys[$key] = apcu_exists($key) ? false : true;
                         }
+                        
+                        // 
+                        // The return array should contain true for keys successful
+                        // deleted and false for keys that should have been deleted
+                        // but still exist.
+                        // 
                         return $keys;
                 });
 
@@ -77,7 +90,7 @@ class APCu extends Base implements Backend
         /**
          * {@inheritdoc}
          */
-        public function exists($key, int $lifetime = 0)
+        public function exists($key)
         {
                 $command = new Exists($this, $key);
                 $command->applyAll(function($keys) {
@@ -91,7 +104,7 @@ class APCu extends Base implements Backend
         /**
          * {@inheritdoc}
          */
-        public function read($key, int $lifetime = 0)
+        public function read($key)
         {
                 $formatter = $this->getFormatter();
 
@@ -115,12 +128,13 @@ class APCu extends Base implements Backend
         public function save($key, $value = null, int $lifetime = 0)
         {
                 $formatter = $this->getFormatter();
+                $lifetime = $this->getLifetime($lifetime);
 
                 $command = new Save($this, $key, $value);
                 $command->applyOne(function($key, $val) use($formatter, $lifetime) {
                         $content = $formatter->onSave($val);
                         return apcu_store(
-                            $key, $content, $this->getLifetime($lifetime)
+                            $key, $content, $lifetime
                         );
                 });
 
