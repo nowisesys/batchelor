@@ -9,7 +9,7 @@ use Batchelor\System\Service\Config;
 $config = new Config();
 
 printf("Filename: %s\n", $config->getFilename());
-printf("Data directory: %s\n", $config->data->directory);
+printf("Data directory: %s\n", $config->data->path);
 
 // 
 // Config is read-only by default:
