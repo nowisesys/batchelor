@@ -23,8 +23,8 @@ return [
         // The data directory where i.e. job queues are stored.
         // 
         'data'   => [
-                'directory'  => realpath(__DIR__ . "/../data"),
-                'permission' => 0750
+                'path' => realpath(__DIR__ . "/../data"),
+                'mode' => 0750
         ],
         // 
         // The contact information.
