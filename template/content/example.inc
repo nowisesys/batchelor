@@ -55,3 +55,6 @@ use UUP\Web\Component\Script\CodeBox;
         PHP code for example <?= $filename ?>.
     </p>
 </div>
+<?php if ($callback) : ?>
+        <?php $callback() ?>
+<?php endif; ?>

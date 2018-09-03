@@ -40,23 +40,31 @@ class ExamplePage extends StandardPage
          * @var string 
          */
         private $_template;
+        /**
+         * Callback render function.
+         * @var callable 
+         */
+        private $_callback;
 
         /**
          * Constructor.
          * @param string $title The page title.
          * @param string $filename The example file.
          */
-        public function __construct($title, $filename)
+        public function __construct($title, $filename, $callback = false)
         {
                 parent::__construct($title);
 
                 $this->_filename = $filename;
                 $this->_template = sprintf("%s/content/example.inc", $this->config->template);
+                $this->_callback = $callback;
         }
 
         public function printContent()
         {
                 $filename = $this->_filename;
+                $callback = $this->_callback;
+
                 require($this->_template);
         }
 
