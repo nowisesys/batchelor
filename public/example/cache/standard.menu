@@ -4,5 +4,6 @@ return array(
         'head' => _('Cache'),
         'data' => array(
                 'File' => 'file',
+                'APCu' => 'apcu'
         )
 );
