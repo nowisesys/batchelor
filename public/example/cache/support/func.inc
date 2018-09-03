@@ -9,6 +9,7 @@ use Batchelor\Cache\Backend;
 
 function test_support(Backend $cache)
 {
+        printf("CLASS: %s\n", get_class($cache));
         printf("KEY: %s\n", $cache->getCacheKey('data1'));
         printf("OPTIONS: %s\n", print_r($cache->getOptions(), true));
 }
