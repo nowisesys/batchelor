@@ -3,7 +3,8 @@
 return array(
         'head' => _('Cache'),
         'data' => array(
-                'File' => 'file',
-                'APCu' => 'apcu'
+                'File'   => 'file',
+                'Memory' => 'memory',
+                'APCu'   => 'apcu'
         )
 );
