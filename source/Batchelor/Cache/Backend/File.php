@@ -98,10 +98,7 @@ class File extends Base implements Backend
          */
         private function hasExpired($file, $lifetime = 0)
         {
-                if ($lifetime == 0) {
-                        return false;
-                }
-
+                $lifetime = $this->getLifetime($lifetime);
                 $modified = $file->getMTime();
                 $expiring = time() - $lifetime;
 
