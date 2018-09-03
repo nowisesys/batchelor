@@ -50,10 +50,9 @@ interface Storage
          * </code>
          * 
          * @param string|array $key The cache key.
-         * @param int $lifetime The cache entry lifetime.
          * @return bool|array
          */
-        function exists($key, int $lifetime = 0);
+        function exists($key);
 
         /**
          * Save value(s) to cache.
@@ -81,10 +80,9 @@ interface Storage
          * associated array having the cache keys as names.
          * 
          * @param string|array $key The cache key.
-         * @param int $lifetime The cache entry lifetime.
          * @return mixed
          */
-        function read($key, int $lifetime = 0);
+        function read($key);
 
         /**
          * Delete key(s) from cache.

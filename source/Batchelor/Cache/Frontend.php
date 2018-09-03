@@ -55,21 +55,21 @@ class Frontend extends Component implements Storage
         /**
          * {@inheritdoc}
          */
-        public function exists($key, int $lifetime = 0)
+        public function exists($key)
         {
                 $backend = $this->_backend;
-                return $backend->exists($key, $lifetime);
+                return $backend->exists($key);
         }
 
         /**
          * {@inheritdoc}
          */
-        public function read($key, int $lifetime = 0)
+        public function read($key)
         {
                 $backend = $this->_backend;
                 $formatter = $this->_formatter;
 
-                if (!($result = $backend->read($key, $lifetime))) {
+                if (!($result = $backend->read($key))) {
                         return $result;
                 } elseif (is_string($key)) {
                         return $formatter->onRead($result);
