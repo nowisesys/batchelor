@@ -67,7 +67,7 @@ class Delete extends Command
          * Get command result.
          * 
          * @param bool $single Retutn single result.
-         * @return boo|array
+         * @return bool|array
          */
         public function getResult(bool $single)
         {
