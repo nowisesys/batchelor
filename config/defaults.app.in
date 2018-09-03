@@ -20,7 +20,7 @@ if (!ini_get("date.timezone")) {
 //
 return [
         // 
-        // The data directory where i.e. job queues are stored.
+        // The data storage directory where i.e. job queues are stored.
         // 
         'data'   => [
                 'path' => realpath(__DIR__ . "/../data"),
@@ -38,9 +38,10 @@ return [
         // The cache options.
         // 
         'cache' => [
-                'type' => 'file',
+                'type' => 'file',               // Use file system cache.
                 'options' => [
-                        
+                        'path'   => 'cache',    // Sub directory in data directory.
+                        'format' => 'php',      // The serialization method.
                 ]
         ]
 ];

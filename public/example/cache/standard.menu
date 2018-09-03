@@ -1,0 +1,8 @@
+<?php
+
+return array(
+        'head' => _('Cache'),
+        'data' => array(
+                'File' => 'file',
+        )
+);
