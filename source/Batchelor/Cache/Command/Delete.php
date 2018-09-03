@@ -57,7 +57,7 @@ class Delete extends Command
                 }
                 foreach ($keys as $key) {
                         $key = $backend->getCacheKey($key);
-                        $result[$key] = false;
+                        $result[$key] = true;
                 }
 
                 return $result;
