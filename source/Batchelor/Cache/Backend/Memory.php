@@ -221,6 +221,28 @@ class Memory extends Base implements Backend, Serializable, ArrayAccess
         }
 
         /**
+         * Compact cache.
+         * 
+         * Remove cache entries with expired timestamp. This method has 
+         * no effect if configured lifetime is 0 and lifetime is not passed
+         * as argument.
+         * 
+         * @param int $lifetime The lifetime to use.
+         */
+        public function compact(int $lifetime = 0)
+        {
+                if (($lifetime = $this->getLifetime($lifetime)) !== 0) {
+                        $expire = time() - $lifetime;
+
+                        foreach ($this->_cached as $key => $data) {
+                                if ($data->stamp < $expire) {
+                                        unset($this->_cached[$key]);
+                                }
+                        }
+                }
+        }
+
+        /**
          * {@inheritdoc}
          */
         public function serialize(): string
