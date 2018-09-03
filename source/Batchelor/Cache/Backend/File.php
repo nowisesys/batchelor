@@ -139,12 +139,14 @@ class File extends Base implements Backend
         {
                 $command = new Delete($this, $key);
                 $command->applyOne(function($key, $val) {
-                        if (($file = $this->getFile($key, 0, 'delete'))) {
-                                $file->delete();
+                        if (!($file = $this->getFile($key, 0, 'delete'))) {
+                                return true;
                         }
+                        $file->delete();
+                        return $file->isFile() == false;
                 });
-                
-                return true;
+
+                return $command->getResult(is_string($key));
         }
 
         /**
@@ -158,7 +160,7 @@ class File extends Base implements Backend
                                 return true;
                         }
                 });
-                
+
                 return $command->getResult(is_string($key));
         }
 
@@ -178,7 +180,7 @@ class File extends Base implements Backend
                         }
                 });
 
-                return $command->getResult();                
+                return $command->getResult();
         }
 
         /**
@@ -197,7 +199,7 @@ class File extends Base implements Backend
                         }
                 });
 
-                return $command->getResult();                
+                return $command->getResult();
         }
 
         /**
