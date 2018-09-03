@@ -90,6 +90,14 @@ class MemoryDataEntry
  * Provides a cache backend using RAM-memory. Using lifetime on cache keys are fully
  * supported because this backend might be used in CLI-mode. The array access interface
  * is also implemented for unchecked simple/fast access.
+ * 
+ * The serialize interface is implemented, The formatted is unused for normal cache
+ * operations, but used for serialization. 
+ * 
+ * The performance is comparable to APC using standard methods (i.e. exist() or read()), 
+ * but ~3-10 times faster using array access. The downside is that this interface can
+ * only be used with single keys. For bulk mode, using save(array) is still faster that
+ * using array access.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
