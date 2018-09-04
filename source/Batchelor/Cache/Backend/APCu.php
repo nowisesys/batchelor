@@ -42,7 +42,7 @@ class APCu extends Base implements Backend
         public function __construct($options = [])
         {
                 if (!extension_loaded("apcu")) {
-                        throw new BadFunctionCallException("The APCu extension is not loaded");
+                        throw new BadFunctionCallException("The apcu extension is not loaded");
                 }
 
                 parent::__construct($options, [

@@ -20,12 +20,19 @@
 
 namespace Batchelor\Cache\Backend;
 
+use BadFunctionCallException;
+use Batchelor\Cache\Backend;
+use Batchelor\Cache\Command\Delete;
+use Batchelor\Cache\Command\Exists;
+use Batchelor\Cache\Command\Read;
+use Batchelor\Cache\Command\Save;
+
 /**
  * The XCache backend.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class XCache extends Base implements \Batchelor\Cache\Backend
+class XCache extends Base implements Backend
 {
 
         /**
@@ -35,7 +42,7 @@ class XCache extends Base implements \Batchelor\Cache\Backend
         public function __construct($options = [])
         {
                 if (!extension_loaded("xcache")) {
-                        throw new BadFunctionCallException("The XCache extension is not loaded");
+                        throw new BadFunctionCallException("The xcache extension is not loaded");
                 }
 
                 parent::__construct($options, [
@@ -44,7 +51,7 @@ class XCache extends Base implements \Batchelor\Cache\Backend
                         'lifetime' => 28800
                 ]);
         }
-        
+
         /**
          * Increment counter.
          * 
