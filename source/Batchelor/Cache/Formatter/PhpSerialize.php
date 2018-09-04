@@ -46,10 +46,13 @@ class PhpSerialize implements Formatter
                         $options = [];
                 }
 
+                if (empty($value) || strlen($value) == 0) {
+                        return false;
+                }
                 if ($value == serialize(false)) {
                         return false;
                 }
-                
+
                 if (!($data = unserialize($value, $options))) {
                         throw new UnexpectedValueException("Failed format data using unserialize()");
                 } else {
