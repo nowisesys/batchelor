@@ -7,6 +7,8 @@ return array(
                 'Memory'                => 'memory',
                 'APCu'                  => 'apcu',
                 'XCache'                => 'xcache',
-                'Shared memory (shmop)' => 'shmop'
+                'Shared memory (shmop)' => 'shmop',
+                false,
+                'Generator'             => 'generator'
         )
 );
