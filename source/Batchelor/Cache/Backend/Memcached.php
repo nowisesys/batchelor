@@ -215,9 +215,9 @@ class Memcached extends Base implements Backend
                 $command->applyAll(function($keys) use($instance, $formatter) {
                         $result = $instance->getMulti(array_keys($keys));
                         foreach ($result as $key => $val) {
-                                $result[$key] = $formatter->onRead($val);
+                                $keys[$key] = $formatter->onRead($val);
                         }
-                        return $result;
+                        return $keys;
                 });
                 return $command->getResult();
         }
