@@ -3,12 +3,14 @@
 return array(
         'head' => _('Cache'),
         'data' => array(
-                'File'                  => 'file',
-                'Memory'                => 'memory',
-                'APCu'                  => 'apcu',
-                'XCache'                => 'xcache',
-                'Shared memory (shmop)' => 'shmop',
+                'File'      => 'file',
+                'Memory'    => 'memory',
+                'APCu'      => 'apcu',
+                'XCache'    => 'xcache',
+                'Memcached' => 'memcached',
                 false,
-                'Generator'             => 'generator'
+                'ShmOp'     => 'shmop',
+                false,
+                'Generator' => 'generator'
         )
 );
