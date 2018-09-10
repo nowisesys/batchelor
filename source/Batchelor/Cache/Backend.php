@@ -56,7 +56,7 @@ interface Backend extends Storage
          * Get config options.
          * @return array The active options.
          */
-        function getOptions();
+        function getOptions(): array;
 
         /**
          * Get config option.

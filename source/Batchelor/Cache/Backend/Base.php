@@ -141,7 +141,7 @@ abstract class Base extends Component implements Backend
         /**
          * {@inheritdoc}
          */
-        public function getOptions()
+        public function getOptions(): array
         {
                 return $this->_options;
         }
