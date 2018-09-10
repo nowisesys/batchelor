@@ -22,6 +22,7 @@ namespace Batchelor\Cache;
 
 use Batchelor\Cache\Backend\APCu;
 use Batchelor\Cache\Backend\Extension\ShmOp;
+use Batchelor\Cache\Backend\Extension\Stacked;
 use Batchelor\Cache\Backend\File;
 use Batchelor\Cache\Backend\Memcached;
 use Batchelor\Cache\Backend\Memory;
@@ -64,6 +65,8 @@ class Factory
                                 return new Redis($options);
                         case 'xcache':
                                 return new XCache($options);
+                        case 'stacked':
+                                return new Stacked($options);
                         default:
                                 throw new LogicException("Unknown cache backend $type");
                 }

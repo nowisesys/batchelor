@@ -54,11 +54,11 @@ files, but can be configured with i.e. apcu.
             'type'    => 'stacked',
             'options' => [
                 'prefix'    => 'batchelor',
-                'lifetime'  => 7200
-            ],
-            'backends' => [
-                'file' => [ ... ],      // Options for file backend.
-                'apcu' => [ ... ],      // Options for APCu backend.
+                'lifetime'  => 7200,
+                'backends' => [
+                    'file' => [ ... ],      // Options for file backend.
+                    'apcu' => [ ... ],      // Options for APCu backend.
+                ]
             ]
         ]
 
@@ -68,18 +68,22 @@ files, but can be configured with i.e. apcu.
 
         'cache' => [
             'type'    => 'stacked',
-            'backends' => [
-                'file' => true,
-                'apcu' => true
+            'options' => [
+                'backends' => [
+                    'file' => true,
+                    'apcu' => true
+                ]
             ]
         ]
 
-    Use simple array of backend names:
+    Use simple array containing the backend names:
 
         'cache' => [
             'type'    => 'stacked',
-            'backends' => [
-                'file', 'apcu'
+            'options' => [
+                'backends' => [
+                    'file', 'apcu'
+                ]
             ]
         ]
 
