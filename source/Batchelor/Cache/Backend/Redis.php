@@ -97,6 +97,15 @@ use RedisCluster;
  *              'read_timeout'   => 5                   // Optional (in seconds)
  *      ]
  * ]);
+ * 
+ * // 
+ * // Use password to authenticate the connection. Pass database to change the
+ * // selected database:
+ * // 
+ * $backend = new Redis([
+ *      'password' => 'secret',
+ *      'database' => 6
+ * ])
  * </code>
  * 
  * Cluster can be instantiated using either the cluster name (requires system 
@@ -273,6 +282,13 @@ class Redis extends Base implements Backend
                 } else {
                         $redis = new RedisServer();
                         $redis->connect(...array_values($options));
+                }
+
+                if (($password = $this->getOption('password'))) {
+                        $redis->auth($password);
+                }
+                if (($database = $this->getOption('database'))) {
+                        $redis->select($database);
                 }
 
                 return $redis;
