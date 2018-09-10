@@ -14,5 +14,6 @@ return array(
                 false,
                 'Generator' => 'generator',
                 'Frontend'  => 'frontend',
+                'Service'   => 'service'
         )
 );

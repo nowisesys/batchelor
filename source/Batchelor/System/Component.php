@@ -20,7 +20,9 @@
 
 namespace Batchelor\System;
 
+use Batchelor\System\Service\Cache;
 use Batchelor\System\Service\Config;
+use Batchelor\System\Service\DataStorage;
 use Batchelor\System\Service\Hostid;
 use Batchelor\System\Service\Persistance;
 
@@ -53,7 +55,8 @@ use Batchelor\System\Service\Persistance;
  * @property-read Hostid $hostid The host ID service.
  * @property-read Persistance $persistance The data persistance service.
  * @property-read Config $app The application config.
- * @property-read Service\DataStorage $data The data storage directory.
+ * @property-read DataStorage $data The data storage directory.
+ * @property-read Cache $cache The cache service.
  * 
  * @author Anders Lövgren (Nowise Systems)
  */

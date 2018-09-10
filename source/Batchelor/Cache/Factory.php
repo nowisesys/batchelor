@@ -49,8 +49,6 @@ class Factory
          */
         public static function getBackend(string $type, array $options = [])
         {
-                // TODO: implement
-
                 switch ($type) {
                         case 'apcu':
                                 return new APCu($options);
