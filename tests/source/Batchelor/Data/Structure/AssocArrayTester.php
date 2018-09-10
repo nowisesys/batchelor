@@ -20,6 +20,8 @@
 
 namespace Batchelor\Data\Structure;
 
+use ArrayIterator;
+
 class MyObject
 {
 
@@ -153,6 +155,21 @@ abstract class AssocArrayTester extends \PHPUnit_Framework_TestCase
                 $actual = array_keys($this->object->getObjects());
                 $this->assertNotNull($actual);
                 $this->assertEquals($expect, $actual);
+        }
+
+        /**
+         * @covers Batchelor\Structure\AssocArrayHeap::getIterator
+         */
+        public function testGetIterator()
+        {
+                $this->object->addObject("key1", new MyObject("k1", 100), false);
+                $this->object->addObject("key2", new MyObject("k1", 50), false);
+                $this->object->addObject("key3", new MyObject("k1", 200), false);
+                $this->object->addObject("key4", new MyObject("k1", 125), false);
+
+                $actual = $this->object->getIterator();
+                $this->assertNotNull($actual);
+                $this->assertTrue($actual instanceof ArrayIterator);
         }
 
 }

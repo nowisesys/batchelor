@@ -20,6 +20,10 @@
 
 namespace Batchelor\Data\Structure;
 
+use ArrayIterator;
+use IteratorAggregate;
+use Traversable;
+
 /**
  * Ordered object array (heap).
  * 
@@ -28,7 +32,7 @@ namespace Batchelor\Data\Structure;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class AssocArrayHeap
+abstract class AssocArrayHeap implements IteratorAggregate
 {
 
         /**
@@ -122,6 +126,15 @@ abstract class AssocArrayHeap
         public function setSorted()
         {
                 uasort($this->_objects, array($this, 'compare'));
+        }
+
+        /**
+         * Get array iterator.
+         * @return Traversable
+         */
+        public function getIterator(): Traversable
+        {
+                return new ArrayIterator($this->_objects);
         }
 
 }
