@@ -21,14 +21,16 @@
 namespace Batchelor\Cache;
 
 use Batchelor\Cache\Formatter\NativeFormat;
-use Batchelor\System\Component;
+use RuntimeException;
+use Traversable;
 
 /**
- * The client side frontend.
+ * The client cache frontend.
  *
+ * Client side is free to use the 
  * @author Anders Lövgren (Nowise Systems)
  */
-class Frontend extends Component implements Storage
+class Frontend implements Storage
 {
 
         /**
@@ -44,12 +46,14 @@ class Frontend extends Component implements Storage
 
         /**
          * Constructor.
-         * @param array $options The cache config options.
+         * 
+         * @param string $type The backend type.
+         * @param array $options The backend options.
          */
-        public function __construct($options = null)
+        public function __construct(string $type = null, array $options = [])
         {
                 $this->_formatter = new NativeFormat();
-                $this->_backend = Factory::getBackend($options);
+                $this->_backend = Factory::getBackend($type, $options);
         }
 
         /**
@@ -71,7 +75,7 @@ class Frontend extends Component implements Storage
 
                 if (!($result = $backend->read($key))) {
                         return $result;
-                } elseif (is_string($key)) {
+                } elseif (is_string($result)) {
                         return $formatter->onRead($result);
                 }
 
@@ -98,7 +102,7 @@ class Frontend extends Component implements Storage
                         $key[$k] = $formatter->onSave($v);
                 }
 
-                $this->save($key, $value, $lifetime);
+                $backend->save($key, $value, $lifetime);
         }
 
         /**
@@ -107,7 +111,7 @@ class Frontend extends Component implements Storage
         public function delete($key)
         {
                 $backend = $this->_backend;
-                $backend->delete($key);
+                return $backend->delete($key);
         }
 
         /**
