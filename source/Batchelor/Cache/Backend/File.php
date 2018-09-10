@@ -102,7 +102,7 @@ class File extends Base implements Backend
                 $modified = $file->getMTime();
                 $expiring = time() - $lifetime;
 
-                return $modified < $expiring;
+                return $lifetime == 0 ? false : $modified < $expiring;
         }
 
         /**
