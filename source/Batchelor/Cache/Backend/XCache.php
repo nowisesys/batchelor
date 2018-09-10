@@ -48,7 +48,7 @@ class XCache extends Base implements Backend
                 parent::__construct($options, [
                         'format'   => 'native',
                         'prefix'   => 'batchelor',
-                        'lifetime' => 28800
+                        'lifetime' => 7200
                 ]);
         }
 
