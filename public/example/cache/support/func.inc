@@ -6,7 +6,28 @@
 
 
 use Batchelor\Cache\Backend;
+use Batchelor\Cache\Frontend;
 use Batchelor\Cache\Storage;
+use Batchelor\System\Service\Cache;
+
+function test_interface(Storage $cache)
+{
+        if ($cache instanceof Backend) {
+                test_class($cache);
+                test_support($cache);
+        }
+        if ($cache instanceof Frontend) {
+                test_class($cache);
+                test_class($cache->getBackend());
+                test_support($cache->getBackend());
+        }
+        if ($cache instanceof Cache) {
+                test_class($cache);
+                test_class($cache->getFrontend());
+                test_class($cache->getFrontend()->getBackend());
+                test_support($cache->getFrontend()->getBackend());
+        }
+}
 
 function test_class(Storage $cache)
 {
@@ -103,15 +124,7 @@ function run_test(Storage $cache, array $data)
 {
         $stime = microtime(true);
 
-        if ($cache instanceof Backend) {
-                test_class($cache);
-                test_support($cache);
-        }
-        if ($cache instanceof Batchelor\Cache\Frontend) {
-                test_class($cache);
-                test_class($cache->getBackend());
-                test_support($cache->getBackend());
-        }
+        test_interface($cache);
 
         printf("(i) Cleanup in cache:\n");
         test_cache_delete($cache, $data);
