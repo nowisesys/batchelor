@@ -12,6 +12,7 @@ return array(
                 false,
                 'ShmOp'     => 'shmop',
                 false,
-                'Generator' => 'generator'
+                'Generator' => 'generator',
+                'Frontend'  => 'frontend',
         )
 );
