@@ -131,7 +131,11 @@ abstract class Base extends Component implements Backend
          */
         protected function getLifetime(int $lifetime = 0)
         {
-                if (!isset($lifetime) || $lifetime === 0 || $lifetime === false) {
+                if (!isset($this->_options['lifetime'])) {
+                        return $lifetime;
+                } elseif (!isset($lifetime)) {
+                        return 0;
+                } elseif ($lifetime === 0 || $lifetime === false) {
                         return $this->_options['lifetime'];
                 } else {
                         return $lifetime;
