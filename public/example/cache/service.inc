@@ -1,10 +1,10 @@
 <?php
 
-use Batchelor\Cache\Frontend;
+use Batchelor\System\Service\Cache;
 
 // 
 // Use common test and data for file cache example/test.
 // 
 
-$cache = new Batchelor\System\Service\Cache();
+$cache = new Cache();
 include('support/test.inc');
