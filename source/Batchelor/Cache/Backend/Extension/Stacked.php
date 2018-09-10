@@ -22,6 +22,7 @@ namespace Batchelor\Cache\Backend\Extension;
 
 use Batchelor\Cache\Backend;
 use Batchelor\Cache\Backend\Base;
+use Batchelor\Cache\Factory;
 use Batchelor\Data\Structure\AssocArrayCompare;
 use RuntimeException;
 
@@ -57,6 +58,8 @@ class Stacked extends Base implements Backend
                 $this->_backends = new AssocArrayCompare(static function($obj1, $obj2) {
                         return $obj1->getOption('lifetime') - $obj2->getOption('lifetime');
                 });
+
+                $this->setBackends();
         }
 
         /**
@@ -108,7 +111,7 @@ class Stacked extends Base implements Backend
         public function save($key, $value = null, int $lifetime = 0)
         {
                 $lifetime = $this->getLifetime($lifetime);
-                
+
                 foreach ($this->_backends as $backend) {
                         $backend->save($key, $value, $lifetime);
                 }
@@ -165,6 +168,17 @@ class Stacked extends Base implements Backend
         public function getBackends(): array
         {
                 return $this->_backends->getObjects();
+        }
+
+        /**
+         * Initialize backends.
+         */
+        private function setBackends()
+        {
+                foreach ($this->getOption('backends', []) as $type => $options) {
+                        $backend = Factory::getBackend($type, $options);
+                        $this->addBackend($type, $backend);
+                }
         }
 
 }

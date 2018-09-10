@@ -5,7 +5,6 @@ use Batchelor\Cache\Backend\Extension\Stacked;
 // 
 // Use common test and data for file cache example/test.
 // 
-
 $cache = new Stacked();
 $cache->setLifetime(10800);
 $cache->addBackend("memory", new Batchelor\Cache\Backend\Memory());

@@ -27,13 +27,13 @@ files, but can be configured with i.e. apcu.
 
     Valid type options are: 
 
-        o) file     - Use file system.
-        o) memory   - Use RAM memory
-        o) shmem    - Use shared memory (IPC)
-        o) xcache   - Use the xcache extension
-        o) apcu     - Use the APCu extension
-        o) redis    - Use redis server
-        o) memcache - Use memcached server
+        o) file      - Use file system.
+        o) memory    - Use RAM memory
+        o) shmop     - Use shared memory
+        o) xcache    - Use the xcache extension
+        o) apcu      - Use the APCu extension
+        o) redis     - Use Redis server (single, cluster or array)
+        o) memcached - Use memcached server
 
     For options, see classes under Batchelor\Cache\Backend under source. 
 
@@ -41,12 +41,29 @@ files, but can be configured with i.e. apcu.
 
     Theres also a special stacked cache that creates a priority queue of configured 
     cache classes using each lifetime options as the priority (reversed). When caching
-    an entry with i.e. lifetime 3600, only configured cache objects with an lifetime
-    lower than 3600 will store the entry.
+    an entry with i.e. lifetime 3600 it is written to all backends.
 
     When reading entries, each cache object in the priority queue is checked top to
     bottom for an existing value. If found, it is then populated up in the queue to
     fill missing entries in cache objects with higher priority.
+
+    The stacked backend is configured from the same place as single instance
+    backend, but uses the backends array:
+
+        'cache' => [
+            'type'    => 'stacked',
+            'options' => [
+                'prefix'    => 'batchelor',
+                'lifetime'  => 7200
+            ],
+            'backends' => [
+                'file' => [ ... ],      // Options for file backend.
+                'apcu' => [ ... ],      // Options for APCu backend.
+            ]
+        ]
+
+    The priority between backends is automatic, with backends with lowest lifetime
+    first in the pipeline.
 
 ** Recommendations:
 
