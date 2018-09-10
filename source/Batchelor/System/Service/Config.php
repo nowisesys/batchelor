@@ -60,7 +60,7 @@ class Config
 
         /**
          * The config data.
-         * @var RecursiveArrayObject 
+         * @var RecursiveArrayObject
          */
         private $_config;
         /**
@@ -244,6 +244,23 @@ class Config
                 } else {
                         return false;
                 }
+        }
+
+        /**
+         * Get array recursive.
+         * 
+         * @param RecursiveArrayObject $config The config tree node.
+         * @return array
+         */
+        public static function toArray(RecursiveArrayObject $config): array
+        {
+                foreach ($config as $key => $val) {
+                        if (is_object($val)) {
+                                $config[$key] = self::toArray($val);
+                        }
+                }
+
+                return $config->getArrayCopy();
         }
 
 }
