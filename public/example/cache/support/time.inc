@@ -1,8 +1,8 @@
 <?php
 
-use Batchelor\Cache\Backend;
+use Batchelor\Cache\Storage;
 
-function test_cache_delete_time_key(Backend $cache, int $limit)
+function test_cache_delete_time_key(Storage $cache, int $limit)
 {
         $timer = microtime(true);
 
@@ -14,7 +14,7 @@ function test_cache_delete_time_key(Backend $cache, int $limit)
         printf("TIMER (S): %.06f (DELETE:$limit)\n", $timer);
 }
 
-function test_cache_delete_time_arr(Backend $cache, array $array)
+function test_cache_delete_time_arr(Storage $cache, array $array)
 {
         $limit = count($array);
         $timer = microtime(true);
@@ -25,13 +25,13 @@ function test_cache_delete_time_arr(Backend $cache, array $array)
         printf("TIMER (M): %.06f (DELETE:$limit)\n", $timer);
 }
 
-function test_cache_delete_time(Backend $cache, array $array, int $limit)
+function test_cache_delete_time(Storage $cache, array $array, int $limit)
 {
         test_cache_delete_time_key($cache, $limit);
         test_cache_delete_time_arr($cache, $array);
 }
 
-function test_cache_exist_time_key(Backend $cache, int $limit)
+function test_cache_exist_time_key(Storage $cache, int $limit)
 {
         $timer = microtime(true);
 
@@ -43,7 +43,7 @@ function test_cache_exist_time_key(Backend $cache, int $limit)
         printf("TIMER (S): %.06f (EXIST:$limit)\n", $timer);
 }
 
-function test_cache_exist_time_arr(Backend $cache, array $array)
+function test_cache_exist_time_arr(Storage $cache, array $array)
 {
         $limit = count($array);
         $timer = microtime(true);
@@ -54,13 +54,13 @@ function test_cache_exist_time_arr(Backend $cache, array $array)
         printf("TIMER (M): %.06f (EXIST:$limit)\n", $timer);
 }
 
-function test_cache_exist_time(Backend $cache, array $array, int $limit)
+function test_cache_exist_time(Storage $cache, array $array, int $limit)
 {
         test_cache_exist_time_key($cache, $limit);
         test_cache_exist_time_arr($cache, $array);
 }
 
-function test_cache_read_time_key(Backend $cache, int $limit)
+function test_cache_read_time_key(Storage $cache, int $limit)
 {
         $timer = microtime(true);
 
@@ -72,7 +72,7 @@ function test_cache_read_time_key(Backend $cache, int $limit)
         printf("TIMER (S): %.06f (READ:$limit)\n", $timer);
 }
 
-function test_cache_read_time_arr(Backend $cache, array $array)
+function test_cache_read_time_arr(Storage $cache, array $array)
 {
         $limit = count($array);
         $timer = microtime(true);
@@ -83,13 +83,13 @@ function test_cache_read_time_arr(Backend $cache, array $array)
         printf("TIMER (M): %.06f (READ:$limit)\n", $timer);
 }
 
-function test_cache_read_time(Backend $cache, array $array, int $limit)
+function test_cache_read_time(Storage $cache, array $array, int $limit)
 {
         test_cache_read_time_key($cache, $limit);
         test_cache_read_time_arr($cache, $array);
 }
 
-function test_cache_save_time_key(Backend $cache, int $limit)
+function test_cache_save_time_key(Storage $cache, int $limit)
 {
         $timer = microtime(true);
 
@@ -101,7 +101,7 @@ function test_cache_save_time_key(Backend $cache, int $limit)
         printf("TIMER (S): %.06f (SAVE:$limit)\n", $timer);
 }
 
-function test_cache_save_time_arr(Backend $cache, array $array)
+function test_cache_save_time_arr(Storage $cache, array $array)
 {
         $limit = count($array);
         $timer = microtime(true);
@@ -112,7 +112,7 @@ function test_cache_save_time_arr(Backend $cache, array $array)
         printf("TIMER (M): %.06f (SAVE:$limit)\n", $timer);
 }
 
-function test_cache_save_time(Backend $cache, array $array, int $limit)
+function test_cache_save_time(Storage $cache, array $array, int $limit)
 {
         test_cache_save_time_key($cache, $limit);
         test_cache_save_time_arr($cache, $array);
@@ -127,12 +127,12 @@ function test_cache_array_prepare(int $limit)
             ), 'value1');
 }
 
-function test_cache_array_delete(Backend $cache, array $array)
+function test_cache_array_delete(Storage $cache, array $array)
 {
         $cache->delete(array_keys($array));
 }
 
-function run_time(Backend $cache, int $limit)
+function run_time(Storage $cache, int $limit)
 {
         $array = test_cache_array_prepare($limit);
         $akeys = array_keys($array);
