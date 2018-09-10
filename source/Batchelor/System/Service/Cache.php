@@ -31,9 +31,10 @@ use Batchelor\System\Component;
  * $cache = new Cache();        // Use application settings
  * $cache = new Cache([         // Set Redis as cache backend.
  *      'type' => 'redis',
- *      'options' => [ ... ]
+ *      'options' => [ 
+ *              ...             // Options for Redis server, cluster or array.
  *      ]
- * ])
+ * ]);
  * </code>
  *
  * @author Anders Lövgren (Nowise Systems)
@@ -55,7 +56,7 @@ class Cache extends Component implements Storage
         public function __construct(array $options = null)
         {
                 if (!isset($options)) {
-                        $options = $this->app->cache->getArrayCopy();
+                        $options = Config::toArray($this->app->cache);
                 }
 
                 if (!isset($options['type'])) {
@@ -63,12 +64,6 @@ class Cache extends Component implements Storage
                 }
                 if (!isset($options['options'])) {
                         $options['options'] = [];
-                }
-
-                foreach ($options as $key => $val) {
-                        if (is_object($val)) {
-                                $options[$key] = $val->getArrayCopy();
-                        }
                 }
 
                 $this->_frontend = new Frontend($options['type'], $options['options']);
