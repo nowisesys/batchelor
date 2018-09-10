@@ -63,7 +63,25 @@ files, but can be configured with i.e. apcu.
         ]
 
     The priority between backends is automatic, with backends with lowest lifetime
-    first in the pipeline.
+    first in the pipeline. Two shortcut modes are also possible if options are not
+    required for backends:
+
+        'cache' => [
+            'type'    => 'stacked',
+            'backends' => [
+                'file' => true,
+                'apcu' => true
+            ]
+        ]
+
+    Use simple array of backend names:
+
+        'cache' => [
+            'type'    => 'stacked',
+            'backends' => [
+                'file', 'apcu'
+            ]
+        ]
 
 ** Recommendations:
 

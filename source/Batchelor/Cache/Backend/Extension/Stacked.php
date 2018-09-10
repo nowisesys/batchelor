@@ -176,9 +176,26 @@ class Stacked extends Base implements Backend
         private function setBackends()
         {
                 foreach ($this->getOption('backends', []) as $type => $options) {
-                        $backend = Factory::getBackend($type, $options);
-                        $this->addBackend($type, $backend);
+                        if (is_array($options)) {
+                                $this->setBackend($type, $options);
+                        } elseif (is_bool($options) && $options) {
+                                $this->setBackend($type, []);
+                        } elseif (is_string($options)) {
+                                $this->setBackend($options, []);
+                        }
                 }
+        }
+
+        /**
+         * Initialize backend.
+         * 
+         * @param string $type The backend type.
+         * @param array $options The backend options.
+         */
+        private function setBackend(string $type, array $options)
+        {
+                $backend = Factory::getBackend($type, $options);
+                $this->addBackend($type, $backend);
         }
 
 }
