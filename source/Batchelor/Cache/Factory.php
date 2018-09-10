@@ -21,7 +21,12 @@
 namespace Batchelor\Cache;
 
 use Batchelor\Cache\Backend\APCu;
+use Batchelor\Cache\Backend\Extension\ShmOp;
 use Batchelor\Cache\Backend\File;
+use Batchelor\Cache\Backend\Memcached;
+use Batchelor\Cache\Backend\Memory;
+use Batchelor\Cache\Backend\Redis;
+use Batchelor\Cache\Backend\XCache;
 use Batchelor\Cache\Formatter\JsonSerialize;
 use Batchelor\Cache\Formatter\NativeFormat;
 use Batchelor\Cache\Formatter\PhpSerialize;
@@ -51,6 +56,16 @@ class Factory
                                 return new APCu($options);
                         case 'file':
                                 return new File($options);
+                        case 'memory':
+                                return new Memory($options);
+                        case 'memcached':
+                                return new Memcached($options);
+                        case 'shmop':
+                                return new ShmOp($options);
+                        case 'redis':
+                                return new Redis($options);
+                        case 'xcache':
+                                return new XCache($options);
                         default:
                                 throw new LogicException("Unknown cache backend $type");
                 }
