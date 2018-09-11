@@ -18,8 +18,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Cache\Backend;
+namespace Batchelor\Cache\Backend\Extension;
 
+use Batchelor\Cache\Backend\Base;
 use Batchelor\Cache\Storage;
 
 /**

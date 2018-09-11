@@ -1,6 +1,6 @@
 <?php
 
-use Batchelor\Cache\Backend\Passthru;
+use Batchelor\Cache\Backend\Extension\Passthru;
 
 // 
 // Use common test and data for file cache example/test.
