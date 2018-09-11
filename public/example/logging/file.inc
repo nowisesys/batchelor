@@ -2,6 +2,7 @@
 
 use Batchelor\Logging\Format\Custom;
 use Batchelor\Logging\Format\DateTime;
+use Batchelor\Logging\Format\Export;
 use Batchelor\Logging\Format\JsonEncode;
 use Batchelor\Logging\Format\Serialize;
 use Batchelor\Logging\Target\File;
@@ -82,3 +83,13 @@ $logger->setFormat($format);
 $logger->info("testing11");
 $format->setCompact();
 $logger->info("testing12");
+
+// 
+// Test PHP export:
+// 
+$format = new Export();
+$logger->setFormat($format);
+$logger->info("testing13");
+$format->setCompact();
+$logger->info("testing14");
+
