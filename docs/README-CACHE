@@ -25,15 +25,15 @@ files, but can be configured with i.e. apcu.
             ]
         ]
 
-    Valid type options are: 
+    Valid options for type are: 
 
         o) file      - Use file system.
-        o) memory    - Use RAM memory
-        o) shmop     - Use shared memory
-        o) xcache    - Use the xcache extension
-        o) apcu      - Use the APCu extension
-        o) redis     - Use Redis server (single, cluster or array)
-        o) memcached - Use memcached server
+        o) memory    - Use RAM memory.
+        o) shmop     - Use shared memory.
+        o) xcache    - Use the xcache extension.
+        o) apcu      - Use the APCu extension.
+        o) redis     - Use Redis server (single, cluster or array).
+        o) memcached - Use memcached server.
 
     For options, see classes under Batchelor\Cache\Backend under source. 
 
@@ -86,6 +86,29 @@ files, but can be configured with i.e. apcu.
                 ]
             ]
         ]
+
+** Detect cache backend:
+
+    It's also possible to use cache backend detection. In this mode, the first
+    available cache backend will be used. The probing is done by putting backends
+    with high performance first in list.
+
+        'cache' => [
+            'type'    => 'detect',
+            'options' => [
+                'exclude' => [ 'file' ]
+            ]
+        ]
+
+** Lifetime:
+
+    The lifetime option defines the number of seconds before an cache entry is 
+    expired. It's defaines the default lifetime that is used unless a lifetime is
+    explicit passed on save().
+
+    Cache entries with lifetime 0 is considered to be permanent and will never
+    expires. The memory backend is an exception to this because its cache entries
+    are all expired when the script terminates.
 
 ** Recommendations:
 

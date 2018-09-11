@@ -35,7 +35,7 @@ return [
                 'page' => 'http://batchelor.example.com/contact.html'
         ],
         // 
-        // The cache options.
+        // The cache options (see docs/README-CACHE).
         // 
         'cache' => [
                 'type' => 'file',               // Use file system cache.
