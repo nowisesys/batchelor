@@ -27,6 +27,7 @@ $logger->debug("hello world!");
 // Test log using generic message method:
 // 
 $logger->message(LOG_NOTICE, "hello world, %s!", ["anders"]);
+$logger->message(LOG_NOTICE, "\nthis message should be trimmed\n\n");
 
 // 
 // Create another logger that logs identity also.
@@ -60,7 +61,7 @@ $logger->info("testing6");
 $format = new Custom();
 $logger->setFormat($format);
 $logger->info("testing7");
-$format->setExpand("@datetime@ <@priority@><@pid@> @message@ <@ident@>\n");
+$format->setExpand("@datetime@ <@priority@><@pid@> @message@ <@ident@>");
 $logger->info("testing8");
 
 // 
