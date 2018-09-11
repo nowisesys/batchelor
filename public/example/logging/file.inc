@@ -2,6 +2,7 @@
 
 use Batchelor\Logging\Format\Custom;
 use Batchelor\Logging\Format\DateTime;
+use Batchelor\Logging\Format\JsonEncode;
 use Batchelor\Logging\Target\File;
 
 $logger = new File("/tmp/batchelor.log");
@@ -56,7 +57,17 @@ $logger->info("testing6");
 // 
 // Test custom formatter:
 // 
-$logger->setFormat(new Custom());
+$format = new Custom();
+$logger->setFormat($format);
 $logger->info("testing7");
-$logger->getFormat()->setExpand("@datetime@ <@priority@><@pid@> @message@ <@ident@>\n");
+$format->setExpand("@datetime@ <@priority@><@pid@> @message@ <@ident@>\n");
 $logger->info("testing8");
+
+// 
+// Test JSON encoder:
+// 
+$format = new JsonEncode();
+$logger->setFormat($format);
+$logger->info("testing9");
+$format->setCompact();
+$logger->info("testing10");
