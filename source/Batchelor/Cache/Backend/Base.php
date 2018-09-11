@@ -159,6 +159,40 @@ abstract class Base extends Component implements Backend
         }
 
         /**
+         * {@inheritdoc}
+         */
+        public function hasOption(string $name): bool
+        {
+                return isset($this->_options[$name]);
+        }
+
+        /**
+         * Use option if exists.
+         * 
+         * Return option value if exists and remove from options. If option is
+         * missing, then return default value instead.
+         * 
+         * @param string $name The option name.
+         * @param mixed $default The default value.
+         * @return mixed 
+         */
+        public function useOption(string $name, $default = false)
+        {
+                if (!isset($this->_options[$name])) {
+                        return $default;
+                }
+
+                if (is_object($this->_options[$name])) {
+                        $value = clone $this->_options[$name];
+                } else {
+                        $value = $this->_options[$name];
+                }
+
+                unset($this->_options[$name]);
+                return $value;
+        }
+
+        /**
          * Set options array.
          * @param array $options The cache options.
          */
