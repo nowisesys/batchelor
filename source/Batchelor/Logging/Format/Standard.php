@@ -46,7 +46,7 @@ class Standard extends Adapter implements Format
                 $input['datetime'] = parent::getTimestamp($input['stamp']);
 
                 return sprintf(
-                    "%s [%s:%d] [%s] %s\n", $input['datetime'], $input['ident'], $input['pid'], $input['priority'], $input['message']
+                    "%s [%s:%d] [%s] %s", $input['datetime'], $input['ident'], $input['pid'], $input['priority'], $input['message']
                 );
         }
 

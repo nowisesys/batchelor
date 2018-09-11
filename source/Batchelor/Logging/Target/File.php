@@ -120,7 +120,7 @@ class File extends Adapter implements Logger
                         if (!flock($handle, LOCK_EX)) {
                                 throw new RuntimeException("Failed lock $filename");
                         }
-                        if (!fwrite($handle, $message) < 0) {
+                        if (!fwrite($handle, $message . "\n") < 0) {
                                 throw new RuntimeException("Failed write log message to $filename");
                         }
                         if ($this->_options & LOG_PERROR) {
@@ -158,7 +158,7 @@ class File extends Adapter implements Logger
                                     'ident'    => $this->_ident,
                                     'pid'      => $this->getProcess(),
                                     'priority' => $priority,
-                                    'message'  => $message
+                                    'message'  => trim($message)
                         ]);
                 }
         }
