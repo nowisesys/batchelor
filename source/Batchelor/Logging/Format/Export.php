@@ -24,6 +24,9 @@ use Batchelor\Logging\Format;
 
 /**
  * The PHP variable export formatter.
+ * 
+ * When context mode is enabled, each log entry is logged decorated with code
+ * enable parsing entries as code using i.e. require() or include(). 
  *
  * @author Anders Lövgren (Nowise Systems)
  */
@@ -35,6 +38,11 @@ class Export extends Adapter implements Format
          * @var bool 
          */
         private $_compact = false;
+        /**
+         * Add code context.
+         * @var bool 
+         */
+        private $_context = false;
 
         /**
          * Set compact mode.
@@ -46,6 +54,15 @@ class Export extends Adapter implements Format
         }
 
         /**
+         * Add context to log entry.
+         * @param bool $enable Enable context mode.
+         */
+        public function addContext(bool $enable = true)
+        {
+                $this->_context = $enable;
+        }
+
+        /**
          * {@inheritdoc}
          */
         public function getMessage(array $input): string
@@ -54,8 +71,11 @@ class Export extends Adapter implements Format
                         $input['priority'] = parent::getPriority($input['priority']);
                         $input['datetime'] = parent::getTimestamp($input['stamp']);
                 }
-
-                return var_export($input, true);
+                if ($this->_context) {
+                        return sprintf("'%f' => %s,", microtime(true), var_export($input, true));
+                } else {
+                        return var_export($input, true);
+                }
         }
 
 }

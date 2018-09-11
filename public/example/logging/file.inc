@@ -92,4 +92,5 @@ $logger->setFormat($format);
 $logger->info("testing13");
 $format->setCompact();
 $logger->info("testing14");
-
+$format->addContext();
+$logger->info("testing15");
