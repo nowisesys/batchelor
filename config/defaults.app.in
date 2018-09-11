@@ -37,11 +37,7 @@ return [
         // 
         // The cache options (see docs/README-CACHE).
         // 
-        'cache' => [
-                'type' => 'file',               // Use file system cache.
-                'options' => [
-                        'path'   => 'cache',    // Sub directory in data directory.
-                        'format' => 'php',      // The serialization method.
-                ]
+        'cache'   => [
+                'type'    => 'detect'
         ]
 ];
