@@ -29,31 +29,31 @@ class DateTime
 {
 
         /**
-         * The locale specific format (i.e. "Tue Feb 5 00:45:10 2009").
+         * The locale specific format (i.e. "Tue Sep 11 23:11:45 2018").
          */
         const FORMAT_HUMAN = "%c";
         /**
-         * The locale specific format (i.e. "02/05/09 03:59:16").
+         * The locale specific format (i.e. "09/11/18 23:11:45").
          */
         const FORMAT_LOCALE = "%x %X";
         /**
-         * The database ISO format (i.e. "2009-02-05 03:59:16").
+         * The database ISO format (i.e. "2018-09-11 23:11:45").
          */
         const FORMAT_ISO_DATABASE = "%Y-%m-%d %H:%M:%S";
         /**
-         * Format as UNIX epoch timestamp (i.e. "305815200").
+         * Format as UNIX epoch timestamp (i.e. "1536700305").
          */
         const FORMAT_UNIX_EPOCH = "%s";
         /**
-         * Log with seconds granularity (pseudo format string).
+         * Log with seconds granularity (pseudo format string, same as FORMAT_ISO_DATABASE).
          */
         const FORMAT_SECONDS = "@s";
         /**
-         * Log with microseconds granularity (pseudo format string: "%d %d").
+         * Log with microseconds granularity (pseudo format string, i.e. "0.51993500 1536700305").
          */
         const FORMAT_MICROSEC = "@m";
         /**
-         * Log with microseconds granularity ((pseudo format string: "%f").
+         * Log with microseconds granularity ((pseudo format string, i.e. "1536700305.5206").
          */
         const FORMAT_FLOATSEC = "@f";
 
