@@ -51,7 +51,7 @@ interface Backend extends Storage
          * @param int $lifetime The key lifetime.
          */
         function setLifetime(int $lifetime);
-
+        
         /**
          * Get config options.
          * @return array The active options.
@@ -67,6 +67,14 @@ interface Backend extends Storage
          */
         function getOption(string $name, $default = false);
 
+        /**
+         * Check if config option exists.
+         * 
+         * @param string $name The option name.
+         * @return bool 
+         */
+        function hasOption(string $name) : bool;
+        
         /**
          * Get cache key.
          * @param string $key The key name.
