@@ -24,7 +24,14 @@ use Batchelor\Logging\Format;
 
 /**
  * The standard message formatter.
- *
+ * 
+ * Generates log messages using a fixed message format string (%s [%s:%d] [%s] %s)
+ * formatting the stamp, ident, pid, priority and message argument passed in using 
+ * the input array. 
+ * 
+ * The priority are replaced by its symbolic name string and stamp are formatted
+ * using the active datetime formatter.
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
 class Standard extends Adapter implements Format

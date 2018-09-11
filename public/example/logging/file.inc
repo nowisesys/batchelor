@@ -1,9 +1,10 @@
 <?php
 
+use Batchelor\Logging\Format\Custom;
 use Batchelor\Logging\Format\DateTime;
 use Batchelor\Logging\Target\File;
 
-$logger = new File("/tmp/batchelor1.log");
+$logger = new File("/tmp/batchelor.log");
 $message = $logger->getMessage("hello world, %s!", ["anders"]);
 
 printf("Test dump formatted message:\n");
@@ -27,9 +28,13 @@ $logger->debug("hello world!");
 $logger->message(LOG_NOTICE, "hello world, %s!", ["anders"]);
 
 // 
-// Test some more logging options, i.e. datetime formatting:
+// Create another logger that logs identity also.
 // 
-$logger = new File("/tmp/batchelor2.log", "batchelor", LOG_PERROR | LOG_PID);
+$logger = new File("/tmp/batchelor.log", "batchelor");
+
+// 
+// Test using datetime formatting:
+// 
 $format = $logger->getFormat()->getDateTime();
 $format->setFormat(DateTime::FORMAT_HUMAN);
 $logger->info("testing1");
@@ -47,3 +52,11 @@ $format->setFormat(DateTime::FORMAT_MICROSEC);
 $logger->info("testing5");
 $format->setFormat(DateTime::FORMAT_FLOATSEC);
 $logger->info("testing6");
+
+// 
+// Test custom formatter:
+// 
+$logger->setFormat(new Custom());
+$logger->info("testing7");
+$logger->getFormat()->setExpand("@datetime@ <@priority@><@pid@> @message@ <@ident@>\n");
+$logger->info("testing8");
