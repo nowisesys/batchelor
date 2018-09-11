@@ -6,6 +6,7 @@ return array(
                 'Service'     => 'service',
                 'Persistance' => 'persistance',
                 'Storage'     => 'storage',
-                'Cache'       => 'cache'
+                'Cache'       => 'cache',
+                'Logging'     => 'logging'
         )
 );

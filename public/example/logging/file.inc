@@ -1,6 +1,7 @@
 <?php
 
-use Batchelor\Logging\File;
+use Batchelor\Logging\Format\DateTime;
+use Batchelor\Logging\Target\File;
 
 $logger = new File("/tmp/batchelor1.log");
 $message = $logger->getMessage("hello world, %s!", ["anders"]);
@@ -29,19 +30,20 @@ $logger->message(LOG_NOTICE, "hello world, %s!", ["anders"]);
 // Test some more logging options, i.e. datetime formatting:
 // 
 $logger = new File("/tmp/batchelor2.log", "batchelor", LOG_PERROR | LOG_PID);
-$logger->setFormat(File::DATETIME_HUMAN);
+$format = $logger->getFormat()->getDateTime();
+$format->setFormat(DateTime::FORMAT_HUMAN);
 $logger->info("testing1");
-$logger->setFormat(File::DATETIME_ISO_DATABASE);
+$format->setFormat(DateTime::FORMAT_ISO_DATABASE);
 $logger->info("testing2");
-$logger->setFormat(File::DATETIME_LOCALE);
+$format->setFormat(DateTime::FORMAT_LOCALE);
 $logger->info("testing3");
-$logger->setFormat(File::DATETIME_UNIX_EPOCH);
+$format->setFormat(DateTime::FORMAT_UNIX_EPOCH);
 $logger->info("testing4");
 
 // 
 // Test microseconds granularity:
 // 
-$logger = new File("/tmp/batchelor3.log", "batchelor", LOG_PERROR | LOG_PID, File::GRANULARITY_FLOATSEC);
+$format->setFormat(DateTime::FORMAT_MICROSEC);
 $logger->info("testing5");
-$logger = new File("/tmp/batchelor3.log", "batchelor", LOG_PERROR | LOG_PID, File::GRANULARITY_MICROSEC);
+$format->setFormat(DateTime::FORMAT_FLOATSEC);
 $logger->info("testing6");

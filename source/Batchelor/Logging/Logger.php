@@ -37,14 +37,6 @@ namespace Batchelor\Logging;
 interface Logger
 {
 
-        /**
-         * Get formatted message.
-         * 
-         * @param string $message The message to log.
-         * @param array $args Optional arguments for message.
-         * @return array The formatted message.
-         */
-        function getMessage(string $message, array $args = []): array;
 
         /**
          * The generic message logger.

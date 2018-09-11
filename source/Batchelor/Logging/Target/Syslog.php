@@ -18,8 +18,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Logging;
+namespace Batchelor\Logging\Target;
 
+use Batchelor\Logging\Logger;
 use RuntimeException;
 
 /**
@@ -76,20 +77,9 @@ class Syslog extends Adapter implements Logger
         /**
          * {@inheritdoc}
          */
-        public function message(int $priority, string $message, array $args = array()): bool
+        public function message(int $priority, string $message, array $args = []): bool
         {
                 return syslog($priority, vsprintf($message, $args));
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function getMessage(string $message, array $args = array()): array
-        {
-                return [
-                        'stamp'   => microtime(true),
-                        'message' => vsprintf($message, $args)
-                ];
         }
 
 }

@@ -18,15 +18,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Logging;
+namespace Batchelor\Logging\Target;
+
+use Batchelor\Logging\Format;
+use Batchelor\Logging\Logger;
+use Batchelor\Logging\Writer;
 
 /**
  * The logger adapter.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class Adapter implements Logger
+abstract class Adapter implements Logger, Writer
 {
+
+        /**
+         * The message formatter.
+         * @var Format 
+         */
+        private $_format;
 
         /**
          * {@inheritdoc}
@@ -91,6 +101,33 @@ abstract class Adapter implements Logger
         {
 
                 return $this->message(LOG_WARNING, $message, $args);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function setFormat(Format $format)
+        {
+                $this->_format = $format;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getFormat(): Format
+        {
+                return $this->_format;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getMessage(string $message, array $args = array()): array
+        {
+                return [
+                        'stamp'   => microtime(true),
+                        'message' => vsprintf($message, $args)
+                ];
         }
 
 }

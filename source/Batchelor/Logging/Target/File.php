@@ -18,8 +18,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Logging;
+namespace Batchelor\Logging\Target;
 
+use Batchelor\Logging\Format\Standard;
+use Batchelor\Logging\Logger;
 use RuntimeException;
 
 /**
@@ -37,35 +39,6 @@ class File extends Adapter implements Logger
 {
 
         /**
-         * The locale specific format (i.e. "Tue Feb 5 00:45:10 2009").
-         */
-        const DATETIME_HUMAN = "%c";
-        /**
-         * The locale specific format (i.e. "02/05/09 03:59:16").
-         */
-        const DATETIME_LOCALE = "%x %X";
-        /**
-         * The database ISO format (i.e. "2009-02-05 03:59:16").
-         */
-        const DATETIME_ISO_DATABASE = "%Y-%m-%d %H:%M:%S";
-        /**
-         * Format as UNIX epoch timestamp (i.e. "305815200").
-         */
-        const DATETIME_UNIX_EPOCH = "%s";
-        /**
-         * Log with seconds granularity.
-         */
-        const GRANULARITY_SECONDS = 1;
-        /**
-         * Log with microseconds granularity (int|int).
-         */
-        const GRANULARITY_MICROSEC = 2;
-        /**
-         * Log with microseconds granularity (float).
-         */
-        const GRANULARITY_FLOATSEC = 3;
-
-        /**
          * The target file.
          * @var string 
          */
@@ -80,16 +53,6 @@ class File extends Adapter implements Logger
          * @var int
          */
         private $_options;
-        /**
-         * The logging granularity.
-         * @var int 
-         */
-        private $_granularity;
-        /**
-         * The datetime format string.
-         * @var string 
-         */
-        private $_format = self::DATETIME_ISO_DATABASE;
 
         /**
          * Constructor.
@@ -99,12 +62,13 @@ class File extends Adapter implements Logger
          * @param int $options The logging options (bitmask of zero or more LOG_XXX contants).
          * @param int $granularity The logging granularity (one of the GRANULARITY_XXX constats).
          */
-        public function __construct(string $filename, string $ident = "", int $options = LOG_CONS | LOG_PID, int $granularity = self::GRANULARITY_SECONDS)
+        public function __construct(string $filename, string $ident = "", int $options = LOG_CONS | LOG_PID)
         {
                 $this->_filename = $filename;
                 $this->_ident = $ident;
                 $this->_options = $options;
-                $this->_granularity = $granularity;
+
+                parent::setFormat(new Standard());
         }
 
         /**
@@ -126,44 +90,28 @@ class File extends Adapter implements Logger
         }
 
         /**
-         * Set logger granularity.
-         * @param int $granularity The logging granularity (one of the GRANULARITY_XXX constats).
-         */
-        public function setGranularity(int $granularity)
-        {
-                $this->_granularity = $granularity;
-        }
-
-        /**
-         * Set datetime format string.
-         *  
-         * @param string $format The format string.
-         * @see strftime()
-         */
-        public function setFormat(string $format)
-        {
-                $this->_format = $format;
-        }
-
-        /**
          * {@inheritdoc}
          */
-        public function message(int $priority, string $message, array $args = array()): bool
+        public function message(int $priority, string $message, array $args = []): bool
         {
-                $format = vsprintf($message, $args);
-                $result = $this->getFormatted($priority, $format);
-                $this->append($result, $this->_filename);
-                return true;
+                if (($result = $this->getFormatted(
+                    $priority, vsprintf($message, $args)
+                    ))) {
+                        $this->logMessage($result, $this->_filename);
+                        return true;
+                } else {
+                        return false;
+                }
         }
 
         /**
-         * Append message to logfile.
+         * Write message to logfile.
          * 
          * @param string $message The log message.
          * @param string $filename The target filename.
          * @throws RuntimeException
          */
-        private function append(string $message, string $filename)
+        private function logMessage(string $message, string $filename)
         {
                 try {
                         if (!($handle = fopen($this->_filename, "a"))) {
@@ -175,9 +123,12 @@ class File extends Adapter implements Logger
                         if (!fwrite($handle, $message) < 0) {
                                 throw new RuntimeException("Failed write log message to $filename");
                         }
+                        if ($this->_options & LOG_PERROR) {
+                                trigger_error($message, E_USER_NOTICE);
+                        }
                 } catch (RuntimeException $exception) {
                         if ($this->_options & LOG_CONS) {
-                                fprintf(STDERR, $message);
+                                trigger_error($message, E_USER_WARNING);
                         }
                         throw $exception;       // Re-throw
                 } finally {
@@ -194,17 +145,6 @@ class File extends Adapter implements Logger
         }
 
         /**
-         * {@inheritdoc}
-         */
-        public function getMessage(string $message, array $args = array()): array
-        {
-                return [
-                        'stamp'   => microtime(true),
-                        'message' => vsprintf($message, $args)
-                ];
-        }
-
-        /**
          * Get formatted message.
          * 
          * @param int $priority One of the LOG_XXX constants.
@@ -212,46 +152,14 @@ class File extends Adapter implements Logger
          */
         private function getFormatted(int $priority, string $message): string
         {
-                return sprintf(
-                    "%s [%s:%d] [%s] %s\n", $this->getTimestamp(), $this->_ident, $this->getProcess(), $this->getPriority($priority), $message
-                );
-        }
-
-        /**
-         * Get timestamp string.
-         * @return string 
-         */
-        private function getTimestamp(): string
-        {
-                switch ($this->_granularity) {
-                        case self::GRANULARITY_SECONDS:
-                                return strftime($this->_format);
-                        case self::GRANULARITY_MICROSEC:
-                                return microtime();
-                        case self::GRANULARITY_FLOATSEC:
-                                return (string) microtime(true);
-                }
-        }
-
-        /**
-         * Get priority string.
-         * @param int $priority The log priority.
-         */
-        private function getPriority(int $priority): string
-        {
-                static $priorities = [
-                        LOG_EMERG   => "emergency",
-                        LOG_ALERT   => "alert",
-                        LOG_CRIT    => "critical",
-                        LOG_ERR     => "error",
-                        LOG_WARNING => "warning",
-                        LOG_NOTICE  => "notice",
-                        LOG_INFO    => "info",
-                        LOG_DEBUG   => "debug"
-                ];
-
-                if (array_key_exists($priority, $priorities)) {
-                        return $priorities[$priority];
+                if (($format = parent::getFormat())) {
+                        return $format->getMessage([
+                                    'stamp'    => time(),
+                                    'ident'    => $this->_ident,
+                                    'pid'      => $this->getProcess(),
+                                    'priority' => $priority,
+                                    'message'  => $message
+                        ]);
                 }
         }
 

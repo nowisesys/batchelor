@@ -1,6 +1,6 @@
 <?php
 
-use Batchelor\Logging\Syslog;
+use Batchelor\Logging\Target\Syslog;
 
 $logger = new Syslog("batchelor");
 $message = $logger->getMessage("hello world, %s!", ["anders"]);
