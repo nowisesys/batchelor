@@ -21,6 +21,7 @@
 namespace Batchelor\System\Service;
 
 use Batchelor\Storage\Directory;
+use Batchelor\Storage\File;
 use Batchelor\System\Component;
 use LogicException;
 
@@ -154,6 +155,32 @@ class DataStorage extends Component
                         $directory = $parent->create($path, $mode);
                         return $directory;
                 }
+        }
+
+        /**
+         * Get file object.
+         * 
+         * The directory path is created if missing. Returns a file object
+         * inside the directory. If filename is absolute, then the path is
+         * not created.
+         * 
+         * The file is not actually created before some content is written
+         * to the file object.
+         * 
+         * @param string $filename The filename path.
+         * @return File
+         */
+        public function addFile(string $filename)
+        {
+                if ($filename[0] == '/') {
+                        return new File($filename);
+                }
+
+                return $this->useDirectory(
+                        dirname($filename)
+                    )->getFile(
+                        basename($filename)
+                );
         }
 
 }
