@@ -67,6 +67,9 @@ files, but can be configured with i.e. apcu.
     The stacked backend is configured from the same place as single instance
     backend, but uses the backends array:
 
+        // 
+        // Use stacked cache backends:
+        // 
         'cache' => [
             'type'    => 'stacked',
             'options' => [
@@ -83,6 +86,9 @@ files, but can be configured with i.e. apcu.
     first in the pipeline. Two shortcut modes are also possible if options are not
     required for backends:
 
+        // 
+        // Use stacked cache backends with default settings:
+        // 
         'cache' => [
             'type'    => 'stacked',
             'options' => [
@@ -95,6 +101,9 @@ files, but can be configured with i.e. apcu.
 
     Use simple array containing the backend names:
 
+        // 
+        // Use stacked cache backends with default settings:
+        // 
         'cache' => [
             'type'    => 'stacked',
             'options' => [
@@ -110,6 +119,9 @@ files, but can be configured with i.e. apcu.
     available cache backend will be used. The probing is done by putting backends
     with high performance first in list.
 
+        // 
+        // Let cache service detect "best" cache backend:
+        // 
         'cache' => [
             'type'    => 'detect'
         ]
@@ -117,6 +129,9 @@ files, but can be configured with i.e. apcu.
     To exclude backends from being considered as candidates, pass an array of 
     backend names to exclude:
 
+        // 
+        // Detect backends, but exclude file backend as possible candidate:
+        // 
         'cache' => [
             'type'    => 'detect',
             'options' => [

@@ -20,9 +20,7 @@
 
 namespace Batchelor\System\Service;
 
-use Batchelor\Cache\Frontend;
-use Batchelor\Cache\Storage;
-use Batchelor\System\Component;
+use Batchelor\Cache\Service;
 
 /**
  * The cache service.
@@ -37,81 +35,11 @@ use Batchelor\System\Component;
  * ]);
  * </code>
  *
+ * See docs/README-CACHE for the full documentation.
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
-class Cache extends Component implements Storage
+class Cache extends Service
 {
-
-        /**
-         * The cache frontend.
-         * @var Frontend 
-         */
-        private $_frontend;
-
-        /**
-         * Constructor.
-         * 
-         * @param array $options The frontend options.
-         */
-        public function __construct(array $options = null)
-        {
-                if (!isset($options)) {
-                        $options = Config::toArray($this->app->cache);
-                }
-
-                if (!isset($options['type'])) {
-                        $options['type'] = null;
-                }
-                if (!isset($options['options'])) {
-                        $options['options'] = [];
-                }
-
-                $this->_frontend = new Frontend($options['type'], $options['options']);
-        }
-
-        /**
-         * Get cache frontend.
-         * @return Frontend The cache frontend.
-         */
-        public function getFrontend(): Frontend
-        {
-                return $this->_frontend;
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function delete($key)
-        {
-                $frontend = $this->_frontend;
-                return $frontend->delete($key);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function exists($key)
-        {
-                $frontend = $this->_frontend;
-                return $frontend->exists($key);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function read($key)
-        {
-                $frontend = $this->_frontend;
-                return $frontend->read($key);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function save($key, $value = null, int $lifetime = 0)
-        {
-                $frontend = $this->_frontend;
-                return $frontend->save($key, $value, $lifetime);
-        }
-
+        
 }
