@@ -9,7 +9,7 @@ use Batchelor\Logging\Format\Serialize;
 use Batchelor\Logging\Target\File;
 
 $logger = new File("/tmp/batchelor.log");
-$message = $logger->getMessage("hello world, %s!", ["anders"]);
+$message = $logger->getMessage("Hello world, %s!", ["anders"]);
 
 printf("Test dump formatted message:\n");
 print_r($message);
@@ -17,19 +17,19 @@ print_r($message);
 // 
 // Test log using various priorities:
 // 
-$logger->emergency("hello world!");
-$logger->alert("hello world!");
-$logger->critical("hello world!");
-$logger->error("hello world!");
-$logger->warning("hello world!");
-$logger->notice("hello world!");
-$logger->info("hello world!");
-$logger->debug("hello world!");
+$logger->emergency("Hello world!");
+$logger->alert("Hello world!");
+$logger->critical("Hello world!");
+$logger->error("Hello world!");
+$logger->warning("Hello world!");
+$logger->notice("Hello world!");
+$logger->info("Hello world!");
+$logger->debug("Hello world!");
 
 // 
 // Test log using generic message method:
 // 
-$logger->message(LOG_NOTICE, "hello world, %s!", ["anders"]);
+$logger->message(LOG_NOTICE, "Hello world, %s!", ["anders"]);
 $logger->message(LOG_NOTICE, "\nthis message should be trimmed\n\n");
 
 // 

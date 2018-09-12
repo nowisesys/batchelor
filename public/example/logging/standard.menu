@@ -4,6 +4,8 @@ return array(
         'head' => _('Logging'),
         'data' => array(
                 'Syslog' => 'syslog',
-                'File'   => 'file'
+                'File'   => 'file',
+                false,
+                'Buffer' => "buffer"
         )
 );
