@@ -60,7 +60,6 @@ class File extends Adapter implements Logger
          * @param string $filename The target filename.
          * @param string $ident The string ident is added to each message.
          * @param int $options The logging options (bitmask of zero or more LOG_XXX contants).
-         * @param int $granularity The logging granularity (one of the GRANULARITY_XXX constats).
          */
         public function __construct(string $filename, string $ident = "", int $options = LOG_CONS | LOG_PID)
         {

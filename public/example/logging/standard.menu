@@ -7,6 +7,7 @@ return array(
                 'File'        => 'file',
                 false,
                 'Buffer'      => 'buffer',
-                'Multiplexer' => 'multiplexer'
+                'Multiplexer' => 'multiplexer',
+                'Request'     => 'request'
         )
 );
