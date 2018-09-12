@@ -27,7 +27,19 @@ use Batchelor\System\Service\Config;
 
 /**
  * The cache service.
+ * 
+ * <code>
+ * $cache = new Cache();        // Use application settings
+ * $cache = new Cache([         // Set Redis as cache backend.
+ *      'type' => 'redis',
+ *      'options' => [ 
+ *              ...             // Options for Redis server, cluster or array.
+ *      ]
+ * ]);
+ * </code>
  *
+ * See docs/README-CACHE for the full documentation.
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
 class Service extends Component implements Storage
