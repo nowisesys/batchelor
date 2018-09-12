@@ -23,7 +23,6 @@ namespace Batchelor\Logging\Target;
 use Batchelor\Logging\Format;
 use Batchelor\Logging\Logger;
 use Batchelor\Logging\Writer;
-use Batchelor\System\Component;
 
 /**
  * The logger adapter.

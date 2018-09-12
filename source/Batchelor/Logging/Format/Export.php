@@ -78,4 +78,27 @@ class Export extends Adapter implements Format
                 }
         }
 
+        /**
+         * The format factory function.
+         * 
+         * @param array $options The format options.
+         * @return Format
+         */
+        public static function create(array $options): Format
+        {
+                $format = new Export();
+
+                if (isset($options['datetime'])) {
+                        $format->getDateTime()->setFormat($options['datetime']);
+                }
+                if (isset($options['context'])) {
+                        $format->addContext($options['context']);
+                }
+                if (isset($options['compact'])) {
+                        $format->setCompact($options['compact']);
+                }
+
+                return $format;
+        }
+
 }

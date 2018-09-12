@@ -1,0 +1,193 @@
+
+    ** The logging documentation **
+
+
+System logging is configured in the config/defaults.app file. Three pre-configured 
+log targets are defined by default: 
+
+    o) auth     - security/authorization messages (syslog)
+    o) system   - generic system logging (file)
+    o) request  - per connection logging
+
+These are by default configured for single target logging (i.e. auth messages goes only
+to syslog), but its possible to multiplex messages to multiple targets.
+
+** Request:
+
+    The request target will log messages to an log file. The logfile name is detected
+    from the remote address/hostname. The default logging directory is logs (that makes
+    them end up under data/logs).
+
+** Configuration:
+
+    The config options (under logger) are passed to the logger service that scan
+    each sub section and instantiate the logger for it.
+
+        // 
+        // The logger options (relative pathes are created inside the data directory).
+        // 
+        'logger'  => [
+                'request' => [
+                        'type'    => 'request',
+                        'options' => [
+                                'path'  => 'logs',
+                                'ident' => 'request'
+                        ]
+                ],
+                'system'  => [
+                        'type'    => 'file',
+                        'options' => [
+                                'filename' => 'logs/system.log'
+                        ]
+                ],
+                'auth'    => [
+                        'type'    => 'syslog',
+                        'options' => [
+                                'ident'    => 'batchelor',
+                                'facility' => LOG_AUTH
+                        ]
+                ]
+        ]
+
+    The key (i.e. system) are used to name the logger service. For system a file
+    logger object is created, passing the options are for initialization. Standard
+    is to have one logger for each logger target.
+
+    The service injector (the components class) makes the logger service available.
+    This service contains three properties that access the logger targets.
+
+** Multiplex:
+
+    It's possible to define the logger service to use a multiplexer. In this case,
+    each logger target (i.e. system) can be configured to have one or more logger
+    targets, each with individual priorities. 
+
+    By configure priorities, the logger target can be configured to log lower
+    important messages to a file, while messages with higher priorities are sent
+    to syslog. Priorities might overlap so that the same message ends up in multiple
+    log destinations.
+
+        // 
+        // Template multiplexer config:
+        // 
+        'logger'  => [
+                'auth' => [
+                        'type'    => 'multiplex',
+                        'options' => [
+                                // Options for multiplexer
+                        ]
+                ]
+        ]
+
+    In the example above we are configuring the auth logger to use a multiplexer.
+    As seen, the multiplexer follows the same configure pattern as other logger
+    targets.
+
+    The keys under options defines the type of logger. The data for each entry 
+    is either bool (true/false) or an array with options for that specific logger,
+    i.e. the file logger. 
+
+        // 
+        // Complete multiplexer for auth logger. Notice that only messages with 
+        // warning or higher priority are logged to syslog. We defines the ident 
+        // for the file target to be remote address. No messages above error ends
+        // up in the file target.
+        // 
+        'logger'  => [
+                'auth' => [
+                        'type'    => 'multiplex',
+                        'options' => [
+                                'request' => [
+                                        'options' => [
+                                                'path'  => 'logs',
+                                                'ident' => 'auth'
+                                        ]
+                                ],
+                                'file'    => [
+                                        'options'  => [
+                                                'filename' => 'logs/auth.log',
+                                                'ident'    => filter_input(INPUT_SERVER, 'REMOTE_ADDR')
+                                        ],
+                                        'priority' => [
+                                                'start' => LOG_INFO,
+                                                'end'   => LOG_ERR
+                                        ]
+                                ],
+                                'syslog'  => [
+                                        'options'  => [
+                                                'ident'    => 'batchelor',
+                                                'facility' => LOG_AUTH
+                                        ],
+                                        'priority' => [
+                                                'start' => LOG_WARNING
+                                        ]
+                                ]
+                        ]
+                ]
+        ]
+
+    Both the options and priority array are optional. The default option for that
+    logger target is applied if missing. For priority, the default is to provide
+    logging for all message priorities (from debug to emergency).
+
+** Formatting:
+
+    Log entries can be customized by attaching format options to the logger 
+    definition:
+
+        // 
+        // Write system log entries as serialized data with locale 
+        // specific format of datetime:
+        // 
+        'system'  => [
+                'type'    => 'file',
+                'options' => [
+                        'filename' => 'logs/system.log'
+                ],
+                'format'  => [
+                        'type'     => 'serialize',
+                        'datetime' => DateTime::FORMAT_LOCALE
+                ]
+        ]
+
+        // 
+        // Example output using these format options: 
+        // 
+        // a:6:{s:5:"stamp";i:1536778173;s:5:"ident";s:9:"batchelor";s:3:"pid";i:17910; \
+        //      s:8:"priority";s:4:"info";s:7:"message";s:45:"[1] This message is logged in \
+        //          the system log.";s:8:"datetime";s:17:"09/12/18 20:49:33";}
+        // 
+
+
+    The datetime can be one of the DateTime::FORMAT_XXX constants. The valid format
+    types are: custom, dumper, export, json, serialize and standard. 
+
+    Some format classes supports other options also, like compact, context and 
+    expand. See each format class for details.
+
+        // 
+        // Example on using the expand format option:
+        // 
+        'system'  => [
+                'type'    => 'file',
+                'options' => [
+                        'filename' => 'logs/system.log'
+                ],
+                'format'  => [
+                        'type'     => 'custom',
+                        'expand'   => '@datetime@ <@priority@><@pid@> @message@',
+                        'datetime' => DateTime::FORMAT_LOCALE
+                ]
+        ]
+
+        // 
+        // Example output using these format options: 
+        // 
+        // 09/12/18 21:12:14 <info><17914> [1] This message is logged in the system log.
+        // 
+
+    Notice that it's not possible to define formatting for all logger targets. For 
+    example the syslog target output is more or less fixed.
+
+
+// Anders Lövgren, 2018-09-12

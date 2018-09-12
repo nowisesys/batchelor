@@ -86,4 +86,24 @@ class Custom extends Adapter implements Format
                 );
         }
 
+        /**
+         * The format factory function.
+         * 
+         * @param array $options The format options.
+         * @return Format
+         */
+        public static function create(array $options): Format
+        {
+                $format = new Custom();
+
+                if (isset($options['datetime'])) {
+                        $format->getDateTime()->setFormat($options['datetime']);
+                }
+                if (isset($options['expand'])) {
+                        $format->setExpand($options['expand']);
+                }
+
+                return $format;
+        }
+
 }

@@ -20,6 +20,12 @@
 
 namespace Batchelor\Logging;
 
+use Batchelor\Logging\Format\Custom;
+use Batchelor\Logging\Format\Dumper;
+use Batchelor\Logging\Format\Export;
+use Batchelor\Logging\Format\JsonEncode;
+use Batchelor\Logging\Format\Serialize;
+use Batchelor\Logging\Format\Standard;
 use Batchelor\Logging\Special\Multiplexer;
 use Batchelor\Logging\Special\Request;
 use Batchelor\Logging\Target\File;
@@ -34,6 +40,27 @@ use InvalidArgumentException;
  */
 class Factory
 {
+
+        /**
+         * Get logger object.
+         * 
+         * The logger is initialized from options array. If options contains an
+         * format, then it is also set.
+         * 
+         * @return Writer
+         */
+        public static function getObject(array $options): Writer
+        {
+                if (isset($options['format'])) {
+                        $logger = self::getLogger($options['type'], $options['options']);
+                        $format = self::getFormat($options['format']['type'], $options['format']);
+                        $logger->setFormat($format);
+                } else {
+                        $logger = self::getLogger($options['type'], $options['options']);
+                }
+
+                return $logger;
+        }
 
         /**
          * Create logger object.
@@ -59,6 +86,33 @@ class Factory
                                 return Request::create($options);
                         default:
                                 throw new InvalidArgumentException("Unknown logger type $type");
+                }
+        }
+
+        /**
+         * Create format object.
+         * 
+         * @param string $type The format type.
+         * @param array $options The format options.
+         * @return Format
+         */
+        public static function getFormat(string $type, array $options): Format
+        {
+                switch ($type) {
+                        case 'custom':
+                                return Custom::create($options);
+                        case 'dumper':
+                                return Dumper::create($options);
+                        case 'export':
+                                return Export::create($options);
+                        case 'json':
+                                return JsonEncode::create($options);
+                        case 'serialize':
+                                return Serialize::create($options);
+                        case 'standard':
+                                return Standard::create($options);
+                        default:
+                                throw new InvalidArgumentException("Unknown fromat type $type");
                 }
         }
 

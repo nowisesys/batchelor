@@ -58,4 +58,24 @@ class Serialize extends Adapter implements Format
                 return serialize($input);
         }
 
+        /**
+         * The format factory function.
+         * 
+         * @param array $options The format options.
+         * @return Format
+         */
+        public static function create(array $options): Format
+        {
+                $format = new Serialize();
+
+                if (isset($options['datetime'])) {
+                        $format->getDateTime()->setFormat($options['datetime']);
+                }
+                if (isset($options['compact'])) {
+                        $format->setCompact($options['compact']);
+                }
+
+                return $format;
+        }
+        
 }

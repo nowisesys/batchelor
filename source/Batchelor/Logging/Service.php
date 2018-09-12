@@ -98,8 +98,9 @@ class Service extends Component
         private function setLoggers(array $options)
         {
                 foreach ($options as $name => $data) {
-                        $logger = Factory::getLogger($data['type'], $data['options']);
-                        $this->addLogger($name, $logger);
+                        $this->addLogger(
+                            $name, Factory::getObject($data)
+                        );
                 }
         }
 

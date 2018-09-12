@@ -43,7 +43,7 @@ class JsonEncode extends Adapter implements Format
 
         /**
          * Set JSON encode options.
-         * @param type $options The encode options.
+         * @param int $options The encode options.
          */
         public function setOptions(int $options)
         {
@@ -70,6 +70,29 @@ class JsonEncode extends Adapter implements Format
                 }
 
                 return json_encode($input, $this->_options);
+        }
+
+        /**
+         * The format factory function.
+         * 
+         * @param array $options The format options.
+         * @return Format
+         */
+        public static function create(array $options): Format
+        {
+                $format = new JsonEncode();
+
+                if (isset($options['datetime'])) {
+                        $format->getDateTime()->setFormat($options['datetime']);
+                }
+                if (isset($options['options'])) {
+                        $format->setOptions($options['options']);
+                }
+                if (isset($options['compact'])) {
+                        $format->setCompact($options['compact']);
+                }
+
+                return $format;
         }
 
 }
