@@ -23,7 +23,7 @@ namespace Batchelor\Logging\Target;
 use Batchelor\Logging\Format\Standard;
 use Batchelor\Logging\Logger;
 use Batchelor\Logging\Writer;
-use Batchelor\System\Service\DataStorage;
+use Batchelor\System\Service\Storage;
 use Batchelor\System\Services;
 use RuntimeException;
 
@@ -90,7 +90,7 @@ class File extends Adapter implements Logger
         }
 
         /**
-         * @return DataStorage
+         * @return Storage
          */
         private function getDataStorage()
         {

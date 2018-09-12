@@ -27,7 +27,7 @@ use Batchelor\Storage\Service;
  * 
  * @author Anders Lövgren (Nowise Systems)
  */
-class DataStorage extends Service
+class Storage extends Service
 {
         
 }

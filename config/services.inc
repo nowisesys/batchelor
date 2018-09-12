@@ -44,7 +44,7 @@ return [
         // 
         // The data directory storage service. 
         // 
-        'data'        => new Service(Service\DataStorage::class),
+        'data'        => new Service(Service\Storage::class),
         // 
         // The logger service.
         // 
