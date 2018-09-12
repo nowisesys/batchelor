@@ -205,5 +205,25 @@ to syslog), but its possible to multiplex messages to multiple targets.
                 'threshold' => LOG_INFO
         ]
 
+** Buffering:
+
+    Buffring can be enabled by setting the buffer option to true. This causes all
+    messages to be flushed at once, either when calling flush() or when the script
+    terminates (flush is called from logger destructor).
+
+        // 
+        // Use buffering on system file writer:
+        // 
+        'system'  => [
+                'type'    => 'file',
+                'options' => [
+                        'filename' => 'logs/system.log'
+                ],
+                'buffer'  => true
+        ]
+
+    Using buffering might have some performance gain, at least for file writer as 
+    the file is locked during logging.
+
 
 // Anders Lövgren, 2018-09-12

@@ -26,6 +26,7 @@ use Batchelor\Logging\Format\Export;
 use Batchelor\Logging\Format\JsonEncode;
 use Batchelor\Logging\Format\Serialize;
 use Batchelor\Logging\Format\Standard;
+use Batchelor\Logging\Special\Buffer;
 use Batchelor\Logging\Special\Multiplexer;
 use Batchelor\Logging\Special\Request;
 use Batchelor\Logging\Target\File;
@@ -64,7 +65,11 @@ class Factory
                         $logger->setThreshold($options['threshold']);
                 }
 
-                return $logger;
+                if (isset($options['buffer']) && $options['buffer']) {
+                        return new Buffer($logger);
+                } else {
+                        return $logger;
+                }
         }
 
         /**
