@@ -22,6 +22,9 @@ namespace Batchelor\Logging\Target;
 
 use Batchelor\Logging\Format\Standard;
 use Batchelor\Logging\Logger;
+use Batchelor\Logging\Writer;
+use Batchelor\System\Service\DataStorage;
+use Batchelor\System\Services;
 use RuntimeException;
 
 /**
@@ -63,11 +66,35 @@ class File extends Adapter implements Logger
          */
         public function __construct(string $filename, string $ident = "", int $options = LOG_CONS | LOG_PID)
         {
-                $this->_filename = $filename;
+                $this->_filename = $this->getPathname($filename);
                 $this->_ident = $ident;
                 $this->_options = $options;
 
                 parent::setFormat(new Standard());
+        }
+
+        /**
+         * Get filename.
+         * 
+         * This will create the directory if filename is a relative path. The 
+         * directory is created inside the data directory.
+         * 
+         * @param string $filename The filename.
+         * @return string
+         */
+        private function getPathname($filename): string
+        {
+                return $this->getDataStorage()
+                        ->addFile($filename)
+                        ->getPathname();
+        }
+
+        /**
+         * @return DataStorage
+         */
+        private function getDataStorage()
+        {
+                return Services::getInstance()->getService("data");
         }
 
         /**
@@ -131,13 +158,10 @@ class File extends Adapter implements Logger
                         }
                         throw $exception;       // Re-throw
                 } finally {
-                        if (!is_resource($handle)) {
-                                return;
-                        }
-                        if (!flock($handle, LOCK_UN)) {
+                        if (is_resource($handle) && !flock($handle, LOCK_UN)) {
                                 throw new RuntimeException("Failed unlock $filename");
                         }
-                        if (!fclose($handle)) {
+                        if (is_resource($handle) && !fclose($handle)) {
                                 throw new RuntimeException("Failed close $filename");
                         }
                 }
@@ -171,6 +195,27 @@ class File extends Adapter implements Logger
                 if ($this->_options & LOG_PID) {
                         return getmypid();
                 }
+        }
+
+        /**
+         * The file logger factory function.
+         * 
+         * @param array $options The logger options.
+         * @return Writer
+         */
+        public static function create(array $options): Writer
+        {
+                if (!isset($options['ident'])) {
+                        $options['ident'] = 'batchelor';
+                }
+                if (!isset($options['filename'])) {
+                        $options['filename'] = sys_get_temp_dir() . "/" . $options['ident'] . ".log";
+                }
+                if (!isset($options['options'])) {
+                        $options['options'] = LOG_CONS | LOG_PID;
+                }
+
+                return new File($options['filename'], $options['ident'], $options['options']);
         }
 
 }

@@ -39,5 +39,30 @@ return [
         // 
         'cache'   => [
                 'type'    => 'detect'
+        ],
+        // 
+        // The logger options (relative pathes are created inside the data directory).
+        // 
+        'logger'  => [
+                'request' => [
+                        'type'    => 'request',
+                        'options' => [
+                                'path'  => 'logs',
+                                'ident' => 'request'
+                        ]
+                ],
+                'system'  => [
+                        'type'    => 'file',
+                        'options' => [
+                                'filename' => 'logs/system.log'
+                        ]
+                ],
+                'auth'    => [
+                        'type'    => 'syslog',
+                        'options' => [
+                                'ident'    => 'batchelor',
+                                'facility' => LOG_AUTH
+                        ]
+                ]
         ]
 ];

@@ -21,6 +21,7 @@
 namespace Batchelor\Logging\Special;
 
 use Batchelor\Logging\Target\File;
+use Batchelor\Logging\Writer;
 
 /**
  * The request logger.
@@ -72,6 +73,24 @@ class Request extends File
                 if (filter_has_var(INPUT_SERVER, 'REMOTE_ADDR')) {
                         return filter_input(INPUT_SERVER, 'REMOTE_ADDR');
                 }
+        }
+
+        /**
+         * The request logger factory function.
+         * 
+         * @param array $options The logger options.
+         * @return Writer
+         */
+        public static function create(array $options): Writer
+        {
+                if (!isset($options['path'])) {
+                        $options['path'] = sys_get_temp_dir();
+                }
+                if (!isset($options['ident'])) {
+                        $options['ident'] = 'batchelor';
+                }
+
+                return new Request($options['path'], $options['ident']);
         }
 
 }

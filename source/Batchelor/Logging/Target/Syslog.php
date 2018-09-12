@@ -21,6 +21,7 @@
 namespace Batchelor\Logging\Target;
 
 use Batchelor\Logging\Logger;
+use Batchelor\Logging\Writer;
 use RuntimeException;
 
 /**
@@ -80,6 +81,27 @@ class Syslog extends Adapter implements Logger
         public function message(int $priority, string $message, array $args = []): bool
         {
                 return syslog($priority, vsprintf($message, $args));
+        }
+
+        /**
+         * The syslog logger factory function.
+         * 
+         * @param array $options The logger options.
+         * @return Writer
+         */
+        public static function create(array $options): Writer
+        {
+                if (!isset($options['ident'])) {
+                        $options['ident'] = 'batchelor';
+                }
+                if (!isset($options['option'])) {
+                        $options['option'] = LOG_CONS | LOG_PID;
+                }
+                if (!isset($options['facility'])) {
+                        $options['facility'] = LOG_USER;
+                }
+
+                return new Syslog($options['ident'], $options['option'], $options['facility']);
         }
 
 }

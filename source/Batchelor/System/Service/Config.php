@@ -52,6 +52,7 @@ use RuntimeException;
  * @property-read RecursiveArrayObject $data Data directory settings.
  * @property-read RecursiveArrayObject $contact Contact address settings.
  * @property-read RecursiveArrayObject $cache Cache settings for application.
+ * @property-read RecursiveArrayObject $logger Logger settings for application.
  * 
  * @author Anders Lövgren (Nowise Systems)
  */

@@ -20,6 +20,7 @@
 
 namespace Batchelor\Logging\Special;
 
+use Batchelor\Logging\Factory;
 use Batchelor\Logging\Logger;
 use Batchelor\Logging\Target\Adapter;
 use Batchelor\Logging\Writer;
@@ -256,6 +257,57 @@ class Multiplexer extends Adapter implements Logger
                 }
 
                 return false;
+        }
+
+        /**
+         * The multiplexer logger factory function.
+         * 
+         * @param array $options The logger options.
+         * @return Writer
+         */
+        public static function create(array $options) : Writer
+        {
+                $logger = new Multiplexer();
+
+                foreach ($options as $type => $data) {
+                        if (($data = self::addDefaults($data))) {
+                                $writer = Factory::getLogger($type, $data['options']);
+                                $logger->addBetween($writer, $data['priority']['start'], $data['priority']['end']);
+                        }
+                }
+
+                return $logger;
+        }
+
+        /**
+         * Add default settings.
+         * @param array $data The incoming settings.
+         * @return boolean|array
+         */
+        public static function addDefaults(array $data)
+        {
+                if (empty($data)) {
+                        return false;
+                } else {
+                        return array_replace_recursive(
+                            self::getDefaults(), $data
+                        );
+                }
+        }
+
+        /**
+         * Get default settings.
+         * @return array
+         */
+        public static function getDefaults(): array
+        {
+                return [
+                        'options'  => [],
+                        'priority' => [
+                                'start' => LOG_DEBUG,
+                                'end'   => LOG_EMERG
+                        ]
+                ];
         }
 
 }

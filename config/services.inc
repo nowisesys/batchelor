@@ -48,5 +48,5 @@ return [
         // 
         // The logger service.
         // 
-        'logger'      => new Service(Service\Logger::class)
+        'logger'      => new Service(Service\Logging::class)
 ];
