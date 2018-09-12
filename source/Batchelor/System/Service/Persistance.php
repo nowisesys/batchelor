@@ -20,119 +20,14 @@
 
 namespace Batchelor\System\Service;
 
-use Batchelor\System\Persistance\Storage\CookieStorage;
-use Batchelor\System\Persistance\Storage\SessionStorage;
-use Batchelor\System\Persistance\Storage\StorageService;
-use InvalidArgumentException;
+use Batchelor\System\Persistance\Service;
 
 /**
  * The persistance service.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class Persistance implements StorageService
+class Persistance extends Service
 {
-
-        /**
-         * The storage backend.
-         * @var StorageService 
-         */
-        private $_storage;
-
-        /**
-         * Constructor.
-         * 
-         * @param string $backend The storage backend type.
-         * @throws InvalidArgumentException
-         */
-        public function __construct($backend = 'cookie')
-        {
-                switch ($backend) {
-                        case 'cookie':
-                                $this->_storage = new CookieStorage();
-                                break;
-                        case 'session':
-                                $this->_storage = new SessionStorage();
-                                break;
-                        default:
-                                throw new InvalidArgumentException("Unknown storage backend $backend for persistance service");
-                }
-        }
-
-        /**
-         * Set storage backend.
-         * @param StorageService $storage The storage backend.
-         */
-        public function setBackend(StorageService $storage)
-        {
-                $this->_storage = $storage;
-        }
-
-        /**
-         * Delete an stored value/object.
-         * 
-         * @param string $name The key name.
-         */
-        public function delete(string $name)
-        {
-                $this->_storage->delete($name);
-        }
-
-        /**
-         * Check if key exists.
-         * 
-         * @param string $name The key name.
-         * @return bool 
-         */
-        public function exists(string $name): bool
-        {
-                return $this->_storage->exists($name);
-        }
-
-        /**
-         * Read value from storage.
-         * 
-         * @param string $name The key name.
-         * @return string
-         */
-        public function read(string $name): string
-        {
-                return $this->_storage->read($name);
-        }
-
-        /**
-         * Save value to storage.
-         * 
-         * @param string $name The key name.
-         * @param string $value The value to store.
-         * @param int $lifetime The value lifetime.
-         */
-        public function save(string $name, string $value, int $lifetime = 0)
-        {
-                $this->_storage->save($name, $value, $lifetime);
-        }
-
-        /**
-         * Fetch serialized data from storage.
-         * 
-         * @param string $name The key name.
-         * @return mixed The stored data (i.e. an array or object).
-         */
-        public function fetch(string $name)
-        {
-                return $this->_storage->fetch($name);
-        }
-
-        /**
-         * Store serializable data.
-         * 
-         * @param string $name The key name.
-         * @param mixed $value The data to store.
-         * @param int $lifetime The data lifetime.
-         */
-        function store(string $name, $value, int $lifetime = 0)
-        {
-                $this->_storage->store($name, $value, $lifetime);
-        }
-
+        
 }
