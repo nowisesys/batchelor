@@ -3,9 +3,10 @@
 return array(
         'head' => _('Logging'),
         'data' => array(
-                'Syslog' => 'syslog',
-                'File'   => 'file',
+                'Syslog'      => 'syslog',
+                'File'        => 'file',
                 false,
-                'Buffer' => "buffer"
+                'Buffer'      => 'buffer',
+                'Multiplexer' => 'multiplexer'
         )
 );
