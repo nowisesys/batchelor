@@ -8,6 +8,8 @@ return array(
                 false,
                 'Buffer'      => 'buffer',
                 'Multiplexer' => 'multiplexer',
-                'Request'     => 'request'
+                'Request'     => 'request',
+                false,
+                'Service'     => 'service'
         )
 );
