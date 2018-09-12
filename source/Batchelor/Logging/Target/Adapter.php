@@ -22,6 +22,7 @@ namespace Batchelor\Logging\Target;
 
 use Batchelor\Logging\Format;
 use Batchelor\Logging\Logger;
+use Batchelor\Logging\Special\Buffer;
 use Batchelor\Logging\Writer;
 
 /**
@@ -122,6 +123,14 @@ abstract class Adapter implements Logger, Writer
         public function getFormat(): Format
         {
                 return $this->_format;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getBuffered(): Buffer
+        {
+                return new Buffer($this);
         }
 
         /**

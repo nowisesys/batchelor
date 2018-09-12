@@ -46,3 +46,9 @@ $buffer->info("This message should be logged at terminate");
 // 
 $buffer = new Buffer($buffer);
 $buffer->info("Test message from buffer in buffer");
+
+// 
+// Test get buffer method:
+// 
+$buffer = $logger->getBuffered();
+printf("Initial (empty=%b, size=%d):\n", $buffer->isEmpty(), $buffer->getSize());

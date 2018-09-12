@@ -20,6 +20,8 @@
 
 namespace Batchelor\Logging;
 
+use Batchelor\Logging\Special\Buffer;
+
 /**
  * The log writer interface.
  * @author Anders Lövgren (Nowise Systems)
@@ -58,4 +60,10 @@ interface Writer
          * @param int $priority The message priority.
          */
         function setThreshold(int $priority);
+
+        /**
+         * Get buffered writer.
+         * @return Buffer
+         */
+        function getBuffered(): Buffer;
 }
