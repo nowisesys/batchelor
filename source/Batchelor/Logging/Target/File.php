@@ -118,7 +118,7 @@ class File extends Adapter implements Logger
         /**
          * {@inheritdoc}
          */
-        public function message(int $priority, string $message, array $args = []): bool
+        public function doLogging(int $priority, string $message, array $args = []): bool
         {
                 if (($result = $this->getFormatted(
                     $priority, vsprintf($message, $args)

@@ -44,8 +44,9 @@ class Factory
         /**
          * Get logger object.
          * 
-         * The logger is initialized from options array. If options contains an
-         * format, then it is also set.
+         * The logger is initialized by settings from the options array,
+         * including format options if defined. This function will also
+         * apply threshold if defined.
          * 
          * @return Writer
          */
@@ -57,6 +58,10 @@ class Factory
                         $logger->setFormat($format);
                 } else {
                         $logger = self::getLogger($options['type'], $options['options']);
+                }
+
+                if (isset($options['threshold'])) {
+                        $logger->setThreshold($options['threshold']);
                 }
 
                 return $logger;

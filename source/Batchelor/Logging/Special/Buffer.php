@@ -107,7 +107,7 @@ class Buffer extends Adapter implements Logger
         /**
          * {@inheritdoc}
          */
-        public function message(int $priority, string $message, array $args = array()): bool
+        public function doLogging(int $priority, string $message, array $args = array()): bool
         {
                 $this->_buffer[] = [
                         'priority' => $priority,

@@ -37,6 +37,11 @@ abstract class Adapter implements Logger, Writer
          * @var Format 
          */
         private $_format;
+        /**
+         * The message threshold.
+         * @var int 
+         */
+        private $_threshold = 10;
 
         /**
          * {@inheritdoc}
@@ -130,4 +135,33 @@ abstract class Adapter implements Logger, Writer
                 ];
         }
 
+        /**
+         * {@inheritdoc}
+         */
+        public function setThreshold(int $priority)
+        {
+                $this->_threshold = $priority;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function message(int $priority, string $message, array $args = []): bool
+        {
+                if ($priority >= $this->_threshold) {
+                        return false;
+                } else {
+                        return $this->doLogging($priority, $message, $args);
+                }
+        }
+
+        /**
+         * The real message logger.
+         * 
+         * @param int $priority One of the LOG_XXX constants.
+         * @param string $message The message to log.
+         * @param array $args Optional arguments for message.
+         * @return bool True if message was successful written.
+         */
+        abstract protected function doLogging(int $priority, string $message, array $args = []): bool;
 }

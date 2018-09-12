@@ -78,7 +78,7 @@ class Syslog extends Adapter implements Logger
         /**
          * {@inheritdoc}
          */
-        public function message(int $priority, string $message, array $args = []): bool
+        public function doLogging(int $priority, string $message, array $args = []): bool
         {
                 return syslog($priority, vsprintf($message, $args));
         }

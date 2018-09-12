@@ -47,4 +47,15 @@ interface Writer
          * @return Format The message formatter.
          */
         function getFormat(): Format;
+
+        /**
+         * Set message importance threshold.
+         * 
+         * Messages with priority higher or equal to the given priority are
+         * silently discarded from logging. Notice that LOG_DEBUG is highest
+         * and LOG_EMERG is lowest priority.
+         * 
+         * @param int $priority The message priority.
+         */
+        function setThreshold(int $priority);
 }

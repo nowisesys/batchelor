@@ -5,10 +5,11 @@ return array(
         'data' => array(
                 'Syslog'      => 'syslog',
                 'File'        => 'file',
+                'Request'     => 'request',
+                'Multiplexer' => 'multiplexer',
                 false,
                 'Buffer'      => 'buffer',
-                'Multiplexer' => 'multiplexer',
-                'Request'     => 'request',
+                'Threshold'   => 'threshold',
                 false,
                 'Service'     => 'service'
         )

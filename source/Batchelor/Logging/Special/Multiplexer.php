@@ -244,7 +244,7 @@ class Multiplexer extends Adapter implements Logger
         /**
          * {@inheritdoc}
          */
-        public function message(int $priority, string $message, array $args = array()): bool
+        public function doLogging(int $priority, string $message, array $args = array()): bool
         {
                 if (($targets = $this->getWriters($priority))) {
                         $status = true;
@@ -265,7 +265,7 @@ class Multiplexer extends Adapter implements Logger
          * @param array $options The logger options.
          * @return Writer
          */
-        public static function create(array $options) : Writer
+        public static function create(array $options): Writer
         {
                 $logger = new Multiplexer();
 
