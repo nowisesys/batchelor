@@ -7,6 +7,8 @@ return array(
                 'File'        => 'file',
                 'Request'     => 'request',
                 'Multiplexer' => 'multiplexer',
+                'Priority'    => 'priority',
+                'Files'       => 'files',
                 false,
                 'Buffer'      => 'buffer',
                 'Threshold'   => 'threshold',
