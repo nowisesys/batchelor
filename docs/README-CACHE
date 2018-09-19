@@ -1,21 +1,36 @@
 
-    ** System cache **
+    ************************************
+        README FOR SYSTEM CACHE
+    ************************************
 
 
-Cache is configured in config/defaults.app. By default the cache is using 
-files, but can be configured with i.e. apcu.
+Cache is configured in config/defaults.app. By default the cache is using files, 
+but can be configured to use i.e. apcu. The example below is using the system 
+cache, but the same pattern applies to all other cache targets as declare in the
+application config file (i.e. queue or mapper).
 
-** Single type cache:
+** GENERAL PATTERN:
 
-    The config entry is on this form, were the options array are passed as is to 
-    cache constructor for type xxx:
+    The generic pattern for cache config is the cache target (i.e. system) with 
+    a string/array value:
 
         'cache' => [
-            'type'    => 'xxx',
-            'options' => [ ... ]
+            'system' => (string|array)
+                ...
         ]
 
-    Valid options for type are: 
+    The simplest possible config is using a string as value. The value identifies
+    the cache type (in this case file cache):
+
+        'cache' => [
+            'system' => 'file'
+                ...
+        ]
+
+    The cache backend will apply default options when using string value. Examples 
+    below will explain the more verbose alternative of using an array.
+
+    Valid options for cache backend (type) are: 
 
         o) file      - Use file system.
         o) memory    - Use RAM memory.
@@ -27,16 +42,30 @@ files, but can be configured with i.e. apcu.
 
     For options, see classes under Batchelor\Cache\Backend under source. 
 
+** PASSING OPTIONS:
+
+    The config entry is on this form, were the options array are passed as is to 
+    cache constructor for type xxx:
+
+        'cache' => [
+            'system' => [
+                'type'    => 'xxx',
+                'options' => [ ... ]
+            ]
+        ]
+
     o) Examples:
 
         // 
         // Using APCu as cache backend:
         // 
         'cache' => [
-            'type'    => 'apcu',
-            'options' => [
-                'prefix'    => 'batchelor',
-                'lifetime'  => 7200
+            'system' => [
+                'type'    => 'apcu',
+                'options' => [
+                    'prefix'    => 'batchelor',
+                    'lifetime'  => 7200
+                ]
             ]
         ]
 
@@ -44,17 +73,22 @@ files, but can be configured with i.e. apcu.
         // Using file system as cache backend:
         // 
         'cache' => [
-            'type'    => 'file',
-            'options' => [
-                'path'     => 'cache', // Absolute or relative to the data directory.
-                'format'   => 'php',
-                'prefix'   => 'batchelor',
-                'suffix'   => '.ser',
-                'lifetime' => 604800
+            'system' => [
+                'type'    => 'file',
+                'options' => [
+                    'path'     => 'cache', // Absolute or relative to the data directory.
+                    'format'   => 'php',
+                    'prefix'   => 'batchelor',
+                    'suffix'   => '.ser',
+                    'lifetime' => 604800
+                ]
             ]
         ]
 
-** Stacked cache:
+    Without an options array these examples are essential the same as using string
+    intialization.
+    
+** STACKED CACHE:
 
     Theres also a special stacked cache that creates a priority queue of configured 
     cache classes using each lifetime options as the priority (reversed). When caching
@@ -71,13 +105,15 @@ files, but can be configured with i.e. apcu.
         // Use stacked cache backends:
         // 
         'cache' => [
-            'type'    => 'stacked',
-            'options' => [
-                'prefix'    => 'batchelor',
-                'lifetime'  => 7200,
-                'backends' => [
-                    'file' => [ ... ],      // Options for file backend.
-                    'apcu' => [ ... ],      // Options for APCu backend.
+            'system' => [
+                'type'    => 'stacked',
+                'options' => [
+                    'prefix'    => 'batchelor',
+                    'lifetime'  => 7200,
+                    'backends' => [
+                        'file' => [ ... ],      // Options for file backend.
+                        'apcu' => [ ... ],      // Options for APCu backend.
+                    ]
                 ]
             ]
         ]
@@ -90,11 +126,13 @@ files, but can be configured with i.e. apcu.
         // Use stacked cache backends with default settings:
         // 
         'cache' => [
-            'type'    => 'stacked',
-            'options' => [
-                'backends' => [
-                    'file' => true,
-                    'apcu' => true
+            'system' => [
+                'type'    => 'stacked',
+                'options' => [
+                    'backends' => [
+                        'file' => true,
+                        'apcu' => true
+                    ]
                 ]
             ]
         ]
@@ -105,15 +143,17 @@ files, but can be configured with i.e. apcu.
         // Use stacked cache backends with default settings:
         // 
         'cache' => [
-            'type'    => 'stacked',
-            'options' => [
-                'backends' => [
-                    'file', 'apcu'
+            'system' => [
+                'type'    => 'stacked',
+                'options' => [
+                    'backends' => [
+                        'file', 'apcu'
+                    ]
                 ]
             ]
         ]
 
-** Detect cache backend:
+** DETECT CACHE BACKEND:
 
     It's also possible to use cache backend detection. In this mode, the first
     available cache backend will be used. The probing is done by putting backends
@@ -123,7 +163,9 @@ files, but can be configured with i.e. apcu.
         // Let cache service detect "best" cache backend:
         // 
         'cache' => [
-            'type'    => 'detect'
+            'system' => [
+                'type'    => 'detect'
+            ]
         ]
 
     To exclude backends from being considered as candidates, pass an array of 
@@ -133,13 +175,15 @@ files, but can be configured with i.e. apcu.
         // Detect backends, but exclude file backend as possible candidate:
         // 
         'cache' => [
-            'type'    => 'detect',
-            'options' => [
-                'exclude' => [ 'file' ]
+            'system' => [
+                'type'    => 'detect',
+                'options' => [
+                    'exclude' => [ 'file' ]
+                ]
             ]
         ]
 
-** Lifetime:
+** LIFETIME:
 
     The lifetime option defines the number of seconds before an cache entry is 
     expired. It's defaines the default lifetime that is used unless a lifetime is
@@ -149,15 +193,17 @@ files, but can be configured with i.e. apcu.
     expires. The memory backend is an exception to this because its cache entries
     are all expired when the script terminates.
 
-** Recommendations:
+** RECOMMENDATIONS:
 
     The stacked cache is suitable for implementing an "eventual in sync" cache. For
     most installations its sufficient with i.e. using redis. If running on a single
     server, use apcu or redis as backend.
 
-** Service:
+** SYSTEM SERVICE:
 
-    The configured cache is available as a service named cache. It's injected as a
-    property into classes deriving from the component class.
+    The cache service uses the system cache config. Deriving from the component
+    class makes the system cache available for service injection and accessable
+    as the cache property.
+
 
 // Anders Lövgren, 2018-09-01

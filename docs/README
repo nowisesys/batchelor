@@ -1,63 +1,38 @@
 
-    ** Batch Job Queue Manager (Batchelor) **
+    *********************************************
+        BATCH JOB QUEUE MANAGER (BATCHELOR)
+    *********************************************
 
+Batchelor is an batch job queue manager supporting schdeule task for later 
+execution, controlling them and retrieving result. Suitable applications can be
+scientific or heavy processing tasks (like media rendering).
 
-This is an web application with buitin web service API for running custom applications
+** QUEUES:
 
+    The job queue can be accessed thru both a web interface and web services (i.e. 
+    SOAP or JSON API). The simpliest configuration uses an local queue, but the 
+    installation can be configured as a frontend for multiple remote queues which 
+    gives an distributed system with a common interface.
 
-** Requirements:
+** TASKS:
 
-   	o) Web server (i.e. Apache 2.4.29)
-   	o) PHP support (tested with 7.1.x)
+    Implement one or more classes that defines your application business logic
+    and register them with the processor service. An incoming processing request 
+    is queued (scheduled for later execution). 
 
-** Install:
+    A background process consumes queued tasks and uses the task registry to find 
+    a suitable class (among those registered by you) to process the data. The task
+    class is called with input data and working directory.
 
-   It's recommended to use composer to install batchelor, but you can use the tar-ball for
-   doing a traditional install.
+** END USERS:
 
-	bash$> cd /var/www/apps
-	bash$> mkdir batchelor2
-	bash$> composer init
+    An end user can have multiple personal queues that they can switch between. 
+    Theres also support for authentication meant to give authorized users extra 
+    powers, for example relaxed upload limits.
 
-   Add the following repository to composer.json:
+** INTEGRATE:
 
-	"repositories": [
-        {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/proj/sci/batchelor/"
-        }
-        ],
-        "require": {
-            "bmc/batchelor": ">=2.0.0"
-        }
+    See the file docs/GETTING-STARTED that contains information for integrators on
+    how to configure batchelor to power your applications.
 
-   Run composer update to install batchelor and its dependencies:
-
-	bash$> composer update
-
-** Configure:
-
-   You need to provide config protected versions of the config files (*.in):
-
-	bash$> cd config
-	bash$> cp apache.conf.in apache.conf
-	bash$> cp auth.inc.in auth.inc
-	bash$> cp defaults.site.in defaults.site
-
-   It's recommended to use apache.conf instead of htaccess file (found in the public directory) 
-   when setting up a production application. 
-
-   o) Production:
-
-   	Edit apache.conf and include in your Apache server configuration (i.e. an virtual host 
-	definition). Remove any .htaccess inside the public directory:
-
-	bash$> rm public/.htaccess
-
-   o) Development:
-
-	Use the htaccess inside the public directory. Tweak to match your setup. The default assumes
-	that /batchelor2 is used as location.
-
-
-// Anders Lövgren, 2018-06-07
+// Anders Lövgren, 2018-09-19

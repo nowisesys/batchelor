@@ -1,8 +1,9 @@
-=============================================================================
-    Notes for developer
-=============================================================================
 
-** Composer:
+    ************************************
+        DEVELOPER NOTES
+    ************************************
+
+** COMPOSER:
 
    The composer-dev.json can be used for development of required packages used 
    by this web application. It creates symbolic links under vendor linking the 
