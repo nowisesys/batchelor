@@ -3,6 +3,8 @@
 return array(
         'head' => _('Logging'),
         'data' => array(
+                'Simple'      => 'simple',
+                'Memory'      => 'memory',
                 'Syslog'      => 'syslog',
                 'File'        => 'file',
                 'Request'     => 'request',

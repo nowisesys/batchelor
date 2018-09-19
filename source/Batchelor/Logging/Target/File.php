@@ -194,6 +194,8 @@ class File extends Adapter implements Logger
         {
                 if ($this->_options & LOG_PID) {
                         return getmypid();
+                } else {
+                        return 0;
                 }
         }
 
