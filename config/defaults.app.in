@@ -20,9 +20,9 @@ if (!ini_get("date.timezone")) {
 //
 return [
         // 
-        // The data storage directory where i.e. job queues are stored.
+        // The data directory where i.e. job queues are stored.
         // 
-        'data'   => [
+        'data'    => [
                 'path' => realpath(__DIR__ . "/../data"),
                 'mode' => 0750
         ],
@@ -34,35 +34,51 @@ return [
                 'mail' => 'batchelor@localhost',
                 'page' => 'http://batchelor.example.com/contact.html'
         ],
-        // 
-        // The cache options (see docs/README-CACHE).
-        // 
-        'cache'   => [
-                'type'    => 'detect'
-        ],
-        // 
-        // The logger options (relative pathes are created inside the data directory).
-        // 
-        'logger'  => [
-                'request' => [
-                        'type'    => 'request',
-                        'options' => [
-                                'path'  => 'logs',
-                                'ident' => 'request'
-                        ]
-                ],
-                'system'  => [
-                        'type'    => 'file',
-                        'options' => [
-                                'filename' => 'logs/system.log'
-                        ]
-                ],
-                'auth'    => [
-                        'type'    => 'syslog',
-                        'options' => [
-                                'ident'    => 'batchelor',
-                                'facility' => LOG_AUTH
-                        ]
-                ]
-        ]
+        // // 
+        // // The cache options (see docs/README-CACHE). By default all caches
+        // // are configured to detect cache backend. 
+        // // 
+        // 'cache'   => [
+        //        'system'   => 'detect', // Generic system cache.
+        //        'queue'    => 'detect', // Jobs queue cache.
+        //        'schedule' => 'detect', // Scheduled task cache.
+        //        'mapper'   => 'detect'  // The hostid to queue map cache.
+        // ],
+        // // 
+        // // The logger options. Target root directory for relative pathes are the
+        // // data directory. 
+        // // 
+        // 'logger'  => [
+        //        'request' => [
+        //                'type'    => 'request',
+        //                'options' => [
+        //                        'path'  => 'logs',
+        //                        'ident' => 'request'
+        //                ]
+        //        ],
+        //        'system'  => [
+        //                'type'    => 'file',
+        //                'options' => [
+        //                        'filename' => 'logs/system.log'
+        //                ]
+        //        ],
+        //        'auth'    => [
+        //                'type'    => 'syslog',
+        //                'options' => [
+        //                        'ident'    => 'batchelor',
+        //                        'facility' => LOG_AUTH
+        //                ]
+        //        ]
+        // ],
+        // // 
+        // // The job queue options (see docs/README-QUEUE). Default is to use a
+        // // single local work queue, but it's possible to setup a distribued 
+        // // solution by defining one or more remote queues.
+        // // 
+        //'queue'   => [
+        //        'local' => [
+        //                'type'   => 'system',
+        //                'weight' => 50
+        //        ]
+        //]
 ];
