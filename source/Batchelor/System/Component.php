@@ -22,10 +22,11 @@ namespace Batchelor\System;
 
 use Batchelor\System\Service\Cache;
 use Batchelor\System\Service\Config;
-use Batchelor\System\Service\Storage;
 use Batchelor\System\Service\Hostid;
 use Batchelor\System\Service\Logging;
 use Batchelor\System\Service\Persistance;
+use Batchelor\System\Service\Queue;
+use Batchelor\System\Service\Storage;
 
 /**
  * The system component class.
@@ -59,6 +60,8 @@ use Batchelor\System\Service\Persistance;
  * @property-read Storage $data The data storage directory.
  * @property-read Cache $cache The cache service.
  * @property-read Logging $logger The logging service.
+ * @property-read Queue $queue The queue service.
+ * @property-read Processor $processor The task processor service.
  * 
  * @author Anders Lövgren (Nowise Systems)
  */
@@ -82,12 +85,7 @@ class Component
 
         public function __get($name)
         {
-                if (!($services = $this->getInjector())) {
-                        return null;
-                }
-                if ($services->hasService($name)) {
-                        return $this->$name = $services->getService($name);
-                }
+                return $this->$name = $this->getService($name);
         }
 
         /**
@@ -109,6 +107,25 @@ class Component
                         return $this->_services;
                 } else {
                         return Services::getInstance();
+                }
+        }
+
+        /**
+         * Get named service.
+         * 
+         * The difference between using this method and magic get is that the
+         * requested service is not injected into this object.
+         * 
+         * @param string $name The service name.
+         * @return object
+         */
+        public function getService(string $name)
+        {
+                if (!($services = $this->getInjector())) {
+                        return null;
+                }
+                if ($services->hasService($name)) {
+                        return $services->getService($name);
                 }
         }
 
