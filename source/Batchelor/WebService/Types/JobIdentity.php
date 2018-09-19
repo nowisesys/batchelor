@@ -25,7 +25,7 @@ namespace Batchelor\WebService\Types;
  *
  * Contains the data for identifying a queued job relative to the current used 
  * batch job queue. The jobid is the assigned execution order in the batch queue 
- * and the result is physical root directory.
+ * and result its physical root directory.
  * 
  * This class should be used as a message passed from peer when performing tasks
  * like stat() an existing job. Client side should treat it as opaque and don't
