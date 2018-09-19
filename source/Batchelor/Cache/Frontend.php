@@ -21,8 +21,6 @@
 namespace Batchelor\Cache;
 
 use Batchelor\Cache\Formatter\NativeFormat;
-use RuntimeException;
-use Traversable;
 
 /**
  * The client cache frontend.
