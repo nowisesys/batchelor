@@ -47,6 +47,9 @@ class SoapServiceFrontend extends ServiceFrontend
                 $this->_location = $location;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function render()
         {
                 $service = new SoapService(SoapServiceHandler::class);
