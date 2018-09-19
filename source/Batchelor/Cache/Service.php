@@ -26,7 +26,7 @@ use Batchelor\System\Component;
 use Batchelor\System\Service\Config;
 
 /**
- * The cache service.
+ * The system cache service.
  * 
  * <code>
  * $cache = new Cache();        // Use application settings
@@ -59,7 +59,7 @@ class Service extends Component implements Storage
         public function __construct(array $options = null)
         {
                 if (!isset($options)) {
-                        $options = Config::toArray($this->app->cache);
+                        $options = $this->getConfig();
                 }
 
                 if (!isset($options['type'])) {
@@ -115,6 +115,23 @@ class Service extends Component implements Storage
         {
                 $frontend = $this->_frontend;
                 return $frontend->save($key, $value, $lifetime);
+        }
+
+        /**
+         * Get service configuration.
+         * @return array 
+         */
+        private function getConfig(): array
+        {
+                if (($config = $this->getService("app"))) {
+                        if (!isset($config->cache->system)) {
+                                return ['type' => 'detect'];
+                        } elseif (is_string($config->cache->system)) {
+                                return ['type' => $this->app->cache->system];
+                        } else {
+                                return Config::toArray($config->cache->system);
+                        }
+                }
         }
 
 }

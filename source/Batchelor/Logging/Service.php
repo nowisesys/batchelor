@@ -44,7 +44,7 @@ class Service extends Component
         public function __construct(array $options = [])
         {
                 if (empty($options)) {
-                        $options = Config::toArray($this->app->logger);
+                        $options = $this->getConfig();
                 }
                 if (isset($options)) {
                         $this->setLoggers($options);
@@ -102,6 +102,53 @@ class Service extends Component
                             $name, Factory::getObject($data)
                         );
                 }
+        }
+
+        /**
+         * Get service configuration.
+         * @return array 
+         */
+        private function getConfig(): array
+        {
+                if (($config = $this->getService("app"))) {
+                        if (!isset($config->logger)) {
+                                return self::getDefaults();
+                        } else {
+                                return array_replace_recursive(
+                                    self::getDefaults(), Config::toArray($config->logger)
+                                );
+                        }
+                }
+        }
+
+        /**
+         * Get default logger settings.
+         * @return array
+         */
+        private static function getDefaults(): array
+        {
+                return [
+                        'request' => [
+                                'type'    => 'request',
+                                'options' => [
+                                        'path'  => 'logs',
+                                        'ident' => 'request'
+                                ]
+                        ],
+                        'system'  => [
+                                'type'    => 'file',
+                                'options' => [
+                                        'filename' => 'logs/system.log'
+                                ]
+                        ],
+                        'auth'    => [
+                                'type'    => 'syslog',
+                                'options' => [
+                                        'ident'    => 'batchelor',
+                                        'facility' => LOG_AUTH
+                                ]
+                        ]
+                ];
         }
 
 }
