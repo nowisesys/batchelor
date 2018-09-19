@@ -20,6 +20,7 @@
 
 namespace Batchelor\Web;
 
+use Batchelor\System\Timer;
 use UUP\Site\Page\Web\StandardPage;
 
 /**
@@ -65,7 +66,13 @@ class ExamplePage extends StandardPage
                 $filename = $this->_filename;
                 $callback = $this->_callback;
 
+                $timer = new Timer();
+                $timer->start();
+                
                 require($this->_template);
+                
+                $timer->stop();
+                printf("Example finished in %f sec\n", $timer->elapsed());
         }
 
 }
