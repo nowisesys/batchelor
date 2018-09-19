@@ -89,7 +89,7 @@ abstract class EnumType implements JsonSerializable
          * @param mixed $value The enum value.
          * @param string $class The inheriting class.
          */
-        protected function __construct($value, $class)
+        protected function __construct($value, string $class)
         {
                 $this->_value = $value;
                 $this->_class = $class;
@@ -127,7 +127,7 @@ abstract class EnumType implements JsonSerializable
          * @param bool $strict Use strict comparision.
          * @return bool
          */
-        public function hasValue($value, $strict = true)
+        public function hasValue($value, bool $strict = true)
         {
                 if ($strict) {
                         return $this->_value === $value;
