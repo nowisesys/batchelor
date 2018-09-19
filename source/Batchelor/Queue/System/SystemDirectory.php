@@ -148,10 +148,10 @@ class SystemDirectory extends Component implements WorkDirectory
         }
 
         /**
-         * The work directory.
+         * The work result directory.
          * 
-         * Directory where an enqueued job should output the result from 
-         * computation. When requesting result download, the content in this 
+         * Directory where an enqueued job should output the result from its
+         * computation. When a result download is requested, the content of this 
          * directory will be sent.
          * 
          * @return Directory 
