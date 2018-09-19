@@ -33,7 +33,7 @@ use Batchelor\Logging\Format;
  * // Using this message expansion string would format sub sequent messages
  * // i.e. as "2018-09-11 23:52:48 <info><32100> some message text..."
  * // 
- * $custom->setExapand("@datetime@ <@priority@><@pid@> @message@");
+ * $custom->setExpand("@datetime@ <@priority@><@pid@> @message@");
  * $custom->getMessage($input);
  * </code>
  * 
@@ -79,10 +79,8 @@ class Custom extends Adapter implements Format
                         "@message@"  => $input['message']
                 ];
 
-                return sprintf(
-                    str_replace(
-                        array_keys($search), array_values($search), $this->_expand
-                    )
+                return str_replace(
+                    array_keys($search), array_values($search), $this->_expand
                 );
         }
 
