@@ -30,15 +30,15 @@ use Batchelor\System\Service;
 
 return [
         // 
-        // The hostid service providing job queue mapping:
+        // The hostid service providing job queue mapping.
         // 
         'hostid'      => new Service(Service\Hostid::class),
         // 
-        // The persistance service for storing data in cookies or session:
+        // The persistance service for storing data in cookies or session.
         // 
         'persistance' => new Service(Service\Persistance::class),
         // 
-        // The application config from defaults.app:
+        // The application config from defaults.app.
         // 
         'app'         => new Service(Service\Config::class),
         // 
@@ -48,5 +48,18 @@ return [
         // 
         // The logger service.
         // 
-        'logger'      => new Service(Service\Logging::class)
+        'logger'      => new Service(Service\Logging::class),
+        // 
+        // The job/work queue service.
+        // 
+        'queue'       => new Service(Service\Queue::class),
+        // 
+        // The system cache service.
+        // 
+        'cache'       => new Service(Service\Cache::class),
+        // 
+        // The task processor service provides a task runner resository for the
+        // scheduled job consumer application.
+        // 
+        'processor'   => new Service(Service\Processor::class)
 ];
