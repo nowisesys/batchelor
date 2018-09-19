@@ -21,6 +21,7 @@
 namespace Batchelor\WebService\Handler;
 
 use Batchelor\WebService\Common\ServiceBackend;
+use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
@@ -108,10 +109,10 @@ class SoapServiceHandler implements SoapHandler
         /**
          * Queues an job for later execution.
          * 
-         * @param string $indata The input data.
+         * @param JobData $indata The input data.
          * @return QueuedJob[]
          */
-        public function enqueue(string $indata)
+        public function enqueue(JobData $indata)
         {
                 return $this->_backend->enqueue($indata);
         }
