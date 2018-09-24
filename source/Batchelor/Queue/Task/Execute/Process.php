@@ -20,6 +20,8 @@
 
 namespace Batchelor\Queue\Task\Execute;
 
+use RuntimeException;
+
 /**
  * The running process.
  * 
@@ -137,7 +139,18 @@ class Process implements ProcessControl
          */
         public function getStatus(): Status
         {
-                return new Status($this->_handle);
+                $status = new Status($this->_handle);
+
+                // 
+                // See http://php.net/manual/en/function.proc-get-status.php
+                // 
+                if ($this->_status == -1) {
+                        if ($status->running == false && $status->exitcode != -1) {
+                                $this->_status = $status->exitcode;
+                        }
+                }
+
+                return $status;
         }
 
         /**
@@ -179,13 +192,28 @@ class Process implements ProcessControl
                                         fread($stream, 1024);
                                 }
                         }
-                        if (fclose($stream) === false) {
+                        if (fclose($stream) == false) {
                                 throw new RuntimeException("Failed close stream");
                         }
                 }
                 if (is_resource($this->_handle)) {
-                        if (($this->_status = proc_close($this->_handle)) == -1) {
+                        $this->setExitCode(proc_close($this->_handle));
+                }
+        }
+
+        /**
+         * Set process exit code.
+         * 
+         * @param int $status The status code.
+         * @throws RuntimeException
+         */
+        private function setExitCode(int $status)
+        {
+                if ($this->_status == -1) {
+                        if ($status == -1 && $this->_status == -1) {
                                 throw new RuntimeException("Failed close process");
+                        } else {
+                                $this->_status = $status;
                         }
                 }
         }

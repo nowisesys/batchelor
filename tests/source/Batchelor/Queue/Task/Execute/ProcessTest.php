@@ -19,7 +19,14 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
          */
         protected function setUp()
         {
-                $this->object = new Process;
+                $this->object = (new Spawner(new class extends Runnable implements Selectable {
+
+                            public function getCommand(): string
+                            {
+                                    return "ls -l /tmp";
+                            }
+                    }
+                    ))->open();
         }
 
         /**
@@ -32,87 +39,86 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
         }
 
         /**
-         * @covers Batchelor\Queue\Task\Execute\Process::__destruct
-         * @todo   Implement test__destruct().
-         */
-        public function test__destruct()
-        {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
-        }
-
-        /**
          * @covers Batchelor\Queue\Task\Execute\Process::signal
-         * @todo   Implement testSignal().
          */
         public function testSignal()
         {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
+                $actual = $this->object->signal(15);
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_bool($actual));
+                $this->assertTrue($actual);
         }
 
         /**
          * @covers Batchelor\Queue\Task\Execute\Process::suspend
-         * @todo   Implement testSuspend().
          */
         public function testSuspend()
         {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
+                $actual = $this->object->suspend();
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_bool($actual));
+                $this->assertTrue($actual);
+
+                $this->object->resume();        // Must resume before return from test
         }
 
         /**
          * @covers Batchelor\Queue\Task\Execute\Process::resume
-         * @todo   Implement testResume().
          */
         public function testResume()
         {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
+                $actual = $this->object->resume();
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_bool($actual));
+                $this->assertTrue($actual);
         }
 
         /**
          * @covers Batchelor\Queue\Task\Execute\Process::terminate
-         * @todo   Implement testTerminate().
          */
         public function testTerminate()
         {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
+                $actual = $this->object->terminate();
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_bool($actual));
+                $this->assertTrue($actual);
         }
 
         /**
          * @covers Batchelor\Queue\Task\Execute\Process::getStreams
-         * @todo   Implement testGetStreams().
          */
         public function testGetStreams()
         {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
+                $actual = $this->object->getStreams();
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_array($actual));
+                $this->assertTrue(count($actual) == 3);
+
+                $this->assertTrue(is_resource($actual[0]));
+                $this->assertTrue(get_resource_type($actual[0]) == "stream");
+
+                $this->assertTrue(is_resource($actual[1]));
+                $this->assertTrue(get_resource_type($actual[1]) == "stream");
+
+                $this->assertTrue(is_resource($actual[2]));
+                $this->assertTrue(get_resource_type($actual[2]) == "stream");
         }
 
         /**
          * @covers Batchelor\Queue\Task\Execute\Process::getStream
-         * @todo   Implement testGetStream().
          */
         public function testGetStream()
         {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
+                $actual = $this->object->getStream(1);
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_resource($actual));
+                $this->assertTrue(get_resource_type($actual) == "stream");
         }
 
         /**
@@ -127,7 +133,6 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue(is_int($actual));
                 $this->assertEquals($expect, $actual);
 
-                $this->object->open();
                 $this->object->close();
 
                 $expect = 0;
@@ -147,13 +152,6 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
                 $this->assertNotNull($actual);
                 $this->assertTrue(is_object($actual));
                 $this->assertTrue($actual instanceof Status);
-                $this->assertTrue(is_null($actual->pid));
-
-                $this->object->open();
-                $actual = $this->object->getStatus();
-                $this->assertNotNull($actual);
-                $this->assertTrue(is_object($actual));
-                $this->assertTrue($actual instanceof Status);
                 $this->assertTrue(is_int($actual->pid));
                 $this->assertTrue($actual->running);
                 $this->assertFalse($actual->signaled);
@@ -161,7 +159,6 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue($actual->stopsig == 0);
                 $this->assertTrue($actual->termsig == 0);
                 $this->assertTrue($actual->exitcode == -1);
-                $this->assertEquals($this->select->getCommand(), $actual->command);
 
                 print_r($actual);
 
@@ -175,26 +172,20 @@ class ProcessTest extends \PHPUnit_Framework_TestCase
 
         /**
          * @covers Batchelor\Queue\Task\Execute\Process::isReadable
-         * @todo   Implement testIsReadable().
          */
         public function testIsReadable()
         {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
+                $actual = $this->object->isReadable(1);
+                $this->assertNotNull($actual);
+                $this->assertTrue($actual);
         }
 
         /**
          * @covers Batchelor\Queue\Task\Execute\Process::close
-         * @todo   Implement testClose().
          */
         public function testClose()
         {
-                // Remove the following lines when you implement this test.
-                $this->markTestIncomplete(
-                    'This test has not been implemented yet.'
-                );
+                $this->object->close();         // Test not throwing
         }
 
 }
