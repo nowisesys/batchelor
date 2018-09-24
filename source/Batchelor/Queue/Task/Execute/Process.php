@@ -161,7 +161,7 @@ class Process implements ProcessControl
 
                 list($r, $w, $e) = [[$stream], null, null];
 
-                if ((stream_select($r, $w, $e, $timeout))) {
+                if ((stream_select($r, $w, $e, $timeout, 10000))) {
                         return true;
                 } else {
                         return false;   // When error or none ready
