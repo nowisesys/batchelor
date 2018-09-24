@@ -159,16 +159,17 @@ class Expect
                 if (!(fwrite($this->_handle, $command) == strlen($command))) {
                         throw new RuntimeException("Failed run command $command");
                 }
-                if (is_array($options) || is_callable($options)) {
-                        $this->process($options);
+
+                if (!isset($options)) {
+                        $this->invoke(function($stream, $expect) {
+                                self::consume($stream, $expect);
+                        });
                 } elseif (is_bool($options) && $options) {
                         $this->invoke(function($stream, $expect) {
                                 self::consume($stream, $expect, true);
                         });
-                } else {
-                        $this->invoke(function($stream, $expect) {
-                                self::consume($stream, $expect);
-                        });
+                } elseif (is_array($options) || is_callable($options)) {
+                        $this->process($options);
                 }
 
                 return $this;
