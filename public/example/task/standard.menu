@@ -3,7 +3,10 @@
 return array(
         'head' => _('Tasks'),
         'data' => array(
+                'Process'  => 'process',
                 'Command'  => 'command',
+                'Worker'   => 'worker',
+                'Monitor'  => 'monitor',
                 'Expect'   => 'expect',
                 'Interact' => 'interact'
         )

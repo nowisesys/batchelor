@@ -9,6 +9,8 @@ use Batchelor\Queue\Task\Execute\Selectable;
 // 
 $monitor = new Monitor(new class extends Runnable implements Selectable {
 
+            private $_files = 0;
+
             public function getCommand(): string
             {
                     return "ls -lR";
@@ -31,9 +33,44 @@ $monitor = new Monitor(new class extends Runnable implements Selectable {
             {
                     printf("[O]: Called\n");
                     while (($buff = trim(fgets($stream)))) {
+                            ++$this->_files;
                             printf("[O]: %s\n", $buff);
                     }
+            }
+
+            public function getFilesCount()
+            {
+                    return $this->_files;
             }
     });
 
 $monitor->execute();
+
+// 
+// Call method thru monitor.
+// 
+$monitor = new Monitor(new class extends Runnable implements Selectable {
+
+            private $_files = 0;
+
+            public function getCommand(): string
+            {
+                    return "find /tmp -type f";
+            }
+
+            public function onOutput($stream)
+            {
+                    while (($buff = trim(fgets($stream)))) {
+                            ++$this->_files;
+                    }
+            }
+
+            public function getFilesCount()
+            {
+                    return $this->_files;
+            }
+    });
+
+$monitor->execute();
+
+printf("[C]: %d\n", $monitor->getFilesCount());

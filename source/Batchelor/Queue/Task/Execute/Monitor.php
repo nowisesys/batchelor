@@ -28,6 +28,9 @@ use RuntimeException;
  * Executes the command and monitor it's process streams for activity using stream 
  * select. Calls on input, output or error methods on the selectable command when 
  * activity is detected on respective I/O stream.
+ * 
+ * Adding support for calling methods in the selectable object. Mostly useful when 
+ * using an anonymous class.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
@@ -47,6 +50,20 @@ class Monitor
         public function __construct(Selectable $command)
         {
                 $this->_command = new Worker($command);
+        }
+
+        /**
+         * Call method in selectable object.
+         * 
+         * @param string $name Name of the method being called.
+         * @param array $arguments Arguments for called method.
+         * @return mixed
+         */
+        public function __call(string $name, array $arguments)
+        {
+                return call_user_func([
+                        $this->_command->getSelectable(), $name
+                    ], $arguments);
         }
 
         /**
