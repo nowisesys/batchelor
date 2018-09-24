@@ -1,0 +1,10 @@
+<?php
+
+return array(
+        'head' => _('Tasks'),
+        'data' => array(
+                'Command'  => 'command',
+                'Expect'   => 'expect',
+                'Interact' => 'interact'
+        )
+);

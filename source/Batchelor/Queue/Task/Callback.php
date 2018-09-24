@@ -23,6 +23,9 @@ namespace Batchelor\Queue\Task;
 use Batchelor\Logging\Format\DateTime;
 use Batchelor\Logging\Logger;
 use Batchelor\Logging\Target\Memory;
+use Batchelor\Queue\Task\Execute\Command;
+use Batchelor\Queue\Task\Execute\Monitor;
+use Batchelor\Queue\Task\Execute\Selectable;
 use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\JobStatus;
 
@@ -98,6 +101,29 @@ class Callback
                         'expand'   => "@datetime@: @message@ (@priority@)",
                         'datetime' => DateTime::FORMAT_HUMAN
                 ]);
+        }
+
+        /**
+         * Run non-interactive command.
+         * 
+         * The command is executed and output is captured. If an error occure,
+         * then an runtime exception will be thrown. Returns the exit status
+         * from command.
+         * 
+         * @param string $cmd The command string.
+         * @param array $env The environment variables.
+         */
+        public function runCommand(string $cmd, array $env = null): int
+        {
+                return (new Monitor)
+                        ->execute(
+                            Command::create($cmd, $env), $this->_logger
+                );
+        }
+
+        public function runProcess(Selectable $command)
+        {
+                (new Monitor($command))->execute();
         }
 
 }
