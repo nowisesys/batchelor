@@ -21,6 +21,7 @@
 namespace Batchelor\Queue\Task;
 
 use Batchelor\System\Component;
+use RuntimeException;
 
 /**
  * The scheduled task processor.
@@ -39,6 +40,18 @@ class Processor extends Component
          * @var bool 
          */
         private $_done = false;
+
+        /**
+         * Constructor.
+         * 
+         * @throws RuntimeException
+         */
+        public function __construct()
+        {
+                if (PHP_SAPI != "cli") {
+                        throw new RuntimeException("The processor should only be run in CLI mode.");
+                }
+        }
 
         /**
          * Run queued jobs.
