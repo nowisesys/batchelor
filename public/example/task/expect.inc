@@ -3,12 +3,8 @@
 use Batchelor\Queue\Task\Execute\Expect;
 
 // 
-// Connect to localhost using SSH. Define the username and password if you 
-// wan't to test this script.
+// Settings for the expect extension:
 // 
-$user = "username";
-$pass = "secret";
-
 ini_set("expect.loguser", "Off");
 ini_set("expect.logfile", "/tmp/expect.out");
 
@@ -18,10 +14,10 @@ ini_set("expect.logfile", "/tmp/expect.out");
 $expect = new Expect("/bin/sh");
 $expect->execute("date\n", static function($stream, $expect) {
         while ($expect->isReadable()) {
-                printf("[SH] %s\n", trim(fgets($stream)));
+                printf("[SH]: %s\n", trim(fgets($stream)));
         }
 });
-        
+
 // 
 // Execute bc for calculation. Notice that we are only processing
 // the actual calculation (a * b):
@@ -34,14 +30,22 @@ $expect->execute("a=49\n");
 $expect->execute("b=12\n");
 $expect->execute("a*b\n", static function($stream, $expect) {
         while ($expect->isReadable()) {
-                printf("[BC] %s\n", trim(fgets($stream)));
+                printf("[BC]: %s\n", trim(fgets($stream)));
         }
 });
 $expect->execute("quit\n");
 
 // 
-// Open SSH connection:
+// Open SSH connection. 
 // 
+$user = "username";
+$pass = "secret";
+
+if ($user == "username" && $pass == "secret") {
+        printf("[CC]: Define the username and password for testing SSH connection.");
+        return;
+}
+
 $expect = new Expect("ssh $user@localhost");
 
 // 

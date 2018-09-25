@@ -4,17 +4,20 @@ use Batchelor\Queue\Task\Execute\Command;
 use Batchelor\Queue\Task\Execute\Interact;
 
 // 
-// Example using interactive class.
+// Example using interactive class. 
 // 
-// This example connects thru telnet and executes some commands. Define the 
-// username and password for testing.
+// This example connects thru telnet and executes some commands. Define username 
+// and password for testing.
 // 
 
 $user = "username";
 $pass = "secret";
 
-$output = "";           // The output buffer.
-//
+if ($user == "username" && $pass == "secret") {
+        printf("[T]: Define the username and password for testing telnet connection.");
+        return;
+}
+
 // 
 // Open telnet connection. Unset color prompt once connected, run some commands
 // and exit remote shell.
