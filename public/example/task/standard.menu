@@ -7,6 +7,8 @@ return array(
                 'Command'  => 'command',
                 'Worker'   => 'worker',
                 'Monitor'  => 'monitor',
+                'Capture'  => 'capture',
+                false,
                 'Expect'   => 'expect',
                 'Interact' => 'interact'
         )
