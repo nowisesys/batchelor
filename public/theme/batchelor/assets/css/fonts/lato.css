@@ -2,5 +2,11 @@
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(../../fonts/lato.ttf) format('truetype');
+  src: local('Lato Regular'), local('Lato-Regular'), url(../../fonts/lato-regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: bold;
+  src: local('Lato Bold'), local('Lato-Bold'), url(../../fonts/lato-bold.ttf) format('truetype');
 }
