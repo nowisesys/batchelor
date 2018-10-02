@@ -34,7 +34,7 @@ class JsonClientHandler
          * The base URL.
          * @var string 
          */
-        private $_base;
+        private $_base = "http://localhost/batchelor/ws/json/";
         /**
          * The cURL client.
          * @var resource 
@@ -56,7 +56,9 @@ class JsonClientHandler
          */
         public function __construct()
         {
-                $this->setBase("http://localhost/batchelor/ws/json/");
+                if (!extension_loaded("json")) {
+                        throw new RuntimeException("The JSON extension is not loaded");
+                }
         }
 
         /**

@@ -34,7 +34,7 @@ class SoapClientHandler
          * The base URL.
          * @var string 
          */
-        private $_base;
+        private $_base = "http://localhost/batchelor/ws/soap/";
         /**
          * The  WSDL address.
          * @var string 
@@ -46,6 +46,11 @@ class SoapClientHandler
          */
         private $_client;
         /**
+         * The trace data.
+         * @var array
+         */
+        private $_tracing;
+        /**
          * The default SOAP options
          * @var array 
          */
@@ -55,18 +60,15 @@ class SoapClientHandler
                 'trace'        => 0,
                 'cache_wsdl'   => WSDL_CACHE_BOTH
         ];
-        /**
-         * The trace data.
-         * @var array
-         */
-        private $_tracing;
 
         /**
          * Constructor.
          */
         public function __construct()
         {
-                $this->setBase("http://localhost/batchelor/ws/soap/");
+                if (!extension_loaded("soap")) {
+                        throw new RuntimeException("The SOAP extension is not loaded");
+                }
         }
 
         /**
