@@ -1,6 +1,6 @@
 #
-# Configured for batchelor installed on location /batchelor2. Change to match
-# your setup location.
+# Configured for batchelor installed under location /batchelor2. Change the 
+# location to match your setup.
 # 
 
 # Enable URL rewrite:
