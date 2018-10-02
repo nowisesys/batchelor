@@ -66,20 +66,6 @@ class SoapServiceHandler implements SoapHandler
 {
 
         /**
-         * The service backend.
-         * @var ServiceBackend 
-         */
-        private $_backend;
-
-        /**
-         * Constructor.
-         */
-        public function __construct()
-        {
-                $this->_backend = new ServiceBackend();
-        }
-
-        /**
          * This method returns the list of queued jobs in current queue.
          * 
          * @param string $sort The sort options.
@@ -88,7 +74,9 @@ class SoapServiceHandler implements SoapHandler
          */
         public function queue(string $sort, string $filter)
         {
-                return $this->_backend->queue(new QueueSortResult($sort), new QueueFilterResult($filter));
+                return (new ServiceBackend())->queue(
+                        new QueueSortResult($sort), new QueueFilterResult($filter)
+                );
         }
 
         /**
@@ -103,7 +91,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function select(string $queue)
         {
-                return $this->_backend->select($queue);
+                return (new ServiceBackend())->select($queue);
         }
 
         /**
@@ -114,7 +102,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function enqueue(JobData $indata)
         {
-                return $this->_backend->enqueue($indata);
+                return (new ServiceBackend())->enqueue($indata);
         }
 
         /**
@@ -125,7 +113,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function dequeue(JobIdentity $job)
         {
-                return $this->_backend->dequeue($job);
+                return (new ServiceBackend())->dequeue($job);
         }
 
         /**
@@ -135,7 +123,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function suspend(JobIdentity $job)
         {
-                return $this->_backend->suspend($job);
+                return (new ServiceBackend())->suspend($job);
         }
 
         /**
@@ -145,7 +133,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function resume(JobIdentity $job)
         {
-                return $this->_backend->resume($job);
+                return (new ServiceBackend())->resume($job);
         }
 
         /**
@@ -156,7 +144,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function stat(JobIdentity $job)
         {
-                return $this->_backend->stat($job);
+                return (new ServiceBackend())->stat($job);
         }
 
         /**
@@ -167,7 +155,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function watch(int $stamp)
         {
-                return $this->_backend->watch($stamp);
+                return (new ServiceBackend())->watch($stamp);
         }
 
         /**
@@ -180,7 +168,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function opendir()
         {
-                return $this->_backend->opendir();
+                return (new ServiceBackend())->opendir();
         }
 
         /**
@@ -194,7 +182,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function readdir(JobIdentity $job)
         {
-                return $this->_backend->readdir($job);
+                return (new ServiceBackend())->readdir($job);
         }
 
         /**
@@ -209,7 +197,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function fopen(JobIdentity $job, string $file)
         {
-                return $this->_backend->fopen($job, $file);
+                return (new ServiceBackend())->fopen($job, $file);
         }
 
         /**
@@ -218,7 +206,7 @@ class SoapServiceHandler implements SoapHandler
          */
         public function version()
         {
-                return $this->_backend->version();
+                return (new ServiceBackend())->version();
         }
 
 }
