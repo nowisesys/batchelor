@@ -22,6 +22,7 @@ namespace Batchelor\Queue\Remote;
 
 use Batchelor\Queue\WorkDirectory;
 use Batchelor\Queue\WorkQueue;
+use Batchelor\WebService\Client\JsonClientHandler;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
@@ -37,11 +38,28 @@ class RemoteQueue implements WorkQueue
 {
 
         /**
+         * The remote client.
+         * @var JsonClientHandler 
+         */
+        private $_client;
+
+        /**
+         * Constructor.
+         * @param array $data The remote queue config.
+         */
+        public function __construct(array $data)
+        {
+                $this->_client = new JsonClientHandler();
+                $this->_client->setBase(sprintf("%s/ws/json", $data['url']));
+        }
+
+        /**
          * {@inheritdoc}
          */
         public function addJob(string $hostid, JobData $indata)
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("enqueue", $indata);
         }
 
         /**
@@ -49,7 +67,7 @@ class RemoteQueue implements WorkQueue
          */
         public function getReader(string $hostid): WorkDirectory
         {
-                // TODO: implement using JSON API
+                return new RemoteDirectory($this->_client);
         }
 
         /**
@@ -57,7 +75,8 @@ class RemoteQueue implements WorkQueue
          */
         public function getStatus(string $hostid, JobIdentity $job): JobStatus
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("stat", $job);
         }
 
         /**
@@ -65,7 +84,11 @@ class RemoteQueue implements WorkQueue
          */
         public function listJobs(string $hostid, QueueSortResult $sort = QueueSortResult::STARTED, QueueFilterResult $filter = QueueFilterResult::NONE)
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("queue", [
+                                'sort'   => $sort,
+                                'filter' => $filter
+                ]);
         }
 
         /**
@@ -73,7 +96,8 @@ class RemoteQueue implements WorkQueue
          */
         public function removeJob(string $hostid, JobIdentity $job): bool
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("dequeue", $job);
         }
 
         /**
@@ -81,7 +105,8 @@ class RemoteQueue implements WorkQueue
          */
         public function resumeJob(string $hostid, JobIdentity $job): bool
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("resume", $job);
         }
 
         /**
@@ -89,7 +114,8 @@ class RemoteQueue implements WorkQueue
          */
         public function suspendJob(string $hostid, JobIdentity $job): bool
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("suspend", $job);
         }
 
         /**

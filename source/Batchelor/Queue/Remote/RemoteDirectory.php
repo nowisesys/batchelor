@@ -21,6 +21,7 @@
 namespace Batchelor\Queue\Remote;
 
 use Batchelor\Queue\WorkDirectory;
+use Batchelor\WebService\Client\JsonClientHandler;
 use Batchelor\WebService\Types\JobIdentity;
 
 /**
@@ -32,11 +33,31 @@ class RemoteDirectory implements WorkDirectory
 {
 
         /**
+         * The remote client.
+         * @var JsonClientHandler 
+         */
+        private $_client;
+
+        /**
+         * Constructor.
+         * @param JsonClientHandler $client The remote client.
+         */
+        public function __construct(JsonClientHandler $client)
+        {
+                $this->_client = $client;
+        }
+
+        /**
          * {@inheritdoc}
          */
         public function getContent(JobIdentity $job, string $file, bool $return = true)
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("fopen", [
+                                'job'  => $job,
+                                'file' => $file,
+                                'send' => $return
+                ]);
         }
 
         /**
@@ -44,7 +65,8 @@ class RemoteDirectory implements WorkDirectory
          */
         public function getFiles(JobIdentity $job)
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("readdir", $job);
         }
 
         /**
@@ -52,7 +74,8 @@ class RemoteDirectory implements WorkDirectory
          */
         public function getJobs()
         {
-                // TODO: implement using JSON API
+                return $this->_client
+                        ->callMethod("opendir", []);
         }
 
 }
