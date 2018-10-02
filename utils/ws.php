@@ -18,6 +18,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+// 
+// Run the web service client.
+// 
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Batchelor\Console\WebServiceClient;
