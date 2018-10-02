@@ -47,7 +47,7 @@ class SoapClientHandler
         private $_client;
         /**
          * The default SOAP options
-         * @var type 
+         * @var array 
          */
         private $_options = [
                 'soap_version' => SOAP_1_2,
