@@ -195,12 +195,13 @@ class ServiceBackend extends Component
          * 
          * @param JobIdentity $job The job identity.
          * @param string $file The filename.
+         * @param bool $send Send content to stdout.
          * @return string
          */
-        public function fopen(JobIdentity $job, string $file): string
+        public function fopen(JobIdentity $job, string $file, bool $send = false): string
         {
                 return $this->getDirectory()
-                        ->getContent($job, $file);
+                        ->getContent($job, $file, $send);
         }
 
         /**
