@@ -20,6 +20,7 @@
 
 namespace Batchelor\Console;
 
+use Batchelor\Console\WebServiceClient\JsonCommand;
 use Batchelor\Console\WebServiceClient\SoapCommand;
 use Symfony\Component\Console\Application;
 
@@ -38,6 +39,7 @@ class WebServiceClient
         {
                 $app = new Application('Web service client', '1.0');
                 $app->add(new SoapCommand());
+                $app->add(new JsonCommand());
                 $app->run();
         }
 
