@@ -1,19 +1,12 @@
 # 
 # Support for page routing. 
 # 
-# Include in virtual host or configuration file for a web application. 
-# The same file can be included in multiple locations. 
-# 
-# For development or testing uup-site you don't need this file. Simply link 
-# the project directory under htdocs.
+# Include in virtual host or configuration file for a web application. The same 
+# file can be included in multiple locations. For development or testing it's 
+# easier to use the htaccess-file found in the public directory.
 # 
 # Author: Anders Lövgren
 # Date:   2017-09-09
-# 
-
-# 
-# Config for include in virtual host using the public directory from 
-# uup-site as document root:
 # 
 
 # Allow access from localhost and private network:
@@ -23,15 +16,19 @@ Require ip 192.168.
 # Enable URL rewrite:
 RewriteEngine on
 
-# Exclude theme location:
-RewriteCond %{REQUEST_FILENAME} "^/theme"
+# Exclude static content:
+RewriteCond %{REQUEST_URI} ^/(theme|assets)
 RewriteRule "(.*)" - [L]
+
+# The JSON API service:
+RewriteCond %{REQUEST_URI} ^/ws/json/
+RewriteRule "(.*)/([^/]+)/?" /dispatch.php?uri=$1/index&func=$2 [QSA,NE,L]
 
 # Handle index page request:
 RewriteCond %{REQUEST_FILENAME} ^.*/$
-RewriteRule ^(.*)$ /dispatch.php?uri=$1index [QSA,L]
+RewriteRule "^(.*)$" /dispatch.php?uri=$1index [QSA,L]
 
 # Route all page request to dispatcher:
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ /dispatch.php?uri=$1 [QSA,L]
+RewriteRule "^(.*)$" /dispatch.php?uri=$1 [QSA,L]
