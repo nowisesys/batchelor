@@ -20,7 +20,9 @@
 
 namespace Batchelor\Queue\Task;
 
+use Batchelor\Logging\Logger;
 use Batchelor\System\Component;
+use Batchelor\System\Process\Daemonized;
 use RuntimeException;
 
 /**
@@ -29,17 +31,26 @@ use RuntimeException;
  * Should be run as a command line (CLI) task that consumes queued jobs from the 
  * job scheduler. Queries the processor service for a matching task processor to 
  * handle the queued job.
+ * 
+ * This class is not executing jobs. Instead it's delegating everything related
+ * to running task to its worker manager that is running in the same main thread,
+ * but executing tasks using threads/forked processes.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class Processor extends Component
+class Processor extends Component implements Daemonized
 {
 
         /**
          * The time to exit flag.
          * @var bool 
          */
-        private $_done = false;
+        private $_done;
+        /**
+         * The number of workers.
+         * @var int 
+         */
+        private $_workers = 3;
 
         /**
          * Constructor.
@@ -53,22 +64,74 @@ class Processor extends Component
                 }
         }
 
+        public function setWorkers(int $num)
+        {
+                $this->_workers = $num;
+        }
+
+        public function prepare(Logger $logger)
+        {
+                $this->_done = false;
+        }
+
+        public function execute(Logger $logger)
+        {
+                $this->run($logger);
+        }
+
+        public function terminate(Logger $logger)
+        {
+                $logger->debug("Got terminate signal (setting exit flag)");
+                $this->_done = true;
+        }
+
+        public function finished(): bool
+        {
+                return $this->_done;
+        }
+
         /**
          * Run queued jobs.
          */
-        public function run()
+        protected function run(Logger $logger)
         {
                 $scheduler = new Scheduler();
 
-                while (!$this->_done) {
-                        if (!$scheduler->hasJobs()) {
-                                sleep(5);
-                                continue;
-                        }
+                $logger->info("Ready to process jobs (%d workers)", [$this->_workers]);
+                while (!$this->finished()) {
+                        $this->loop($logger, $scheduler);
+                }
+                $logger->info("Finished process jobs");
+        }
 
-                        if (($runtime = $scheduler->popJob())) {
-                                // TODO: Create and execute task.
-                        }
+        private function loop(Logger $logger, Scheduler $scheduler)
+        {
+                if (function_exists("pcntl_signal_dispatch")) {
+                        pcntl_signal_dispatch();
+                }
+
+                if ($this->finished()) {
+                        return;
+                } else {
+                        $this->poll($logger, $scheduler);
+                }
+        }
+
+        private function poll(Logger $logger, Scheduler $scheduler)
+        {
+                $logger->debug("Polling for jobs");
+
+                if ($scheduler->hasJobs()) {
+                        $this->process($logger, $scheduler);
+                } else {
+                        sleep(10);
+                }
+        }
+
+        private function process(Logger $logger, Scheduler $scheduler)
+        {
+                if (($runtime = $scheduler->popJob())) {
+                        // TODO: Create and execute task.
                 }
         }
 
