@@ -23,6 +23,7 @@ namespace Batchelor\Queue\Task\Scheduler;
 use Batchelor\Cache\Storage;
 use Batchelor\Queue\Task\Runtime;
 use Batchelor\WebService\Types\JobIdentity;
+use Batchelor\WebService\Types\JobState;
 
 /**
  * The task queue.
@@ -51,7 +52,7 @@ class JobQueue
         }
 
         /**
-         * Check if qeueu is empty.
+         * Check if queue is empty.
          * @return bool
          */
         public function hasJobs(): bool
@@ -65,7 +66,10 @@ class JobQueue
          */
         public function addJob(Runtime $runtime)
         {
-                $this->addData($runtime, $this->addNext());
+                $slot = $this->addNext();
+
+                $this->setData($runtime, $slot);
+                $this->addData($runtime, $slot->name);
         }
 
         /**
@@ -77,6 +81,24 @@ class JobQueue
         private function addData(Runtime $runtime, string $name)
         {
                 $this->_cache->save($name, $runtime);
+        }
+
+        /**
+         * Set enqueue data.
+         * 
+         * @param Runtime $runtime The job runtime.
+         * @param JobSlot $slot The allocated slot.
+         */
+        private function setData(Runtime $runtime, JobSlot $slot)
+        {
+                $runtime->meta->identity->jobid = $slot->index;
+
+                $runtime->meta->status->date = date("Y-m-d", $slot->time);
+                $runtime->meta->status->time = date("H:i:s", $slot->time);
+                $runtime->meta->status->stamp = $slot->time;
+                $runtime->meta->status->state = JobState::PENDING;
+
+                $runtime->meta->status->timezone = ini_get("date.timezone");
         }
 
         /**
@@ -136,22 +158,29 @@ class JobQueue
 
         /**
          * Add next job.
-         * @return string Key for added task.
+         * @return JobSlot The added slot.
          */
-        private function addNext(): string
+        private function addNext(): JobSlot
         {
-                $index = $this->getIndex();
-                $count = $this->getCount();
-                $queue = $this->getQueue();
+                $slot = new JobSlot();
 
-                $name = sprintf("schedule-task-%d", $index + 1);
-                $queue[time()] = $name;
+                $slot->index = $this->getIndex();
+                $slot->count = $this->getCount();
+                $slot->queue = $this->getQueue();
 
-                $this->_cache->save("schedule-index", $index + 1);
-                $this->_cache->save("schedule-count", $count + 1);
-                $this->_cache->save("schedule-queue", $queue);
+                $slot->time = time();
+                $slot->name = sprintf("schedule-task-%d", $slot->index + 1);
 
-                return $name;
+                $slot->queue[$slot->time] = $slot->name;
+
+                $this->_cache->save("schedule-index", $slot->index + 1);
+                $this->_cache->save("schedule-count", $slot->count + 1);
+                $this->_cache->save("schedule-queue", $slot->queue);
+
+                ++$slot->count;
+                ++$slot->index;
+
+                return $slot;
         }
 
         /**
