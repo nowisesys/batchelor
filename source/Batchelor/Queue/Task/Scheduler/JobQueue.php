@@ -133,7 +133,7 @@ class JobQueue
                 $queue = $this->getQueue();
 
                 $name = sprintf("schedule-task-%d", $index + 1);
-                $queue[] = $name;
+                $queue[time()] = $name;
 
                 $this->_cache->save("schedule-index", $index + 1);
                 $this->_cache->save("schedule-count", $count + 1);
@@ -157,6 +157,10 @@ class JobQueue
 
         /**
          * Get task index.
+         * 
+         * The index forms a strictly increasing sequence of numbers. For each
+         * scheduled job, the index gets incremented.
+         * 
          * @return int
          */
         private function getIndex(): int
@@ -179,6 +183,41 @@ class JobQueue
                 } else {
                         return [];
                 }
+        }
+
+        /**
+         * Get job queue status.
+         * 
+         * Returns an array containing the current index (last job id), the number
+         * of queued jobs and the job names (cache keys).
+         * 
+         * <code>
+         * $status = [
+         *      'index' => 9584,
+         *      'count' => 8,
+         *      'queue' => [
+         *              1538534078 => 'schedule-task-9483',
+         *              1538534078 => 'schedule-task-9487',
+         *              1538534078 => 'schedule-task-9488',
+         *                      ...
+         *      ],
+         *      'timezone' => 'Europe/Stockholm'
+         * ]
+         * </code>
+         * 
+         * The queue array keys are the schedule time represented by UNIX 
+         * timestamps in server local timezone.
+         * 
+         * @return array
+         */
+        public function getStatus(): array
+        {
+                return [
+                        'index'    => $this->getIndex(),
+                        'count'    => $this->getCount(),
+                        'queue'    => $this->getQueue(),
+                        'timezone' => ini_get("date.timezone ")
+                ];
         }
 
 }

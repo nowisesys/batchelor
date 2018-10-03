@@ -102,6 +102,16 @@ class Scheduler extends Component
         }
 
         /**
+         * Get scheduled jobs.
+         * @return array
+         */
+        public function getList(): array
+        {
+                return (new JobQueue($this->_cache))
+                        ->getStatus();
+        }
+
+        /**
          * Get cache backend.
          * @return Storage
          */
