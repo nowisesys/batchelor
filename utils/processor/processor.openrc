@@ -1,0 +1,21 @@
+#!/sbin/openrc-run
+#
+# Author: Anders Lövgren
+# Date:   2018-10-02
+
+depend() {
+        need localmount
+        use net
+}
+
+start() {
+        ebegin "Starting batchelor job processor"
+        start-stop-daemon --start --exec php /usr/local/bin/batchelor-processor --pidfile /run/${SVCNAME}.pid --user batchelor --background --make-pidfile > /dev/null
+        eend $?
+}
+ 
+stop() {
+        ebegin "Stopping batchelor job processor"
+        start-stop-daemon --stop --exec /usr/local/bin/batchelor-processor --pidfile /run/${SVCNAME}.pid --name batchelor-processor
+        eend $?
+}
