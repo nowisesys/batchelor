@@ -20,7 +20,7 @@
 
 namespace Batchelor\Console;
 
-use Batchelor\Console\ScheduledJobProcessor\ProcessorCommand;
+use Batchelor\Console\Scheduler\ProcessorCommand;
 use Symfony\Component\Console\Application;
 
 /**
@@ -28,7 +28,7 @@ use Symfony\Component\Console\Application;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class ScheduledJobProcessor
+class ScheduleProcessor
 {
 
         public function execute()

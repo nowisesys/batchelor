@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Console\ScheduledJobProcessor;
+namespace Batchelor\Console\ScheduleProcessor;
 
 use Batchelor\Logging\Target\File as FileLogger;
 use Batchelor\Queue\Task\Processor;
