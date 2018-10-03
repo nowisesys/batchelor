@@ -20,7 +20,7 @@
 
 namespace Batchelor\Console;
 
-use Batchelor\Console\Scheduler\ProcessorCommand;
+use Batchelor\Console\ScheduleProcessor\ProcessorCommand;
 use Symfony\Component\Console\Application;
 
 /**
