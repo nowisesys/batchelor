@@ -112,6 +112,9 @@ class Scheduler extends Component
                 if (!isset($options['options'])) {
                         $options['options'] = [];
                 }
+                if (!isset($options['options']['lifetime'])) {
+                        $options['options']['lifetime'] = 0;
+                }
                 if ($options['options']['lifetime'] != 0) {
                         $options['options']['lifetime'] = 0;
                 }
