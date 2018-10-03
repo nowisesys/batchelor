@@ -23,6 +23,7 @@ namespace Batchelor\Queue\Task;
 use Batchelor\Cache\Factory;
 use Batchelor\Cache\Storage;
 use Batchelor\Queue\Task\Scheduler\JobQueue;
+use Batchelor\Queue\Task\Scheduler\Status;
 use Batchelor\System\Component;
 use Batchelor\System\Service\Config;
 use Batchelor\WebService\Types\JobIdentity;
@@ -105,10 +106,12 @@ class Scheduler extends Component
          * Get scheduled jobs.
          * @return array
          */
-        public function getList(): array
+        public function getList(): Status
         {
-                return (new JobQueue($this->_cache))
-                        ->getStatus();
+                return new Status(
+                    (new JobQueue($this->_cache))
+                        ->getStatus()
+                );
         }
 
         /**
