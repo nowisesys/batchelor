@@ -216,7 +216,7 @@ class JobQueue
                         'index'    => $this->getIndex(),
                         'count'    => $this->getCount(),
                         'queue'    => $this->getQueue(),
-                        'timezone' => ini_get("date.timezone ")
+                        'timezone' => ini_get("date.timezone")
                 ];
         }
 
