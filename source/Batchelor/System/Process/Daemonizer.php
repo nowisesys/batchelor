@@ -39,7 +39,7 @@ use RuntimeException;
  * 
  * @author Anders Lövgren (Nowise Systems)
  */
-class Daemonize
+class Daemonizer
 {
 
         /**
@@ -137,13 +137,13 @@ class Daemonize
                 }
 
                 if ($this->_options[self::NO_CLOSE_FILE] == false) {
-                        if (!fclose(STDIN)) {
+                        if (is_resource(STDIN) && !fclose(STDIN)) {
                                 throw new RuntimeException("Failed close stdin stream");
                         }
-                        if (!fclose(STDOUT)) {
+                        if (is_resource(STDOUT) && !fclose(STDOUT)) {
                                 throw new RuntimeException("Failed close stdout stream");
                         }
-                        if (!fclose(STDERR)) {
+                        if (is_resource(STDERR) && !fclose(STDERR)) {
                                 throw new RuntimeException("Failed close stderr stream");
                         }
                 }
