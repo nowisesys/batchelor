@@ -37,7 +37,8 @@
         "bmc/uup-auth": "^2.3",
         "bmc/uup-web-component": "^2.0",
         "etconsilium/php-recursive-array-object": "^0.1.0",
-        "symfony/console": "^4.1"
+        "symfony/console": "^4.1",
+        "krakjoe/pthreads-polyfill": "^1.1"
     },
     "autoload": {
         "psr-0": {
