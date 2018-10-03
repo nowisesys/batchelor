@@ -102,6 +102,18 @@ class JobQueue
         }
 
         /**
+         * Get job details.
+         * 
+         * @param JobIdentity $job The job identity.
+         * @return Runtime 
+         */
+        public function getJob(JobIdentity $job): Runtime
+        {
+                $name = sprintf("schedule-task-%d", $job->jobid);
+                return $this->_cache->read($name);
+        }
+
+        /**
          * Remove queued job.
          * 
          * @param JobIdentity $job The job identity.

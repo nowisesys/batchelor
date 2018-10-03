@@ -115,6 +115,18 @@ class Scheduler extends Component
         }
 
         /**
+         * Get job details.
+         * 
+         * @param JobIdentity $job The job identity.
+         * @return Runtime 
+         */
+        public function getJob(JobIdentity $job): Runtime
+        {
+                return (new JobQueue($this->_cache))
+                        ->getJob($job);
+        }
+
+        /**
          * Get cache backend.
          * @return Storage
          */
