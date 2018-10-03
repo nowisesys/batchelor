@@ -25,7 +25,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Batchelor\Console\ScheduledJobProcessor;
+use Batchelor\Console\ScheduleProcessor;
 
-$app = new ScheduledJobProcessor();
+$app = new ScheduleProcessor();
 $app->execute();
