@@ -26,7 +26,10 @@ use Batchelor\Queue\Task\Scheduler\JobQueue;
 use Batchelor\Queue\Task\Scheduler\Status;
 use Batchelor\System\Component;
 use Batchelor\System\Service\Config;
+use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
+use Batchelor\WebService\Types\JobStatus;
+use Batchelor\WebService\Types\QueuedJob;
 
 /**
  * The task scheduler.
@@ -165,6 +168,18 @@ class Scheduler extends Component
                                 return Config::toArray($config->cache->schedule);
                         }
                 }
+        }
+
+        /**
+         * Generate runtime for data.
+         * 
+         * @param JobData $data
+         */
+        public function getRuntime(JobData $data): Runtime
+        {
+                return new Runtime(new QueuedJob(
+                    new JobIdentity(...["", ""]), new JobStatus(...["", 0, "", "", ""])
+                    ), $data);
         }
 
 }
