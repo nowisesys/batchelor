@@ -44,7 +44,7 @@ class QueuedJob
          * @param JobIdentity $identity The job identity.
          * @param JobStatus $status The job status.
          */
-        public function __construct($identity, $status)
+        public function __construct(JobIdentity $identity, JobStatus $status)
         {
                 $this->identity = $identity;
                 $this->status = $status;

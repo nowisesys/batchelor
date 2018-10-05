@@ -67,7 +67,7 @@ class JobStatus
          * @param int $stamp The enqueue UNIX timestamp.
          * @param JobState $state The job state.
          */
-        public function __construct($date, $time, $stamp, $state)
+        public function __construct(string $date, string $time, int $stamp, JobState $state)
         {
                 $this->date = $date;
                 $this->time = $time;

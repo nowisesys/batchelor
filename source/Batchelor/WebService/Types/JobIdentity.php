@@ -52,7 +52,7 @@ class JobIdentity
          * @param string $jobid The job identity.
          * @param string $result The root directory.
          */
-        public function __construct($jobid, $result)
+        public function __construct(string $jobid, string $result)
         {
                 $this->jobid = $jobid;
                 $this->result = $result;
