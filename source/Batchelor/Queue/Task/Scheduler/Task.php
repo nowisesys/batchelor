@@ -20,17 +20,38 @@
 
 namespace Batchelor\Queue\Task\Scheduler;
 
+use Batchelor\WebService\Types\JobData;
+use Batchelor\WebService\Types\JobIdentity;
+
 /**
- * The allocated slot.
+ * Simple data type for serialization.
  *
- * @property string $name The key name.
- * @property int $time The allocation time.
- * @property int $count The number of allocated slots.
- * @property int $index The allocated slot number (jobid).
- * 
  * @author Anders Lövgren (Nowise Systems)
  */
-class JobSlot
+class Task
 {
-        
+
+        /**
+         * The job data.
+         * @var JobData 
+         */
+        public $data;
+        /**
+         * The job identity.
+         * @var JobIdentity 
+         */
+        public $identity;
+
+        /**
+         * Constructor.
+         * 
+         * @param JobIdentity $identity The job identity.
+         * @param JobData $data The job data.
+         */
+        public function __construct(JobIdentity $identity, JobData $data)
+        {
+                $this->identity = $identity;
+                $this->data = $data;
+        }
+
 }

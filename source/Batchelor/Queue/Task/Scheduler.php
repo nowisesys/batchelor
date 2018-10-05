@@ -22,12 +22,15 @@ namespace Batchelor\Queue\Task;
 
 use Batchelor\Cache\Factory;
 use Batchelor\Cache\Storage;
-use Batchelor\Queue\Task\Scheduler\JobQueue;
-use Batchelor\Queue\Task\Scheduler\Status;
+use Batchelor\Queue\Task\Scheduler\Channels;
+use Batchelor\Queue\Task\Scheduler\State\Inspector;
+use Batchelor\Queue\Task\Scheduler\Summary;
+use Batchelor\Queue\Task\Scheduler\Tasks;
 use Batchelor\System\Component;
 use Batchelor\System\Service\Config;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
+use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
 
@@ -37,7 +40,7 @@ use Batchelor\WebService\Types\QueuedJob;
  * Web services or command line task communicates with the sceduler to push jobs
  * onto the task qeueue. The task runner consumes queued tasks from the top until
  * no more queued task exists.
- *
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
 class Scheduler extends Component
@@ -62,6 +65,42 @@ class Scheduler extends Component
                 }
         }
 
+        public function setState(JobIdentity $identity, JobState $state)
+        {
+                (new Channels($this->_cache))
+                    ->setState($identity, $state);
+        }
+
+        /**
+         * Get inspector for pending jobs channel.
+         * @return Inspector
+         */
+        public function getPending(): Inspector
+        {
+                return (new Channels($this->_cache))
+                        ->getPending();
+        }
+
+        /**
+         * Get inspector for running jobs channel.
+         * @return Inspector
+         */
+        public function getRunning(): Inspector
+        {
+                return (new Channels($this->_cache))
+                        ->getRunning();
+        }
+
+        /**
+         * Get inspector for finished jobs channel.
+         * @return Inspector
+         */
+        public function getFinished(): Inspector
+        {
+                return (new Channels($this->_cache))
+                        ->getFinished();
+        }
+
         /**
          * Push scheduled job.
          * 
@@ -69,8 +108,16 @@ class Scheduler extends Component
          */
         public function pushJob(Runtime $runtime)
         {
-                (new JobQueue($this->_cache))
-                    ->addJob($runtime);
+                (new Channels($this->_cache))
+                    ->getPending()
+                    ->addStatus(
+                        $runtime->meta->identity, $runtime->meta->status
+                );
+
+                (new Tasks($this->_cache))
+                    ->addTask(
+                        $runtime->meta->identity, $runtime->data
+                );
         }
 
         /**
@@ -79,42 +126,33 @@ class Scheduler extends Component
          */
         public function popJob(): Runtime
         {
-                return (new JobQueue($this->_cache))
-                        ->getNext();
+                (new Channels($this->_cache))
+                    ->usePending();
         }
 
         /**
-         * Check if schedule qeuue is empty.
+         * Check if pending jobs exists.
          * @return bool
          */
         public function hasJobs(): bool
         {
-                return (new JobQueue($this->_cache))
-                        ->hasJobs();
+                return (new Channels($this->_cache))
+                        ->hasPending();
         }
 
         /**
-         * Remove queued job.
+         * Remove scheduled job.
          * 
          * @param JobIdentity $job The job identity.
-         * @return bool
          */
-        public function removeJob(JobIdentity $job)
+        public function removeJob(JobIdentity $identity)
         {
-                return (new JobQueue($this->_cache))
-                        ->removeJob($job);
-        }
+                (new Channels($this->_cache))
+                    ->getPending()
+                    ->removeStatus($identity);
 
-        /**
-         * Get scheduled jobs.
-         * @return array
-         */
-        public function getList(): Status
-        {
-                return new Status(
-                    (new JobQueue($this->_cache))
-                        ->getStatus()
-                );
+                (new Tasks($this->_cache))
+                    ->removeTask($identity);
         }
 
         /**
@@ -123,10 +161,22 @@ class Scheduler extends Component
          * @param JobIdentity $job The job identity.
          * @return Runtime 
          */
-        public function getJob(JobIdentity $job): Runtime
+        public function getJob(JobIdentity $identity): Runtime
         {
-                return (new JobQueue($this->_cache))
-                        ->getJob($job);
+                return (new Channels($this->_cache))
+                        ->getRuntime($identity);
+        }
+
+        /**
+         * Check if job is found.
+         * 
+         * @param JobIdentity $identity The job identity.
+         * @return bool
+         */
+        public function hasJob(JobIdentity $identity): bool
+        {
+                return (new Channels($this->_cache))
+                        ->hasChannel($identity);
         }
 
         /**
@@ -175,11 +225,20 @@ class Scheduler extends Component
          * 
          * @param JobData $data
          */
-        public function getRuntime(JobData $data): Runtime
+        public function makeRuntime(JobData $data): Runtime
         {
                 return new Runtime(new QueuedJob(
-                    new JobIdentity(...["", ""]), new JobStatus(...["", 0, "", "", ""])
+                    new JobIdentity(...["", ""]), new JobStatus(...["", "", 0, JobState::NONE()])
                     ), $data);
+        }
+
+        /**
+         * Get scheduler summary.
+         * @return Summary
+         */
+        public function getSummary(): Summary
+        {
+                return new Summary($this);
         }
 
 }
