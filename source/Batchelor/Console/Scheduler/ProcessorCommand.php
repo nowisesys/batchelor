@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Console\ScheduleProcessor;
+namespace Batchelor\Console\Scheduler;
 
 use Batchelor\Logging\Target\File as FileLogger;
 use Batchelor\Queue\Task\Processor;
@@ -29,7 +29,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Description of BaseCommand
+ * The command for scheduled job processor.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
