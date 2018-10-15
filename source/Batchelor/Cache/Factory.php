@@ -89,6 +89,10 @@ class Factory
         {
                 $backends = [];
 
+                if (PHP_SAPI == "cli") {
+                        $exclude = array_unique(array_merge($exclude, ["apcu", "xcache"]));
+                }
+
                 if (extension_loaded("apcu") && !in_array("apcu", $exclude)) {
                         $backends[] = "apcu";
                 }
