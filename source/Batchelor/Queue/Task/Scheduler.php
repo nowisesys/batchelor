@@ -211,7 +211,12 @@ class Scheduler extends Component
         {
                 if (($config = $this->getService("app"))) {
                         if (!isset($config->cache->schedule)) {
-                                return ['type' => 'detect'];
+                                return [
+                                        'type'    => 'detect',
+                                        'options' => [
+                                                'exclude' => ['apcu', 'xcache']
+                                        ]
+                                ];
                         } elseif (is_string($config->cache->schedule)) {
                                 return ['type' => $this->app->cache->schedule];
                         } else {
