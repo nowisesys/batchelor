@@ -24,6 +24,7 @@ use Batchelor\Queue\Remote\RemoteQueue;
 use Batchelor\Queue\System\SystemQueue;
 use Batchelor\Queue\WorkQueue;
 use InvalidArgumentException;
+use LogicException;
 
 /**
  * The queue provider.
@@ -108,6 +109,10 @@ class QueueInitiator
                 $queues = array_keys($this->_queues);
                 $values = array_values($this->_queues);
 
+                if (count($queues) == 0) {
+                        throw new LogicException("No work queues exists. Check the application configuration to make sure at lease one local or remote queue is defined.");
+                }
+
                 while (true) {
                         $index = rand(0, count($this->_queues));
                         $value = rand(0, $this->_max);
@@ -142,7 +147,7 @@ class QueueInitiator
          * @param int $total The total number of queues.
          * @return array
          */
-        private function addMissing(array $data, int $total):array
+        private function addMissing(array $data, int $total): array
         {
                 if (!isset($data['weight'])) {
                         $data['weight'] = $total;
