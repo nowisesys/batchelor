@@ -114,12 +114,12 @@ class QueueInitiator
                 }
 
                 while (true) {
-                        $index = rand(0, count($this->_queues));
+                        $index = rand(0, count($queues) - 1);
                         $value = rand(0, $this->_max);
 
                         $queue = $values[$index];
 
-                        if ($queue['weight'] < $value) {
+                        if ($queue['weight'] <= $value) {
                                 return $queues[$index];
                         }
                 }
@@ -131,6 +131,10 @@ class QueueInitiator
          */
         private function setOptions(array $options)
         {
+                if (empty($options)) {
+                        $options = ['local' => ['type' => 'system']];
+                }
+
                 foreach ($options as $name => $data) {
                         $options[$name] = $this->addMissing(
                             $data, count($options)
