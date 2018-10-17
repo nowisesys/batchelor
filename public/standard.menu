@@ -1,0 +1,13 @@
+<?php
+
+use UUP\Site\Page\Web\Component\Link;
+
+return array(
+        'head' => _('Queue'),
+        'data' => array(
+                _('Recent Jobs') => 'queue?sort=state&filter=recent',
+                Link::SEPARATOR,
+                _('Help')        => 'help',
+                _('About')       => 'about',
+        )
+);
