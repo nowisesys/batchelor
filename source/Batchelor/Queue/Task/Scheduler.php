@@ -78,7 +78,7 @@ class Scheduler extends Component
         public function getPending(): Inspector
         {
                 return (new Channels($this->_cache))
-                        ->getPending();
+                        ->usePending();
         }
 
         /**
@@ -88,7 +88,7 @@ class Scheduler extends Component
         public function getRunning(): Inspector
         {
                 return (new Channels($this->_cache))
-                        ->getRunning();
+                        ->useRunning();
         }
 
         /**
@@ -98,7 +98,7 @@ class Scheduler extends Component
         public function getFinished(): Inspector
         {
                 return (new Channels($this->_cache))
-                        ->getFinished();
+                        ->useFinished();
         }
 
         /**
@@ -109,7 +109,7 @@ class Scheduler extends Component
         public function pushJob(Runtime $runtime)
         {
                 (new Channels($this->_cache))
-                    ->getPending()
+                    ->usePending()
                     ->addStatus(
                         $runtime->meta->identity, $runtime->meta->status
                 );
@@ -126,8 +126,8 @@ class Scheduler extends Component
          */
         public function popJob(): Runtime
         {
-                (new Channels($this->_cache))
-                    ->usePending();
+                return (new Channels($this->_cache))
+                        ->getPending();
         }
 
         /**
@@ -148,7 +148,7 @@ class Scheduler extends Component
         public function removeJob(JobIdentity $identity)
         {
                 (new Channels($this->_cache))
-                    ->getPending()
+                    ->usePending()
                     ->removeStatus($identity);
 
                 (new Tasks($this->_cache))
