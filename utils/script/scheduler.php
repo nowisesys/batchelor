@@ -19,12 +19,13 @@
  */
 
 // 
-// Run the web service client.
+// The schedule viewer can be used for listing, adding, removing or showing
+// details of queued jobs. This is a debug tool.
 // 
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Batchelor\Console\WebServiceClient;
+use Batchelor\Console\ScheduleViewer;
 
-$app = new WebServiceClient();
+$app = new ScheduleViewer();
 $app->execute();

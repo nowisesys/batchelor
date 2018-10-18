@@ -19,13 +19,12 @@
  */
 
 // 
-// Command that process scheduled jobs and executes them. This is a daemon
-// process that should be started from a boot script.
+// Run the web service client.
 // 
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Batchelor\Console\ScheduleProcessor;
+use Batchelor\Console\WebServiceClient;
 
-$app = new ScheduleProcessor();
+$app = new WebServiceClient();
 $app->execute();

@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2018 Anders Lövgren (Nowise Systems)
  *
  * This program is free software; you can redistribute it and/or
@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */ 
+ */
 
 // 
-// The schedule viewer can be used for listing, adding, removing or showing
-// details of queued jobs. This is a debug tool.
+// Command that process scheduled jobs and executes them. This is a daemon
+// process that should be started from a boot script.
 // 
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Batchelor\Console\ScheduleViewer;
+use Batchelor\Console\ScheduleProcessor;
 
-$app = new ScheduleViewer;
+$app = new ScheduleProcessor();
 $app->execute();
