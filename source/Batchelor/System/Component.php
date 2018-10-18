@@ -25,6 +25,7 @@ use Batchelor\System\Service\Config;
 use Batchelor\System\Service\Hostid;
 use Batchelor\System\Service\Logging;
 use Batchelor\System\Service\Persistance;
+use Batchelor\System\Service\Processor;
 use Batchelor\System\Service\Queue;
 use Batchelor\System\Service\Storage;
 
