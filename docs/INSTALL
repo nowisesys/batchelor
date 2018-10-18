@@ -39,6 +39,21 @@ to use if wanted.
     Classic install using tar-ball is also possible, but not recommended as it
     makes updating harder.
 
+** SETUP:
+
+    The batchelor.sh script can be used to setup batchelor. Run with --setup should 
+    give you a basic setup:
+
+        bash$> ./vendor/bin/batchelor.sh --setup
+        (i) Directory config has been setup (please modify the defaults.* files).
+        (i) Directory data has been setup (please chmod to web server user).
+        (i) File public/.htaccess has been installed (please modify if needed).
+        (i) File public/dispatch.php has been installed (please modify if needed).
+
+    Pay attention to the messages and make required changes. The config files might
+    need some tweaks and the data directory has to be writable by the web server
+    user.
+
 ** CONFIGURE:
 
     You need to provide config protected versions of the config files (*.in):
@@ -64,5 +79,16 @@ to use if wanted.
 	Use the htaccess inside the public directory. Tweak to match your setup as 
         default assumes that /batchelor2 is used as location.
 
+** BUSINESS LOGIC:
+
+    You should now have a basic setup with web services and a user interface. Next
+    step is to define your applications business logic. 
+
+    Point your browser at i.e. http://localhost/batchelor-simula/ (or the location were 
+    batchelor is setup) and you should be greated with a message that the system is not 
+    yet configured. 
+
+    Follow the links to documentation on how to customize user interface and defining
+    the tasks that defines your application.
 
 // Anders Lövgren, 2018-06-07
