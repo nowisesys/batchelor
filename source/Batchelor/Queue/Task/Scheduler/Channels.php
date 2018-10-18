@@ -88,28 +88,28 @@ class Channels
         }
 
         /**
-         * Get pending jobs channel.
+         * Use pending jobs channel.
          * @return State
          */
-        public function getPending(): Pending
+        public function usePending(): Pending
         {
                 return new Pending($this->_cache);
         }
 
         /**
-         * Get running jobs channel.
+         * Use running jobs channel.
          * @return State
          */
-        public function getRunning(): Running
+        public function useRunning(): Running
         {
                 return new Running($this->_cache);
         }
 
         /**
-         * Get finished jobs channel.
+         * Use finished jobs channel.
          * @return State
          */
-        public function getFinished(): Finished
+        public function useFinished(): Finished
         {
                 return new Finished($this->_cache);
         }
@@ -152,10 +152,10 @@ class Channels
          */
         private function setPending(JobIdentity $identity, JobState $state)
         {
-                if (!$this->getPending()->hasStatus($identity)) {
-                        $this->getFinished()->setState($identity, $state);
+                if (!$this->usePending()->hasStatus($identity)) {
+                        $this->useFinished()->setState($identity, $state);
                 } else {
-                        $this->getPending()->setState($identity, $state);
+                        $this->usePending()->setState($identity, $state);
                 }
         }
 
@@ -167,10 +167,10 @@ class Channels
          */
         private function setRunning(JobIdentity $identity, JobState $state)
         {
-                if (!$this->getRunning()->hasStatus($identity)) {
-                        $this->getPending()->setState($identity, $state);
+                if (!$this->useRunning()->hasStatus($identity)) {
+                        $this->usePending()->setState($identity, $state);
                 } else {
-                        $this->getRunning()->setState($identity, $state);
+                        $this->useRunning()->setState($identity, $state);
                 }
         }
 
@@ -182,10 +182,10 @@ class Channels
          */
         private function setFinished(JobIdentity $identity, JobState $state)
         {
-                if (!$this->getFinished()->hasStatus($identity)) {
-                        $this->getRunning()->setState($identity, $state);
+                if (!$this->useFinished()->hasStatus($identity)) {
+                        $this->useRunning()->setState($identity, $state);
                 } else {
-                        $this->getFinished()->setState($identity, $state);
+                        $this->useFinished()->setState($identity, $state);
                 }
         }
 
@@ -201,13 +201,13 @@ class Channels
          */
         private function getChannel(JobIdentity $identity): State
         {
-                if (($channel = $this->getPending()) && $channel->hasStatus($identity)) {
+                if (($channel = $this->usePending()) && $channel->hasStatus($identity)) {
                         return $channel;
                 }
-                if (($channel = $this->getRunning()) && $channel->hasStatus($identity)) {
+                if (($channel = $this->useRunning()) && $channel->hasStatus($identity)) {
                         return $channel;
                 }
-                if (($channel = $this->getFinished()) && $channel->hasStatus($identity)) {
+                if (($channel = $this->useFinished()) && $channel->hasStatus($identity)) {
                         return $channel;
                 }
         }
@@ -224,13 +224,13 @@ class Channels
          */
         public function hasChannel(JobIdentity $identity): bool
         {
-                if (($channel = $this->getPending()) && $channel->hasStatus($identity)) {
+                if (($channel = $this->usePending()) && $channel->hasStatus($identity)) {
                         return true;
                 }
-                if (($channel = $this->getRunning()) && $channel->hasStatus($identity)) {
+                if (($channel = $this->useRunning()) && $channel->hasStatus($identity)) {
                         return true;
                 }
-                if (($channel = $this->getFinished()) && $channel->hasStatus($identity)) {
+                if (($channel = $this->useFinished()) && $channel->hasStatus($identity)) {
                         return true;
                 }
 
@@ -255,16 +255,16 @@ class Channels
         }
 
         /**
-         * Use next pending job.
+         * Get next pending job.
          * @return Runtime 
          */
-        public function usePending(): Runtime
+        public function getPending(): Runtime
         {
-                $pending = $this->getPending();
+                $pending = $this->usePending();
                 $current = $pending->getCurrent();
                 $runtime = $pending->getRuntime($current);
 
-                $pending->setState($current, JobState::RUNNING); // Migrates job to running
+                $pending->setState($current, JobState::RUNNING()); // Migrate job to running
 
                 return $runtime;
         }
