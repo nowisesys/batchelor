@@ -186,7 +186,7 @@ class Config
                 if (file_exists($config)) {
                         $this->loadConfig($config);
                 } else {
-                        $this->findConfig("defaults.app", $locations);
+                        $this->findConfig($config, $locations);
                 }
         }
 
