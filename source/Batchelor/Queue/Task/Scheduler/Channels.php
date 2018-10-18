@@ -199,7 +199,7 @@ class Channels
          * @param JobIdentity $identity
          * @return State The state queue.
          */
-        private function getChannel(JobIdentity $identity): State
+        public function getChannel(JobIdentity $identity): State
         {
                 if (($channel = $this->usePending()) && $channel->hasStatus($identity)) {
                         return $channel;

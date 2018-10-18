@@ -33,6 +33,7 @@ use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
+use LogicException;
 
 /**
  * The task scheduler.
@@ -65,6 +66,12 @@ class Scheduler extends Component
                 }
         }
 
+        /**
+         * Change state of job.
+         * 
+         * @param JobIdentity $job The job identity.
+         * @param JobState $state The job state.
+         */
         public function setState(JobIdentity $identity, JobState $state)
         {
                 (new Channels($this->_cache))
@@ -147,8 +154,13 @@ class Scheduler extends Component
          */
         public function removeJob(JobIdentity $identity)
         {
+                if (!(new Channels($this->_cache))
+                        ->hasChannel($identity)) {
+                        throw new LogicException("The job is missing");
+                }
+
                 (new Channels($this->_cache))
-                    ->usePending()
+                    ->getChannel($identity)
                     ->removeStatus($identity);
 
                 (new Tasks($this->_cache))
