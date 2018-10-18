@@ -53,7 +53,7 @@ class PhpSerialize implements Formatter
                         return false;
                 }
 
-                if (!($data = unserialize($value, $options))) {
+                if (($data = unserialize($value, $options)) === false) {
                         throw new UnexpectedValueException("Failed format data using unserialize()");
                 } else {
                         return $data;
