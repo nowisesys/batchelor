@@ -91,8 +91,9 @@ class Services
         public function __construct($config = null)
         {
                 if (!isset($config)) {
-                        $config = realpath(__DIR__ . "/../../../config/services.inc");
+                        $config = $this->getConfigPath();
                 }
+
                 if (is_string($config) && !file_exists($config)) {
                         throw new RuntimeException("The services config file is missing ($config)");
                 }
@@ -241,6 +242,19 @@ class Services
         {
                 $callback = $this->_services[$name];
                 $this->_services[$name] = call_user_func($callback, $name);
+        }
+
+        /**
+         * Get config file path.
+         * @return string
+         */
+        private function getConfigPath(): string
+        {
+                if (defined('APP_ROOT')) {
+                        return sprintf("%s/config/services.inc", APP_ROOT);
+                } else {
+                        return realpath(__DIR__ . "/../../../config/services.inc");
+                }
         }
 
 }
