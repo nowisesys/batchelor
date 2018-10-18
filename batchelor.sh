@@ -91,6 +91,9 @@ function setup_develop()
     for dir in public utils template; do 
         rm -rf $dir && mkdir $dir && ln -sf $srcdir/$dir/* $dir
     done
+    
+    rm -f public/.htaccess && cp $srcdir/public/.htaccess
+    rm -f public/dispatch.php && cp $srcdir/public/dispatch.php
 }
 
 function cleanup()
