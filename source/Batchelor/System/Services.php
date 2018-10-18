@@ -252,6 +252,8 @@ class Services
         {
                 if (defined('APP_ROOT')) {
                         return sprintf("%s/config/services.inc", APP_ROOT);
+                } elseif (getenv('APP_ROOT')) {
+                        return sprintf("%s/config/services.inc", getenv('APP_ROOT'));
                 } else {
                         return realpath(__DIR__ . "/../../../config/services.inc");
                 }
