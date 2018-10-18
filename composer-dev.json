@@ -44,5 +44,8 @@
         "psr-0": {
             "Batchelor\\": "source"
         }
-    }
+    },
+    "bin": [
+        "batchelor.sh"
+    ]
 }
