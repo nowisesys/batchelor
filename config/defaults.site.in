@@ -54,6 +54,10 @@
  */
 
 return array(
+          /**
+           * Change to true once your application has been setup.
+           */
+          'configured' => false,
 //        /**
 //         * Common site name.
 //         */
