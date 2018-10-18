@@ -14,4 +14,4 @@ fi
 
 ( cd $root
   export APP_ROOT=$(dirname `pwd`)
-  exec php ./script/processor.php $* )
+  exec php ./script/processor.php "$*" )
