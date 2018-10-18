@@ -47,25 +47,20 @@ function setup_docs()
     cp -a $srcdir/docs .
 }
 
-function setup_basic()
+function setup_data()
 {
-    setup_public
-    setup_config
-    setup_utils
-    setup_template
-    setup_dispatcher
+    cp -a $srcdir/data .
+    echo "(i) Directory data has been setup (please chmod to web server user)."
+}
+
+function setup_source()
+{
+    mkdir source
 }
 
 function setup_examples()
 {
     cp -a $srcdir/public/example public
-}
-
-function setup_develop() 
-{
-    for dir in public utils template; do 
-        rm -rf $dir && mkdir $dir && ln -sf $srcdir/$dir/* $dir
-    done
 }
 
 function setup_dispatcher()
@@ -77,6 +72,24 @@ function setup_dispatcher()
 #        sed -i -e s%'/../../vendor/'%'/../vendor/'%1 \
 #               -e s%"/batchelor2"%"${location}"%g public/$file
         echo "(i) File public/$file has been installed (please modify)."
+    done
+}
+
+function setup_basic()
+{
+    setup_public
+    setup_config
+    setup_utils
+    setup_template
+    setup_data
+    setup_source
+    setup_dispatcher
+}
+
+function setup_develop() 
+{
+    for dir in public utils template; do 
+        rm -rf $dir && mkdir $dir && ln -sf $srcdir/$dir/* $dir
     done
 }
 
@@ -97,7 +110,7 @@ function usage()
 {
     echo "$prog - Setup and management tool."
     echo 
-    echo "Usage: $prog --setup [--public] [--config] [--utils] [--docs]"
+    echo "Usage: $prog --setup"
     echo "       $prog --examples"
     echo "       $prog --develop"
     echo 
@@ -106,6 +119,9 @@ function usage()
     echo "  --public    : Setup public directory."
     echo "  --config    : Setup config directory."
     echo "  --utils     : Setup utils directory."
+    echo "  --data      : Setup data directory (for jobs, cache and logs)."
+    echo "  --source    : Setup source directory (for application business logic)."
+    echo "  --template  : Setup render templates."
     echo "  --docs      : Install documentation (recommended)."
     echo "  --examples  : Install examples in public."
     echo "  --develop   : Configure for development."
@@ -122,7 +138,7 @@ function usage()
     echo
     echo "Notice:"
     echo "  1. The --location or --verbose options must be used before any other option."
-    echo "  2. The --setup option implies --public --config --utils."
+    echo "  2. The --setup option implies --public --config --utils --data --source --template."
     echo 
     echo "Copyright (C) 2018 Nowise Systems and Uppsala University (Anders Lövgren, BMC-IT)"
 }
@@ -164,6 +180,15 @@ while [ -n "$1" ]; do
             ;;
         --docs)
             setup_docs
+            ;;
+        --data)
+            setup_data
+            ;;
+        --source)
+            setup_source
+            ;;
+        --template)
+            setup_template
             ;;
         --examples)
             setup_examples
