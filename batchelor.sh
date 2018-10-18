@@ -71,7 +71,7 @@ function setup_dispatcher()
         relocate public/$file
 #        sed -i -e s%'/../../vendor/'%'/../vendor/'%1 \
 #               -e s%"/batchelor2"%"${location}"%g public/$file
-        echo "(i) File public/$file has been installed (please modify)."
+        echo "(i) File public/$file has been installed (please modify if needed)."
     done
 }
 
