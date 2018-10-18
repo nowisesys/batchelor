@@ -14,7 +14,7 @@ use Batchelor\System\Service;
 // should always be instantiated (i.e. a session service).
 // 
 // [
-//      'qeuue' => new Queue()
+//      'queue' => new Queue()
 // ]
 // 
 // Example on using callable, in this case an closure. The name will be the
