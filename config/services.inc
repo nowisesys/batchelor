@@ -26,6 +26,7 @@ use Batchelor\System\Service;
 //              $qeuue->connect('127.0.0.1');
 //              return $queue;
 //         }
+// ]
 // 
 
 return [
@@ -58,8 +59,8 @@ return [
         // 
         'cache'       => new Service(Service\Cache::class),
         // 
-        // The task processor service provides a task runner resository for the
-        // scheduled job consumer application.
+        // The task processor service provides the repository of task runners 
+        // used by the consumer of scheduled jobs (processor).
         // 
         'processor'   => new Service(Service\Processor::class)
 ];
