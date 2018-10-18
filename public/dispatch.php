@@ -18,6 +18,7 @@
 
 require_once(realpath(__DIR__ . '/../vendor/autoload.php'));
 
+define('APP_ROOT', dirname(__DIR__));
 use UUP\Site\Request\Router;
 
 $router = new Router();
