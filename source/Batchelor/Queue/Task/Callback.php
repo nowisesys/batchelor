@@ -112,7 +112,6 @@ class Callback
          * 
          * @param string $cmd The command string.
          * @param array $env The environment variables.
-         * @return int The exit status
          */
         public function runCommand(string $cmd, array $env = null): int
         {

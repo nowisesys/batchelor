@@ -35,7 +35,7 @@ class IndexPage extends WelcomePage
 
         public function printContent()
         {
-                
+                echo "TEST";
         }
 
 }
