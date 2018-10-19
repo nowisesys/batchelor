@@ -21,8 +21,11 @@
 namespace Batchelor\Queue\Task;
 
 use Batchelor\Logging\Logger;
+use Batchelor\Queue\Task\Manager\Prefork;
+use Batchelor\Queue\Task\Manager\Threads;
 use Batchelor\System\Component;
 use Batchelor\System\Process\Daemonized;
+use InvalidArgumentException;
 use RuntimeException;
 
 /**
@@ -51,6 +54,21 @@ class Processor extends Component implements Daemonized
          * @var int 
          */
         private $_workers = 3;
+        /**
+         * The work manager type.
+         * @var string 
+         */
+        private $_manager = "prefork";
+        /**
+         * The work manager.
+         * @var Manager 
+         */
+        private $_runner;
+        /**
+         * The poll interval.
+         * @var int 
+         */
+        private $_poll = 5;
 
         /**
          * Constructor.
@@ -64,44 +82,89 @@ class Processor extends Component implements Daemonized
                 }
         }
 
+        /**
+         * Set number of workers (threads or processes).
+         * @param int $num The number of workers.
+         */
         public function setWorkers(int $num)
         {
                 $this->_workers = $num;
         }
 
+        /**
+         * Set worker manager type.
+         * @param string $type The manager type.
+         */
+        public function setManager(string $type)
+        {
+                $this->_manager = $type;
+        }
+
+        /**
+         * Set polling interval.
+         * @param int $interval The polling interval.
+         */
+        public function setPolling(int $interval)
+        {
+                $this->_poll = $interval;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function prepare(Logger $logger)
         {
                 $this->_done = false;
+                $this->_runner = $this->getManager();
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function execute(Logger $logger)
         {
                 $this->run($logger);
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function terminate(Logger $logger)
         {
                 $logger->debug("Got terminate signal (setting exit flag)");
                 $this->_done = true;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function finished(): bool
         {
                 return $this->_done;
         }
 
-        /**
-         * Run queued jobs.
-         */
         protected function run(Logger $logger)
         {
+                $logger->debug("Starting up work processor...");
+
                 $scheduler = new Scheduler();
 
-                $logger->info("Ready to process jobs (%d workers)", [$this->_workers]);
+                $manager = $this->_runner;
+                $workers = $this->_workers;
+                $polling = $this->_poll;
+
+                $logger->info("Ready to process jobs (%d workers:%s:%d sec poll)", [$workers, $manager->getType(), $polling]);
                 while (!$this->finished()) {
                         $this->loop($logger, $scheduler);
                 }
                 $logger->info("Finished process jobs");
+
+                while (!$manager->isIdle()) {
+                        $logger->debug("Collecting child processes");
+                        $manager->getChildren();
+                }
+
+                $logger->debug("Closed work processor");
         }
 
         private function loop(Logger $logger, Scheduler $scheduler)
@@ -110,28 +173,56 @@ class Processor extends Component implements Daemonized
                         pcntl_signal_dispatch();
                 }
 
-                if ($this->finished()) {
-                        return;
-                } else {
-                        $this->poll($logger, $scheduler);
+                if (!$this->finished()) {
+                        $this->poll($logger, $scheduler, $this->_runner);
                 }
         }
 
-        private function poll(Logger $logger, Scheduler $scheduler)
+        private function poll(Logger $logger, Scheduler $scheduler, Manager $manager)
         {
                 $logger->debug("Polling for jobs");
 
-                if ($scheduler->hasJobs()) {
-                        $this->process($logger, $scheduler);
-                } else {
-                        sleep(10);
+                if ($manager->isBusy()) {
+                        $logger->debug("Manager is busy");
+                        return sleep($this->_poll);
+                }
+                if ($manager->isIdle() == false) {
+                        $logger->debug("Collecting child processes");
+                        $manager->getChildren();
+                }
+
+                while ($scheduler->hasJobs() && $manager->isBusy() == false) {
+                        $this->process($logger, $scheduler, $manager);
+                }
+
+                if ($manager->isIdle()) {
+                        return sleep($this->_poll);
                 }
         }
 
-        private function process(Logger $logger, Scheduler $scheduler)
+        private function process(Logger $logger, Scheduler $scheduler, Manager $manager)
         {
                 if (($runtime = $scheduler->popJob())) {
-                        // TODO: Create and execute task.
+                        $logger->info("Running job %d", [$runtime->meta->identity->jobid]);
+                        $manager->addJob($runtime);
+                }
+        }
+
+        /**
+         * Get work manager object.
+         * 
+         * @return Manager
+         * @throws InvalidArgumentException
+         */
+        private function getManager(): Manager
+        {
+                switch ($this->_manager) {
+                        case 'threads':
+                                return new Threads($this->_workers);
+                        case 'prefork':
+                                return new Prefork($this->_workers);
+                        default:
+                                throw new InvalidArgumentException("Unknown type of work manager $this->_manager");
                 }
         }
 
