@@ -70,4 +70,6 @@ interface Manager
          * @param int $number The number of workers.
          */
         function setWorkers(int $number);
+
+        function getType(): string;
 }

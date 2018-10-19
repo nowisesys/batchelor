@@ -79,6 +79,14 @@ class Prefork implements Manager
         /**
          * {@inheritdoc}
          */
+        public function getType(): string
+        {
+                return "prefork";
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function setWorkers(int $number)
         {
                 $this->_running = 0;

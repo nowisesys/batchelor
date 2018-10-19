@@ -39,26 +39,49 @@ class Threads implements Manager
                 }
         }
 
+        /**
+         * {@inheritdoc}
+         */
+        public function getType(): string
+        {
+                return "pthreads";
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function addJob(Runtime $runtime)
         {
                 
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function getChildren(): array
         {
                 
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function isBusy(): bool
         {
                 
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function isIdle(): bool
         {
                 
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function setWorkers(int $number)
         {
                 
