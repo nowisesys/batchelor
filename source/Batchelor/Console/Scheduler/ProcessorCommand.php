@@ -48,7 +48,9 @@ class ProcessorCommand extends Command
                 $this->addOption("pidfile", "p", InputOption::VALUE_REQUIRED, "Create process ID (PID) file");
                 $this->addOption("logfile", "l", InputOption::VALUE_REQUIRED, "Write events to logfile");
                 $this->addOption("foreground", "k", InputOption::VALUE_NONE, "Don't run as daemon process");
-                $this->addOption("worker", "w", InputOption::VALUE_REQUIRED, "The number of worker to fork");
+                $this->addOption("worker", "w", InputOption::VALUE_REQUIRED, "The number of workers");
+                $this->addOption("manager", "m", InputOption::VALUE_REQUIRED, "The work manager (threads or prefork)");
+                $this->addOption("poll", "i", InputOption::VALUE_REQUIRED, "The interval for polling jobs");
                 $this->addOption("debug", "d", InputOption::VALUE_NONE, "Enable debug mode");
 
                 $this->addusage("[--user=batchelor] [--group=daemon] [--pidfile=/var/run/batchelor.pid]");
@@ -60,6 +62,9 @@ class ProcessorCommand extends Command
 
                 $daemon = new Runner($processor);
 
+                if ($input->getOption("manager")) {
+                        $processor->setManager($input->getOption("manager"));
+                }                
                 if ($input->getOption("worker")) {
                         $processor->setWorkers($input->getOption("worker"));
                 }
