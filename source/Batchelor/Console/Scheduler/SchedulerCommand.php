@@ -154,7 +154,7 @@ class SchedulerCommand extends Command
                 $scheduler = new Scheduler();
 
                 if (!$scheduler->hasJob($identity)) {
-                        return $output->writeln("The job $data is missing");
+                        return $output->writeln("Job $data was not found");
                 }
 
                 $scheduler->removeJob($identity);
@@ -167,7 +167,7 @@ class SchedulerCommand extends Command
                 $scheduler = new Scheduler();
 
                 if (!$scheduler->hasJob($identity)) {
-                        return $output->writeln("The job $data is missing");
+                        return $output->writeln("Job $data is missing");
                 }
 
                 print_r($scheduler->getJob($identity));
