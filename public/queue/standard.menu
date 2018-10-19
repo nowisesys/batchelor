@@ -1,0 +1,11 @@
+<?php
+
+return array(
+        'head' => _('Queue'),
+        'data' => array(
+                _('Recent')   => '::?sort=state&filter=recent',
+                _('Pending')  => '::?sort=jobid&filter=pending',
+                _('Running')  => '::?sort=jobid&filter=running',
+                _('Finished') => '::?sort=jobid&filter=finished',
+        )
+);
