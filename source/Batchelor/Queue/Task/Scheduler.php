@@ -154,14 +154,8 @@ class Scheduler extends Component
          */
         public function removeJob(JobIdentity $identity)
         {
-                if (!(new Channels($this->_cache))
-                        ->hasChannel($identity)) {
-                        throw new LogicException("The job is missing");
-                }
-
                 (new Channels($this->_cache))
-                    ->getChannel($identity)
-                    ->removeStatus($identity);
+                    ->removeIdentity($identity);
 
                 (new Tasks($this->_cache))
                     ->removeTask($identity);

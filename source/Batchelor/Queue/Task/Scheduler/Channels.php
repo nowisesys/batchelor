@@ -199,7 +199,7 @@ class Channels
          * @param JobIdentity $identity
          * @return State The state queue.
          */
-        public function getChannel(JobIdentity $identity): State
+        private function getChannel(JobIdentity $identity): State
         {
                 if (($channel = $this->usePending()) && $channel->hasStatus($identity)) {
                         return $channel;
@@ -267,6 +267,21 @@ class Channels
                 $pending->setState($current, JobState::RUNNING()); // Migrate job to running
 
                 return $runtime;
+        }
+
+        /**
+         * Remove job identity.
+         * 
+         * @param JobIdentity $identity The job identity.
+         */
+        public function removeIdentity(JobIdentity $identity)
+        {
+                if (!$this->hasChannel($identity)) {
+                        throw new LogicException("The job is missing");
+                }
+
+                $this->getChannel($identity)
+                    ->removeStatus($identity);
         }
 
 }

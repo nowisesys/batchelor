@@ -150,17 +150,22 @@ class SchedulerCommand extends Command
 
         private function removeJob(OutputInterface $output, string $data)
         {
+                $identity = new JobIdentity($data, "");
                 $scheduler = new Scheduler();
-                $scheduler->removeJob(new JobIdentity($data, ""));
-
-                $output->writeln("Removed job $data");
+                
+                if ($scheduler->hasJob($identity)) {
+                        $scheduler->removeJob($identity);
+                        $output->writeln("Removed job $data");
+                } else {
+                        $output->writeln("The job $data is missing");
+                }
         }
 
         private function showJob(OutputInterface $output, string $data)
         {
                 $identity = new JobIdentity($data, "");
-
                 $scheduler = new Scheduler();
+                
                 if ($scheduler->hasJob($identity)) {
                         print_r($scheduler->getJob($identity));
                 } else {
