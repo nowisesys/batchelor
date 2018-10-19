@@ -3,9 +3,9 @@
 use UUP\Site\Page\Web\Component\Link;
 
 return array(
-        'head' => _('Queue'),
+        'head' => _('Batchelor'),
         'data' => array(
-                _('Recent Jobs') => 'queue?sort=state&filter=recent',
+                _('Queue') => 'queue?sort=state&filter=recent',
                 Link::SEPARATOR,
                 _('Help')        => 'help',
                 _('About')       => 'about',
