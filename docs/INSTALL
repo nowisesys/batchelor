@@ -37,7 +37,7 @@ to use if wanted.
 	bash$> composer update
 
     Classic install using tar-ball is also possible, but not recommended as it
-    makes updating harder.
+    makes it harder to update batchelor.
 
 ** SETUP:
 
