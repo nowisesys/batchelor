@@ -28,7 +28,11 @@ namespace Batchelor\WebService\Types;
  * 
  * To keep things simple (at least for now) we assume that the download URL will 
  * send the data in a format not requiring further processing. At this time we 
- * are not supporting sending credentials for authentication. 
+ * are only supporting basic authentication encoded in the URL.
+ * 
+ * The task is the processor that will perform work on the input data. The name
+ * must match one of the registered task processors. Most setups have only a single
+ * task processor in which case default is a good choice.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
@@ -45,16 +49,23 @@ class JobData
          * @var string 
          */
         public $type;
+        /**
+         * The task processor.
+         * @var string 
+         */
+        public $task;
 
         /**
          * Constructor.
          * @param string $data The job data (plain data or an URL).
          * @param string $type The data type (either "data" or "url").
+         * @param string $task The task processor (i.e. "default").
          */
-        public function __construct(string $data, string $type)
+        public function __construct(string $data, string $type, string $task = 'default')
         {
                 $this->data = $data;
                 $this->type = $type;
+                $this->task = $task;
         }
 
 }
