@@ -142,6 +142,7 @@ class SchedulerCommand extends Command
 
                 $jobdata = new JobData(...array_values($data['data']));
                 $runtime = $scheduler->makeRuntime($jobdata);
+                $runtime->hostid = (new \Batchelor\System\Service\Hostid())->getValue();
 
                 $scheduler->pushJob($runtime);
 

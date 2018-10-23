@@ -20,6 +20,8 @@
 
 namespace Batchelor\Queue\Task;
 
+use Batchelor\Queue\System\SystemDirectory;
+use Batchelor\Storage\Directory;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\QueuedJob;
 
@@ -41,17 +43,40 @@ class Runtime
          * @var JobData 
          */
         public $data;
+        /**
+         * The runtime hostid.
+         * @var string
+         */
+        public $hostid;
 
         /**
          * Constructor.
          * 
          * @param QueuedJob $meta The queued job.
          * @param Jobdata $data The job data.
+         * @param string $hostid The hostid.
          */
-        public function __construct(QueuedJob $meta, Jobdata $data)
+        public function __construct(QueuedJob $meta, Jobdata $data, string $hostid = null)
         {
                 $this->meta = $meta;
                 $this->data = $data;
+                $this->hostid = $hostid;
+        }
+
+        public function getWorkDirectory(): Directory
+        {
+                return (new SystemDirectory($this->hostid))
+                        ->getWorkDirectory(
+                            $this->meta->identity->result
+                );
+        }
+
+        public function getResultDirectory(): Directory
+        {
+                return (new SystemDirectory($this->hostid))
+                        ->getResultDirectory(
+                            $this->meta->identity->result
+                );
         }
 
 }

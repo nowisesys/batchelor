@@ -33,7 +33,6 @@ use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
-use LogicException;
 
 /**
  * The task scheduler.
@@ -106,6 +105,17 @@ class Scheduler extends Component
         {
                 return (new Channels($this->_cache))
                         ->useFinished();
+        }
+
+        /**
+         * Check if job is running.
+         * 
+         * @param JobIdentity $job The job identity.
+         * @return bool
+         */
+        public function isRunning(JobIdentity $identity): bool
+        {
+                return $this->getRunning()->hasStatus($identity);
         }
 
         /**

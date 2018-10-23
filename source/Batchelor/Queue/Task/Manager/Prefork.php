@@ -22,7 +22,6 @@ namespace Batchelor\Queue\Task\Manager;
 
 use Batchelor\Queue\Task\Manager;
 use Batchelor\Queue\Task\Runtime;
-use Batchelor\WebService\Types\JobState;
 use RuntimeException;
 
 /**
@@ -158,17 +157,33 @@ class Prefork implements Manager
                 return $result;
         }
 
+        /**
+         * Run single task.
+         * 
+         * @param Runtime $runtime The task runtime.
+         */
         private function runJob(Runtime $runtime)
         {
-                
+                (new TaskRunner())->runTask($runtime);
         }
 
+        /**
+         * Set process slot as busy.
+         * 
+         * @param int $pid The process ID.
+         * @param Runtime $runtime The job runtime.
+         */
         private function setBusy(int $pid, Runtime $runtime)
         {
-                $this->_current[$pid] = $runtime->meta->identity->jobid;
+                $this->_current[$pid] = $runtime->meta->identity;
                 $this->_running++;
         }
 
+        /**
+         * Set process slot as free.
+         * 
+         * @param int $pid The process ID.
+         */
         private function setFree(int $pid)
         {
                 unset($this->_current[$pid]);

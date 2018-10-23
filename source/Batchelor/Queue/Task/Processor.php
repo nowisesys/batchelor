@@ -25,6 +25,7 @@ use Batchelor\Queue\Task\Manager\Prefork;
 use Batchelor\Queue\Task\Manager\Threads;
 use Batchelor\System\Component;
 use Batchelor\System\Process\Daemonized;
+use Batchelor\WebService\Types\JobState;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -161,7 +162,7 @@ class Processor extends Component implements Daemonized
 
                 while (!$manager->isIdle()) {
                         $logger->debug("Collecting child processes");
-                        $manager->getChildren();
+                        $this->setResult($scheduler, $manager->getChildren());
                 }
 
                 $logger->debug("Closed work processor");
@@ -188,7 +189,7 @@ class Processor extends Component implements Daemonized
                 }
                 if ($manager->isIdle() == false) {
                         $logger->debug("Collecting child processes");
-                        $manager->getChildren();
+                        $this->setResult($scheduler, $manager->getChildren());
                 }
 
                 while ($scheduler->hasJobs() && $manager->isBusy() == false) {
@@ -223,6 +224,25 @@ class Processor extends Component implements Daemonized
                                 return new Prefork($this->_workers);
                         default:
                                 throw new InvalidArgumentException("Unknown type of work manager $this->_manager");
+                }
+        }
+
+        /**
+         * Set job result state.
+         * 
+         * @param Scheduler $scheduler The job scheduler.
+         * @param array $results The results array.
+         */
+        private function setResult(Scheduler $scheduler, array $results)
+        {
+                foreach ($results as $result) {
+                        if (!$scheduler->isRunning($result['job'])) {
+                                continue;       // State already set
+                        } elseif ($result['code'] != 0) {
+                                $scheduler->setState($result['job'], JobState::ERROR);
+                        } else {
+                                $scheduler->setState($result['job'], JobState::FINISHED);
+                        }
                 }
         }
 
