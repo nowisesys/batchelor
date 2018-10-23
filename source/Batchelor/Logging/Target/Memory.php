@@ -83,6 +83,7 @@ class Memory extends Adapter implements Logger
 
         /**
          * Get all messages.
+         * @return array 
          */
         public function getMessages(): array
         {
