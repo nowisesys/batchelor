@@ -31,9 +31,27 @@ use Batchelor\WebService\Types\JobData;
  * job queue processor service. The class should implement the methods to provide 
  * the business logic that defines your application.
  * 
- * The methods will be called in this order: initialize(), prepare(), execute() and
- * last finished(). The task adapter class can be used that provides dummy methods
- * and some boiler plate code.
+ * The methods will be called in this order:
+ * 
+ * <ol>
+ * <li>validate()   - Validate input data for this task.</li>
+ * <li>prepare()    - Prepare data for execution.</li>
+ * <li>initialize() - Initilize task before execute.</li>
+ * <li>execute()    - Called to process input data.</li>
+ * <li>finished()   - Cleanup after execution.</li>
+ * </ol>
+ * 
+ * The task adapter is an abstract class that provides dummy implementations for
+ * some of the interface methods. The validate() and prepare() method is called
+ * to prepare indata, while the initialize(), execute() and finished() methods are 
+ * called by the schedule processor to process data.
+ * 
+ * Throw exceptions or call set error status thru the response callback to signal
+ * error condition. New jobs can also be added to scheduler which makes it possible
+ * to build chained (workflow) or divided tasks,
+ * 
+ * The initial task might i.e. chose to split input data into smaller blocks that 
+ * is each processed as a separate task.
  * 
  * @author Anders Lövgren (Nowise Systems)
  * @see Task\Adapter
@@ -42,9 +60,11 @@ interface Task
 {
 
         /**
-         * The task initialize method.
+         * Check input data.
+         * 
+         * @param JobData $data The job data to process.
          */
-        function initialize();
+        function validate(JobData $data);
 
         /**
          * Prepare for execution.
@@ -53,6 +73,11 @@ interface Task
          * @param JobData $data The job data to process.
          */
         function prepare(Directory $workdir, JobData $data);
+
+        /**
+         * The task initialize method.
+         */
+        function initialize();
 
         /**
          * Perform business logic.
