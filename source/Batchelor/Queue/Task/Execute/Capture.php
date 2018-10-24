@@ -141,7 +141,7 @@ class Capture implements Selectable
          * 
          * @return Capture
          */
-        public static function create(Logger $logging, string $command, array $env = null, string $cwd = null)
+        public static function create(Logger $logging, string $command, array $env = null, string $cwd = null): Capture
         {
                 return new Capture(
                     new Runnable($command, $env, $cwd), $logging

@@ -328,7 +328,7 @@ class Expect
          * @return bool
          * @throws RuntimeException
          */
-        public function isReadable(int $timeout = 0)
+        public function isReadable(int $timeout = 0): bool
         {
                 list($fdr, $fdw, $fde) = [[$this->_handle], null, null];
 

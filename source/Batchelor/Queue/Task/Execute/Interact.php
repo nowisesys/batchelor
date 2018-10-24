@@ -211,6 +211,7 @@ class Interact
 
         /**
          * Set output buffer.
+         * 
          * @param string $buff The message for output.
          * @param string $output The output buffer.
          */

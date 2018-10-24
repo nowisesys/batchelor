@@ -65,6 +65,8 @@ class Spawner
 
         /**
          * Open process.
+         * 
+         * @return Process
          * @throws RuntimeException
          */
         public function open(): Process
