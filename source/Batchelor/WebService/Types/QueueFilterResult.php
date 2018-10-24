@@ -72,6 +72,14 @@ class QueueFilterResult extends EnumType
          * Alias for PENDING.
          */
         const WAITING = 'pending';
+        /**
+         * Job is suspended.
+         */
+        const SUSPEND = 'suspend';
+        /**
+         * Job is resumed.
+         */
+        const RESUMED = 'resumed';
 
         /**
          * Constructor.
