@@ -103,6 +103,19 @@ class Callback
         }
 
         /**
+         * Set message logger.
+         * 
+         * Call this method to replace the default in memory logger with for 
+         * example a file logger or syslog.
+         * 
+         * @param Logger $logger The message logger.
+         */
+        public function setLogger(Logger $logger)
+        {
+                $this->_logger = $logger;
+        }
+
+        /**
          * Create message logger.
          * @return Memory
          */

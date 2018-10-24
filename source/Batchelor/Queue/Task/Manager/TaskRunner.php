@@ -20,14 +20,10 @@
 
 namespace Batchelor\Queue\Task\Manager;
 
-use Batchelor\Logging\Target\Memory;
 use Batchelor\Queue\Task;
-use Batchelor\Queue\Task\Callback;
 use Batchelor\Queue\Task\Runtime;
-use Batchelor\Storage\Directory;
 use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobState;
-use RuntimeException;
 use Throwable;
 
 /**
