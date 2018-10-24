@@ -24,9 +24,10 @@ use Batchelor\Logging\Format\DateTime;
 use Batchelor\Logging\Logger;
 use Batchelor\Logging\Target\Memory;
 use Batchelor\Queue\Task\Execute\Capture;
+use Batchelor\Queue\Task\Execute\Process;
 use Batchelor\Queue\Task\Execute\Selectable;
+use Batchelor\Queue\Task\Execute\Spawner;
 use Batchelor\WebService\Types\JobState;
-use Batchelor\WebService\Types\JobStatus;
 
 /**
  * The message class.
@@ -46,14 +47,9 @@ use Batchelor\WebService\Types\JobStatus;
  * 
  * @author Anders Lövgren (Nowise Systems)
  */
-class Callback
+abstract class Callback
 {
 
-        /**
-         * The job status.
-         * @var JobState  
-         */
-        private $_status;
         /**
          * The message logger.
          * @var Logger 
@@ -62,11 +58,9 @@ class Callback
 
         /**
          * Constructor.
-         * @param JobStatus $status The job status object.
          */
         public function __construct()
         {
-                $this->_status = JobState::NONE();
                 $this->_logger = $this->useLogger();
         }
 
@@ -81,16 +75,7 @@ class Callback
          */
         public function setStatus(JobState $state)
         {
-                $this->_status = $state;
-        }
-
-        /**
-         * Get job status.
-         * @return JobState 
-         */
-        public function getStatus(): JobState
-        {
-                return $this->_status;
+                $this->onStatus($state);
         }
 
         /**
@@ -130,22 +115,36 @@ class Callback
         /**
          * Run non-interactive command.
          * 
-         * The command is executed and output is captured. If an error occure,
-         * then an runtime exception will be thrown. Returns the exit status
-         * from command.
+         * Execute command with optional environment variables and working 
+         * directory. The command output is automatic captured and appended
+         * to current message logger.
          * 
          * @param string $cmd The command string.
          * @param array $env The environment variables.
-         * @return int The exit status
+         * @param string $$cwd The working directory.
          */
-        public function runCommand(string $cmd, array $env = null): int
+        public function runCommand(string $cmd, array $env = null, string $cwd = null)
         {
-                Capture::create($this->_logger, $cmd, $env)->execute();
+                Capture::create($this->_logger, $cmd, $env, $cwd)->execute();
         }
 
-        public function runProcess(Selectable $command)
+        /**
+         * Run selectable command.
+         * 
+         * The command is excuted and its process object is returned that can be
+         * used to control the process, read output and status. Output streams 
+         * from process is set non-blocking.
+         * 
+         * @param Selectable $command
+         * @return Process 
+         */
+        public function runProcess(Selectable $command): Process
         {
-                (new Capture($command, $this->_logger))->execute();
+                (new Spawner($command))->open();
         }
 
+        /**
+         * Called on set status.
+         */
+        protected abstract function onStatus(JobState $state);
 }
