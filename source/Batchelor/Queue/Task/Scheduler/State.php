@@ -71,7 +71,7 @@ class State
         public function __construct(string $hostid, string $task)
         {
                 $this->hostid = $hostid;
-                $this->result = (string) time();
+                $this->result = sprintf("%d%d", time(), rand(1000, 9999));
 
                 $this->task = $task;
                 $this->state = JobState::PENDING();
