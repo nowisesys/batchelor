@@ -18,10 +18,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Queue\Task\Scheduler\State;
+namespace Batchelor\Queue\Task\Scheduler;
 
-use Batchelor\WebService\Types\JobIdentity;
-use Batchelor\WebService\Types\JobStatus;
+use Batchelor\Queue\Task\Scheduler\State;
 
 /**
  * The state queue inspector.
@@ -35,44 +34,39 @@ interface Inspector
          * The number of items in queue.
          * @return int 
          */
-        function count(): int;
+        function getSize(): int;
 
         /**
-         * The last index used.
-         * @return int 
-         */
-        function index(): int;
-
-        /**
-         * Get queue data.
-         * @return array 
-         */
-        function queue(): array;
-
-        /**
-         * Check if status object exists.
+         * Check if job state exists.
          * 
-         * @param JobIdentity $identity
+         * @param string $job The job ID.
          * @return bool True if status object exist in this state queue.
          */
-        function hasStatus(JobIdentity $identity): bool;
+        function hasState(string $job): bool;
 
         /**
-         * Get job status.
-         * 
-         * @param JobIdentity $identity The job identity.
-         * @return JobStatus 
+         * Get first job ID.
+         * @return string
          */
-        function getStatus(JobIdentity $identity): JobStatus;
+        function getFirst(): string;
+
+        /**
+         * Get job state.
+         * 
+         * @param string $job The job ID.
+         * @return State
+         */
+        function getState(string $job): State;
 
         /**
          * Get queued jobs.
          * 
-         * Returns a list of queued jobs. The values are the job ID.
+         * Returns an array of queued jobs were keys are job ID and values are
+         * the job state object.
          * 
          * @return array
          */
-        function getList(): array;
+        function getContent(): array;
 
         /**
          * Check if queue is empty.

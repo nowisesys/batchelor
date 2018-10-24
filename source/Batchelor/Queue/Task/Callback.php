@@ -23,8 +23,7 @@ namespace Batchelor\Queue\Task;
 use Batchelor\Logging\Format\DateTime;
 use Batchelor\Logging\Logger;
 use Batchelor\Logging\Target\Memory;
-use Batchelor\Queue\Task\Execute\Command;
-use Batchelor\Queue\Task\Execute\Monitor;
+use Batchelor\Queue\Task\Execute\Capture;
 use Batchelor\Queue\Task\Execute\Selectable;
 use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\JobStatus;
@@ -36,11 +35,14 @@ use Batchelor\WebService\Types\JobStatus;
  * run and the job queue processor service. 
  *
  * <code>
- * $logger = $callback->getLogger();    // Get message logger.
- *      ...                             // Do some work in task...
- * $logger->info("Finished");
- * $logger->setStatus(JobState::SUCCESS);
+ * $callback->getLogger()->info("Starting");
+ *      ...     // doing some work...
+ * $callback->getLogger()->info("Finished");
+ * $callback->setStatus(JobState::SUCCESS());
  * </code>
+ * 
+ * Only set status if job has failed or has completed. If current task is part 
+ * of a pipeline, then set status in last sub task.
  * 
  * @author Anders Lövgren (Nowise Systems)
  */
@@ -48,8 +50,8 @@ class Callback
 {
 
         /**
-         * The job status object.
-         * @var JobStatus  
+         * The job status.
+         * @var JobState  
          */
         private $_status;
         /**
@@ -62,9 +64,9 @@ class Callback
          * Constructor.
          * @param JobStatus $status The job status object.
          */
-        public function __construct(JobStatus $status)
+        public function __construct()
         {
-                $this->_status = $status;
+                $this->_status = JobState::NONE();
                 $this->_logger = $this->useLogger();
         }
 
@@ -79,7 +81,16 @@ class Callback
          */
         public function setStatus(JobState $state)
         {
-                $this->_status->state = $state->getValue();
+                $this->_status = $state;
+        }
+
+        /**
+         * Get job status.
+         * @return JobState 
+         */
+        public function getStatus(): JobState
+        {
+                return $this->_status;
         }
 
         /**
@@ -116,15 +127,12 @@ class Callback
          */
         public function runCommand(string $cmd, array $env = null): int
         {
-                return (new Monitor)
-                        ->execute(
-                            Command::create($cmd, $env), $this->_logger
-                );
+                Capture::create($this->_logger, $cmd, $env)->execute();
         }
 
         public function runProcess(Selectable $command)
         {
-                (new Monitor($command))->execute();
+                (new Capture($command, $this->_logger))->execute();
         }
 
 }

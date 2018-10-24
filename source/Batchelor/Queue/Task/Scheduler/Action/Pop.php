@@ -18,40 +18,43 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Queue\Task\Scheduler;
+namespace Batchelor\Queue\Task\Scheduler\Action;
 
-use Batchelor\WebService\Types\JobData;
-use Batchelor\WebService\Types\JobIdentity;
+use Batchelor\Queue\Task\Runtime;
+use Batchelor\Queue\Task\Scheduler;
 
 /**
- * Simple data type for serialization.
+ * Pop job from scheduler.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class Task
+class Pop
 {
 
         /**
-         * The job data.
-         * @var JobData 
+         * The scheduler object.
+         * @var Scheduler
          */
-        public $data;
-        /**
-         * The job identity.
-         * @var JobIdentity 
-         */
-        public $identity;
+        private $_scheduler;
 
         /**
          * Constructor.
-         * 
-         * @param JobIdentity $identity The job identity.
-         * @param JobData $data The job data.
+         * @param Scheduler $scheduler The scheduler object.
          */
-        public function __construct(JobIdentity $identity, JobData $data)
+        public function __construct(Scheduler $scheduler)
         {
-                $this->identity = $identity;
-                $this->data = $data;
+                $this->_scheduler = $scheduler;
+        }
+
+        public function execute(): Runtime
+        {
+                $scheduler = $this->_scheduler;
+
+                $queue = $scheduler->getQueue("pending");
+                $runtime = $scheduler->getRuntime($queue->getFirst());
+
+                $scheduler->setRunning($runtime->job);
+                return $runtime;
         }
 
 }

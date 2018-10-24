@@ -27,6 +27,7 @@ use Batchelor\Queue\Task\Runtime;
 use Batchelor\Storage\Directory;
 use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobState;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -49,18 +50,22 @@ class TaskRunner extends Component
         public function runTask(Runtime $runtime)
         {
                 $task = $this->getTask($runtime->data->task);
-
-                $callback = new Callback($runtime->meta->status);
+                $logs = $this->getLogger($runtime);
 
                 try {
-                        $task->initialize();
-                        $task->execute($runtime->getWorkDirectory(), $runtime->getResultDirectory(), $callback);
-                        $task->finished();
+                        $logs->start();
 
-                        $this->writeLog($callback->getLogger(), $runtime->getWorkDirectory());
+                        $task->validate($runtime->data);
+                        $task->prepare($runtime->getWorkDirectory(), $runtime->data);
+                        $task->initialize();
+                        $task->execute($runtime->getWorkDirectory(), $runtime->getResultDirectory(), $runtime->getCallback());
+                        $task->finished();
                 } catch (Throwable $exception) {
-                        $callback->getLogger()->critical($exception->getMessage());
-                        $callback->setStatus(JobState::CRASHED);
+                        $runtime->getCallback()->setStatus(JobState::CRASHED());
+                        $logs->logException($exception);
+                } finally {
+                        $logs->stop();
+                        $logs->flush();
                 }
         }
 
@@ -71,9 +76,17 @@ class TaskRunner extends Component
                 }
         }
 
-        private function writeLog(Memory $logger, Directory $workdir)
+        private function getLogger(Runtime $runtime): TaskLogger
         {
-                $workdir->getFile("task.log")->putContent(implode("\n", $logger->getMessages()));
+                $file = $runtime->getWorkDirectory()->getFile(
+                    sprintf("task-%s.log", $runtime->data->task)
+                );
+
+                $logs = new TaskLogger();
+                $logs->setLogger($runtime->getCallback()->getLogger());
+                $logs->setLogfile($file);
+
+                return $logs;
         }
 
 }

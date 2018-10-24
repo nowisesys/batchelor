@@ -50,11 +50,6 @@ class Prefork implements Manager
          */
         private $_workers;
         /**
-         * The wait list.
-         * @var array 
-         */
-        private $_waiting;
-        /**
          * The current executing tasks.
          * @var array 
          */
@@ -124,9 +119,9 @@ class Prefork implements Manager
                                 throw new RuntimeException("Failed fork process");
                         case 0:
                                 $this->runJob($runtime);
-                                break;
+                                exit(0);        // Exit child process
                         default:
-                                $this->setBusy($runtime, $pid);
+                                $this->setBusy($pid, $runtime);
                 }
         }
 
@@ -175,7 +170,7 @@ class Prefork implements Manager
          */
         private function setBusy(int $pid, Runtime $runtime)
         {
-                $this->_current[$pid] = $runtime->meta->identity;
+                $this->_current[$pid] = $runtime->job;
                 $this->_running++;
         }
 

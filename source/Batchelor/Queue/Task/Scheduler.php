@@ -22,16 +22,19 @@ namespace Batchelor\Queue\Task;
 
 use Batchelor\Cache\Factory;
 use Batchelor\Cache\Storage;
-use Batchelor\Queue\Task\Scheduler\Channels;
-use Batchelor\Queue\Task\Scheduler\State\Inspector;
+use Batchelor\Queue\Task\Scheduler\Action\Add as AddAction;
+use Batchelor\Queue\Task\Scheduler\Action\Pop as PopAction;
+use Batchelor\Queue\Task\Scheduler\Action\Push as PushAction;
+use Batchelor\Queue\Task\Scheduler\Action\Remove as RemoveAction;
+use Batchelor\Queue\Task\Scheduler\Action\Transition;
+use Batchelor\Queue\Task\Scheduler\Inspector;
+use Batchelor\Queue\Task\Scheduler\State;
+use Batchelor\Queue\Task\Scheduler\StateQueue;
 use Batchelor\Queue\Task\Scheduler\Summary;
-use Batchelor\Queue\Task\Scheduler\Tasks;
 use Batchelor\System\Component;
 use Batchelor\System\Service\Config;
 use Batchelor\WebService\Types\JobData;
-use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobState;
-use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
 
 /**
@@ -66,85 +69,36 @@ class Scheduler extends Component
         }
 
         /**
-         * Change state of job.
+         * Push job action.
          * 
-         * @param JobIdentity $job The job identity.
-         * @param JobState $state The job state.
-         */
-        public function setState(JobIdentity $identity, JobState $state)
-        {
-                (new Channels($this->_cache))
-                    ->setState($identity, $state);
-        }
-
-        /**
-         * Get inspector for pending jobs channel.
-         * @return Inspector
-         */
-        public function getPending(): Inspector
-        {
-                return (new Channels($this->_cache))
-                        ->usePending();
-        }
-
-        /**
-         * Get inspector for running jobs channel.
-         * @return Inspector
-         */
-        public function getRunning(): Inspector
-        {
-                return (new Channels($this->_cache))
-                        ->useRunning();
-        }
-
-        /**
-         * Get inspector for finished jobs channel.
-         * @return Inspector
-         */
-        public function getFinished(): Inspector
-        {
-                return (new Channels($this->_cache))
-                        ->useFinished();
-        }
-
-        /**
-         * Check if job is running.
+         * Insert job state in pending and hostid queue. The job data is used for
+         * creating the runtime object. When pop job is called for the inserted
+         * job, the runtime will contains supplied job data.
          * 
-         * @param JobIdentity $job The job identity.
-         * @return bool
-         */
-        public function isRunning(JobIdentity $identity): bool
-        {
-                return $this->getRunning()->hasStatus($identity);
-        }
-
-        /**
-         * Push scheduled job.
+         * Returns a queue job object containing the job identity. This object 
+         * can be used by web services for future interaction with the job queue, 
+         * processor or scheduler.
          * 
-         * @param Runtime $runtime The job runtime.
+         * @param string $hostid The host ID.
+         * @param JobData $data The job data.
+         * @return QueuedJob
          */
-        public function pushJob(Runtime $runtime)
+        public function pushJob(string $hostid, JobData $data): QueuedJob
         {
-                (new Channels($this->_cache))
-                    ->usePending()
-                    ->addStatus(
-                        $runtime->meta->identity, $runtime->meta->status
-                );
-
-                (new Tasks($this->_cache))
-                    ->addTask(
-                        $runtime->meta->identity, $runtime->data
-                );
+                return (new PushAction($this))->execute($hostid, $data);
         }
 
         /**
-         * Pop scheduled job.
+         * Pop job action.
+         * 
+         * Removes first job in the pending queue and transition it to running
+         * queue. Returns the runtime data.
+         * 
          * @return Runtime
          */
         public function popJob(): Runtime
         {
-                return (new Channels($this->_cache))
-                        ->getPending();
+                return (new PopAction($this))->execute();
         }
 
         /**
@@ -153,46 +107,94 @@ class Scheduler extends Component
          */
         public function hasJobs(): bool
         {
-                return (new Channels($this->_cache))
-                        ->hasPending();
+                $queue = $this->getQueue("pending");
+                return $queue->isEmpty() == false;
         }
 
         /**
-         * Remove scheduled job.
+         * Check if job exists.
          * 
-         * @param JobIdentity $job The job identity.
-         */
-        public function removeJob(JobIdentity $identity)
-        {
-                (new Channels($this->_cache))
-                    ->removeIdentity($identity);
-
-                (new Tasks($this->_cache))
-                    ->removeTask($identity);
-        }
-
-        /**
-         * Get job details.
-         * 
-         * @param JobIdentity $job The job identity.
-         * @return Runtime 
-         */
-        public function getJob(JobIdentity $identity): Runtime
-        {
-                return (new Channels($this->_cache))
-                        ->getRuntime($identity);
-        }
-
-        /**
-         * Check if job is found.
-         * 
-         * @param JobIdentity $identity The job identity.
+         * @param string $job The job ID.
          * @return bool
          */
-        public function hasJob(JobIdentity $identity): bool
+        public function hasJob(string $job): bool
         {
-                return (new Channels($this->_cache))
-                        ->hasChannel($identity);
+                $ckey = sprintf("scheduler-%s-runtime", $job);
+                return $this->_cache->exists($ckey);
+        }
+
+        /**
+         * Add job action.
+         * 
+         * This method is for appending a child job for an existing job. This 
+         * method can be used to implement pipelines and splitted jobs if indata
+         * is large.
+         * 
+         * @param string $job The job ID.
+         * @param JobData $data The job data.
+         */
+        public function addJob(string $job, JobData $data)
+        {
+                (new AddAction($this))->execute($job, $data);
+        }
+
+        /**
+         * Remove job action.
+         * 
+         * The job is removed from the intrinsic queues (i.e. finished) and 
+         * from the hostid queue. Calling this method will also delete runtime 
+         * data. 
+         * 
+         * It's the callers responsibility to remove working directory and other 
+         * files associated with the job.
+         * 
+         * @param string $job The job ID.
+         */
+        public function removeJob(string $job)
+        {
+                (new RemoveAction($this))->execute($job);
+
+                $ckey = sprintf("scheduler-%s-runtime", $job);
+                $this->_cache->delete($ckey);
+        }
+
+        /**
+         * Get job queue.
+         * 
+         * The ident parameter is the name of one of the intrisic queue (i.e. 
+         * running) or an hostid queue. The hostid queues are created on the 
+         * fly by peer users.
+         * 
+         * @param string $ident The job queue identity.
+         * @return StateQueue
+         */
+        public function getQueue(string $ident): StateQueue
+        {
+                return new StateQueue($ident, $this->_cache);
+        }
+
+        /**
+         * Get runtime for job.
+         * 
+         * @param string $job The job ID.
+         * @return Runtime
+         */
+        public function getRuntime(string $job): Runtime
+        {
+                $ckey = sprintf("scheduler-%s-runtime", $job);
+                return $this->_cache->read($ckey);
+        }
+
+        /**
+         * Set runtime for job.
+         * 
+         * @param string $job The job ID.
+         * @param Runtime $runtime The runtime object.
+         */
+        public function setRuntime(string $job, Runtime $runtime)
+        {
+                $ckey = sprintf("scheduler-%s-runtime", $job);
+                $this->_cache->save($ckey, $runtime);
         }
 
         /**
@@ -242,24 +244,123 @@ class Scheduler extends Component
         }
 
         /**
-         * Generate runtime for data.
-         * 
-         * @param JobData $data
-         */
-        public function makeRuntime(JobData $data): Runtime
-        {
-                return new Runtime(new QueuedJob(
-                    new JobIdentity(...["", ""]), new JobStatus(...["", "", 0, JobState::NONE()])
-                    ), $data);
-        }
-
-        /**
          * Get scheduler summary.
          * @return Summary
          */
         public function getSummary(): Summary
         {
                 return new Summary($this);
+        }
+
+        /**
+         * Get inspector for pending queue.
+         * @return Inspector
+         */
+        public function getPending(): Inspector
+        {
+                return $this->getQueue("pending");
+        }
+
+        /**
+         * Get inspector for riunning queue.
+         * @return Inspector
+         */
+        public function getRunning(): Inspector
+        {
+                return $this->getQueue("running");
+        }
+
+        /**
+         * Get inspector for finished queue.
+         * @return Inspector
+         */
+        public function getFinished(): Inspector
+        {
+                return $this->getQueue("finished");
+        }
+
+        /**
+         * Set suspended status on job.
+         * 
+         * Transition job form running queue to suspend. The task processor should
+         * invoke this method in response to child process being stopped.
+         * 
+         * @param string $job The job ID.
+         */
+        public function setSuspend(string $job)
+        {
+                (new Transition($this))
+                    ->execute($job, "running", "suspend", static function(State &$state) {
+                            $state->state = JobState::SUSPEND();
+                    });
+        }
+
+        /**
+         * Set resumed status on job.
+         * 
+         * Transition job from suspended jb queue to resumed. The task processor 
+         * should poll this queue reqular to pick up resumed jobs.
+         * 
+         * @param string $job The job ID.
+         */
+        public function setResume(string $job)
+        {
+                (new Transition($this))
+                    ->execute($job, "suspend", "resumed", static function(State &$state) {
+                            $state->state = JobState::RESUMED();
+                    });
+        }
+
+        /**
+         * Set pending status on job.
+         * 
+         * Transitions the job from finished queue to pending. This method is for
+         * restarting an job, for example if failed because input date could not
+         * be downloaded.
+         * 
+         * @param string $job The job ID.
+         */
+        public function setPending(string $job)
+        {
+                (new Transition($this))
+                    ->execute($job, "finished", "pending", static function(State &$state) {
+                            $state->state = JobState::PENDING();
+                    });
+        }
+
+        /**
+         * Set running status on job.
+         * 
+         * Transitions the job from pending queue to running. Sets the start time
+         * on job.
+         * 
+         * @param string $job The job ID.
+         */
+        public function setRunning(string $job)
+        {
+                (new Transition($this))
+                    ->execute($job, "pending", "running", static function(State &$state) {
+                            $state->state = JobState::RUNNING();
+                            $state->started = time();
+                    });
+        }
+
+        /**
+         * Set finished status on job.
+         * 
+         * Transitions the job from running queue to finished. The status is the 
+         * final state for this job (i.e. success or error).
+         * 
+         * @param string $job The job ID.
+         * @param JobState $status The job status.
+         */
+        public function setFinished(string $job, JobState $status)
+        {
+                (new Transition($this))
+                    ->execute($job, "running", "finished", static function(State &$state) use($status) {
+                            $state->state = $status;
+                            $state->finished = time();
+                    });
         }
 
 }

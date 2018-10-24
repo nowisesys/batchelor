@@ -22,7 +22,8 @@ namespace Batchelor\Console\Scheduler;
 
 use Batchelor\Queue\Task\Runtime;
 use Batchelor\Queue\Task\Scheduler;
-use Batchelor\Queue\Task\Scheduler\State\Inspector;
+use Batchelor\Queue\Task\Scheduler\Inspector;
+use Batchelor\System\Service\Hostid;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Symfony\Component\Console\Command\Command;
@@ -55,7 +56,7 @@ class SchedulerCommand extends Command
                 $this->addOption("add", "a", InputOption::VALUE_REQUIRED, "Add job to scheduler");
                 $this->addOption("remove", "r", InputOption::VALUE_REQUIRED, "Delete job to scheduler");
                 $this->addOption("show", "s", InputOption::VALUE_REQUIRED, "Show job details");
-                $this->addOption("example", "e", InputOption::VALUE_REQUIRED, "Generate example input data");
+                $this->addOption("example", "e", InputOption::VALUE_REQUIRED, "Show example");
 
                 $this->addusage("--list [--pending] [--running] [--finished] [-v]");
                 $this->addusage("--add=data|--remove=jobid|--show=jobid");
@@ -68,9 +69,7 @@ class SchedulerCommand extends Command
                         $this->listJobs($input, $output);
                 }
                 if ($input->getOption("add")) {
-                        $this->addJob($output, json_decode(
-                                $input->getOption("add"), true
-                        ));
+                        $this->addJob($output, $input->getOption("add"));
                 }
                 if ($input->getOption("remove")) {
                         $this->removeJob($output, $input->getOption("remove"));
@@ -79,7 +78,7 @@ class SchedulerCommand extends Command
                         $this->showJob($output, $input->getOption("show"));
                 }
                 if ($input->getOption("example")) {
-                        $this->exampleData($output, $input->getOption("example"));
+                        $this->showExample($output, $input->getOption("example"));
                 }
         }
 
@@ -91,8 +90,6 @@ class SchedulerCommand extends Command
                 $output->writeln("Summary");
                 $output->writeln("-----------------------------");
                 $output->writeln(sprintf("\tTimezone: %s", $summary->timezone));
-                $output->writeln(sprintf("\t   Count: %s", $summary->count));
-                $output->writeln(sprintf("\t   Index: %s", $summary->index));
                 $output->writeln(sprintf("\t Pending: %s", $summary->pending));
                 $output->writeln(sprintf("\t Running: %s", $summary->running));
 
@@ -124,63 +121,77 @@ class SchedulerCommand extends Command
                         return;
                 }
 
-                $format = "%-10s%-25s%s";
+                if ($output->isVerbose()) {
+                        $this->listQueueVerbose($output, $queue);
+                } else {
+                        $this->listQueueNormal($output, $queue);
+                }
+        }
 
-                $output->writeln(sprintf($format, "JobID:", "Time:", "Status:"));
+        private function listQueueNormal(OutputInterface $output, Inspector $queue)
+        {
+                $format = "%-40s%-20s%s";
+
+                $output->writeln(sprintf($format, "JobID:", "Time:", "State:"));
                 $output->writeln("");
 
-                foreach ($queue as $jobid => $status) {
+                foreach ($queue as $jobid => $state) {
                         $output->writeln(sprintf(
-                                $format, $jobid, strftime("%x %X", $status->stamp), $status->state
+                                $format, $jobid, strftime("%x %X", $state->queued), $state->state->getValue()
                         ));
                 }
         }
 
-        private function addJob(OutputInterface $output, array $data)
+        private function listQueueVerbose(OutputInterface $output, Inspector $queue)
+        {
+                $format = "%-40s%-20s%-10s%-10s%-30s";
+
+                $output->writeln(sprintf($format, "JobID:", "Time:", "State:", "Task:", "Queue:"));
+                $output->writeln("");
+
+                foreach ($queue as $jobid => $state) {
+                        $output->writeln(sprintf(
+                                $format, $jobid, strftime("%x %X", $state->queued), $state->state->getValue(), $state->task, $state->hostid
+                        ));
+                }
+        }
+
+        private function addJob(OutputInterface $output, string $data)
         {
                 $scheduler = new Scheduler();
 
-                $jobdata = new JobData(...array_values($data['data']));
-                $runtime = $scheduler->makeRuntime($jobdata);
-                $runtime->hostid = (new \Batchelor\System\Service\Hostid())->getValue();
+                $jobdata = new JobData($data, "data");
+                $hostid = (new Hostid())->getValue();
 
-                $scheduler->pushJob($runtime);
+                $result = $scheduler->pushJob($hostid, $jobdata);
 
-                $output->writeln(sprintf("Added job: %s [%s]", $runtime->meta->identity->jobid, strftime("%x %X", $runtime->meta->status->stamp)));
+                $output->writeln(sprintf("Added job: %s [%s]", $result->identity->jobid, strftime("%x %X", $result->status->stamp)));
         }
 
         private function removeJob(OutputInterface $output, string $data)
         {
-                $identity = new JobIdentity($data, "");
                 $scheduler = new Scheduler();
 
-                if (!$scheduler->hasJob($identity)) {
-                        return $output->writeln("Job $data was not found");
-                }
-
-                $scheduler->removeJob($identity);
+                $scheduler->removeJob($data);
                 $output->writeln("Removed job $data");
         }
 
         private function showJob(OutputInterface $output, string $data)
         {
-                $identity = new JobIdentity($data, "");
                 $scheduler = new Scheduler();
 
-                if (!$scheduler->hasJob($identity)) {
+                if (!$scheduler->hasJob($data)) {
                         return $output->writeln("Job $data is missing");
                 }
 
-                print_r($scheduler->getJob($identity));
+                print_r($scheduler->getRuntime($data));
         }
 
-        private function exampleData(OutputInterface $output, string $option)
+        private function showExample(OutputInterface $output, string $option)
         {
                 switch ($option) {
                         case "add":
-                                $output->writeln(json_encode(
-                                        $this->exampleRuntime()
-                                ));
+                                $output->writeln("-a 'hello world'");
                                 break;
                         case "remove":
                         case "show";
@@ -191,19 +202,6 @@ class SchedulerCommand extends Command
                         default:
                                 throw new InvalidArgumentException("Invalid option $option for example");
                 }
-        }
-
-        private function exampleRuntime(): Runtime
-        {
-                return (new Scheduler)
-                        ->makeRuntime(
-                            new JobData("input data", "data")
-                );
-        }
-
-        private function exampleJobIdentity(): JobIdentity
-        {
-                return new JobIdentity("123", "456");
         }
 
 }

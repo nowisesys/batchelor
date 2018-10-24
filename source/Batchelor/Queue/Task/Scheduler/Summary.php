@@ -49,8 +49,6 @@ class Summary
         public function __construct(Scheduler $scheduler)
         {
                 $this->setTimezone();
-                $this->setCount($scheduler);
-                $this->setIndex($scheduler);
                 $this->setPending($scheduler);
                 $this->setRunning($scheduler);
         }
@@ -67,26 +65,14 @@ class Summary
                 $this->_data['timezone'] = ini_get("date.timezone");
         }
 
-        private function setCount(Scheduler $scheduler)
-        {
-                $this->_data['count'] = $scheduler->getPending()->count() +
-                    $scheduler->getRunning()->count() +
-                    $scheduler->getFinished()->count();
-        }
-
-        private function setIndex(Scheduler $scheduler)
-        {
-                $this->_data['index'] = $scheduler->getPending()->index();
-        }
-
         private function setPending(Scheduler $scheduler)
         {
-                $this->_data['pending'] = $scheduler->getPending()->count();
+                $this->_data['pending'] = $scheduler->getQueue("pending")->getSize();
         }
 
         private function setRunning(Scheduler $scheduler)
         {
-                $this->_data['running'] = $scheduler->getRunning()->count();
+                $this->_data['running'] = $scheduler->getQueue("running")->getSize();
         }
 
 }

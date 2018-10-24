@@ -23,7 +23,7 @@ namespace Batchelor\Queue\Task;
 use Batchelor\Queue\System\SystemDirectory;
 use Batchelor\Storage\Directory;
 use Batchelor\WebService\Types\JobData;
-use Batchelor\WebService\Types\QueuedJob;
+use RuntimeException;
 
 /**
  * The runtime data.
@@ -34,49 +34,84 @@ class Runtime
 {
 
         /**
-         * The queued job.
-         * @var QueuedJob 
+         * The job ID.
+         * @var string 
          */
-        public $meta;
+        public $job;
+        /**
+         * The process ID (PID/TID).
+         * @var int 
+         */
+        public $pid;
         /**
          * The job data.
          * @var JobData 
          */
         public $data;
         /**
-         * The runtime hostid.
-         * @var string
+         * The host ID.
+         * @var string 
          */
         public $hostid;
+        /**
+         * The root directory.
+         * @var string 
+         */
+        public $result;
 
         /**
          * Constructor.
          * 
-         * @param QueuedJob $meta The queued job.
+         * @param string $job The job ID.
          * @param Jobdata $data The job data.
          * @param string $hostid The hostid.
+         * @param string $result The root directory.
          */
-        public function __construct(QueuedJob $meta, Jobdata $data, string $hostid = null)
+        public function __construct(string $job, Jobdata $data, string $hostid, string $result)
         {
-                $this->meta = $meta;
+                $this->pid = 0;
+                $this->job = $job;
                 $this->data = $data;
                 $this->hostid = $hostid;
+                $this->result = $result;
+        }
+
+        /**
+         * Signal this process.
+         * @param int $signal The signal number (i.e. SIGSTOP).
+         */
+        public function sendSignal(int $signal)
+        {
+                if (!extension_loaded("posix")) {
+                        throw new RuntimeException("The posix extension is not loaded");
+                }
+                if (!posix_kill(0, $this->pid)) {
+                        throw new RuntimeException("Not permitted to signal process $this->pid");
+                }
+                if (!posix_kill($signal, $this->pid)) {
+                        throw new RuntimeException("Failed send signal $signal to process $this->pid");
+                }
         }
 
         public function getWorkDirectory(): Directory
         {
                 return (new SystemDirectory($this->hostid))
-                        ->getWorkDirectory(
-                            $this->meta->identity->result
-                );
+                        ->getWorkDirectory($this->result);
         }
 
         public function getResultDirectory(): Directory
         {
                 return (new SystemDirectory($this->hostid))
-                        ->getResultDirectory(
-                            $this->meta->identity->result
-                );
+                        ->getResultDirectory($this->result);
+        }
+
+        public function getCallback(): Callback
+        {
+                if (isset($this->_callback)) {
+                        return $this->_callback;
+                } else {
+                        return $this->_callback = new Callback();
+                }
         }
 
 }

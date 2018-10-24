@@ -181,15 +181,17 @@ class Processor extends Component implements Daemonized
 
         private function poll(Logger $logger, Scheduler $scheduler, Manager $manager)
         {
+                sleep(1);
+
                 $logger->debug("Polling for jobs");
 
-                if ($manager->isBusy()) {
-                        $logger->debug("Manager is busy");
-                        return sleep($this->_poll);
-                }
                 if ($manager->isIdle() == false) {
                         $logger->debug("Collecting child processes");
                         $this->setResult($scheduler, $manager->getChildren());
+                }
+                if ($manager->isBusy()) {
+                        $logger->debug("Manager is busy");
+                        return sleep($this->_poll);
                 }
 
                 while ($scheduler->hasJobs() && $manager->isBusy() == false) {
@@ -204,7 +206,7 @@ class Processor extends Component implements Daemonized
         private function process(Logger $logger, Scheduler $scheduler, Manager $manager)
         {
                 if (($runtime = $scheduler->popJob())) {
-                        $logger->info("Running job %d", [$runtime->meta->identity->jobid]);
+                        $logger->info("Running job %s", [$runtime->job]);
                         $manager->addJob($runtime);
                 }
         }
@@ -236,12 +238,8 @@ class Processor extends Component implements Daemonized
         private function setResult(Scheduler $scheduler, array $results)
         {
                 foreach ($results as $result) {
-                        if (!$scheduler->isRunning($result['job'])) {
-                                continue;       // State already set
-                        } elseif ($result['code'] != 0) {
-                                $scheduler->setState($result['job'], JobState::ERROR);
-                        } else {
-                                $scheduler->setState($result['job'], JobState::FINISHED);
+                        if ($result['code'] != 0) {
+                                $scheduler->setFinished($result['job'], JobState::ERROR());
                         }
                 }
         }
