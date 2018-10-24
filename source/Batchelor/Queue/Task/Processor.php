@@ -175,14 +175,25 @@ class Processor extends Component implements Daemonized
                 }
 
                 if (!$this->finished()) {
+                        $stime = microtime(true);
+
                         $this->poll($logger, $scheduler, $this->_runner);
+
+                        $etime = microtime(true);
+                        $dtime = ($etime - $stime);
+                        $ttime = pow(10, 6) * ($this->_poll - $dtime);
+
+                        if ($ttime > 0) {
+                                usleep($ttime);
+                        }
+                        if ($dtime > 1) {
+                                $logger->warning("Slow poll processing detected (%f sec)", [$dtime]);
+                        }
                 }
         }
 
         private function poll(Logger $logger, Scheduler $scheduler, Manager $manager)
         {
-                sleep(1);
-
                 $logger->debug("Polling for jobs");
 
                 if ($manager->isIdle() == false) {
@@ -191,7 +202,7 @@ class Processor extends Component implements Daemonized
                 }
                 if ($manager->isBusy()) {
                         $logger->debug("Manager is busy");
-                        return sleep($this->_poll);
+                        return;
                 }
 
                 while ($scheduler->hasJobs() && $manager->isBusy() == false) {
@@ -199,7 +210,7 @@ class Processor extends Component implements Daemonized
                 }
 
                 if ($manager->isIdle()) {
-                        return sleep($this->_poll);
+                        return;
                 }
         }
 
