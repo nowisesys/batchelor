@@ -93,25 +93,42 @@ class Runtime
                 }
         }
 
+        /**
+         * Get working directory.
+         * @return Directory
+         */
         public function getWorkDirectory(): Directory
         {
                 return (new SystemDirectory($this->hostid))
                         ->getWorkDirectory($this->result);
         }
 
+        /**
+         * Get result directory.
+         * @return Directory
+         */
         public function getResultDirectory(): Directory
         {
                 return (new SystemDirectory($this->hostid))
                         ->getResultDirectory($this->result);
         }
 
+        /**
+         * Get callback for task interaction.
+         * @return Callback
+         */
         public function getCallback(): Callback
         {
-                if (isset($this->_callback)) {
-                        return $this->_callback;
-                } else {
-                        return $this->_callback = new Callback();
-                }
+                return $this->_callback;
+        }
+
+        /**
+         * Set callback for task interaction.
+         * @param Callback $callback The callback object.
+         */
+        public function setCallback(Callback $callback)
+        {
+                $this->_callback = $callback;
         }
 
 }
