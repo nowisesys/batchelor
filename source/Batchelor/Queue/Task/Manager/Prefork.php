@@ -119,7 +119,6 @@ class Prefork implements Manager
                                 throw new RuntimeException("Failed fork process");
                         case 0:
                                 $this->runJob($runtime);
-                                exit(0);        // Exit child process
                         default:
                                 $this->setBusy($pid, $runtime);
                 }
@@ -159,7 +158,13 @@ class Prefork implements Manager
          */
         private function runJob(Runtime $runtime)
         {
-                (new TaskRunner())->runTask($runtime);
+                try {
+                        (new TaskRunner())->runTask($runtime);
+                } catch (Throwable $exception) {
+                        error_log(print_r($exception, true));
+                } finally {
+                        exit(0);        // Exit child process
+                }
         }
 
         /**

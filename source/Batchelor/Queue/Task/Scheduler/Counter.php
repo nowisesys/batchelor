@@ -83,10 +83,17 @@ class Counter
                 $cname = $this->getCacheKey();
                 $cache = $this->_cache;
 
-                if ($cache->exists($cname)) {
-                        return $cache->read($cname);
-                } else {
-                        return 0;
+                while (true) {
+                        if ($cache->exists($cname)) {
+                                $result = $cache->read($cname);
+                        } else {
+                                $result = 0;
+                        }
+                        if (is_int($result)) {
+                                return $result;
+                        } else {
+                                sleep(1);
+                        }
                 }
         }
 

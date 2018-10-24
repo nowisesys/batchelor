@@ -107,8 +107,14 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function getState(string $job): State
         {
-                $content = $this->getContent();
-                return $content[$job];
+                while (true) {
+                        $content = $this->getContent();
+                        if (isset($content[$job])) {
+                                return $content[$job];
+                        } else {
+                                sleep(1);
+                        }
+                }
         }
 
         /**
@@ -149,10 +155,17 @@ class StateQueue implements Inspector, IteratorAggregate
                 $cname = $this->getCacheKey();
                 $cache = $this->_cache;
 
-                if ($cache->exists($cname)) {
-                        return $cache->read($cname);
-                } else {
-                        return [];
+                while (true) {
+                        if ($cache->exists($cname)) {
+                                $result = $cache->read($cname);
+                        } else {
+                                $result = [];
+                        }
+                        if (is_array($result)) {
+                                return $result;
+                        } else {
+                                sleep(1);
+                        }
                 }
         }
 
