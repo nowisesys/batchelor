@@ -21,6 +21,7 @@
 namespace Batchelor\Queue\Task\Scheduler;
 
 use Batchelor\Cache\Storage;
+use SyncReaderWriter;
 
 /**
  * Counter for state queue.
@@ -43,6 +44,11 @@ class Counter
          * @var Storage 
          */
         private $_cache;
+        /**
+         * The read/write lock.
+         * @var SyncReaderWriter 
+         */
+        private $_qsync;
 
         /**
          * Constructor.
@@ -54,18 +60,20 @@ class Counter
         {
                 $this->_ident = $ident;
                 $this->_cache = $cache;
+
+                $this->_qsync = new SyncReaderWriter($this->getCacheKey());
         }
 
         public function increment()
         {
                 $value = $this->getValue();
-                $this->setValue( ++$value);
+                $this->setValue(++$value);
         }
 
         public function decrement()
         {
                 $value = $this->getValue();
-                $this->setValue( --$value);
+                $this->setValue(--$value);
         }
 
         public function getSize(): int
@@ -83,17 +91,16 @@ class Counter
                 $cname = $this->getCacheKey();
                 $cache = $this->_cache;
 
-                while (true) {
+                try {
+                        $this->_qsync->readlock();
+
                         if ($cache->exists($cname)) {
-                                $result = $cache->read($cname);
+                                return $cache->read($cname);
                         } else {
-                                $result = 0;
+                                return 0;
                         }
-                        if (is_int($result)) {
-                                return $result;
-                        } else {
-                                sleep(1);
-                        }
+                } finally {
+                        $this->_qsync->readunlock();
                 }
         }
 
@@ -102,11 +109,17 @@ class Counter
                 if ($value < 0) {
                         return;
                 }
+                
+                try {
+                        $this->_qsync->writelock();
 
-                $cname = $this->getCacheKey();
-                $cache = $this->_cache;
+                        $cname = $this->getCacheKey();
+                        $cache = $this->_cache;
 
-                $cache->save($cname, $value);
+                        $cache->save($cname, $value);
+                } finally {
+                        $this->_qsync->writeunlock();
+                }
         }
 
         private function getCacheKey(): string

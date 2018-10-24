@@ -24,6 +24,7 @@ use ArrayIterator;
 use Batchelor\Cache\Storage;
 use Batchelor\Queue\Task\Scheduler\Inspector;
 use IteratorAggregate;
+use SyncReaderWriter;
 use Traversable;
 
 /**
@@ -52,6 +53,11 @@ class StateQueue implements Inspector, IteratorAggregate
          * @var Storage 
          */
         private $_cache;
+        /**
+         * The read/write lock.
+         * @var SyncReaderWriter 
+         */
+        private $_qsync;
 
         /**
          * Constructor.
@@ -63,6 +69,8 @@ class StateQueue implements Inspector, IteratorAggregate
         {
                 $this->_ident = $ident;
                 $this->_cache = $cache;
+
+                $this->_qsync = new SyncReaderWriter($this->getCacheKey());
         }
 
         /**
@@ -155,17 +163,16 @@ class StateQueue implements Inspector, IteratorAggregate
                 $cname = $this->getCacheKey();
                 $cache = $this->_cache;
 
-                while (true) {
+                try {
+                        $this->_qsync->readlock();
+
                         if ($cache->exists($cname)) {
-                                $result = $cache->read($cname);
+                                return $cache->read($cname);
                         } else {
-                                $result = [];
+                                return [];
                         }
-                        if (is_array($result)) {
-                                return $result;
-                        } else {
-                                sleep(1);
-                        }
+                } finally {
+                        $this->_qsync->readunlock();
                 }
         }
 
@@ -175,8 +182,14 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function setContent(array $content)
         {
-                $this->_cache->save($this->getCacheKey(), $content);
-                $this->getCounter()->setSize(count($content));
+                try {
+                        $this->_qsync->writelock();
+
+                        $this->_cache->save($this->getCacheKey(), $content);
+                        $this->getCounter()->setSize(count($content));
+                } finally {
+                        $this->_qsync->writeunlock();
+                }
         }
 
         /**
