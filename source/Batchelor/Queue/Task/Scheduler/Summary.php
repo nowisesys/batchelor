@@ -51,6 +51,7 @@ class Summary
                 $this->setTimezone();
                 $this->setPending($scheduler);
                 $this->setRunning($scheduler);
+                $this->setFinished($scheduler);
         }
 
         public function __get($name)
@@ -75,4 +76,8 @@ class Summary
                 $this->_data['running'] = $scheduler->getQueue("running")->getSize();
         }
 
+        private function setFinished(Scheduler $scheduler)
+        {
+                $this->_data['finished'] = $scheduler->getQueue("finished")->getSize();
+        }
 }

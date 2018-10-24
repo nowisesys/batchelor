@@ -92,6 +92,7 @@ class SchedulerCommand extends Command
                 $output->writeln(sprintf("\tTimezone: %s", $summary->timezone));
                 $output->writeln(sprintf("\t Pending: %s", $summary->pending));
                 $output->writeln(sprintf("\t Running: %s", $summary->running));
+                $output->writeln(sprintf("\tFinished: %s", $summary->finished));
 
                 if ($input->getOption("all")) {
                         $input->setOption("pending", true);
@@ -113,7 +114,7 @@ class SchedulerCommand extends Command
         private function listQueue(OutputInterface $output, Inspector $queue)
         {
                 $output->writeln("");
-                $output->writeln(sprintf("%s:", $queue->getName()));
+                $output->writeln(sprintf("%s:", ucfirst($queue->getName())));
                 $output->writeln("-----------------------------");
 
                 if ($queue->isEmpty()) {
