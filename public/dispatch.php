@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015-2017 Anders Lövgren (Nowise Systems/BMC-IT, Uppsala University).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-require_once(realpath(__DIR__ . '/../vendor/autoload.php'));
+define('BATCHELOR_APP_ROOT', dirname(__DIR__));
+require_once(BATCHELOR_APP_ROOT . '/vendor/autoload.php');
 
-define('APP_ROOT', dirname(__DIR__));
 use UUP\Site\Request\Router;
 
 $router = new Router();

@@ -22,7 +22,8 @@
 // Run the web service client.
 // 
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+define('BATCHELOR_APP_ROOT', getenv('BATCHELOR_APP_ROOT'));
+require_once(BATCHELOR_APP_ROOT . '/vendor/autoload.php');
 
 use Batchelor\Console\WebServiceClient;
 
