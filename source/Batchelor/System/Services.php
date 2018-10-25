@@ -20,6 +20,7 @@
 
 namespace Batchelor\System;
 
+use Batchelor\Storage\Locate;
 use RuntimeException;
 
 /**
@@ -94,16 +95,10 @@ class Services
                         $config = $this->getConfigPath();
                 }
 
-                if (is_string($config) && !file_exists($config)) {
-                        throw new RuntimeException("The services config file is missing ($config)");
-                }
-
                 if (is_array($config)) {
                         $this->setServices($config);
                 } elseif (is_string($config)) {
                         $this->setServices(require($config));
-                } else {
-                        throw new InvalidArgumentException("Expected null, array or string as argument");
                 }
         }
 
@@ -250,13 +245,15 @@ class Services
          */
         private function getConfigPath(): string
         {
-                if (defined('APP_ROOT')) {
-                        return sprintf("%s/config/services.inc", APP_ROOT);
-                } elseif (getenv('APP_ROOT')) {
-                        return sprintf("%s/config/services.inc", getenv('APP_ROOT'));
-                } else {
-                        return realpath(__DIR__ . "/../../../config/services.inc");
+                $config = "services.inc";
+                $locate = new Locate();
+                $locate->addLocation("/etc/batchelor");
+
+                if (!($target = $locate->getFilepath($config))) {
+                        throw new RuntimeException("Failed locate config file $config");
                 }
+
+                return $target;
         }
 
 }

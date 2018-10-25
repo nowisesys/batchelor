@@ -20,6 +20,7 @@
 
 namespace Batchelor\System\Service;
 
+use Batchelor\Storage\Locate;
 use RecursiveArrayObject;
 use RuntimeException;
 
@@ -212,39 +213,14 @@ class Config
          */
         private function findConfig($config, $locations)
         {
-                $locations = array_merge($locations, [
-                        ".",
-                        __DIR__ . "/../../../../config",
-                        __DIR__ . "/../../../../../../config",
-                        "/etc/batchelor"
-                ]);
+                $locate = new Locate($locations);
+                $locate->addLocation("/etc/batchelor");
 
-                foreach ($locations as $location) {
-                        if ($this->testConfig(sprintf("%s/%s", $location, $config))) {
-                                return;
-                        }
-                        if ($this->testConfig(sprintf("%s/%s.in", $location, $config))) {
-                                return;
-                        }
+                if (!($target = $locate->getFilepath($config))) {
+                        throw new RuntimeException("Failed locate config file $config");
                 }
 
-                throw new RuntimeException("Failed locate config file $config after searching in standard locations");
-        }
-
-        /**
-         * Load config if exists.
-         * 
-         * @param string $config The config file.
-         * @return boolean
-         */
-        private function testConfig($config)
-        {
-                if (file_exists($config)) {
-                        $this->loadConfig($config);
-                        return true;
-                } else {
-                        return false;
-                }
+                $this->loadConfig($target);
         }
 
         /**
