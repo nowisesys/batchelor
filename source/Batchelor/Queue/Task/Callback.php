@@ -121,7 +121,7 @@ abstract class Callback
          * 
          * @param string $cmd The command string.
          * @param array $env The environment variables.
-         * @param string $$cwd The working directory.
+         * @param string $cwd The working directory.
          */
         public function runCommand(string $cmd, array $env = null, string $cwd = null)
         {

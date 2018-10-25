@@ -218,16 +218,16 @@ class Processor extends Component implements Daemonized
         {
                 if (($runtime = $scheduler->popJob())) {
                         $logger->info("Running job %s", [$runtime->job]);
-                        $runtime->setCallback(new class($scheduler, $runtime) extends Callback {
+                        $runtime->setCallback(new class($runtime) extends Callback {
 
                                 private $scheduler;
                                 private $runtime;
 
-                                public function __construct(Scheduler $scheduler, Runtime $runtime)
+                                public function __construct(Runtime $runtime)
                                 {
                                         parent::__construct();
 
-                                        $this->scheduler = $scheduler;
+                                        $this->scheduler = new Scheduler();
                                         $this->runtime = $runtime;
                                 }
 

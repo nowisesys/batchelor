@@ -23,7 +23,6 @@ namespace Batchelor\Queue\Task\Manager;
 use Batchelor\Queue\Task;
 use Batchelor\Queue\Task\Runtime;
 use Batchelor\System\Component;
-use Batchelor\System\Services;
 use Batchelor\WebService\Types\JobState;
 use Throwable;
 
@@ -48,9 +47,7 @@ class TaskRunner extends Component
         {
                 $task = $this->getTask($runtime->data->task);
                 $logs = $this->getLogger($runtime);
-                
-                Services::setInstance(new Services());
-                
+
                 try {
                         $logs->start();
 
