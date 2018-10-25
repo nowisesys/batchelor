@@ -24,6 +24,7 @@ use ArrayIterator;
 use Batchelor\Cache\Storage;
 use Batchelor\Queue\Task\Scheduler\Inspector;
 use IteratorAggregate;
+use RuntimeException;
 use SyncReaderWriter;
 use Traversable;
 
@@ -53,11 +54,6 @@ class StateQueue implements Inspector, IteratorAggregate
          * @var Storage 
          */
         private $_cache;
-        /**
-         * The read/write lock.
-         * @var SyncReaderWriter 
-         */
-        private $_qsync;
 
         /**
          * Constructor.
@@ -67,10 +63,12 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function __construct(string $ident, Storage $cache)
         {
+                if (!extension_loaded("sync")) {
+                        throw new RuntimeException("The sync extension is not loaded");
+                }
+
                 $this->_ident = $ident;
                 $this->_cache = $cache;
-
-                $this->_qsync = new SyncReaderWriter($this->getCacheKey());
         }
 
         /**
@@ -105,9 +103,17 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function addState(string $job, State $state)
         {
-                $content = $this->getContent();
-                $content[$job] = $state;
-                $this->setContent($content);
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->writelock();
+
+                        $content = $this->getContent();
+                        $content[$job] = $state;
+                        $this->setContent($content);
+                } finally {
+                        $qsync->writeunlock();
+                }
         }
 
         /**
@@ -115,13 +121,15 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function getState(string $job): State
         {
-                while (true) {
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->readlock();
+
                         $content = $this->getContent();
-                        if (isset($content[$job])) {
-                                return $content[$job];
-                        } else {
-                                sleep(1);
-                        }
+                        return $content[$job];
+                } finally {
+                        $qsync->readunlock();
                 }
         }
 
@@ -132,9 +140,17 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function removeState(string $job)
         {
-                $content = $this->getContent();
-                unset($content[$job]);
-                $this->setContent($content);
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->writelock();
+
+                        $content = $this->getContent();
+                        unset($content[$job]);
+                        $this->setContent($content);
+                } finally {
+                        $qsync->writeunlock();
+                }
         }
 
         /**
@@ -142,8 +158,16 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function hasState(string $job): bool
         {
-                $content = $this->getContent();
-                return isset($content[$job]);
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->readlock();
+
+                        $content = $this->getContent();
+                        return isset($content[$job]);
+                } finally {
+                        $qsync->readunlock();
+                }
         }
 
         /**
@@ -151,8 +175,16 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function getFirst(): string
         {
-                $content = $this->getContent();
-                return key($content);
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->readlock();
+
+                        $content = $this->getContent();
+                        return key($content);
+                } finally {
+                        $qsync->readunlock();
+                }
         }
 
         /**
@@ -163,8 +195,10 @@ class StateQueue implements Inspector, IteratorAggregate
                 $cname = $this->getCacheKey();
                 $cache = $this->_cache;
 
+                $qsync = $this->getSyncLock("content");
+
                 try {
-                        $this->_qsync->readlock();
+                        $qsync->readlock();
 
                         if ($cache->exists($cname)) {
                                 return $cache->read($cname);
@@ -172,7 +206,7 @@ class StateQueue implements Inspector, IteratorAggregate
                                 return [];
                         }
                 } finally {
-                        $this->_qsync->readunlock();
+                        $qsync->readunlock();
                 }
         }
 
@@ -182,13 +216,15 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         public function setContent(array $content)
         {
+                $qsync = $this->getSyncLock("content");
+
                 try {
-                        $this->_qsync->writelock();
+                        $qsync->writelock();
 
                         $this->_cache->save($this->getCacheKey(), $content);
                         $this->getCounter()->setSize(count($content));
                 } finally {
-                        $this->_qsync->writeunlock();
+                        $qsync->writeunlock();
                 }
         }
 
@@ -220,6 +256,24 @@ class StateQueue implements Inspector, IteratorAggregate
         public function getIterator(): Traversable
         {
                 return new ArrayIterator($this->getContent());
+        }
+
+        /**
+         * Get synchronize read/write lock.
+         * 
+         * Returns a sync read/write object that can be used to protect other
+         * threads from entering a critical section. The lock is bound to this
+         * queue name.
+         * 
+         * @param string $name The lock name.
+         * @return SyncReaderWriter
+         * @see http://php.net/manual/en/class.syncreaderwriter.php
+         */
+        public function getSyncLock(string $name = "lock"): SyncReaderWriter
+        {
+                return new SyncReaderWriter(
+                    sprintf("scheduler-%s-queue-%s", $this->_ident, $name)
+                );
         }
 
 }

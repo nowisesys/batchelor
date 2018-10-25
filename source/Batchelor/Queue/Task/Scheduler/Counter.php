@@ -21,13 +21,15 @@
 namespace Batchelor\Queue\Task\Scheduler;
 
 use Batchelor\Cache\Storage;
+use RuntimeException;
 use SyncReaderWriter;
 
 /**
  * Counter for state queue.
  * 
- * This is a simple class that helps keeping track on the state queue size
- * without actually open the queue itself.
+ * This class helps keeping track on the state queue size without require the
+ * queue consumer to actually open the queue itself. Uses synchronize locks to
+ * coordinate read/write operations.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
@@ -44,11 +46,6 @@ class Counter
          * @var Storage 
          */
         private $_cache;
-        /**
-         * The read/write lock.
-         * @var SyncReaderWriter 
-         */
-        private $_qsync;
 
         /**
          * Constructor.
@@ -58,73 +55,135 @@ class Counter
          */
         public function __construct(string $ident, Storage $cache)
         {
+                if (!extension_loaded("sync")) {
+                        throw new RuntimeException("The sync extension is not loaded");
+                }
+
                 $this->_ident = $ident;
                 $this->_cache = $cache;
-
-                $this->_qsync = new SyncReaderWriter($this->getCacheKey());
         }
 
+        /**
+         * Increment counter value.
+         */
         public function increment()
         {
-                $value = $this->getValue();
-                $this->setValue(++$value);
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->writelock();
+                        $value = $this->getValue();
+                        $this->setValue( ++$value);
+                } finally {
+                        $qsync->writeunlock();
+                }
         }
 
+        /**
+         * Decrement counter value.
+         */
         public function decrement()
         {
-                $value = $this->getValue();
-                $this->setValue(--$value);
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->writelock();
+                        $value = $this->getValue();
+                        $this->setValue( --$value);
+                } finally {
+                        $qsync->writeunlock();
+                }
         }
 
+        /**
+         * Get counter value.
+         * @return int
+         */
         public function getSize(): int
         {
-                return $this->getValue();
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->readlock();
+                        return $this->getValue();
+                } finally {
+                        $qsync->readunlock();
+                }
         }
 
+        /**
+         * Set counter value.
+         * @param int $size The number of items.
+         */
         public function setSize(int $size)
         {
-                $this->setValue($size);
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->writelock();
+                        $this->setValue($size);
+                } finally {
+                        $qsync->writeunlock();
+                }
         }
 
-        private function getValue()
+        /**
+         * Get counter value.
+         * @return int
+         */
+        private function getValue(): int
         {
                 $cname = $this->getCacheKey();
                 $cache = $this->_cache;
 
-                try {
-                        $this->_qsync->readlock();
-
-                        if ($cache->exists($cname)) {
-                                return $cache->read($cname);
-                        } else {
-                                return 0;
-                        }
-                } finally {
-                        $this->_qsync->readunlock();
+                if ($cache->exists($cname)) {
+                        return $cache->read($cname);
+                } else {
+                        return 0;
                 }
         }
 
-        private function setValue($value)
+        /**
+         * Set counter value.
+         * @param int $value The counter value.
+         */
+        private function setValue(int $value)
         {
                 if ($value < 0) {
                         return;
                 }
-                
-                try {
-                        $this->_qsync->writelock();
 
-                        $cname = $this->getCacheKey();
-                        $cache = $this->_cache;
+                $cname = $this->getCacheKey();
+                $cache = $this->_cache;
 
-                        $cache->save($cname, $value);
-                } finally {
-                        $this->_qsync->writeunlock();
-                }
+                $cache->save($cname, $value);
         }
 
+        /**
+         * Get cache queue.
+         * @return string
+         */
         private function getCacheKey(): string
         {
                 return sprintf("scheduler-%s-count", $this->_ident);
+        }
+
+        /**
+         * Get synchronize read/write lock.
+         * 
+         * Returns a sync read/write object that can be used to protect other
+         * threads from entering a critical section. The lock is bound to this
+         * counter name.
+         * 
+         * @param string $name The lock name.
+         * @return SyncReaderWriter
+         * @see http://php.net/manual/en/class.syncreaderwriter.php
+         */
+        public function getSyncLock(string $name = "lock"): SyncReaderWriter
+        {
+                return new SyncReaderWriter(
+                    sprintf("scheduler-%s-count-%s", $this->_ident, $name)
+                );
         }
 
 }
