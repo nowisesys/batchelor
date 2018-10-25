@@ -22,6 +22,7 @@ namespace Batchelor\Queue\Task;
 
 use Batchelor\Queue\System\SystemDirectory;
 use Batchelor\Storage\Directory;
+use Batchelor\Storage\File;
 use Batchelor\WebService\Types\JobData;
 use RuntimeException;
 
@@ -111,6 +112,18 @@ class Runtime
         {
                 return (new SystemDirectory($this->hostid))
                         ->getResultDirectory($this->result);
+        }
+
+        /**
+         * Get logfile for this task.
+         * @return File
+         */
+        public function getLogfile(): File
+        {
+                return $this->getWorkDirectory()
+                        ->getFile(
+                            sprintf("task-%s.log", $this->data->task)
+                );
         }
 
         /**

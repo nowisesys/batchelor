@@ -22,6 +22,7 @@ namespace Batchelor\Queue\Task\Manager;
 
 use Batchelor\Queue\Task;
 use Batchelor\Queue\Task\Runtime;
+use Batchelor\Storage\File;
 use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobState;
 use Throwable;
@@ -74,13 +75,9 @@ class TaskRunner extends Component
 
         private function getLogger(Runtime $runtime): TaskLogger
         {
-                $file = $runtime->getWorkDirectory()->getFile(
-                    sprintf("task-%s.log", $runtime->data->task)
-                );
-
                 $logs = new TaskLogger();
                 $logs->setLogger($runtime->getCallback()->getLogger());
-                $logs->setLogfile($file);
+                $logs->setLogfile($runtime->getLogfile());
 
                 return $logs;
         }
