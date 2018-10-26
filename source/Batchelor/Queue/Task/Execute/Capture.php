@@ -125,10 +125,14 @@ class Capture implements Selectable
 
         /**
          * Execute process.
+         * 
+         * Returns the status for
+         * @return Status
          */
-        public function execute()
+        public function execute(): Status
         {
-                (new Monitor($this))->execute();
+                return (new Monitor($this))
+                        ->execute();
         }
 
         /**
