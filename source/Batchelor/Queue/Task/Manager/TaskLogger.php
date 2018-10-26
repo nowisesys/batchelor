@@ -130,6 +130,7 @@ class TaskLogger
         public function flush()
         {
                 $this->write($this->_logger, $this->_file);
+                $this->clean();
         }
 
         /**
@@ -139,6 +140,9 @@ class TaskLogger
         {
                 if (ob_get_level() != 0) {
                         ob_clean();
+                }
+                if ($this->_logger instanceof Memory) {
+                        $this->_logger->clear();
                 }
         }
 
@@ -150,9 +154,11 @@ class TaskLogger
          */
         private function write(Memory $logger, File $file)
         {
-                $file->putContent(
-                    implode("\n", $logger->getMessages()) . "\n", FILE_APPEND
-                );
+                if ($this->_logger instanceof Memory) {
+                        $file->putContent(
+                            implode("\n", $logger->getMessages()) . "\n", FILE_APPEND
+                        );
+                }
         }
 
 }
