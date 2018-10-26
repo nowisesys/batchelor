@@ -56,7 +56,7 @@ class QueueFilterResultTest extends \PHPUnit_Framework_TestCase
         public function testAliases()
         {
                 $object = new QueueFilterResult(QueueFilterResult::ALL);
-                $object = new QueueFilterResult(QueueFilterResult::SUCCESSS);
+                $object = new QueueFilterResult(QueueFilterResult::SUCCESS);
                 $object = new QueueFilterResult(QueueFilterResult::WAITING);
         }
 

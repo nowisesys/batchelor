@@ -67,7 +67,7 @@ class QueueFilterResult extends EnumType
         /**
          * Alias for FINISHED.
          */
-        const SUCCESSS = 'finished';
+        const SUCCESS = 'finished';
         /**
          * Alias for PENDING.
          */
