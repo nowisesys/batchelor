@@ -154,7 +154,8 @@ class TaskLogger
          */
         private function write(Memory $logger, File $file)
         {
-                if ($this->_logger instanceof Memory) {
+                if ($this->_logger instanceof Memory &&
+                    $this->_logger->hasMesssages()) {
                         $file->putContent(
                             implode("\n", $logger->getMessages()) . "\n", FILE_APPEND
                         );
