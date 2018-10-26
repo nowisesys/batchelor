@@ -248,6 +248,8 @@ class Processor extends Component implements Daemonized
                 foreach ($results as $result) {
                         if ($result['code'] != 0) {
                                 $scheduler->setFinished($result['job'], JobState::ERROR());
+                        } elseif ($scheduler->getQueue("running")->hasState($result['job'])) {
+                                $scheduler->setFinished($result['job'], JobState::CRASHED());
                         }
                 }
         }
