@@ -21,7 +21,6 @@
 namespace Batchelor\Queue\Task\Manager;
 
 use Batchelor\Logging\Target\Memory;
-use Batchelor\Storage\Directory;
 use Batchelor\Storage\File;
 use RuntimeException;
 use Throwable;
@@ -134,6 +133,16 @@ class TaskLogger
         }
 
         /**
+         * Clean output buffer.
+         */
+        public function clean()
+        {
+                if (ob_get_level() != 0) {
+                        ob_clean();
+                }
+        }
+
+        /**
          * Write content in memory logger to current selected logfile.
          * 
          * @param Memory $logger The memory logger.
@@ -142,7 +151,7 @@ class TaskLogger
         private function write(Memory $logger, File $file)
         {
                 $file->putContent(
-                    implode("\n", $logger->getMessages())
+                    implode("\n", $logger->getMessages()) . "\n", FILE_APPEND
                 );
         }
 
