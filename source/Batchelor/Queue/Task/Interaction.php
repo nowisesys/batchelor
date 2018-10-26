@@ -23,6 +23,7 @@ namespace Batchelor\Queue\Task;
 use Batchelor\Logging\Logger;
 use Batchelor\Queue\Task\Execute\Process;
 use Batchelor\Queue\Task\Execute\Selectable;
+use Batchelor\Queue\Task\Execute\Status;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
 
@@ -79,11 +80,15 @@ interface Interaction
          * directory. The command output is automatic captured and appended
          * to current message logger.
          * 
+         * Returns the process status object from which exit code and whether
+         * process was signaled can be detected.
+         * 
          * @param string $cmd The command string.
          * @param array $env The environment variables.
          * @param string $cwd The working directory.
+         * @return Status
          */
-        function runCommand(string $cmd, array $env = null, string $cwd = null);
+        function runCommand(string $cmd, array $env = null, string $cwd = null): Status;
 
         /**
          * Run selectable command.

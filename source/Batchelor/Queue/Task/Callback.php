@@ -27,6 +27,7 @@ use Batchelor\Queue\Task\Execute\Capture;
 use Batchelor\Queue\Task\Execute\Process;
 use Batchelor\Queue\Task\Execute\Selectable;
 use Batchelor\Queue\Task\Execute\Spawner;
+use Batchelor\Queue\Task\Execute\Status;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
 
@@ -112,9 +113,9 @@ class Callback implements Interaction
         /**
          * {@inheritdoc}
          */
-        public function runCommand(string $cmd, array $env = null, string $cwd = null)
+        public function runCommand(string $cmd, array $env = null, string $cwd = null): Status
         {
-                Capture::create($this->_logger, $cmd, $env, $cwd)->execute();
+                return Capture::create($this->_logger, $cmd, $env, $cwd)->execute();
         }
 
         /**
@@ -122,7 +123,7 @@ class Callback implements Interaction
          */
         public function runProcess(Selectable $command): Process
         {
-                (new Spawner($command))->open();
+                return (new Spawner($command))->open();
         }
 
         /**
