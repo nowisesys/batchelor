@@ -22,6 +22,7 @@ namespace Batchelor\Queue\Task;
 
 use Batchelor\Queue\Task;
 use Batchelor\Storage\Directory;
+use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobData;
 
 /**
@@ -32,7 +33,7 @@ use Batchelor\WebService\Types\JobData;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class Adapter implements Task
+abstract class Adapter extends Component implements Task
 {
 
         /**
