@@ -91,6 +91,15 @@ class Memory extends Adapter implements Logger
         }
 
         /**
+         * Check if log messages exist.
+         * @return bool
+         */
+        public function hasMesssages(): bool
+        {
+                return count($this->_messages) != 0;
+        }
+
+        /**
          * Clear message buffer.
          */
         public function clear()
