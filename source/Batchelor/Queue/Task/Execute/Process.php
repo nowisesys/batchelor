@@ -44,10 +44,10 @@ class Process implements ProcessControl
          */
         private $_stream;
         /**
-         * The exit status.
-         * @var int 
+         * The process status.
+         * @var Status 
          */
-        private $_status = -1;
+        private $_status;
 
         /**
          * Constructor.
@@ -59,6 +59,7 @@ class Process implements ProcessControl
         {
                 $this->_handle = $handle;
                 $this->_stream = $streams;
+                $this->_status = new Status($handle);
         }
 
         /**
@@ -129,7 +130,7 @@ class Process implements ProcessControl
          */
         public function getExitCode(): int
         {
-                return $this->_status;
+                return $this->_status->exitcode;
         }
 
         /**
@@ -139,18 +140,11 @@ class Process implements ProcessControl
          */
         public function getStatus(): Status
         {
-                $status = new Status($this->_handle);
-
-                // 
-                // See http://php.net/manual/en/function.proc-get-status.php
-                // 
-                if ($this->_status == -1) {
-                        if ($status->running == false && $status->exitcode != -1) {
-                                $this->_status = $status->exitcode;
-                        }
+                if ($this->_status->running) {
+                        return $this->_status = new Status($this->_handle);
+                } else {
+                        return $this->_status;
                 }
-
-                return $status;
         }
 
         /**
@@ -192,29 +186,20 @@ class Process implements ProcessControl
                                         fread($stream, 1024);
                                 }
                         }
-                        if (fclose($stream) == false) {
+                        if (is_resource($stream) && fclose($stream) == false) {
                                 throw new RuntimeException("Failed close stream");
                         }
                 }
                 if (is_resource($this->_handle)) {
-                        $this->setExitCode(proc_close($this->_handle));
-                }
-        }
+                        $status = proc_close($this->_handle);
 
-        /**
-         * Set process exit code.
-         * 
-         * @param int $status The status code.
-         * @throws RuntimeException
-         */
-        private function setExitCode(int $status)
-        {
-                if ($this->_status == -1) {
-                        if ($status == -1 && $this->_status == -1) {
+                        if ($this->_status->signaled == false &&
+                            $this->_status->running == true &&
+                            $status == -1) {
                                 throw new RuntimeException("Failed close process");
-                        } else {
-                                $this->_status = $status;
                         }
+
+                        $this->getStatus();
                 }
         }
 
