@@ -54,7 +54,7 @@ class Processor extends Component implements Daemonized
          * The number of workers.
          * @var int 
          */
-        private $_workers = 3;
+        private $_workers = 4;
         /**
          * The work manager type.
          * @var string 
@@ -69,7 +69,7 @@ class Processor extends Component implements Daemonized
          * The poll interval.
          * @var int 
          */
-        private $_poll = 5;
+        private $_poll = 1;
 
         /**
          * Constructor.
@@ -208,35 +208,13 @@ class Processor extends Component implements Daemonized
                 while ($scheduler->hasJobs() && $manager->isBusy() == false) {
                         $this->process($logger, $scheduler, $manager);
                 }
-
-                if ($manager->isIdle()) {
-                        return;
-                }
         }
 
         private function process(Logger $logger, Scheduler $scheduler, Manager $manager)
         {
                 if (($runtime = $scheduler->popJob())) {
                         $logger->info("Running job %s", [$runtime->job]);
-                        $runtime->setCallback(new class($runtime) extends Callback {
-
-                                private $scheduler;
-                                private $runtime;
-
-                                public function __construct(Runtime $runtime)
-                                {
-                                        parent::__construct();
-
-                                        $this->scheduler = new Scheduler();
-                                        $this->runtime = $runtime;
-                                }
-
-                                protected function onStatus(JobState $state)
-                                {
-                                        $this->scheduler->setFinished($this->runtime->job, $state);
-                                        exit(0);
-                                }
-                        });
+                        $runtime->setCallback(new Callback($runtime));
                         $manager->addJob($runtime);
                 }
         }

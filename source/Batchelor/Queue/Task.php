@@ -20,7 +20,8 @@
 
 namespace Batchelor\Queue;
 
-use Batchelor\Queue\Task\Callback;
+use Batchelor\Queue\Task\Adapter;
+use Batchelor\Queue\Task\Interaction;
 use Batchelor\Storage\Directory;
 use Batchelor\WebService\Types\JobData;
 
@@ -54,7 +55,7 @@ use Batchelor\WebService\Types\JobData;
  * is each processed as a separate task.
  * 
  * @author Anders Lövgren (Nowise Systems)
- * @see Task\Adapter
+ * @see Adapter
  */
 interface Task
 {
@@ -84,9 +85,9 @@ interface Task
          * 
          * @param Directory $workdir The work directory.
          * @param Directory $result The result directory.
-         * @param Callback $response The response object with logger.
+         * @param Interaction $interact The response object with logger.
          */
-        function execute(Directory $workdir, Directory $result, Callback $response);
+        function execute(Directory $workdir, Directory $result, Interaction $interact);
 
         /**
          * Called when task has finished.

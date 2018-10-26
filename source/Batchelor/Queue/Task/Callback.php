@@ -27,27 +27,15 @@ use Batchelor\Queue\Task\Execute\Capture;
 use Batchelor\Queue\Task\Execute\Process;
 use Batchelor\Queue\Task\Execute\Selectable;
 use Batchelor\Queue\Task\Execute\Spawner;
+use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
 
 /**
- * The message class.
- * 
- * Passed to executed task and used for communication between the task being
- * run and the job queue processor service. 
- *
- * <code>
- * $callback->getLogger()->info("Starting");
- *      ...     // doing some work...
- * $callback->getLogger()->info("Finished");
- * $callback->setStatus(JobState::SUCCESS());
- * </code>
- * 
- * Only set status if job has failed or has completed. If current task is part 
- * of a pipeline, then set status in last sub task.
+ * The task interaction class.
  * 
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class Callback
+class Callback implements Interaction
 {
 
         /**
@@ -55,32 +43,46 @@ abstract class Callback
          * @var Logger 
          */
         private $_logger;
+        /**
+         * The scheduler object.
+         * @var Scheduler 
+         */
+        private $_scheduler;
+        /**
+         * The task runtime.
+         * @var Runtime 
+         */
+        private $_runtime;
 
         /**
          * Constructor.
+         * @param Runtime $runtime The task runtime.
          */
-        public function __construct()
+        public function __construct(Runtime $runtime)
         {
                 $this->_logger = $this->useLogger();
+                $this->_scheduler = new Scheduler();
+                $this->_runtime = $runtime;
         }
 
         /**
-         * Set job status.
-         * 
-         * <code>
-         * $message->setStatus(JobState::ERROR);
-         * </code>
-         * 
-         * @param JobState $state The job state.
+         * {@inheritdoc}
          */
         public function setStatus(JobState $state)
         {
-                $this->onStatus($state);
+                $this->onStatusChanged($state);
         }
 
         /**
-         * Get message logger.
-         * @return Logger The message logger.
+         * {@inheritdoc}
+         */
+        public function addTask(JobData $data)
+        {
+                $this->onTaskAdded($data);
+        }
+
+        /**
+         * {@inheritdoc}
          */
         public function getLogger(): Logger
         {
@@ -88,12 +90,7 @@ abstract class Callback
         }
 
         /**
-         * Set message logger.
-         * 
-         * Call this method to replace the default in memory logger with for 
-         * example a file logger or syslog.
-         * 
-         * @param Logger $logger The message logger.
+         * {@inheritdoc}
          */
         public function setLogger(Logger $logger)
         {
@@ -113,15 +110,7 @@ abstract class Callback
         }
 
         /**
-         * Run non-interactive command.
-         * 
-         * Execute command with optional environment variables and working 
-         * directory. The command output is automatic captured and appended
-         * to current message logger.
-         * 
-         * @param string $cmd The command string.
-         * @param array $env The environment variables.
-         * @param string $cwd The working directory.
+         * {@inheritdoc}
          */
         public function runCommand(string $cmd, array $env = null, string $cwd = null)
         {
@@ -129,14 +118,7 @@ abstract class Callback
         }
 
         /**
-         * Run selectable command.
-         * 
-         * The command is excuted and its process object is returned that can be
-         * used to control the process, read output and status. Output streams 
-         * from process is set non-blocking.
-         * 
-         * @param Selectable $command
-         * @return Process 
+         * {@inheritdoc}
          */
         public function runProcess(Selectable $command): Process
         {
@@ -146,5 +128,17 @@ abstract class Callback
         /**
          * Called on set status.
          */
-        protected abstract function onStatus(JobState $state);
+        protected function onStatusChanged(JobState $state)
+        {
+                $this->_scheduler->setFinished($this->_runtime->job, $state);
+        }
+
+        /**
+         * Called on task added.
+         */
+        protected function onTaskAdded(JobData $data)
+        {
+                $this->_scheduler->addJob($this->_runtime->job, $data);
+        }
+
 }
