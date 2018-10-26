@@ -91,6 +91,14 @@ class Memory extends Adapter implements Logger
         }
 
         /**
+         * Clear message buffer.
+         */
+        public function clear()
+        {
+                $this->_messages = [];
+        }
+
+        /**
          * Get formatted message.
          * 
          * @param int $priority One of the LOG_XXX constants.
