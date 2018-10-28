@@ -64,9 +64,6 @@ class TaskRunner extends Component
                 } catch (Throwable $exception) {
                         $runtime->getCallback()->setStatus(JobState::CRASHED());
                         $logs->logException($exception);
-                } finally {
-                        $logs->stop();
-                        $logs->flush();
                 }
         }
 
