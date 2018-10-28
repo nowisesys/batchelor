@@ -119,6 +119,9 @@ class TaskLogger
          */
         public function stop()
         {
+                if (ob_get_level() == 0) {
+                        return;
+                }
                 if (!ob_end_flush()) {
                         throw new RuntimeException("Failed stop output buffering");
                 }
