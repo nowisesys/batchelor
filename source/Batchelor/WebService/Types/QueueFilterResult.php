@@ -80,6 +80,10 @@ class QueueFilterResult extends EnumType
          * Job is resumed.
          */
         const RESUMED = 'resumed';
+        /**
+         * Waiting for sub job to complete.
+         */
+        const CONTINUED = 'continued';
 
         /**
          * Constructor.
