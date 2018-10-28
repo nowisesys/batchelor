@@ -54,22 +54,27 @@ class SchedulerCommand extends Command
                 $this->addOption("all", "A", InputOption::VALUE_NONE, "List all jobs (pending, running and finished)");
 
                 $this->addOption("add", "a", InputOption::VALUE_REQUIRED, "Add job to scheduler");
+                $this->addOption("task", "t", InputOption::VALUE_REQUIRED, "Use task for running job");
                 $this->addOption("remove", "r", InputOption::VALUE_REQUIRED, "Delete job to scheduler");
                 $this->addOption("show", "s", InputOption::VALUE_REQUIRED, "Show job details");
                 $this->addOption("example", "e", InputOption::VALUE_REQUIRED, "Show example");
 
                 $this->addusage("--list [--pending] [--running] [--finished] [-v]");
-                $this->addusage("--add=data|--remove=jobid|--show=jobid");
+                $this->addusage("--add=data [--task=name]|--remove=jobid|--show=jobid");
                 $this->addusage("--example={add|remove|show}");
         }
 
         protected function execute(InputInterface $input, OutputInterface $output)
         {
+                if (!$input->getOption("task")) {
+                        $input->setOption("task", "default");
+                }
+
                 if ($input->getOption("list")) {
                         $this->listJobs($input, $output);
                 }
                 if ($input->getOption("add")) {
-                        $this->addJob($output, $input->getOption("add"));
+                        $this->addJob($output, $input->getOption("add"), $input->getOption("task"));
                 }
                 if ($input->getOption("remove")) {
                         $this->removeJob($output, $input->getOption("remove"));
@@ -157,11 +162,11 @@ class SchedulerCommand extends Command
                 }
         }
 
-        private function addJob(OutputInterface $output, string $data)
+        private function addJob(OutputInterface $output, string $data, string $task = 'default')
         {
                 $scheduler = new Scheduler();
 
-                $jobdata = new JobData($data, "data");
+                $jobdata = new JobData($data, "data", $task);
                 $hostid = (new Hostid())->getValue();
 
                 $result = $scheduler->pushJob($hostid, $jobdata);
@@ -192,7 +197,11 @@ class SchedulerCommand extends Command
         {
                 switch ($option) {
                         case "add":
-                                $output->writeln("-a 'hello world'");
+                                $output->writeln("# Run job using default task:");
+                                $output->writeln("--add='hello world'");
+                                $output->writeln("");
+                                $output->writeln("# Run job using the greet task:");
+                                $output->writeln("--add='hello world' --task=greet");
                                 break;
                         case "remove":
                         case "show";
