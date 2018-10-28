@@ -40,12 +40,12 @@ class JobData
 {
 
         /**
-         * The job data (plain data or an URL).
+         * The job data (plain data, file path or an URL).
          * @var string 
          */
         public $data;
         /**
-         * The data type (either "data" or "url").
+         * The data type (either "data", "file" or "url").
          * @var string 
          */
         public $type;
