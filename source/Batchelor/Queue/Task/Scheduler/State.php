@@ -20,7 +20,10 @@
 
 namespace Batchelor\Queue\Task\Scheduler;
 
+use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobState;
+use Batchelor\WebService\Types\JobStatus;
+use Batchelor\WebService\Types\QueuedJob;
 
 /**
  * The job state.
@@ -79,6 +82,39 @@ class State
                 $this->queued = time();
                 $this->started = 0;
                 $this->finished = 0;
+        }
+
+        /**
+         * Get queued job.
+         * 
+         * @param string $jobid The job ID.
+         * @return JobIdentity
+         */
+        public function getJobIdentity(string $jobid): JobIdentity
+        {
+                return new JobIdentity($jobid, $this->result);
+        }
+
+        /**
+         * Get job status.
+         * @return JobStatus
+         */
+        public function getJobStatus(): JobStatus
+        {
+                return new JobStatus(
+                    date('Y-m-d', $this->queued), date('H:i:s', $this->queued), $this->queued, $this->state
+                );
+        }
+
+        /**
+         * Get queued job.
+         * @param string $jobid The job ID.
+         */
+        public function getQueuedJob(string $jobid): QueuedJob
+        {
+                return new QueuedJob(
+                    $this->getJobIdentity($jobid), $this->getJobStatus()
+                );
         }
 
 }
