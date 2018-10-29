@@ -25,7 +25,6 @@ use Batchelor\Queue\Task\Scheduler;
 use Batchelor\Queue\Task\Scheduler\State;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
-use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
 
 /**
@@ -91,9 +90,7 @@ class Push
 
         private function getJobStatus(State $state)
         {
-                return new JobStatus(
-                    date('Y-m-d', $state->queued), date('H:i:s', $state->queued), $state->queued, $state->state
-                );
+                return $state->status;
         }
 
         private static function guidv4($data)
