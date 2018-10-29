@@ -77,9 +77,9 @@ class Callback implements Interaction
         /**
          * {@inheritdoc}
          */
-        public function addTask(JobData $data)
+        public function newTask(JobData $data)
         {
-                $this->onTaskAdded($data);
+                $this->onTaskPush($data);
         }
 
         /**
@@ -135,11 +135,11 @@ class Callback implements Interaction
         }
 
         /**
-         * Called on task added.
+         * Called on new task.
          */
-        protected function onTaskAdded(JobData $data)
+        protected function onTaskPush(JobData $data)
         {
-                $this->_scheduler->addJob($this->_runtime->job, $data);
+                $this->_scheduler->pushJob($this->_runtime->hostid, $data);
         }
 
 }

@@ -105,11 +105,10 @@ interface Interaction
         /**
          * Add scheduled task.
          * 
-         * Schedules an task to be run as a child task of current job. Provides
-         * for chaining tasks in a pipeline or splitting a large job in smaller
-         * sub tasks.
+         * Schedules a new task for later execution. This is equivalent to adding
+         * a new job in the scheduler.
          * 
          * @param JobData $data The job data.
          */
-        function addTask(JobData $data);
+        function newTask(JobData $data);
 }
