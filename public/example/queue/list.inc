@@ -9,7 +9,7 @@ use Batchelor\WebService\Types\QueueSortResult;
 // Get pending jobs:
 // 
 $queue = new SystemQueue();
-$data = $queue->listJobs((new Hostid())->getValue(), QueueSortResult::JOBID(), QueueFilterResult::PENDING());
+$data = $queue->listJobs((new Hostid())->getValue(), QueueSortResult::JOBID(), QueueFilterResult::NONE());
 
 printf("%s\n", json_encode($data, JSON_PRETTY_PRINT));
 print_r($data);
