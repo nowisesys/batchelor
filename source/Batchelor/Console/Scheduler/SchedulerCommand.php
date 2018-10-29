@@ -196,16 +196,18 @@ class SchedulerCommand extends Command
                 switch ($option) {
                         case "add":
                                 $output->writeln("# Run job using default task:");
-                                $output->writeln("--add='hello world'");
+                                $output->writeln("  --add='hello world'");
                                 $output->writeln("");
                                 $output->writeln("# Run job using the greet task:");
-                                $output->writeln("--add='hello world' --task=greet");
+                                $output->writeln("  --add='hello world' --task=greet");
                                 break;
                         case "remove":
+                                $output->writeln("# Show job details by passing its ID:");
+                                $output->writeln("  --show=3417c236-96ef-4b49-abfe-c3076030e8dc'");
+                                break;
                         case "show";
-                                $output->writeln(json_encode(
-                                        $this->exampleJobIdentity()
-                                ));
+                                $output->writeln("# Remove job by passing its ID:");
+                                $output->writeln("  --remove=3417c236-96ef-4b49-abfe-c3076030e8dc'");
                                 break;
                         default:
                                 throw new InvalidArgumentException("Invalid option $option for example");
