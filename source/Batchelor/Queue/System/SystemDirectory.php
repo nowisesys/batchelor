@@ -20,6 +20,8 @@
 
 namespace Batchelor\Queue\System;
 
+use Batchelor\Queue\Task\Scheduler;
+use Batchelor\Queue\Task\Scheduler\StateQueue;
 use Batchelor\Queue\WorkDirectory;
 use Batchelor\Storage\Directory;
 use Batchelor\System\Component;
@@ -104,7 +106,13 @@ class SystemDirectory extends Component implements WorkDirectory
          */
         public function getJobs()
         {
-                // TODO: implement (how to handle the jobid for job identity?)
+                $identities = [];
+
+                foreach ($this->getQueue() as $jobid => $state) {
+                        $identities[] = new JobIdentity($jobid, $state->result);
+                }
+
+                return $identities;
         }
 
         /**
@@ -161,6 +169,12 @@ class SystemDirectory extends Component implements WorkDirectory
                 return $this->data->useDirectory(
                         sprintf("jobs/%s/%s/result", $this->_hostid, $result)
                 );
+        }
+
+        private function getQueue(): StateQueue
+        {
+                return (new Scheduler())
+                        ->getQueue($this->_hostid);
         }
 
 }
