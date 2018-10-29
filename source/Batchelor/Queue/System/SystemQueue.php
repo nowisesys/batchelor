@@ -69,8 +69,11 @@ class SystemQueue implements WorkQueue
         /**
          * {@inheritdoc}
          */
-        public function listJobs(string $hostid, QueueSortResult $sort = null, QueueFilterResult $filter = null)
+        public function listJobs(string $hostid, QueueSortResult $sort = null, QueueFilterResult $filter = null, array $queued = [])
         {
+                // 
+                // Include all jobs and don't sort by default:
+                // 
                 if (!isset($sort)) {
                         $sort = QueueSortResult::NONE();
                 }
@@ -78,14 +81,20 @@ class SystemQueue implements WorkQueue
                         $filter = QueueFilterResult::NONE();
                 }
 
-                $queued = [];
-
+                // 
+                // Filter jobs on job state:
+                // 
                 foreach ($this->getQueue($hostid) as $jobid => $state) {
-                        if ($state->state->getValue() == $filter->getValue()) {
+                        if ($filter->getValue() == QueueFilterResult::NONE) {
+                                $queued[] = $state->getQueuedJob($jobid);
+                        } elseif ($filter->getValue() == $state->status->state->getValue()) {
                                 $queued[] = $state->getQueuedJob($jobid);
                         }
                 }
 
+                // 
+                // Sort result array on request:
+                // 
                 switch ($sort->getValue()) {
                         case QueueSortResult::JOBID:
                                 usort($queued, static function($a, $b) {
