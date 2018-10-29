@@ -20,13 +20,17 @@
 
 namespace Batchelor\Queue\System;
 
+use Batchelor\Queue\Task\Scheduler;
+use Batchelor\Queue\Task\Scheduler\StateQueue;
 use Batchelor\Queue\WorkDirectory;
 use Batchelor\Queue\WorkQueue;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
+use Batchelor\WebService\Types\QueuedJob;
 use Batchelor\WebService\Types\QueueFilterResult;
 use Batchelor\WebService\Types\QueueSortResult;
+use RuntimeException;
 
 /**
  * The local work queue.
@@ -39,9 +43,10 @@ class SystemQueue implements WorkQueue
         /**
          * {@inheritdoc}
          */
-        public function addJob(string $hostid, JobData $indata)
+        public function addJob(string $hostid, JobData $indata): QueuedJob
         {
-                // TODO: implement this method
+                return (new Scheduler())
+                        ->pushJob($hostid, $indata);
         }
 
         /**
@@ -58,14 +63,56 @@ class SystemQueue implements WorkQueue
         public function getStatus(string $hostid, JobIdentity $job): JobStatus
         {
                 // TODO: implement this method
+                throw new RuntimeException("Not yet implemented");
         }
 
         /**
          * {@inheritdoc}
          */
-        public function listJobs(string $hostid, QueueSortResult $sort = QueueSortResult::STARTED, QueueFilterResult $filter = QueueFilterResult::NONE)
+        public function listJobs(string $hostid, QueueSortResult $sort = null, QueueFilterResult $filter = null)
         {
-                // TODO: implement this method
+                if (!isset($sort)) {
+                        $sort = QueueSortResult::NONE();
+                }
+                if (!isset($filter)) {
+                        $filter = QueueFilterResult::NONE();
+                }
+
+                $queued = [];
+
+                foreach ($this->getQueue($hostid) as $jobid => $state) {
+                        if ($state->state->getValue() == $filter->getValue()) {
+                                $queued[] = $state->getQueuedJob($jobid);
+                        }
+                }
+
+                switch ($sort->getValue()) {
+                        case QueueSortResult::JOBID:
+                                usort($queued, static function($a, $b) {
+                                        return strcmp($a->identity->jobid, $b->identity->jobid);
+                                });
+                                break;
+                        case QueueSortResult::NAME:
+                                // TODO: Add name in job data propagated to job identity.
+                                throw new RuntimeException("Not yet implemented");
+                                break;
+                        case QueueSortResult::PUBLISHED:
+                                // TODO: Do we need to support published?
+                                throw new RuntimeException("Not yet implemented");
+                                break;
+                        case QueueSortResult::STARTED:
+                                usort($queued, static function($a, $b) {
+                                        return strcmp($a->identity->jobid, $b->identity->jobid);
+                                });
+                                break;
+                        case QueueSortResult::STATE:
+                                usort($queued, static function($a, $b) {
+                                        return strcmp($a->status->state->getValue(), $a->status->state->getValue());
+                                });
+                                break;
+                }
+
+                return $queued;
         }
 
         /**
@@ -74,6 +121,7 @@ class SystemQueue implements WorkQueue
         public function removeJob(string $hostid, JobIdentity $job): bool
         {
                 // TODO: implement this method
+                throw new RuntimeException("Not yet implemented");
         }
 
         /**
@@ -82,6 +130,7 @@ class SystemQueue implements WorkQueue
         public function resumeJob(string $hostid, JobIdentity $job): bool
         {
                 // TODO: implement this method
+                throw new RuntimeException("Not yet implemented");
         }
 
         /**
@@ -90,6 +139,7 @@ class SystemQueue implements WorkQueue
         public function suspendJob(string $hostid, JobIdentity $job): bool
         {
                 // TODO: implement this method
+                throw new RuntimeException("Not yet implemented");
         }
 
         /**
@@ -98,6 +148,12 @@ class SystemQueue implements WorkQueue
         public function isRemote(): bool
         {
                 return false;
+        }
+
+        private function getQueue(string $hostid): StateQueue
+        {
+                return (new Scheduler())
+                        ->getQueue($hostid);
         }
 
 }
