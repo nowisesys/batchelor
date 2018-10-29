@@ -1,0 +1,10 @@
+<?php
+
+return array(
+        'head' => _('Queue'),
+        'data' => array(
+                'Add job'   => 'add',
+                'List jobs' => 'list',
+                'Get jobs'  => 'jobs'
+        )
+);
