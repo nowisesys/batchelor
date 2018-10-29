@@ -27,5 +27,18 @@ namespace Batchelor\WebService\Types;
  */
 class JobState extends QueueFilterResult
 {
-        
+
+        /**
+         * Restart an finished job.
+         */
+        const RESTART = 'restart';
+
+        /**
+         * Constructor.
+         */
+        public function __construct(string $state = parent::PENDING)
+        {
+                parent::__construct($state);
+        }
+
 }
