@@ -45,9 +45,9 @@ interface WorkQueue
          * 
          * @param string $hostid The host ID.
          * @param JobData $indata The job data.
-         * @return QueuedJob[]
+         * @return QueuedJob
          */
-        function addJob(string $hostid, JobData $indata);
+        function addJob(string $hostid, JobData $indata): QueuedJob;
 
         /**
          * Removes the job from queue.

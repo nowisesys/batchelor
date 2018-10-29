@@ -26,6 +26,7 @@ use Batchelor\WebService\Client\JsonClientHandler;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
+use Batchelor\WebService\Types\QueuedJob;
 use Batchelor\WebService\Types\QueueFilterResult;
 use Batchelor\WebService\Types\QueueSortResult;
 
@@ -56,7 +57,7 @@ class RemoteQueue implements WorkQueue
         /**
          * {@inheritdoc}
          */
-        public function addJob(string $hostid, JobData $indata)
+        public function addJob(string $hostid, JobData $indata): QueuedJob
         {
                 return $this->_client
                         ->callMethod("enqueue", $indata);

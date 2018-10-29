@@ -21,9 +21,11 @@
 namespace Batchelor\Queue;
 
 use Batchelor\System\Component;
+use Batchelor\System\Service\Config;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
+use Batchelor\WebService\Types\QueuedJob;
 use Batchelor\WebService\Types\QueueFilterResult;
 use Batchelor\WebService\Types\QueueSortResult;
 
@@ -58,7 +60,7 @@ class Service extends Component implements WorkQueue
         /**
          * {@inheritdoc}
          */
-        public function addJob(string $hostid, JobData $indata)
+        public function addJob(string $hostid, JobData $indata): QueuedJob
         {
                 return $this->getQueue($hostid)
                         ->addJob($hostid, $indata);
