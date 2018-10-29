@@ -40,7 +40,7 @@ class QueueFilterResultTest extends \PHPUnit_Framework_TestCase
                 $expect = QueueFilterResult::NONE;
                 $actual = $this->object->hasValue(QueueFilterResult::NONE);
                 $this->assertTrue($actual == $expect);
-                
+
                 $expect = QueueFilterResult::NONE;
                 $actual = $this->object->hasValue(QueueFilterResult::PENDING);
                 $this->assertFalse($actual == $expect);
@@ -154,6 +154,25 @@ class QueueFilterResultTest extends \PHPUnit_Framework_TestCase
 
                 $this->assertTrue($enum1 != $enum2);            // Different enum value
                 $this->assertTrue($enum1 !== $enum2);           // Different enum objects
+        }
+
+        public function testJsonSerialize()
+        {
+                $expect = "\"" . QueueFilterResult::NONE  . "\"";
+                $actual = json_encode($this->object);
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+                $this->assertEquals($actual, $expect);
+
+                $this->object = QueueFilterResult::PENDING();
+
+                $expect = "\"" . QueueFilterResult::PENDING  . "\"";
+                $actual = json_encode($this->object);
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+                $this->assertEquals($actual, $expect);
         }
 
 }

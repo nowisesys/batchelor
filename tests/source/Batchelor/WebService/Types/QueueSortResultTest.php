@@ -137,4 +137,23 @@ class QueueSortResultTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue($enum1 !== $enum2);           // Different enum objects
         }
 
+        public function testJsonSerialize()
+        {
+                $expect = "\"" . QueueSortResult::NONE . "\"";
+                $actual = json_encode($this->object);
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+                $this->assertEquals($actual, $expect);
+
+                $this->object = QueueSortResult::STARTED();
+
+                $expect = "\"" . QueueSortResult::STARTED . "\"";
+                $actual = json_encode($this->object);
+
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+                $this->assertEquals($actual, $expect);
+        }
+
 }

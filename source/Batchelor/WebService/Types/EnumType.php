@@ -194,11 +194,11 @@ abstract class EnumType implements JsonSerializable
 
         /**
          * Get data for JSON encoding.
-         * @return array
+         * @return string
          */
         public function jsonSerialize()
         {
-                return ['value' => $this->_value];
+                return $this->_value;
         }
 
 }
