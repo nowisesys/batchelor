@@ -3,6 +3,7 @@
         GETTING STARTED
     ***********************************************
 
+
 This document describes how to integrate your application with batchelor. It's 
 assumed that you have completed the simple steps in INSTALL and have batchelor
 up and runnig (accessable thru a browser).
@@ -48,6 +49,7 @@ any real work until task processors defining your business logic has been added.
         use Batchelor\Queue\Task\Callback;
         use Batchelor\Storage\Directory;
         use Batchelor\WebService\Types\JobData;
+        use Batchelor\WebService\Types\JobState;
 
         class SystemTime implements Task
         {
@@ -61,9 +63,10 @@ any real work until task processors defining your business logic has been added.
                     // No transformation required.
             }
 
-            public function execute(Directory $workdir, Directory $result, Callback $response)
+            public function execute(Directory $workdir, Directory $result, Interaction $interact)
             {
-                    $response->getLogger()->info(system("date"));
+                    $interact->getLogger()->info(system("date"));
+                    $interact->setState(JobState::FINISHED());
             }
 
             public function finished()
@@ -82,12 +85,14 @@ any real work until task processors defining your business logic has been added.
         use Batchelor\Queue\Task\Adapter as TaskAdapter;
         use Batchelor\Queue\Task\Callback;
         use Batchelor\Storage\Directory;
+        use Batchelor\WebService\Types\JobState;
 
         class SystemTime extends TaskAdapter
         {
-            public function execute(Directory $workdir, Directory $result, Callback $response)
+            public function execute(Directory $workdir, Directory $result, Interaction $interact)
             {
-                    $response->getLogger()->info(system("date"));
+                    $interact->getLogger()->info(system("date"));
+                    $interact->setState(JobState::FINISHED());
             }
         }
 
@@ -100,8 +105,10 @@ any real work until task processors defining your business logic has been added.
     directory. Store the result from your batch job in result directory to make it
     available for download.
 
-    Use response to communicate task status back to the task processor/scheduler,
-    i.e. if job has crashed fatal or finsihed with warnings.
+    Use the interact object to communicate state back to the task processor/scheduler,
+    i.e. if job has crashed fatal or finsihed with warnings. Unless state is set,
+    the job is assumed to have crashed. Calling die()/exit() or throwing exceptions
+    should be trapped and logged by task executor.
 
 ** REGISTER TASKS:
 
