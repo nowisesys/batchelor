@@ -20,10 +20,9 @@
 
 namespace Batchelor\Queue\Task\Scheduler\Action;
 
-use Batchelor\Queue\Task\Runtime;
 use Batchelor\Queue\Task\Scheduler;
-use Batchelor\Queue\Task\Scheduler\State;
 use Batchelor\WebService\Types\JobData;
+use RuntimeException;
 
 /**
  * Add job to scheduler.
@@ -53,28 +52,8 @@ class Add
 
         public function execute(string $job, JobData $data)
         {
-                $scheduler = $this->_scheduler;
-
-                $runtime = $this->setRuntime($job, $data);
-                $state = new State($runtime->hostid, $data->task);
-
-                $queue = $scheduler->getQueue("running");
-                $queue->removeState($job);
-
-                $queue = $scheduler->getQueue($runtime->hostid);
-                $queue->addState($job, $state);
-        }
-
-        private function setRuntime(string $job, JobData $data): Runtime
-        {
-                $scheduler = $this->_scheduler;
-
-                $runtime = $scheduler->getRuntime($job);
-                $runtime->data = $data;
-                $runtime->pid = 0;
-                $scheduler->setRuntime($job, $runtime);
-
-                return $runtime;
+                // TODO: Add sub task to job.
+                throw new RuntimeException("Adding sub task is not yet implemented");
         }
 
 }
