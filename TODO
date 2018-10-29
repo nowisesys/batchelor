@@ -6,3 +6,6 @@
   controllers (public service and page controllers).
 
 * Drag and drop for submitting jobs (upload file).
+
+* Support named jobs. The name could be passed in job data, kept in scheduled
+  job and made available in job identity.
