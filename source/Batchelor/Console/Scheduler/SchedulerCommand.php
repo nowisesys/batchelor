@@ -20,12 +20,10 @@
 
 namespace Batchelor\Console\Scheduler;
 
-use Batchelor\Queue\Task\Runtime;
 use Batchelor\Queue\Task\Scheduler;
 use Batchelor\Queue\Task\Scheduler\Inspector;
 use Batchelor\System\Service\Hostid;
 use Batchelor\WebService\Types\JobData;
-use Batchelor\WebService\Types\JobIdentity;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -136,14 +134,14 @@ class SchedulerCommand extends Command
 
         private function listQueueNormal(OutputInterface $output, Inspector $queue)
         {
-                $format = "%-40s%-20s%s";
+                $format = "%-40s%-25s%s";
 
                 $output->writeln(sprintf($format, "JobID:", "Time:", "State:"));
                 $output->writeln("");
 
                 foreach ($queue as $jobid => $state) {
                         $output->writeln(sprintf(
-                                $format, $jobid, strftime("%x %X", $state->queued), $state->state->getValue()
+                                $format, $jobid, strftime("%x %X", $state->status->queued->getTimestamp()), $state->status->state->getValue()
                         ));
                 }
         }
@@ -157,7 +155,7 @@ class SchedulerCommand extends Command
 
                 foreach ($queue as $jobid => $state) {
                         $output->writeln(sprintf(
-                                $format, $jobid, strftime("%x %X", $state->queued), $state->state->getValue(), $state->task, $state->hostid
+                                $format, $jobid, strftime("%x %X", $state->status->queued->getTimestamp()), $state->status->state->getValue(), $state->task, $state->hostid
                         ));
                 }
         }
@@ -171,7 +169,7 @@ class SchedulerCommand extends Command
 
                 $result = $scheduler->pushJob($hostid, $jobdata);
 
-                $output->writeln(sprintf("Added job: %s [%s]", $result->identity->jobid, strftime("%x %X", $result->status->stamp)));
+                $output->writeln(sprintf("Added job: %s [%s]", $result->identity->jobid, strftime("%x %X", $result->status->queued->getTimestamp())));
         }
 
         private function removeJob(OutputInterface $output, string $data)

@@ -20,6 +20,8 @@
 
 namespace Batchelor\WebService\Types;
 
+use DateTime;
+
 /**
  * The job status class.
  * 
@@ -34,46 +36,36 @@ class JobStatus
 {
 
         /**
-         * The enqueue date.
-         * @var string 
+         * When job was queued.
+         * @var DateTime 
          */
-        public $date;
+        public $queued;
         /**
-         * The enqueue time.
-         * @var string 
+         * When job was started.
+         * @var DateTime 
          */
-        public $time;
+        public $started;
         /**
-         * The server timezone.
-         * @var string 
+         * When job was finished.
+         * @var DateTime 
          */
-        public $timezone;
-        /**
-         * The enqueue UNIX timestamp.
-         * @var int 
-         */
-        public $stamp;
+        public $finished;
         /**
          * The job state.
-         * @var string 
+         * @var JobState 
          */
         public $state;
 
         /**
          * Constructor.
          * 
-         * @param string $date The enqueue date.
-         * @param string $time The enqueue time.
-         * @param int $stamp The enqueue UNIX timestamp.
+         * @param DateTime $queued The enqueue date.
          * @param JobState $state The job state.
          */
-        public function __construct(string $date, string $time, int $stamp, JobState $state)
+        public function __construct(DateTime $queued, JobState $state)
         {
-                $this->date = $date;
-                $this->time = $time;
-                $this->stamp = $stamp;
+                $this->queued = $queued;
                 $this->state = $state;
-                $this->timezone = ini_get("date.timezone");
         }
 
 }
