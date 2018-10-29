@@ -54,6 +54,9 @@ class Transition
                 $queue->removeState($job);
 
                 $transform($state);
+                
+                $queue = $scheduler->getQueue($state->hostid);
+                $queue->setState($job, $state);
 
                 $queue = $scheduler->getQueue($queue2);
                 $queue->addState($job, $state);
