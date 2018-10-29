@@ -117,6 +117,27 @@ class StateQueue implements Inspector, IteratorAggregate
         }
 
         /**
+         * Set state in queue.
+         * 
+         * @param string $job The job ID.
+         * @param State $state The job state.
+         */
+        public function setState(string $job, State $state)
+        {
+                $qsync = $this->getSyncLock();
+
+                try {
+                        $qsync->writelock();
+
+                        $content = $this->getContent();
+                        $content[$job] = $state;
+                        $this->setContent($content);
+                } finally {
+                        $qsync->writeunlock();
+                }
+        }
+
+        /**
          * {@inheritdoc}
          */
         public function getState(string $job): State
