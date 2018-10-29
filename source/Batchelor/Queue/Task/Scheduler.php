@@ -291,7 +291,7 @@ class Scheduler extends Component
         {
                 (new Transition($this))
                     ->execute($job, "running", "suspend", static function(State &$state) {
-                            $state->state = JobState::SUSPEND();
+                            $state->setState(JobState::SUSPEND());
                     });
         }
 
@@ -307,7 +307,7 @@ class Scheduler extends Component
         {
                 (new Transition($this))
                     ->execute($job, "suspend", "resumed", static function(State &$state) {
-                            $state->state = JobState::RESUMED();
+                            $state->setState(JobState::RESUMED());
                     });
         }
 
@@ -324,7 +324,7 @@ class Scheduler extends Component
         {
                 (new Transition($this))
                     ->execute($job, "finished", "pending", static function(State &$state) {
-                            $state->state = JobState::PENDING();
+                            $state->setState(JobState::PENDING());
                     });
         }
 
@@ -340,8 +340,7 @@ class Scheduler extends Component
         {
                 (new Transition($this))
                     ->execute($job, "pending", "running", static function(State &$state) {
-                            $state->state = JobState::RUNNING();
-                            $state->started = time();
+                            $state->setState(JobState::RUNNING());
                     });
         }
 
@@ -358,8 +357,7 @@ class Scheduler extends Component
         {
                 (new Transition($this))
                     ->execute($job, "running", "finished", static function(State &$state) use($status) {
-                            $state->state = $status;
-                            $state->finished = time();
+                            $state->setState(JobState::FINISHED());
                     });
         }
 

@@ -24,12 +24,13 @@ use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
+use DateTime;
 
 /**
  * The job state.
  * 
  * Simple class representing an state queue item.
- *
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
 class State
@@ -51,37 +52,18 @@ class State
          */
         public $task;
         /**
-         * The current state.
-         * @var JobState 
+         * The job status.
+         * @var JobStatus 
          */
-        public $state;
-        /**
-         * The queued time (UNIX timestamp).
-         * @var int 
-         */
-        public $queued;
-        /**
-         * The started time (UNIX timestamp).
-         * @var int 
-         */
-        public $started;
-        /**
-         * The finished time (UNIX timestamp).
-         * @var int 
-         */
-        public $finished;
+        public $status;
 
         public function __construct(string $hostid, string $task)
         {
                 $this->hostid = $hostid;
                 $this->result = sprintf("%d%d", time(), rand(1000, 9999));
+                $this->status = new JobStatus(new DateTime(), JobState::PENDING());
 
                 $this->task = $task;
-                $this->state = JobState::PENDING();
-
-                $this->queued = time();
-                $this->started = 0;
-                $this->finished = 0;
         }
 
         /**
@@ -101,9 +83,7 @@ class State
          */
         public function getJobStatus(): JobStatus
         {
-                return new JobStatus(
-                    date('Y-m-d', $this->queued), date('H:i:s', $this->queued), $this->queued, $this->state
-                );
+                return $this->status;
         }
 
         /**
@@ -115,6 +95,37 @@ class State
                 return new QueuedJob(
                     $this->getJobIdentity($jobid), $this->getJobStatus()
                 );
+        }
+
+        /**
+         * Set state on object.
+         * 
+         * Has some side effects, for example sets the started time if state is
+         * running. When state is restart, the object is reset to initial state
+         * while keeping hostid and result.
+         * 
+         * @param JobState $state
+         */
+        public function setState(JobState $state)
+        {
+                switch ($state->getValue()) {
+                        case JobState::RESTART:
+                                $this->status->state = $state;
+                                $this->status->queued = new DateTime();
+                                $this->status->started = null;
+                                $this->status->finished = null;
+                                break;
+                        case JobState::RUNNING:
+                                $this->status->state = $state;
+                                $this->status->started = new DateTime();
+                                break;
+                        case JobState::FINISHED:
+                                $this->status->state = $state;
+                                $this->status->finished = new DateTime();
+                                break;
+                        default:
+                                $this->status->state = $state;
+                }
         }
 
 }
