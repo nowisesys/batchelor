@@ -1,1 +1,8 @@
 * Rename web service directory ws -> api
+
+* Callback::setLogger(): Needs to work with non-memory logger.
+
+* Add user service (logger on user) by injecting object into services from 
+  controllers (public service and page controllers).
+
+* Drag and drop for submitting jobs (upload file).
