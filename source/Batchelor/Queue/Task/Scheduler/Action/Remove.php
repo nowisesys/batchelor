@@ -57,7 +57,7 @@ class Remove
                 $state = $queue->getState($job);
                 $queue->removeState($job);
                 
-                $queue = $scheduler->getQueue($state->state->getValue());
+                $queue = $scheduler->getQueue($state->status->state->getValue());
                 $queue->removeState($job);
         }
 
