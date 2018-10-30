@@ -29,5 +29,10 @@ $data = $queue->addJob(
 );
 $status = $queue->getStatus((new Hostid())->getValue(), $data->identity);
 
-printf("%s\n", json_encode($data, JSON_PRETTY_PRINT));
-print_r($data);
+printf("[D] %s\n", json_encode($data, JSON_PRETTY_PRINT));
+printf("[D] %s\n", print_r($data, true));
+
+// 
+// Remove added job:
+// 
+ $queue->removeJob((new Hostid())->getValue(), $data->identity);
