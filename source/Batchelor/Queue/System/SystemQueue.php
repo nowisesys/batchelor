@@ -62,8 +62,8 @@ class SystemQueue implements WorkQueue
          */
         public function getStatus(string $hostid, JobIdentity $job): JobStatus
         {
-                // TODO: implement this method
-                throw new RuntimeException("Not yet implemented");
+                return $this->getQueue($hostid)
+                        ->getState($job->jobid)->status;
         }
 
         /**
