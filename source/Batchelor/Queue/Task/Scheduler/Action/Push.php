@@ -25,6 +25,8 @@ use Batchelor\Queue\Task\Scheduler;
 use Batchelor\Queue\Task\Scheduler\State;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
+use Batchelor\WebService\Types\JobStatus;
+use Batchelor\WebService\Types\JobSubmit;
 use Batchelor\WebService\Types\QueuedJob;
 
 /**
@@ -54,7 +56,7 @@ class Push
         {
                 $scheduler = $this->_scheduler;
 
-                $state = new State($hostid, $data->task);
+                $state = new State($hostid, $data->task, $data->name);
                 $runtime = $this->addRuntime($state, $data);
 
                 $queue = $scheduler->getQueue("pending");
@@ -78,7 +80,9 @@ class Push
 
         private function getQueuedJob(Runtime $runtime, State $state): QueuedJob
         {
-                return new QueuedJob($this->getJobIdentity($runtime), $this->getJobStatus($state));
+                return new QueuedJob(
+                    $this->getJobIdentity($runtime), $this->getJobStatus($state), $this->getJobSubmit($state)
+                );
         }
 
         private function getJobIdentity(Runtime $runtime): JobIdentity
@@ -88,9 +92,14 @@ class Push
                 );
         }
 
-        private function getJobStatus(State $state)
+        private function getJobStatus(State $state): JobStatus
         {
                 return $state->status;
+        }
+
+        private function getJobSubmit(State $state): JobSubmit
+        {
+                return $state->submit;
         }
 
         private static function guidv4($data)

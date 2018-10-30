@@ -52,13 +52,14 @@ class SchedulerCommand extends Command
                 $this->addOption("all", "A", InputOption::VALUE_NONE, "List all jobs (pending, running and finished)");
 
                 $this->addOption("add", "a", InputOption::VALUE_REQUIRED, "Add job to scheduler");
-                $this->addOption("task", "t", InputOption::VALUE_REQUIRED, "Use task for running job");
                 $this->addOption("remove", "r", InputOption::VALUE_REQUIRED, "Delete job to scheduler");
                 $this->addOption("show", "s", InputOption::VALUE_REQUIRED, "Show job details");
                 $this->addOption("example", "e", InputOption::VALUE_REQUIRED, "Show example");
+                $this->addOption("task", "T", InputOption::VALUE_REQUIRED, "Use task as job processor");
+                $this->addOption("name", "N", InputOption::VALUE_REQUIRED, "Use optional name for job");
 
                 $this->addusage("--list [--pending] [--running] [--finished] [-v]");
-                $this->addusage("--add=data [--task=name]|--remove=jobid|--show=jobid");
+                $this->addusage("--add=data [--task=name] [--name=str]|--remove=jobid|--show=jobid");
                 $this->addusage("--example={add|remove|show}");
         }
 
@@ -67,12 +68,15 @@ class SchedulerCommand extends Command
                 if (!$input->getOption("task")) {
                         $input->setOption("task", "default");
                 }
+                if (!$input->getOption("name")) {
+                        $input->setOption("name", null);
+                }
 
                 if ($input->getOption("list")) {
                         $this->listJobs($input, $output);
                 }
                 if ($input->getOption("add")) {
-                        $this->addJob($output, $input->getOption("add"), $input->getOption("task"));
+                        $this->addJob($output, $input->getOption("add"), $input->getOption("task"), $input->getOption("name"));
                 }
                 if ($input->getOption("remove")) {
                         $this->removeJob($output, $input->getOption("remove"));
@@ -148,23 +152,23 @@ class SchedulerCommand extends Command
 
         private function listQueueVerbose(OutputInterface $output, Inspector $queue)
         {
-                $format = "%-40s%-20s%-10s%-10s%-30s";
+                $format = "%-40s%-20s%-10s%-10s%-20s%-30s";
 
-                $output->writeln(sprintf($format, "JobID:", "Time:", "State:", "Task:", "Queue:"));
+                $output->writeln(sprintf($format, "JobID:", "Time:", "State:", "Task:", "Name:", "Queue:"));
                 $output->writeln("");
 
                 foreach ($queue as $jobid => $state) {
                         $output->writeln(sprintf(
-                                $format, $jobid, strftime("%x %X", $state->status->queued->getTimestamp()), $state->status->state->getValue(), $state->task, $state->hostid
+                                $format, $jobid, strftime("%x %X", $state->status->queued->getTimestamp()), $state->status->state->getValue(), $state->submit->task, $state->submit->name, $state->hostid
                         ));
                 }
         }
 
-        private function addJob(OutputInterface $output, string $data, string $task = 'default')
+        private function addJob(OutputInterface $output, string $data, string $task = 'default', string $name = null)
         {
                 $scheduler = new Scheduler();
 
-                $jobdata = new JobData($data, "data", $task);
+                $jobdata = new JobData($data, "data", $task, $name);
                 $hostid = (new Hostid())->getValue();
 
                 $result = $scheduler->pushJob($hostid, $jobdata);
@@ -200,6 +204,9 @@ class SchedulerCommand extends Command
                                 $output->writeln("");
                                 $output->writeln("# Run job using the greet task:");
                                 $output->writeln("  --add='hello world' --task=greet");
+                                $output->writeln("");
+                                $output->writeln("# Give job the name myjob:");
+                                $output->writeln("  --add='hello world' --name='some job name'");
                                 break;
                         case "remove":
                                 $output->writeln("# Show job details by passing its ID:");

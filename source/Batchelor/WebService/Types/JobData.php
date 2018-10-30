@@ -24,15 +24,18 @@ namespace Batchelor\WebService\Types;
  * The job data (indata) class.
  * 
  * Represent data used as input for an scheduled job. The job data can be plain 
- * data or an download URL. 
+ * data, an file already on server or an download URL. 
  * 
- * To keep things simple (at least for now) we assume that the download URL will 
- * send the data in a format not requiring further processing. At this time we 
- * are only supporting basic authentication encoded in the URL.
+ * The data is procesed by the task manager. It's the responsibility of the task 
+ * to download from an URL and authenticate if required for access. Logon context
+ * used when enqueue the job is not accessable in tasks.
  * 
  * The task is the processor that will perform work on the input data. The name
  * must match one of the registered task processors. Most setups have only a single
  * task processor in which case default is a good choice.
+ * 
+ * The job can be named using the optional name property. When query for jobs in
+ * scheduler/queue the same name can be user for sort/filtering.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
@@ -54,6 +57,11 @@ class JobData
          * @var string 
          */
         public $task;
+        /**
+         * Optional name for job.
+         * @var string 
+         */
+        public $name;
 
         /**
          * Constructor.
@@ -61,11 +69,12 @@ class JobData
          * @param string $type The data type (either "data" or "url").
          * @param string $task The task processor (i.e. "default").
          */
-        public function __construct(string $data, string $type, string $task = 'default')
+        public function __construct(string $data, string $type, string $task = 'default', string $name = null)
         {
                 $this->data = $data;
                 $this->type = $type;
                 $this->task = $task;
+                $this->name = $name;
         }
 
 }

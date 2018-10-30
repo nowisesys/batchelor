@@ -23,6 +23,7 @@ namespace Batchelor\Queue\Task\Scheduler;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\JobStatus;
+use Batchelor\WebService\Types\JobSubmit;
 use Batchelor\WebService\Types\QueuedJob;
 use DateTime;
 
@@ -56,12 +57,26 @@ class State
          * @var JobStatus 
          */
         public $status;
+        /**
+         * The submitted job (gecos).
+         * @var JobSubmit 
+         */
+        public $submit;
 
-        public function __construct(string $hostid, string $task)
+        /**
+         * Constructor.
+         * 
+         * @param string $hostid The host ID.
+         * @param string $task The current task.
+         * @param string $name The job name (optional).
+         */
+        public function __construct(string $hostid, string $task, string $name = null)
         {
                 $this->hostid = $hostid;
                 $this->result = sprintf("%d%d", time(), rand(1000, 9999));
+
                 $this->status = new JobStatus(new DateTime(), JobState::PENDING());
+                $this->submit = new JobSubmit($task, $name);
 
                 $this->task = $task;
         }
@@ -86,6 +101,11 @@ class State
                 return $this->status;
         }
 
+        private function getJobSubmit(): JobSubmit
+        {
+                return $this->submit;
+        }
+
         /**
          * Get queued job.
          * @param string $jobid The job ID.
@@ -93,7 +113,7 @@ class State
         public function getQueuedJob(string $jobid): QueuedJob
         {
                 return new QueuedJob(
-                    $this->getJobIdentity($jobid), $this->getJobStatus()
+                    $this->getJobIdentity($jobid), $this->getJobStatus(), $this->getJobSubmit()
                 );
         }
 

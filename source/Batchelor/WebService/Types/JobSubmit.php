@@ -21,39 +21,33 @@
 namespace Batchelor\WebService\Types;
 
 /**
- * The queued job.
+ * Gecos for submitted job.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class QueuedJob
+class JobSubmit
 {
 
         /**
-         * The job identity.
-         * @var JobIdentity 
+         * The task name.
+         * @var string 
          */
-        public $identity;
+        public $task;
         /**
-         * The job status.
-         * @var JobStatus
+         * The optional job name.
+         * @var string 
          */
-        public $status;
-        /**
-         * The submitted job.
-         * @var JobSubmit 
-         */
-        public $submit;
+        public $name;
 
         /**
          * Constructor.
-         * @param JobIdentity $identity The job identity.
-         * @param JobStatus $status The job status.
+         * @param string $task The task name.
+         * @param string $name The optional job name.
          */
-        public function __construct(JobIdentity $identity, JobStatus $status, JobSubmit $submit)
+        public function __construct(string $task = 'default', string $name = null)
         {
-                $this->identity = $identity;
-                $this->status = $status;
-                $this->submit = $submit;
+                $this->task = $task;
+                $this->name = $name;
         }
 
 }
