@@ -151,7 +151,7 @@ class StateQueue implements Inspector, IteratorAggregate
                         $content = $this->getContent();
 
                         if (!isset($content[$job])) {
-                                throw new InvalidArgumentException("The job $job is missing in queue");
+                                throw new InvalidArgumentException("The job $job is missing");
                         }
 
                         return $content[$job];
