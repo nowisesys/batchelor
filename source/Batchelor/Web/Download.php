@@ -81,7 +81,9 @@ class Download
 
         /**
          * Constructor.
+         * 
          * @param string $url The download URL.
+         * @param int $size The size of each chunk to read.
          */
         public function __construct(string $url, int $size = self::CHUNK_SIZE)
         {
@@ -95,6 +97,15 @@ class Download
         public function __destruct()
         {
                 self::close($this->_handle);
+        }
+
+        /**
+         * Set chunk size for download.
+         * @param int $size The chunk size.
+         */
+        public function setSize(int $size)
+        {
+                $this->_size = $size;
         }
 
         /**
