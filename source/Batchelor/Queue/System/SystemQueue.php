@@ -116,7 +116,7 @@ class SystemQueue implements WorkQueue
                                 break;
                         case QueueSortResult::STATE:
                                 usort($queued, static function($a, $b) {
-                                        return strcmp($a->status->state->getValue(), $a->status->state->getValue());
+                                        return strcmp($a->status->state->getValue(), $b->status->state->getValue());
                                 });
                                 break;
                 }
@@ -129,8 +129,9 @@ class SystemQueue implements WorkQueue
          */
         public function removeJob(string $hostid, JobIdentity $job): bool
         {
-                // TODO: implement this method
-                throw new RuntimeException("Not yet implemented");
+                (new Scheduler())
+                    ->removeJob($job->jobid);
+                return true;    // Treat remove missing job as success
         }
 
         /**
