@@ -102,8 +102,11 @@ class SystemQueue implements WorkQueue
                                 });
                                 break;
                         case QueueSortResult::NAME:
-                                // TODO: Add name in job data propagated to job identity.
-                                throw new RuntimeException("Not yet implemented");
+//                                // TODO: Add name in job data propagated to job identity.
+//                                throw new RuntimeException("Not yet implemented");
+                                usort($queued, static function($a, $b) {
+                                        return strcmp($a->submit->name, $b->submit->name);
+                                });
                                 break;
                         case QueueSortResult::PUBLISHED:
                                 // TODO: Do we need to support published?
