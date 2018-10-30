@@ -24,6 +24,7 @@ use Batchelor\Logging\Logger;
 use Batchelor\Queue\Task\Execute\Process;
 use Batchelor\Queue\Task\Execute\Selectable;
 use Batchelor\Queue\Task\Execute\Status;
+use Batchelor\Web\Download;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
 
@@ -111,4 +112,10 @@ interface Interaction
          * @param JobData $data The job data.
          */
         function newTask(JobData $data);
+
+        /**
+         * Get downloader for URL.
+         * @param string $url The target url.
+         */
+        function getDownloader(string $url): Download;
 }

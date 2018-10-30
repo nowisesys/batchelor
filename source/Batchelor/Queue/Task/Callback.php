@@ -28,6 +28,7 @@ use Batchelor\Queue\Task\Execute\Process;
 use Batchelor\Queue\Task\Execute\Selectable;
 use Batchelor\Queue\Task\Execute\Spawner;
 use Batchelor\Queue\Task\Execute\Status;
+use Batchelor\Web\Download;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
 
@@ -124,6 +125,14 @@ class Callback implements Interaction
         public function runProcess(Selectable $command): Process
         {
                 return (new Spawner($command))->open();
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getDownloader(string $url): Download
+        {
+                return new Download($url);
         }
 
         /**
