@@ -222,6 +222,32 @@ class Download
         }
 
         /**
+         * Set blocking mode.
+         * 
+         * @param bool $enable Enable blocking mode if true.
+         * @throws RuntimeException
+         */
+        public function setBlocking(bool $enable = true)
+        {
+                if (!stream_set_blocking($this->_handle, $enable)) {
+                        throw new RuntimeException("Failed set blocking mode on stream");
+                }
+        }
+
+        /**
+         * Set read timeout.
+         * 
+         * @param int $sec The timeout in seconds.
+         * @throws RuntimeException
+         */
+        public function setTimeout(int $sec)
+        {
+                if (!stream_set_timeout($this->_handle, $sec)) {
+                        throw new RuntimeException("Failed set timeout on stream");
+                }
+        }
+
+        /**
          * Check if stream is good.
          * 
          * The stream is good if it's an opened stream and not at end of file.
