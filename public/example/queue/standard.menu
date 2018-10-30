@@ -4,8 +4,9 @@ return array(
         'head' => _('Queue'),
         'data' => array(
                 'Add job'     => 'add',
+                'Remove job'  => 'remove',
+                'Show status' => 'status',
                 'List jobs'   => 'list',
                 'Get jobs'    => 'jobs',
-                'Show status' => 'status'
         )
 );
