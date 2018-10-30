@@ -148,7 +148,7 @@ class Download
          */
         public function getStream()
         {
-                return $this->_handle = self::open($this->_url);
+                return $this->_handle = self::open($this->_url, $this->_size);
         }
 
         /**
@@ -240,10 +240,11 @@ class Download
          * Open resource stream.
          * 
          * @param string $url The download URL.
+         * @param int $size The chunk size.
          * @return resource
          * @throws RuntimeException
          */
-        private static function open(string $url)
+        private static function open(string $url, int $size)
         {
                 if (ini_get("allow_url_fopen") != 1) {
                         throw new RuntimeException("The allow_url_fopen setting is not enabled");
@@ -251,9 +252,15 @@ class Download
 
                 if (!($stream = fopen($url, "r"))) {
                         throw new RuntimeException("Failed open URL $url");
-                } else {
-                        return $stream;
                 }
+                if (stream_set_chunk_size($stream, $size) == false) {
+                        throw new RuntimeException("Failed set chunk size on stream");
+                }
+                if (stream_set_read_buffer($stream, $size) != 0) {
+                        throw new RuntimeException("Failed set read buffer size on stream");
+                }
+
+                return $stream;
         }
 
         /**
