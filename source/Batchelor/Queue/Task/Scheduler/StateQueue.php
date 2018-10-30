@@ -23,6 +23,7 @@ namespace Batchelor\Queue\Task\Scheduler;
 use ArrayIterator;
 use Batchelor\Cache\Storage;
 use Batchelor\Queue\Task\Scheduler\Inspector;
+use InvalidArgumentException;
 use IteratorAggregate;
 use RuntimeException;
 use SyncReaderWriter;
@@ -148,6 +149,11 @@ class StateQueue implements Inspector, IteratorAggregate
                         $qsync->readlock();
 
                         $content = $this->getContent();
+
+                        if (!isset($content[$job])) {
+                                throw new InvalidArgumentException("The job $job is missing in queue");
+                        }
+
                         return $content[$job];
                 } finally {
                         $qsync->readunlock();
