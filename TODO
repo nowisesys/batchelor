@@ -9,3 +9,5 @@
 
 * Support named jobs. The name could be passed in job data, kept in scheduled
   job and made available in job identity.
+
+* Implement threaded task manager. Use pthreads extension with worker pool.
