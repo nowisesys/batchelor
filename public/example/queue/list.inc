@@ -6,7 +6,7 @@ use Batchelor\WebService\Types\QueueFilterResult;
 use Batchelor\WebService\Types\QueueSortResult;
 
 // 
-// Get pending jobs:
+// Get all jobs:
 // 
 $queue = new SystemQueue();
 $data = $queue->listJobs((new Hostid())->getValue(), QueueSortResult::JOBID(), QueueFilterResult::NONE());
