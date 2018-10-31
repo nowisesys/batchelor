@@ -63,7 +63,7 @@ interface Manager
          * 
          * @return array The array of finished tasks.
          */
-        function getChildren(): array;
+        function getFinished(): array;
 
         /**
          * Set number of workers.
@@ -71,5 +71,8 @@ interface Manager
          */
         function setWorkers(int $number);
 
+        /**
+         * Get manager type (i.e. prefork).
+         */
         function getType(): string;
 }

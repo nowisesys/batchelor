@@ -129,7 +129,7 @@ class Prefork implements Manager
         /**
          * {@inheritdoc}
          */
-        public function getChildren(): array
+        public function getFinished(): array
         {
                 $result = [];
                 $status = 0;

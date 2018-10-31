@@ -180,7 +180,7 @@ class Processor extends Component implements Daemonized
 
                 while (!$manager->isIdle()) {
                         $logger->debug("Collecting child processes");
-                        $this->setResult($scheduler, $manager->getChildren());
+                        $this->setResult($scheduler, $manager->getFinished());
                 }
 
                 $logger->debug("Closed work processor");
@@ -216,7 +216,7 @@ class Processor extends Component implements Daemonized
 
                 if ($manager->isIdle() == false) {
                         $logger->debug("Collecting child processes");
-                        $this->setResult($scheduler, $manager->getChildren());
+                        $this->setResult($scheduler, $manager->getFinished());
                 }
                 if ($manager->isBusy()) {
                         $logger->debug("Manager is busy");

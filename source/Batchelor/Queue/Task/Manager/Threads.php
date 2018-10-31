@@ -92,10 +92,10 @@ class Threads implements Manager
         /**
          * {@inheritdoc}
          */
-        public function getChildren(): array
+        public function getFinished(): array
         {
                 try {
-                        return $done = $this->_done;
+                        return $this->_done;
                 } finally {
                         $this->_done = [];
                 }
