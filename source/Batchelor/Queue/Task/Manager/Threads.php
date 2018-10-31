@@ -21,22 +21,47 @@
 namespace Batchelor\Queue\Task\Manager;
 
 use Batchelor\Queue\Task\Manager;
+use Batchelor\Queue\Task\Manager\Threads\Autoloader;
+use Batchelor\Queue\Task\Manager\Threads\Delegate;
 use Batchelor\Queue\Task\Runtime;
+use Pool;
 use RuntimeException;
+use const BATCHELOR_APP_ROOT;
 
 /**
- * POSIX threaded task executor.
+ * POSIX threads task executor.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
 class Threads implements Manager
 {
 
+        /**
+         * The worker pool.
+         * @var Pool 
+         */
+        private $_pool;
+        /**
+         * The finished tasks.
+         * @var array 
+         */
+        private $_done = [];
+
+        /**
+         * Constructor.
+         * 
+         * @param int $workers The number of workers.
+         * @throws RuntimeException
+         */
         public function __construct(int $workers)
         {
                 if (!extension_loaded("pthreads")) {
                         throw new RuntimeException("The pthreads extension is not loaded");
                 }
+
+                $this->_pool = new Pool(
+                    $workers, Autoloader::class, [BATCHELOR_APP_ROOT . '/vendor/autoload.php']
+                );
         }
 
         /**
@@ -52,7 +77,16 @@ class Threads implements Manager
          */
         public function addJob(Runtime $runtime)
         {
-                
+                $this->_pool->submit(new Delegate($runtime, $this));
+        }
+
+        /**
+         * Called on finished task.
+         * @param array $data The task result.
+         */
+        public function setFinished($data)
+        {
+                $this->_done[] = $data;
         }
 
         /**
@@ -60,7 +94,11 @@ class Threads implements Manager
          */
         public function getChildren(): array
         {
-                
+                try {
+                        return $done = $this->_done;
+                } finally {
+                        $this->_done = [];
+                }
         }
 
         /**
@@ -68,7 +106,7 @@ class Threads implements Manager
          */
         public function isBusy(): bool
         {
-                
+                return false;
         }
 
         /**
@@ -76,7 +114,7 @@ class Threads implements Manager
          */
         public function isIdle(): bool
         {
-                
+                return $this->_pool->collect() == 0;
         }
 
         /**
@@ -84,7 +122,7 @@ class Threads implements Manager
          */
         public function setWorkers(int $number)
         {
-                
+                $this->_pool->resize($number);
         }
 
 }

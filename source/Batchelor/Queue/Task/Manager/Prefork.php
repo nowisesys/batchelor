@@ -21,8 +21,10 @@
 namespace Batchelor\Queue\Task\Manager;
 
 use Batchelor\Queue\Task\Manager;
+use Batchelor\Queue\Task\Manager\Shared\TaskRunner;
 use Batchelor\Queue\Task\Runtime;
 use RuntimeException;
+use Throwable;
 
 /**
  * Process forking task executor.

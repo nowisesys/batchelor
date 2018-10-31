@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Queue\Task\Manager;
+namespace Batchelor\Queue\Task\Manager\Shared;
 
 use Batchelor\Queue\Task;
 use Batchelor\Queue\Task\Runtime;
@@ -64,6 +64,7 @@ class TaskRunner extends Component
                 } catch (Throwable $exception) {
                         $runtime->getCallback()->setStatus(JobState::CRASHED());
                         $logs->logException($exception);
+                        $logs->flush();
                 }
         }
 
