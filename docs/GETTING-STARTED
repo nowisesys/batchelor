@@ -166,6 +166,10 @@ any real work until task processors defining your business logic has been added.
 
         bash$> ./utils/scheduler.sh -lA
 
+    Don't use the threads task manager (see -m option for processor.sh) if your
+    task calls exit(). The prefork task manager handles child exited correct and
+    is safe for use with code calling die().
+
 ** CUSTOMIZE:
 
     Modify core settings in config/defaults.app and config/defaults.site. User 
