@@ -62,9 +62,12 @@ class ProcessorCommand extends Command
 
                 $daemon = new Runner($processor);
 
+                if ($output->isQuiet()) {
+                        $processor->setWarnings(false);
+                }
                 if ($input->getOption("manager")) {
                         $processor->setManager($input->getOption("manager"));
-                }                
+                }
                 if ($input->getOption("worker")) {
                         $processor->setWorkers($input->getOption("worker"));
                 }

@@ -70,6 +70,11 @@ class Processor extends Component implements Daemonized
          * @var int 
          */
         private $_poll = 1;
+        /**
+         * Show cache warnings.
+         * @var bool 
+         */
+        private $_warnings = true;
 
         /**
          * Constructor.
@@ -111,6 +116,15 @@ class Processor extends Component implements Daemonized
         }
 
         /**
+         * Enable cache warnings.
+         * @param bool $enable The enable mode.
+         */
+        public function setWarnings(bool $enable)
+        {
+                $this->_warnings = $enable;
+        }
+
+        /**
          * {@inheritdoc}
          */
         public function prepare(Logger $logger)
@@ -147,6 +161,10 @@ class Processor extends Component implements Daemonized
         protected function run(Logger $logger)
         {
                 $logger->debug("Starting up work processor...");
+
+                if ($this->_warnings) {
+                        $logger->notice("Please ensure to use a persistent cache that preserve state on reboot. The redis cache is known to cause problem with threaded task manager due to shared file descriptors. This warning can be disabled by passing the -q option at startup.");
+                }
 
                 $scheduler = new Scheduler();
 
