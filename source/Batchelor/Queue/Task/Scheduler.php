@@ -357,7 +357,7 @@ class Scheduler extends Component
         {
                 (new Transition($this))
                     ->execute($job, "running", "finished", static function(State &$state) use($status) {
-                            $state->setState(JobState::FINISHED());
+                            $state->setState($status);
                     });
         }
 

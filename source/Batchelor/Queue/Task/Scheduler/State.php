@@ -139,7 +139,11 @@ class State
                                 $this->status->state = $state;
                                 $this->status->started = new DateTime();
                                 break;
+                        case JobState::SUCCESS:
                         case JobState::FINISHED:
+                        case JobState::WARNING:
+                        case JobState::ERROR:
+                        case JobState::CRASHED:
                                 $this->status->state = $state;
                                 $this->status->finished = new DateTime();
                                 break;
