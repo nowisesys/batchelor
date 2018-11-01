@@ -46,6 +46,11 @@ class Threads implements Manager
          * @var array 
          */
         private $_done = [];
+        /**
+         * Number of running tasks.
+         * @var int 
+         */
+        private $_curr = 0;
 
         /**
          * Constructor.
@@ -81,12 +86,11 @@ class Threads implements Manager
         }
 
         /**
-         * Called on finished task.
-         * @param array $data The task result.
+         * {@inheritdoc}
          */
-        public function setFinished($data)
+        public function hasFinished(): bool
         {
-                $this->_done[] = $data;
+                return count($this->_done) > 0;
         }
 
         /**
@@ -123,6 +127,31 @@ class Threads implements Manager
         public function setWorkers(int $number)
         {
                 $this->_pool->resize($number);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function onFinished(array $data)
+        {
+                $this->_done[] = $data;
+                $this->_curr--;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function onStarting(array $data)
+        {
+                $this->_curr++;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getRunning(): int
+        {
+                return $this->_curr;
         }
 
 }

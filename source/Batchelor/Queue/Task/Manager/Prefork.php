@@ -21,10 +21,10 @@
 namespace Batchelor\Queue\Task\Manager;
 
 use Batchelor\Queue\Task\Manager;
-use Batchelor\Queue\Task\Manager\Shared\TaskRunner;
+use Batchelor\Queue\Task\Manager\Prefork\Delegate;
+use Batchelor\Queue\Task\Manager\Prefork\Scratch;
 use Batchelor\Queue\Task\Runtime;
 use RuntimeException;
-use Throwable;
 
 /**
  * Process forking task executor.
@@ -42,20 +42,10 @@ class Prefork implements Manager
 {
 
         /**
-         * The number of running tasks.
-         * @var int 
-         */
-        private $_running;
-        /**
          * The number of workers.
          * @var int 
          */
         private $_workers;
-        /**
-         * The current executing tasks.
-         * @var array 
-         */
-        private $_current;
 
         /**
          * Constructor.
@@ -85,10 +75,7 @@ class Prefork implements Manager
          */
         public function setWorkers(int $number)
         {
-                $this->_running = 0;
                 $this->_workers = $number;
-                $this->_current = [];
-                $this->_waiting = [];
         }
 
         /**
@@ -96,7 +83,7 @@ class Prefork implements Manager
          */
         public function isBusy(): bool
         {
-                return $this->_running == $this->_workers;
+                return (new Scratch())->numRunning() >= $this->_workers;
         }
 
         /**
@@ -104,7 +91,15 @@ class Prefork implements Manager
          */
         public function isIdle(): bool
         {
-                return $this->_running == 0;
+                return (new Scratch())->numRunning() == 0;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getRunning(): int
+        {
+                return (new Scratch())->numRunning();
         }
 
         /**
@@ -112,18 +107,23 @@ class Prefork implements Manager
          */
         public function addJob(Runtime $runtime)
         {
-                if ($this->isBusy()) {
-                        throw new RuntimeException("The manager is busy");
-                }
-
                 switch (($pid = pcntl_fork())) {
                         case -1:
                                 throw new RuntimeException("Failed fork process");
                         case 0:
-                                $this->runJob($runtime);
+                                (new Delegate($runtime, $this))->run();
+                                exit(0);
                         default:
-                                $this->setBusy($pid, $runtime);
+                                usleep(100000);         // Don't spawn too fast
                 }
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function hasFinished(): bool
+        {
+                return (new Scratch())->hasFinished();
         }
 
         /**
@@ -131,65 +131,52 @@ class Prefork implements Manager
          */
         public function getFinished(): array
         {
-                $result = [];
-                $status = 0;
+                $this->setFinished();
 
-                foreach ($this->_current as $pid => $job) {
+                try {
+                        return (new Scratch())->getFinished();
+                } finally {
+                        (new Scratch())->setFinished([]);
+                }
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function onFinished(array $data)
+        {
+                (new Scratch())->addFinished($data);
+                (new Scratch())->removeRunning($data['pid']);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function onStarting(array $data)
+        {
+                (new Scratch())->addRunning($data['pid'], $data['job']);
+        }
+
+        /**
+         * Collect finished child processes.
+         * @throws RuntimeException
+         */
+        private function setFinished(int $status = 0)
+        {
+                foreach ((new Scratch())->getRunning() as $pid => $job) {
                         switch (pcntl_waitpid($pid, $status, WNOHANG)) {
                                 case 0:
                                         break;  // Still running
                                 case -1:
                                         throw new RuntimeException("Failed wait on child process $pid");
                                 default:
-                                        $result[] = [
+                                        $this->onFinished([
                                                 'code' => pcntl_wexitstatus($status),
                                                 'pid'  => $pid,
                                                 'job'  => $job
-                                        ];
-                                        $this->setFree($pid);
+                                        ]);
                         }
                 }
-
-                return $result;
-        }
-
-        /**
-         * Run single task.
-         * 
-         * @param Runtime $runtime The task runtime.
-         */
-        private function runJob(Runtime $runtime)
-        {
-                try {
-                        (new TaskRunner())->runTask($runtime);
-                } catch (Throwable $exception) {
-                        error_log(print_r($exception, true));
-                } finally {
-                        exit(0);        // Exit child process
-                }
-        }
-
-        /**
-         * Set process slot as busy.
-         * 
-         * @param int $pid The process ID.
-         * @param Runtime $runtime The job runtime.
-         */
-        private function setBusy(int $pid, Runtime $runtime)
-        {
-                $this->_current[$pid] = $runtime->job;
-                $this->_running++;
-        }
-
-        /**
-         * Set process slot as free.
-         * 
-         * @param int $pid The process ID.
-         */
-        private function setFree(int $pid)
-        {
-                unset($this->_current[$pid]);
-                $this->_running--;
         }
 
 }

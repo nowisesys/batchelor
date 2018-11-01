@@ -42,16 +42,28 @@ interface Manager
         function isIdle(): bool;
 
         /**
-         * Start running job.
+         * Number of running tasks.
+         */
+        function getRunning(): int;
+
+        /**
+         * Add job to task pool.
          * @param Runtime $runtime The task runtime.
          */
         function addJob(Runtime $runtime);
 
         /**
-         * Wait for child processes/threads to exit.
+         * Check if finished tasks can be collected.
+         * @return bool 
+         */
+        function hasFinished(): bool;
+
+        /**
+         * Collect finished tasks.
          * 
-         * The returned array consisting of finished tasks. Each entry contains 
-         * the process identity (PID/TID), job ID and exit code:
+         * Returns an array of zero or more entries, each one containg the 
+         * process identity (PID/TID), the job ID and the exit code of the 
+         * finished task:
          * 
          * <code>
          * $status = [
@@ -75,4 +87,16 @@ interface Manager
          * Get manager type (i.e. prefork).
          */
         function getType(): string;
+
+        /**
+         * Called on started task.
+         * @param array $data The task data.
+         */
+        function onStarting(array $data);
+
+        /**
+         * Called on finished task.
+         * @param array $data The task data.
+         */
+        function onFinished(array $data);
 }

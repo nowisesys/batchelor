@@ -18,24 +18,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Queue\Task\Manager\Threads;
+namespace Batchelor\Queue\Task\Manager\Prefork;
 
 use Batchelor\Queue\Task\Manager;
 use Batchelor\Queue\Task\Manager\Shared\TaskRunner;
 use Batchelor\Queue\Task\Runtime;
-use Thread;
 use Throwable;
 
 /**
- * The thread <-> task delegate.
- * 
- * Extends thread to be runnable by worker. The run() method is invoked by 
- * running thread (think java). The actual task processing is delegated to
- * task runner.
+ * Run forked process.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class Delegate extends Thread
+class Delegate
 {
 
         /**
@@ -77,6 +72,8 @@ class Delegate extends Thread
                 } catch (Throwable $exception) {
                         error_log(print_r($exception, true));
                         $this->setFinished(1);
+                } finally {
+                        exit(0);        // Exit child process
                 }
         }
 
@@ -87,7 +84,7 @@ class Delegate extends Thread
         {
                 $this->_manager->onStarting([
                         'job' => $this->_runtime->job,
-                        'pid' => self::getCurrentThreadId()
+                        'pid' => posix_getpid()
                 ]);
         }
 
@@ -99,7 +96,7 @@ class Delegate extends Thread
         {
                 $this->_manager->onFinished([
                         'job'  => $this->_runtime->job,
-                        'pid'  => self::getCurrentThreadId(),
+                        'pid'  => posix_getpid(),
                         'code' => $code
                 ]);
         }

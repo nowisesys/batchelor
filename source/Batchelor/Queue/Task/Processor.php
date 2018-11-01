@@ -178,7 +178,7 @@ class Processor extends Component implements Daemonized
                 }
                 $logger->info("Finished process jobs");
 
-                while (!$manager->isIdle()) {
+                while (!$manager->isIdle() || $manager->hasFinished()) {
                         $logger->debug("Collecting child processes");
                         $this->setResult($scheduler, $manager->getFinished());
                 }
@@ -214,7 +214,7 @@ class Processor extends Component implements Daemonized
         {
                 $logger->debug("Polling for jobs");
 
-                if ($manager->isIdle() == false) {
+                if ($manager->hasFinished()) {
                         $logger->debug("Collecting child processes");
                         $this->setResult($scheduler, $manager->getFinished());
                 }
