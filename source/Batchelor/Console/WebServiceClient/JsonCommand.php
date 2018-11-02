@@ -65,7 +65,7 @@ class JsonCommand extends BaseCommand
                 }
 
                 if ($response) {
-                        $output->writeln(sprintf("<result>Result:</result> %s", json_encode($response)));
+                        $this->showResult(json_decode($response, true), $output, $input->getOption("decode"));
                 }
         }
 

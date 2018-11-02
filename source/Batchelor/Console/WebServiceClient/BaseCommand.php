@@ -46,6 +46,7 @@ abstract class BaseCommand extends Command
                 $this->addOption("file", null, InputOption::VALUE_REQUIRED, "Use file when posting data (see --post=file)");
                 $this->addOption("params", null, InputOption::VALUE_REQUIRED, "JSON-encoded function parameters (e.g. {\"result\":1234.\"jobid\":99})");
                 $this->addOption("trace", null, InputOption::VALUE_NONE, "Enable client request tracing");
+                $this->addOption("decode", null, InputOption::VALUE_OPTIONAL, "Decode response as array");
 
                 $this->addusage("--func=<method> --base=http://localhost/batchelor2/ws/soap");
         }
@@ -132,6 +133,17 @@ abstract class BaseCommand extends Command
                 $text = preg_replace("/(Array|stdClass Object)/", "<type>$1</type>", $text);
 
                 $output->write($text);
+        }
+
+        protected function showResult(array $result, OutputInterface $output, string $decode = null)
+        {
+                if ($decode == "color") {
+                        $this->showTrace($result, $output);
+                } elseif ($decode) {
+                        $output->writeln(sprintf("<result>Result:</result> %s", print_r($result, true)));
+                } else {
+                        $output->writeln(sprintf("<result>Result:</result> %s", json_encode($result)));
+                }
         }
 
 }
