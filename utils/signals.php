@@ -147,7 +147,7 @@ function extract_signal_values($prog, $header)
         while ($str = fgets($fp)) {
                 $match = array();
                 if (preg_match('/^#define\s+(SIG[A-Z0-9]+)\s+(\d+)/', $str, $match)) {
-                        printf("define (\"%s\", %d);\n", $match[1], $match[2]);
+                        printf("if (!defined(\"%s\")) { define (\"%s\", %d); }\n", $match[1], $match[1], $match[2]);
                 }
         }
         pclose($fp);

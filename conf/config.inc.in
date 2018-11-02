@@ -298,42 +298,42 @@ define("JOB_CONTROL_ACTION", "term");
 // You must define the signal values used in $signals. Run 'kill -l' or use the 
 // utility script utils/signals.php. These defines are for GNU/Linux.
 // 
-define("SIGHUP", 1);
-define("SIGINT", 2);
-define("SIGQUIT", 3);
-define("SIGILL", 4);
-define("SIGTRAP", 5);
-define("SIGABRT", 6);
-define("SIGIOT", 6);
-define("SIGBUS", 7);
-define("SIGFPE", 8);
-define("SIGKILL", 9);
-define("SIGUSR1", 10);
-define("SIGSEGV", 11);
-define("SIGUSR2", 12);
-define("SIGPIPE", 13);
-define("SIGALRM", 14);
-define("SIGTERM", 15);
-define("SIGSTKFLT", 16);
-define("SIGCHLD", 17);
-define("SIGCONT", 18);
-define("SIGSTOP", 19);
-define("SIGTSTP", 20);
-define("SIGTTIN", 21);
-define("SIGTTOU", 22);
-define("SIGURG", 23);
-define("SIGXCPU", 24);
-define("SIGXFSZ", 25);
-define("SIGVTALRM", 26);
-define("SIGPROF", 27);
-define("SIGWINCH", 28);
-define("SIGIO", 29);
-define("SIGLOST", 29);
-define("SIGPWR", 30);
-define("SIGSYS", 31);
-define("SIGUNUSED", 31);
-define("SIGRTMIN", 32);
-define("SIGSTKSZ", 8192);
+if (!defined("SIGHUP")) { define ("SIGHUP", 1); }
+if (!defined("SIGINT")) { define ("SIGINT", 2); }
+if (!defined("SIGQUIT")) { define ("SIGQUIT", 3); }
+if (!defined("SIGILL")) { define ("SIGILL", 4); }
+if (!defined("SIGTRAP")) { define ("SIGTRAP", 5); }
+if (!defined("SIGABRT")) { define ("SIGABRT", 6); }
+if (!defined("SIGIOT")) { define ("SIGIOT", 6); }
+if (!defined("SIGBUS")) { define ("SIGBUS", 7); }
+if (!defined("SIGFPE")) { define ("SIGFPE", 8); }
+if (!defined("SIGKILL")) { define ("SIGKILL", 9); }
+if (!defined("SIGUSR1")) { define ("SIGUSR1", 10); }
+if (!defined("SIGSEGV")) { define ("SIGSEGV", 11); }
+if (!defined("SIGUSR2")) { define ("SIGUSR2", 12); }
+if (!defined("SIGPIPE")) { define ("SIGPIPE", 13); }
+if (!defined("SIGALRM")) { define ("SIGALRM", 14); }
+if (!defined("SIGTERM")) { define ("SIGTERM", 15); }
+if (!defined("SIGSTKFLT")) { define ("SIGSTKFLT", 16); }
+if (!defined("SIGCHLD")) { define ("SIGCHLD", 17); }
+if (!defined("SIGCONT")) { define ("SIGCONT", 18); }
+if (!defined("SIGSTOP")) { define ("SIGSTOP", 19); }
+if (!defined("SIGTSTP")) { define ("SIGTSTP", 20); }
+if (!defined("SIGTTIN")) { define ("SIGTTIN", 21); }
+if (!defined("SIGTTOU")) { define ("SIGTTOU", 22); }
+if (!defined("SIGURG")) { define ("SIGURG", 23); }
+if (!defined("SIGXCPU")) { define ("SIGXCPU", 24); }
+if (!defined("SIGXFSZ")) { define ("SIGXFSZ", 25); }
+if (!defined("SIGVTALRM")) { define ("SIGVTALRM", 26); }
+if (!defined("SIGPROF")) { define ("SIGPROF", 27); }
+if (!defined("SIGWINCH")) { define ("SIGWINCH", 28); }
+if (!defined("SIGIO")) { define ("SIGIO", 29); }
+if (!defined("SIGLOST")) { define ("SIGLOST", 29); }
+if (!defined("SIGPWR")) { define ("SIGPWR", 30); }
+if (!defined("SIGSYS")) { define ("SIGSYS", 31); }
+if (!defined("SIGUNUSED")) { define ("SIGUNUSED", 31); }
+if (!defined("SIGRTMIN")) { define ("SIGRTMIN", 32); }
+if (!defined("SIGSTKSZ")) { define ("SIGSTKSZ", 8192); }
 
 // 
 // The array of accepted signals. The action defines optional actions to 
