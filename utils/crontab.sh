@@ -2,15 +2,16 @@
 #
 # A simple script to put in /etc/cron.{hourly|daily|weekly|monthly}
 #
-# Run periodic tasks for Batchelor (the batch job queue manager).
+# Run periodic tasks for batchelor (the batch job queue manager).
 #
 # Author: Anders Lövgren
 # Date:   2008-03-19
 
-# Update statistics:
+# Set directory were batchelor is installed:
+tssdir=$(dirname $0)
+appdir=$(dirname $tssdir)
 
-# You
-appdir="/var/www/localhost/apps/batchelor"
+# Update statistics:
 
 if [ -d $appdir/utils ]; then
    ( cd $appdir/utils ; php -q collect.php -q 2 )
