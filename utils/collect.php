@@ -75,6 +75,7 @@ include "../include/queue.inc";
 include "../include/getopt.inc";
 
 if (USE_JPGRAPH_LIB) {
+        die("GEER");
         if (file_exists("../conf/jpgraph.inc")) {
                 include "../conf/jpgraph.inc";
         } elseif (file_exists("../conf/jpgraph.inc.in")) {
@@ -958,6 +959,10 @@ function collect_flush_stats($statdir, $statdata, $options)
 // 
 function graph_draw_barplot($labels, $values, $image, $title, $subtitle, $colors, $callback = null)
 {
+        if (!USE_JPGRAPH_LIB) {
+                return false;
+        }
+
         $width = 460;
         $height = 210;
 
@@ -1261,6 +1266,10 @@ function graph_daily_submit($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_draw_proctime($labels, $values, $image, $title, $subtitle, $colors)
 {
+        if (!USE_JPGRAPH_LIB) {
+                return false;
+        }
+
         $width = 560;
         $height = 260;
 
@@ -1666,6 +1675,10 @@ function graph_daily_proctime($graphdir, $hostid, $options, $timestamp, $data)
 // 
 function graph_draw_pieplot($labels, $values, $image, $title, $colors)
 {
+        if (!USE_JPGRAPH_LIB) {
+                return false;
+        }
+
         $graph = new PieGraph(320, 200, "auto");
 
         $graph->title->Set($title);
@@ -1873,6 +1886,10 @@ function timestamp_for_total($stamp)
 // 
 function graph_draw_system_load($data, $image, $title, $mode, $options)
 {
+        if (!USE_JPGRAPH_LIB) {
+                return false;
+        }
+
         if ($mode == "hourly") {
                 if (HOURLY_FILTER_TYPE == FILTER_TYPE_PARABLE) {
                         apply_parable_filter($data['submit'], HOURLY_FUZZY_FILTER_POINTS);
