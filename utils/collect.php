@@ -75,7 +75,6 @@ include "../include/queue.inc";
 include "../include/getopt.inc";
 
 if (USE_JPGRAPH_LIB) {
-        die("GEER");
         if (file_exists("../conf/jpgraph.inc")) {
                 include "../conf/jpgraph.inc";
         } elseif (file_exists("../conf/jpgraph.inc.in")) {
