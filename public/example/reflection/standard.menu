@@ -1,0 +1,8 @@
+<?php
+
+return array(
+        'head' => _('Reflection'),
+        'data' => array(
+                'DateTime' => 'datetime'
+        )
+);

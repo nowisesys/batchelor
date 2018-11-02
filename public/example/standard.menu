@@ -9,6 +9,7 @@ return array(
                 'Cache'       => 'cache',
                 'Logging'     => 'logging',
                 'Tasks'       => 'task',
-                'Queue'       => 'queue'
+                'Queue'       => 'queue',
+                'Reflection'  => 'reflection'
         )
 );
