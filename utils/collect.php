@@ -261,7 +261,7 @@ function parse_options(&$argc, $argv, &$options)
 function collect_file_content($filename, $default)
 {
         if (file_exists($filename)) {
-                return file_get_contents($filename);
+                return trim(file_get_contents($filename));
         }
         return $default;
 }
