@@ -98,7 +98,7 @@ class SoapServiceHandler implements SoapHandler
          * Queues an job for later execution.
          * 
          * @param JobData $indata The input data.
-         * @return QueuedJob[]
+         * @return QueuedJob
          */
         public function enqueue(JobData $indata)
         {
