@@ -22,6 +22,7 @@ namespace Batchelor\Console\WebServiceClient;
 
 use Batchelor\WebService\Client\SoapClientHandler;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -38,6 +39,9 @@ class SoapCommand extends BaseCommand
 
                 $this->setName("soap");
                 $this->setDescription("SOAP service client");
+
+                $this->addOption("no-cache", null, InputOption::VALUE_NONE, "Disable WSDL document cache");
+                $this->addOption("no-throw", null, InputOption::VALUE_NONE, "Disable SOAP fault exception");
         }
 
         protected function execute(InputInterface $input, OutputInterface $output)
@@ -52,6 +56,12 @@ class SoapCommand extends BaseCommand
 
                 if ($input->getOption("trace")) {
                         $client->setTracing();
+                }
+                if ($input->getOption("no-cache")) {
+                        $client->setOption("cache_wsdl", WSDL_CACHE_NONE);
+                }
+                if ($input->getOption("no-throw")) {
+                        $client->setOption("exceptions", false);
                 }
 
                 if ($data) {
