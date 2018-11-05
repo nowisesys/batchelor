@@ -74,14 +74,14 @@ abstract class EnumType implements JsonSerializable
 
         /**
          * The enum value.
-         * @var mixed
+         * @var string
          */
-        private $_value;
+        public $value;
         /**
          * The inheriting class.
          * @var string
          */
-        private $_class;
+        private $class;
 
         /**
          * Constructor.
@@ -91,8 +91,8 @@ abstract class EnumType implements JsonSerializable
          */
         protected function __construct($value, string $class)
         {
-                $this->_value = $value;
-                $this->_class = $class;
+                $this->value = $value;
+                $this->class = $class;
 
                 if (!$this->hasConstant($value)) {
                         throw new InvalidArgumentException("Invalid enum value $value");
@@ -105,7 +105,7 @@ abstract class EnumType implements JsonSerializable
          */
         public function __invoke()
         {
-                return $this->_value;
+                return $this->value;
         }
 
         public static function __callStatic($name, $arguments)
@@ -130,9 +130,9 @@ abstract class EnumType implements JsonSerializable
         public function hasValue($value, bool $strict = true)
         {
                 if ($strict) {
-                        return $this->_value === $value;
+                        return $this->value === $value;
                 } else {
-                        return $this->_value === $value;
+                        return $this->value === $value;
                 }
         }
 
@@ -142,7 +142,7 @@ abstract class EnumType implements JsonSerializable
          */
         public function getValue()
         {
-                return $this->getConstant($this->_value)['val'];
+                return $this->getConstant($this->value)['val'];
         }
 
         /**
@@ -151,7 +151,7 @@ abstract class EnumType implements JsonSerializable
          */
         public function getName()
         {
-                return $this->getConstant($this->_value)['key'];
+                return $this->getConstant($this->value)['key'];
         }
 
         /**
@@ -160,7 +160,7 @@ abstract class EnumType implements JsonSerializable
          */
         public function getConstants()
         {
-                $class = new ReflectionClass($this->_class);
+                $class = new ReflectionClass($this->class);
                 return $class->getConstants();
         }
 
@@ -198,7 +198,7 @@ abstract class EnumType implements JsonSerializable
          */
         public function jsonSerialize()
         {
-                return $this->_value;
+                return $this->value;
         }
 
 }
