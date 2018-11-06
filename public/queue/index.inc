@@ -58,6 +58,16 @@
             <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
         </div>
     </div>
+    <div class="w3-dropdown-hover w3-right" style="margin-right: 3px">
+        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= $sort ?></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a onclick="content_replace(event, 'page-content', '?sort=state&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("State") ?></a>
+            <a onclick="content_replace(event, 'page-content', '?sort=started&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Started") ?></a>
+            <a onclick="content_replace(event, 'page-content', '?sort=name&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Name") ?></a>
+            <a onclick="content_replace(event, 'page-content', '?sort=task&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Task") ?></a>
+            <a onclick="content_replace(event, 'page-content', '?sort=jobid&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Job ID") ?></a>
+        </div>
+    </div>
     <h3><?= _("Job queue") ?></h3>
 </div>
 
