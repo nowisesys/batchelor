@@ -170,10 +170,10 @@ define("TIMESTAMP_FORMAT", "%Y-%m-%d %H:%M:%S");
 // The first '%s' is zip-file to create, the second '%s' is the name of the
 // directory to archive.
 // 
-// This example is for Info-ZIP (also free):
-// define ("ZIP_FILE_COMMAND", "zip -r %s %s");
+// define("ZIP_FILE_COMMAND", "zip -r %s %s");          // Info-ZIP
+// define("ZIP_FILE_COMMAND", "7z a %s %s -tzip");      // 7-Zip
 // 
-// This example is for 7-Zip:
+// The default option is to use 7-Zip:
 // 
 define("ZIP_FILE_COMMAND", "7z a %s %s -tzip");
 
@@ -298,42 +298,114 @@ define("JOB_CONTROL_ACTION", "term");
 // You must define the signal values used in $signals. Run 'kill -l' or use the 
 // utility script utils/signals.php. These defines are for GNU/Linux.
 // 
-if (!defined("SIGHUP")) { define ("SIGHUP", 1); }
-if (!defined("SIGINT")) { define ("SIGINT", 2); }
-if (!defined("SIGQUIT")) { define ("SIGQUIT", 3); }
-if (!defined("SIGILL")) { define ("SIGILL", 4); }
-if (!defined("SIGTRAP")) { define ("SIGTRAP", 5); }
-if (!defined("SIGABRT")) { define ("SIGABRT", 6); }
-if (!defined("SIGIOT")) { define ("SIGIOT", 6); }
-if (!defined("SIGBUS")) { define ("SIGBUS", 7); }
-if (!defined("SIGFPE")) { define ("SIGFPE", 8); }
-if (!defined("SIGKILL")) { define ("SIGKILL", 9); }
-if (!defined("SIGUSR1")) { define ("SIGUSR1", 10); }
-if (!defined("SIGSEGV")) { define ("SIGSEGV", 11); }
-if (!defined("SIGUSR2")) { define ("SIGUSR2", 12); }
-if (!defined("SIGPIPE")) { define ("SIGPIPE", 13); }
-if (!defined("SIGALRM")) { define ("SIGALRM", 14); }
-if (!defined("SIGTERM")) { define ("SIGTERM", 15); }
-if (!defined("SIGSTKFLT")) { define ("SIGSTKFLT", 16); }
-if (!defined("SIGCHLD")) { define ("SIGCHLD", 17); }
-if (!defined("SIGCONT")) { define ("SIGCONT", 18); }
-if (!defined("SIGSTOP")) { define ("SIGSTOP", 19); }
-if (!defined("SIGTSTP")) { define ("SIGTSTP", 20); }
-if (!defined("SIGTTIN")) { define ("SIGTTIN", 21); }
-if (!defined("SIGTTOU")) { define ("SIGTTOU", 22); }
-if (!defined("SIGURG")) { define ("SIGURG", 23); }
-if (!defined("SIGXCPU")) { define ("SIGXCPU", 24); }
-if (!defined("SIGXFSZ")) { define ("SIGXFSZ", 25); }
-if (!defined("SIGVTALRM")) { define ("SIGVTALRM", 26); }
-if (!defined("SIGPROF")) { define ("SIGPROF", 27); }
-if (!defined("SIGWINCH")) { define ("SIGWINCH", 28); }
-if (!defined("SIGIO")) { define ("SIGIO", 29); }
-if (!defined("SIGLOST")) { define ("SIGLOST", 29); }
-if (!defined("SIGPWR")) { define ("SIGPWR", 30); }
-if (!defined("SIGSYS")) { define ("SIGSYS", 31); }
-if (!defined("SIGUNUSED")) { define ("SIGUNUSED", 31); }
-if (!defined("SIGRTMIN")) { define ("SIGRTMIN", 32); }
-if (!defined("SIGSTKSZ")) { define ("SIGSTKSZ", 8192); }
+if (!defined("SIGHUP")) {
+        define("SIGHUP", 1);
+}
+if (!defined("SIGINT")) {
+        define("SIGINT", 2);
+}
+if (!defined("SIGQUIT")) {
+        define("SIGQUIT", 3);
+}
+if (!defined("SIGILL")) {
+        define("SIGILL", 4);
+}
+if (!defined("SIGTRAP")) {
+        define("SIGTRAP", 5);
+}
+if (!defined("SIGABRT")) {
+        define("SIGABRT", 6);
+}
+if (!defined("SIGIOT")) {
+        define("SIGIOT", 6);
+}
+if (!defined("SIGBUS")) {
+        define("SIGBUS", 7);
+}
+if (!defined("SIGFPE")) {
+        define("SIGFPE", 8);
+}
+if (!defined("SIGKILL")) {
+        define("SIGKILL", 9);
+}
+if (!defined("SIGUSR1")) {
+        define("SIGUSR1", 10);
+}
+if (!defined("SIGSEGV")) {
+        define("SIGSEGV", 11);
+}
+if (!defined("SIGUSR2")) {
+        define("SIGUSR2", 12);
+}
+if (!defined("SIGPIPE")) {
+        define("SIGPIPE", 13);
+}
+if (!defined("SIGALRM")) {
+        define("SIGALRM", 14);
+}
+if (!defined("SIGTERM")) {
+        define("SIGTERM", 15);
+}
+if (!defined("SIGSTKFLT")) {
+        define("SIGSTKFLT", 16);
+}
+if (!defined("SIGCHLD")) {
+        define("SIGCHLD", 17);
+}
+if (!defined("SIGCONT")) {
+        define("SIGCONT", 18);
+}
+if (!defined("SIGSTOP")) {
+        define("SIGSTOP", 19);
+}
+if (!defined("SIGTSTP")) {
+        define("SIGTSTP", 20);
+}
+if (!defined("SIGTTIN")) {
+        define("SIGTTIN", 21);
+}
+if (!defined("SIGTTOU")) {
+        define("SIGTTOU", 22);
+}
+if (!defined("SIGURG")) {
+        define("SIGURG", 23);
+}
+if (!defined("SIGXCPU")) {
+        define("SIGXCPU", 24);
+}
+if (!defined("SIGXFSZ")) {
+        define("SIGXFSZ", 25);
+}
+if (!defined("SIGVTALRM")) {
+        define("SIGVTALRM", 26);
+}
+if (!defined("SIGPROF")) {
+        define("SIGPROF", 27);
+}
+if (!defined("SIGWINCH")) {
+        define("SIGWINCH", 28);
+}
+if (!defined("SIGIO")) {
+        define("SIGIO", 29);
+}
+if (!defined("SIGLOST")) {
+        define("SIGLOST", 29);
+}
+if (!defined("SIGPWR")) {
+        define("SIGPWR", 30);
+}
+if (!defined("SIGSYS")) {
+        define("SIGSYS", 31);
+}
+if (!defined("SIGUNUSED")) {
+        define("SIGUNUSED", 31);
+}
+if (!defined("SIGRTMIN")) {
+        define("SIGRTMIN", 32);
+}
+if (!defined("SIGSTKSZ")) {
+        define("SIGSTKSZ", 8192);
+}
 
 // 
 // The array of accepted signals. The action defines optional actions to 
@@ -344,13 +416,41 @@ if (!defined("SIGSTKSZ")) { define ("SIGSTKSZ", 8192); }
 //   clear: wipe out the job directory.
 //   
 $signals = array(
-        "term" => array("value" => SIGTERM, "desc" => "Terminate Process", "action" => "clear"),
-        "stop" => array("value" => SIGSTOP, "desc" => "Stop (Pause)", "action" => "flag"),
-        "cont" => array("value" => SIGCONT, "desc" => "Continue (Resume)", "action" => "flag"),
-        "kill" => array("value" => SIGKILL, "desc" => "Kill Process", "action" => "clear"),
-        "hup" => array("value" => SIGHUP, "desc" => "Signal Hangup", "action" => "flag"),
-        "usr1" => array("value" => SIGUSR1, "desc" => "User Defined #1", "action" => "none"),
-        "usr2" => array("value" => SIGUSR2, "desc" => "User Defined #2", "action" => "none"),
+        "term" => array(
+                "value"  => SIGTERM,
+                "desc"   => "Terminate Process",
+                "action" => "clear"
+        ),
+        "stop" => array(
+                "value"  => SIGSTOP,
+                "desc"   => "Stop (Pause)",
+                "action" => "flag"
+        ),
+        "cont" => array(
+                "value"  => SIGCONT,
+                "desc"   => "Continue (Resume)",
+                "action" => "flag"
+        ),
+        "kill" => array(
+                "value"  => SIGKILL,
+                "desc"   => "Kill Process",
+                "action" => "clear"
+        ),
+        "hup"  => array(
+                "value"  => SIGHUP,
+                "desc"   => "Signal Hangup",
+                "action" => "flag"
+        ),
+        "usr1" => array(
+                "value"  => SIGUSR1,
+                "desc"   => "User Defined #1",
+                "action" => "none"
+        ),
+        "usr2" => array(
+                "value"  => SIGUSR2,
+                "desc"   => "User Defined #2",
+                "action" => "none"
+        ),
 );
 
 // 
