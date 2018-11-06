@@ -49,7 +49,15 @@
 ?>
 
 <div class="w3-margin-top">
-    <a class="w3-btn w3-deep-orange w3-right" style="min-width: 90px"><?= $filter ?></a>
+    <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= $filter ?></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=pending')" class="w3-bar-item w3-button"><?= _("Pending") ?></a>
+            <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=running')" class="w3-bar-item w3-button"><?= _("Running") ?></a>
+            <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=finished')" class="w3-bar-item w3-button"><?= _("Finished") ?></a>
+            <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
+        </div>
+    </div>
     <h3><?= _("Job queue") ?></h3>
 </div>
 
