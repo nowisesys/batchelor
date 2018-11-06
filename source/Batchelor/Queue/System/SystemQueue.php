@@ -69,65 +69,18 @@ class SystemQueue implements WorkQueue
         /**
          * {@inheritdoc}
          */
-        public function listJobs(string $hostid, QueueSortResult $sort = null, QueueFilterResult $filter = null, array $queued = [])
+        public function listJobs(string $hostid, QueueSortResult $sort = null, QueueFilterResult $filter = null)
         {
-                // 
-                // Include all jobs and don't sort by default:
-                // 
-                if (!isset($sort)) {
-                        $sort = QueueSortResult::NONE();
-                }
-                if (!isset($filter)) {
-                        $filter = QueueFilterResult::NONE();
-                }
+                $paginator = new QueuePaginator($this->getQueue($hostid));
 
-                // 
-                // Filter jobs on job state:
-                // 
-                foreach ($this->getQueue($hostid) as $jobid => $state) {
-                        if ($filter->getValue() == QueueFilterResult::NONE) {
-                                $queued[] = $state->getQueuedJob($jobid);
-                        } elseif ($filter->getValue() == $state->status->state->getValue()) {
-                                $queued[] = $state->getQueuedJob($jobid);
-                        }
-                }
+                $paginator->setFilter($filter);
+                $paginator->setSorting($sort);
 
-                // 
-                // Sort result array on request:
-                // 
-                switch ($sort->getValue()) {
-                        case QueueSortResult::JOBID:
-                                usort($queued, static function($a, $b) {
-                                        return strcmp($a->identity->jobid, $b->identity->jobid);
-                                });
-                                break;
-                        case QueueSortResult::NAME:
-                                usort($queued, static function($a, $b) {
-                                        return strcmp($a->submit->name, $b->submit->name);
-                                });
-                                break;
-                        case QueueSortResult::PUBLISHED:
-                                // TODO: Do we need to support published?
-                                throw new RuntimeException("Not yet implemented");
-                                break;
-                        case QueueSortResult::STARTED:
-                                usort($queued, static function($a, $b) {
-                                        return strcmp($a->identity->jobid, $b->identity->jobid);
-                                });
-                                break;
-                        case QueueSortResult::STATE:
-                                usort($queued, static function($a, $b) {
-                                        return strcmp($a->status->state->getValue(), $b->status->state->getValue());
-                                });
-                                break;
-                        case QueueSortResult::TASK:
-                                usort($queued, static function($a, $b) {
-                                        return strcmp($a->submit->task, $b->submit->task);
-                                });
-                                break;
+                if ($filter->getValue() == QueueFilterResult::RECENT) {
+                        return $paginator->getSlice(0, 3);
+                } else {
+                        return $paginator->getSlice();
                 }
-
-                return $queued;
         }
 
         /**

@@ -76,4 +76,24 @@ class JobState extends QueueFilterResult
                 }
         }
 
+        /**
+         * Check if status is good.
+         * 
+         * The status is considered good if the job has not failed fatal (i.e.
+         * crached) or ended in error state. This implies that pending jobs and
+         * suspended jobs are also good.
+         * 
+         * @return bool
+         */
+        public function isGood(): bool
+        {
+                switch ($this->value) {
+                        case self::CRASHED:
+                        case self::ERROR:
+                                return false;
+                        default:
+                                return true;
+                }
+        }
+
 }
