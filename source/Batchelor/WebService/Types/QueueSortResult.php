@@ -52,6 +52,10 @@ class QueueSortResult extends EnumType
          * Sort on published mode.
          */
         const PUBLISHED = 'published';
+        /**
+         * Sort on current task.
+         */
+        const TASK = 'task';
 
         /**
          * Constructor.
