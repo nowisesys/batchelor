@@ -37,7 +37,7 @@ function print_help()
         printf("of uploaded data.</p>\n");
 
         printf("<span id=\"secthead\">Reporting bugs</span>\n");
-        printf("<p>If you think you found a bug in batchelor, please visit the <a href=\"about.php\">");
+        printf("<p>If you think you found a bug in batchelor, please visit the <a href=\"about.php?sect=batchelor#bug-report\">");
         printf("about</a> page for instructions on how to send a bug report.</p>\n");
 }
 
