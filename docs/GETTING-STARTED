@@ -180,6 +180,9 @@ any real work until task processors defining your business logic has been added.
     the page layout. Create your own theme by copy the batchelor directory and
     change theme setting in config/defaults.site.
 
+    The file public/queue/index.inc contains some extended instructions for how
+    to implement business logic in your modified views.
+
 ** ENTERPRISE:
 
     The default is to run a single queue on localhost. For larger installations

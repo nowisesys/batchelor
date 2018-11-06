@@ -19,7 +19,31 @@
 
 // 
 // The queued variable is provided by controller/component and contains the 
-// array of queued jobs to render by this template.
+// array of queued jobs to render by this template. Modify this script to suite
+// your application. 
+// 
+// Each job gets listed in their own list box inside the unordered list. The 
+// builtin operations has buttons float to right. Add any application specific 
+// buttons float left.
+// 
+// The box layout is like this:
+// 
+//      +---------------------------------------+
+//      | <datetime>                <state>  [x]|
+//      | <name>                     <task>     |
+//      |                                       |
+//      | <app-buttons>       <std-buttons>     |
+//      +---------------------------------------+
+// 
+// The output from this script might be loaded by AJAX. JavaScript is enabled 
+// when loaded by AJAX-request, so you can use it when implementing your business 
+// logic. The builtin function content_replace() can be used to load other views
+// and display in an target id:
+// 
+//      onclick="content_replace(event, 'some-id', 'view')"
+// 
+// Cross origin is not supported, modify content_replace() in your theme to add
+// support. Use page-content as target ID to replace main content.
 // 
 
 ?>
@@ -29,8 +53,38 @@
     <h3><?= _("Job queue") ?></h3>
 </div>
 
-<ul class="w3-ul">
+<?php if (count($queued) == 0): ?>
+        <div class="w3-panel w3-blue-gray w3-animate-opacity">
+            <h3><?= _("Nothing to display") ?></h3>
+            <p><?= _("Current filter options did not select any jobs for display when query the batch queue.") ?></p>
+        </div>
+<?php endif; ?>
+
+<ul class="w3-ul w3-animate-right">
     <?php foreach ($queued as $job) : ?>
-            <?php print_r($job); ?>
+            <div class="w3-panel w3-padding w3-card w3-round job-item">
+                <div class="job-header">
+                    <span class="job-date"><?= strftime("%x %X", strtotime($job->status->queued->date)) ?></span>
+                    <span class="job-state w3-right w3-button w3-small w3-<?= $job->status->state->getColor() ?>" style="min-width: 80px"><?= $job->status->state->getValue() ?></span>
+                    <span class="job-task w3-right w3-button w3-small w3-light-gray" style="min-width: 80px"><?= $job->submit->task ?></span>
+                </div>
+                <br>
+                <div class="job-ident">
+                    <span class="job-name"><?= $job->submit->name ?></span>
+                </div>
+                <br>
+                <div class="job-buttons">
+                    <!-- application specific buttons -->
+                    <span class="job-app-buttons">
+                        <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
+                        <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
+                    </span>
+                    <!-- standard system buttons -->
+                    <span class="job-std-buttons w3-right">
+                        <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
+                        <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
+                    </span>
+                </div>
+            </div>
     <?php endforeach; ?>
 </ul>
