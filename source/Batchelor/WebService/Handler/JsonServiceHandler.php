@@ -49,13 +49,13 @@ class JsonServiceHandler
         private function dequeue(array $data)
         {
                 return (new ServiceBackend())
-                        ->dequeue(new JobIdentity(...$data));
+                        ->dequeue(new JobIdentity(...array_values($data)));
         }
 
         private function enqueue(array $data)
         {
                 return (new ServiceBackend())
-                        ->enqueue(new JobData(...$data));
+                        ->enqueue(new JobData(...array_values($data)));
         }
 
         private function fopen(array $data)
@@ -81,13 +81,13 @@ class JsonServiceHandler
         private function readdir(array $data)
         {
                 return (new ServiceBackend())
-                        ->readdir(new JobIdentity(...$data));
+                        ->readdir(new JobIdentity(...array_values($data)));
         }
 
         private function resume(array $data)
         {
                 return (new ServiceBackend())
-                        ->resume(new JobIdentity(...$data));
+                        ->resume(new JobIdentity(...array_values($data)));
         }
 
         private function select(array $data)
@@ -99,13 +99,13 @@ class JsonServiceHandler
         private function stat(array $data)
         {
                 return (new ServiceBackend())
-                        ->stat(new JobIdentity(...$data));
+                        ->stat(new JobIdentity(...array_values($data)));
         }
 
         private function suspend(array $data)
         {
                 return (new ServiceBackend())
-                        ->suspend(new JobIdentity(...$data));
+                        ->suspend(new JobIdentity(...array_values($data)));
         }
 
         private function version(array $data)
