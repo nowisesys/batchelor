@@ -146,7 +146,3 @@
                 .catch(error => show_error_dialog(error))
         }
 </script>
-
-<pre>
-    <?= json_encode($queued, JSON_PRETTY_PRINT) ?>
-</pre>
