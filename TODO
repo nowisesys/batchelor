@@ -6,5 +6,3 @@
   controllers (public service and page controllers).
 
 * Drag and drop for submitting jobs (upload file).
-
-* Implement threaded task manager. Use pthreads extension with worker pool.
