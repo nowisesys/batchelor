@@ -177,7 +177,7 @@ function print_about_page($page, $desc)
         if (file_exists($page)) {
                 $about = file_get_contents($page);
                 $matches = array();
-                if (preg_match("/<body.*?>((.*?|[ \n]*)*)<\/body>/mi", $about, $matches)) {
+                if (preg_match("|<body.*?>(.*?)</body>|msi", $about, $matches)) {
                         print $matches[1];
                 } else {
                         print "<span id=\"secthead\">Failed match pattern.</span>\n";
