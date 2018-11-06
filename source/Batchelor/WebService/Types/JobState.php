@@ -41,4 +41,23 @@ class JobState extends QueueFilterResult
                 parent::__construct($state);
         }
 
+        /**
+         * Get color coding for status.
+         * @return string
+         */
+        public function getColor(): string
+        {
+                switch ($this->value) {
+                        case self::CRASHED:
+                        case self::ERROR:
+                                return "red";
+                        case self::FINISHED:
+                                return "green";
+                        case self::PENDING:
+                                return "light-grey";
+                        case self::RUNNING:
+                                return "green";
+                }
+        }
+
 }
