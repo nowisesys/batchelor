@@ -102,8 +102,6 @@ class SystemQueue implements WorkQueue
                                 });
                                 break;
                         case QueueSortResult::NAME:
-//                                // TODO: Add name in job data propagated to job identity.
-//                                throw new RuntimeException("Not yet implemented");
                                 usort($queued, static function($a, $b) {
                                         return strcmp($a->submit->name, $b->submit->name);
                                 });
@@ -120,6 +118,11 @@ class SystemQueue implements WorkQueue
                         case QueueSortResult::STATE:
                                 usort($queued, static function($a, $b) {
                                         return strcmp($a->status->state->getValue(), $b->status->state->getValue());
+                                });
+                                break;
+                        case QueueSortResult::TASK:
+                                usort($queued, static function($a, $b) {
+                                        return strcmp($a->submit->task, $b->submit->task);
                                 });
                                 break;
                 }
