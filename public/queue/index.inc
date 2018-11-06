@@ -78,9 +78,16 @@
         </div>
 <?php endif; ?>
 
+<div class="w3-panel w3-red w3-animate-opacity" 
+     id="error-dialog" style="display: none; cursor: pointer" 
+     onclick="this.style.display = 'none'">
+    <h3><?= _("Oops, something went wrong") ?></h3>
+    <p>Some error message</p>
+</div>
+
 <ul class="w3-ul w3-animate-right">
     <?php foreach ($queued as $job) : ?>
-            <div class="w3-panel w3-padding w3-card w3-round job-item">
+            <div class="w3-panel w3-padding w3-card w3-round job-item" id="<?= $job->identity->jobid ?>">
                 <div class="job-header">
                     <span class="job-date"><?= strftime("%x %X", strtotime($job->status->queued->date)) ?></span>
                     <span class="job-state w3-right w3-button w3-small w3-<?= $job->status->state->getColor() ?>" style="min-width: 80px"><?= $job->status->state->getValue() ?></span>
@@ -94,15 +101,52 @@
                 <div class="job-buttons">
                     <!-- application specific buttons -->
                     <span class="job-app-buttons">
-                        <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
-                        <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
                     </span>
                     <!-- standard system buttons -->
                     <span class="job-std-buttons w3-right">
-                        <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
+                        <a class="w3-btn" onclick=delete_queued_job('<?= json_encode($job->identity) ?>')><?= $job->status->state->getRemove() ?></a>
                         <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
                     </span>
                 </div>
             </div>
     <?php endforeach; ?>
 </ul>
+
+<script>
+        // 
+        // Display error message in dialog.
+        // 
+        function show_error_dialog(error) {
+            const dialog = document.getElementById('error-dialog');
+            const target = dialog.querySelector("p");
+
+            target.innerHTML = error;
+            dialog.style.display = 'block';
+        }
+
+        // 
+        // Delete queued job and remove from listing. The json contains the
+        // JSON encoded job identity.
+        // 
+        function delete_queued_job(json) {
+            fetch('../ws/json/dequeue', {
+                method: 'post',
+                body: json
+            })
+                .then(response => response.json())
+                .then(response => {
+                    if (response.status === 'success') {
+                        const data = JSON.parse(json);
+                        const item = document.getElementById(data.jobid);
+                        item.parentNode.removeChild(item);
+                    } else {
+                        throw response.message;
+                    }
+                })
+                .catch(error => show_error_dialog(error))
+        }
+</script>
+
+<pre>
+    <?= json_encode($queued, JSON_PRETTY_PRINT) ?>
+</pre>

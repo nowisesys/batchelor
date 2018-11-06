@@ -60,4 +60,20 @@ class JobState extends QueueFilterResult
                 }
         }
 
+        /**
+         * Get label for remove job.
+         * @return string
+         */
+        public function getRemove(): string
+        {
+                switch ($this->value) {
+                        case self::PENDING:
+                        case self::CONTINUED:
+                        case self::RUNNING:
+                                return _("Cancel");
+                        default:
+                                return _("Delete");
+                }
+        }
+
 }

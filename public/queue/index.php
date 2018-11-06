@@ -1,10 +1,5 @@
 <?php
 
-use Batchelor\Render\Queue;
-use Batchelor\WebService\Types\QueueFilterResult;
-use Batchelor\WebService\Types\QueueSortResult;
-use UUP\Site\Page\Web\StandardPage;
-
 /*
  * Copyright (C) 2018 Anders Lövgren (Nowise Systems)
  *
@@ -22,6 +17,11 @@ use UUP\Site\Page\Web\StandardPage;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+use Batchelor\Render\Queue;
+use Batchelor\WebService\Types\QueueFilterResult;
+use Batchelor\WebService\Types\QueueSortResult;
+use UUP\Site\Page\Web\StandardPage;
 
 /**
  * The queue page.
