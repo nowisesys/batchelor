@@ -16,14 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/* global Element */
+
 // 
 // Display error message in dialog.
 // 
 function show_error_dialog(error) {
     const dialog = document.getElementById('error-dialog');
-    const target = dialog.querySelector("p");
+    const target = dialog.querySelector("#error-message");
 
-    target.innerHTML = error;
+    if (error instanceof Element) {
+        target.innerHTML = "";
+        target.appendChild(error);
+    } else {
+        target.innerHTML = error;
+    }
+
     dialog.style.display = 'block';
 }
 
