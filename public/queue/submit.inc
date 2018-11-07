@@ -33,10 +33,22 @@
 </div>
 
 <div style="width: 100%; max-width: 800px">
-    <div id="data" class="submit w3-animate-left" style="display: <?= $type == 'data' ? 'block' : 'none' ?>">
-        <form>
-            <textarea class="w3-input w3-border w3-round" cols="60" rows="5"></textarea>
-            <a onclick="submit_data(this)" class="w3-btn"><?= _("Submit") ?></a>
+    <div id="submit-data" class="submit w3-animate-left" style="display: <?= $type == 'data' ? 'block' : 'none' ?>">
+        <form class="w3-container">
+            <p>
+                <textarea class="w3-input w3-border w3-round" cols="60" rows="5"></textarea>
+            </p>
+            <p>
+                <label for="submit-name"><?= _("Name:") ?></label>
+                <input class="w3-input" type="text" id="submit-name" placeholder="<?= _("An optional name for this job") ?>"/>
+            </p>
+            <p>
+                <label for="submit-task"><?= _("Task:") ?></label>
+                <input class="w3-input" type="text" id="submit-task" placeholder="<?= _("The task processor to address for this job") ?>"/>
+            </p>
+            <p>
+                <a onclick="submit_data(this)" class="w3-btn"><?= _("Submit") ?></a>
+            </p>
         </form>
         <div class="w3-panel w3-indigo">
             <p>
@@ -46,7 +58,7 @@
             </p>
         </div>
     </div>
-    <div id="file" class="submit w3-animate-right" style="display: <?= $type == 'file' ? 'block' : 'none' ?>">
+    <div id="submit-file" class="submit w3-animate-right" style="display: <?= $type == 'file' ? 'block' : 'none' ?>">
         FILE
     </div>
 </div>

@@ -21,16 +21,15 @@
 // URL. Create (enqueue) one job per URL.
 // 
 function submit_data(sender) {
-    console.log("SUBMIT DATA");
-
-    const form = sender.parentNode;
+    const form = sender.parentNode.parentNode;
     const text = form.querySelector("textarea").value.trim();
+    const name = form.querySelector('#submit-name').value.trim();
+    const task = form.querySelector('#submit-task').value.trim();
 
-    console.log(form);
-    console.log(text);
-
+    // 
+    // We need to have input in array form for detecting URL's:
+    // 
     data = text.split("\n");
-    console.log(data);
 
     send = {
         text: [],
@@ -46,33 +45,39 @@ function submit_data(sender) {
         }
     }
 
-    console.log(send);
-
     if (send.text.length !== 0) {
-        enqueue_text(send.text.join("\n"));
+        enqueue_text(name, task, send.text.join("\n"));
     }
     if (send.urls.length !== 0) {
-        enqueue_urls(send.urls);
+        enqueue_urls(name, task, send.urls);
     }
 }
 
-function enqueue_text(text) {
+function enqueue_text(name, task, text) {
     enqueue_data({
         data: text,
-        type: 'data'
+        type: 'data',
+        task: task,
+        name: name
     });
 }
 
-function enqueue_urls(urls) {
+function enqueue_urls(name, task, urls) {
     for (var i = 0; i < urls.length; ++i) {
         enqueue_data({
             data: urls[i],
-            type: 'url'
+            type: 'url',
+            task: task,
+            name: name
         });
     }
 }
 
 function enqueue_data(data) {
+    if (data.data.length === 0) {
+        throw "Input data is empty"
+    }
+    
     fetch('../ws/json/enqueue', {
         method: 'post',
         body: JSON.stringify(data)
