@@ -20,6 +20,8 @@
 
 namespace Batchelor\WebService\Types;
 
+use InvalidArgumentException;
+
 /**
  * The job data (indata) class.
  * 
@@ -75,6 +77,31 @@ class JobData
                 $this->type = $type;
                 $this->task = $task;
                 $this->name = $name;
+        }
+
+        /**
+         * Create job data object.
+         * 
+         * @param array $data The job data input.
+         * @return JobData
+         * @throws InvalidArgumentException
+         */
+        public static function create(array $data): JobData
+        {
+                if (!isset($data['data'])) {
+                        throw new InvalidArgumentException("The data key is missing in job data");
+                }
+                if (!isset($data['type'])) {
+                        throw new InvalidArgumentException("The type key is missing in job data");
+                }
+                if (!isset($data['task'])) {
+                        $data['task'] = 'default';
+                }
+                if (!isset($data['name'])) {
+                        $data['name'] = null;
+                }
+
+                return new JobData($data['data'], $data['type'], $data['task'], $data['name']);
         }
 
 }

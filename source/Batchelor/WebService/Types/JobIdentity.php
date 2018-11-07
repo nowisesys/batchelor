@@ -20,6 +20,8 @@
 
 namespace Batchelor\WebService\Types;
 
+use InvalidArgumentException;
+
 /**
  * The job identity class.
  *
@@ -56,6 +58,25 @@ class JobIdentity
         {
                 $this->jobid = $jobid;
                 $this->result = $result;
+        }
+
+        /**
+         * Create job identity object.
+         * 
+         * @param array $data The job identity input.
+         * @return JobIdentity
+         * @throws InvalidArgumentException
+         */
+        public static function create(array $data): JobIdentity
+        {
+                if (!isset($data['jobid'])) {
+                        throw new InvalidArgumentException("The jobid key is missing in job identity");
+                }
+                if (!isset($data['result'])) {
+                        throw new InvalidArgumentException("The result key is missing in job identity");
+                }
+
+                return new JobIdentity($data['jobid'], $data['reult']);
         }
 
 }

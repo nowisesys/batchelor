@@ -49,19 +49,19 @@ class JsonServiceHandler
         private function dequeue(array $data)
         {
                 return (new ServiceBackend())
-                        ->dequeue(new JobIdentity(...array_values($data)));
+                        ->dequeue(JobIdentity::create($data));
         }
 
         private function enqueue(array $data)
         {
                 return (new ServiceBackend())
-                        ->enqueue(new JobData(...array_values($data)));
+                        ->enqueue(JobData::create($data));
         }
 
         private function fopen(array $data)
         {
                 return (new ServiceBackend())
-                        ->fopen(new JobIdentity(...$data['job']), $data['file'], $data['send']);
+                        ->fopen(JobIdentity::create($data['job']), $data['file'], $data['send']);
         }
 
         private function opendir(array $data)
@@ -81,13 +81,13 @@ class JsonServiceHandler
         private function readdir(array $data)
         {
                 return (new ServiceBackend())
-                        ->readdir(new JobIdentity(...array_values($data)));
+                        ->readdir(JobIdentity::create($data));
         }
 
         private function resume(array $data)
         {
                 return (new ServiceBackend())
-                        ->resume(new JobIdentity(...array_values($data)));
+                        ->resume(JobIdentity::create($data));
         }
 
         private function select(array $data)
@@ -99,13 +99,13 @@ class JsonServiceHandler
         private function stat(array $data)
         {
                 return (new ServiceBackend())
-                        ->stat(new JobIdentity(...array_values($data)));
+                        ->stat(JobIdentity::create($data));
         }
 
         private function suspend(array $data)
         {
                 return (new ServiceBackend())
-                        ->suspend(new JobIdentity(...array_values($data)));
+                        ->suspend(JobIdentity::create($data));
         }
 
         private function version(array $data)
