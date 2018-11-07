@@ -16,89 +16,117 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// 
-// Submit form data. The data is either a chunk of text or one or more
-// URL. Create (enqueue) one job per URL.
-// 
-function submit_data(sender) {
-    const form = sender.parentNode.parentNode;
-    const text = form.querySelector("textarea").value.trim();
-    const name = form.querySelector('#submit-name').value.trim();
-    const task = form.querySelector('#submit-task').value.trim();
+(function () {
+    console.log("CALLED");
+
+    let jobTodo = 0;
+    let jobDone = 0;
+
+    document.querySelectorAll(".show-advanced-options").forEach(function (elem) {
+        elem.addEventListener('change', function () {
+            show_advanced_options(this);
+        }, false);
+    });
+
+    document.querySelector("#submit-data-button").addEventListener("click", function () {
+        submit_data(this);
+    }, false);
 
     // 
-    // We need to have input in array form for detecting URL's:
+    // Submit form data. The data is either a chunk of text or one or more
+    // URL. Create (enqueue) one job per URL.
     // 
-    data = text.split("\n");
+    function submit_data(sender) {
+        const form = sender.parentNode.parentNode;
+        const text = form.querySelector("textarea").value.trim();
+        const name = form.querySelector('#submit-name').value.trim();
+        const task = form.querySelector('#submit-task').value.trim();
 
-    send = {
-        text: [],
-        urls: []
-    };
+        // 
+        // We need to have input in array form for detecting URL's:
+        // 
+        let data = text.split("\n");
 
-    for (var i = 0; i < data.length; ++i) {
-        if (data[i].startsWith("http://") || data[i].startsWith("https://") ||
-            data[i].startsWith("ftp://") || data[i].startsWith("ftps://")) {
-            send.urls.push(data[i]);
-        } else {
-            send.text.push(data[i]);
+        send = {
+            text: [],
+            urls: []
+        };
+
+        for (var i = 0; i < data.length; ++i) {
+            if (data[i].startsWith("http://") || data[i].startsWith("https://") ||
+                data[i].startsWith("ftp://") || data[i].startsWith("ftps://")) {
+                send.urls.push(data[i]);
+            } else {
+                send.text.push(data[i]);
+            }
+        }
+
+        jobTodo = 0;
+        jobDone = 0;
+
+        if (send.text.length !== 0) {
+            jobTodo += 1;
+        }
+        if (send.urls.length !== 0) {
+            jobTodo += send.urls.length;
+        }
+
+        if (send.text.length !== 0) {
+            enqueue_text(name, task, send.text.join("\n"));
+        }
+        if (send.urls.length !== 0) {
+            enqueue_urls(name, task, send.urls);
         }
     }
 
-    if (send.text.length !== 0) {
-        enqueue_text(name, task, send.text.join("\n"));
-    }
-    if (send.urls.length !== 0) {
-        enqueue_urls(name, task, send.urls);
-    }
-}
-
-function enqueue_text(name, task, text) {
-    enqueue_data({
-        data: text,
-        type: 'data',
-        task: task,
-        name: name
-    });
-}
-
-function enqueue_urls(name, task, urls) {
-    for (var i = 0; i < urls.length; ++i) {
+    function enqueue_text(name, task, text) {
         enqueue_data({
-            data: urls[i],
-            type: 'url',
+            data: text,
+            type: 'data',
             task: task,
             name: name
         });
     }
-}
 
-function enqueue_data(data) {
-    if (data.data.length === 0) {
-        throw "Input data is empty"
+    function enqueue_urls(name, task, urls) {
+        for (var i = 0; i < urls.length; ++i) {
+            enqueue_data({
+                data: urls[i],
+                type: 'url',
+                task: task,
+                name: name
+            });
+        }
     }
 
-    fetch('../ws/json/enqueue', {
-        method: 'post',
-        body: JSON.stringify(data)
-    })
-        .then(response => response.json())
-        .then(response => {
-            if (response.status === 'failure') {
-                throw response.message;
-            }
+    function enqueue_data(data) {
+        if (data.data.length === 0) {
+            throw "Input data is empty"
+        }
+
+        fetch('../ws/json/enqueue', {
+            method: 'post',
+            body: JSON.stringify(data)
         })
-        .catch(error => show_error_dialog(error))
-}
-
-function show_advanced_options(sender) {
-    const form = sender.parentNode.parentNode;
-    const sect = form.querySelector('#submit-advanced-option');
-
-    if (sender.checked) {
-        sect.style.display = 'block';
-    } else {
-        sect.style.display = 'none';
-
+            .then(response => response.json())
+            .then(response => {
+                if (response.status === 'failure') {
+                    throw response.message;
+                }
+            })
+            .catch(error => show_error_dialog(error))
     }
-}
+
+    function show_advanced_options(sender) {
+        const form = sender.parentNode.parentNode;
+        const sect = form.querySelector('#submit-advanced-option');
+
+        if (sender.checked) {
+            sect.style.display = 'block';
+        } else {
+            sect.style.display = 'none';
+
+        }
+    }
+
+})();

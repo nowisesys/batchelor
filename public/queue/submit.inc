@@ -19,6 +19,43 @@
 
 ?>
 
+<style>
+    #file-input {
+        display: none;
+    }
+    #file-upload-drop-area {
+        border: 2px dashed #cccccc;
+    }
+    #file-upload-date,
+    #file-upload-term {
+        border-bottom: 0;
+    }
+    #file-upload-term {
+        border-bottom: 1px solid white;
+    }
+    #file-upload-status {
+        display: none;
+    }
+    .file-upload-status-head {
+        color: gray;
+        font-size: 1.2em;
+        margin-left: 10px;
+    }
+    #file-upload-warning-files,
+    #file-upload-error-message {
+        margin-left: 50px;            
+    }
+    #progress-bar {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        visibility: hidden;
+        min-width: 280px;
+        margin-bottom: 10px;
+    }
+</style>
+
 <div class="w3-margin-top">
     <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('submit-file')"><?= _("File") ?></button>
     <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('submit-data')"><?= _("Data") ?></button>
@@ -31,6 +68,8 @@
     <h3><?= _("Oops, something went wrong") ?></h3>
     <p>Some error message</p>
 </div>
+
+<progress class="w3-right w3-animate-opacity" id="progress-bar" max="100" value="0"></progress>
 
 <div style="width: 100%; max-width: 800px">
     <div id="submit-data" class="submit w3-animate-left" style="display: <?= $type == 'data' ? 'block' : 'none' ?>">
@@ -49,11 +88,11 @@
                 </p>
             </div>
             <p>
-                <input class="w3-check" type="checkbox" onclick="show_advanced_options(this)"/>
+                <input class="w3-check show-advanced-options" type="checkbox""/>
                 <label for="submit-advanced"><?= _("Show advanced options") ?></label>
             </p>
             <p>
-                <a onclick="submit_data(this)" class="w3-btn"><?= _("Submit") ?></a>
+                <a id="submit-data-button" class="w3-btn"><?= _("Submit") ?></a>
             </p>
         </form>
         <div class="w3-panel w3-indigo">
@@ -65,7 +104,34 @@
         </div>
     </div>
     <div id="submit-file" class="submit w3-animate-right" style="display: <?= $type == 'file' ? 'block' : 'none' ?>">
-        FILE
+        <form class="w3-container">
+            <div id="file-upload-drop-area" class="w3-center w3-white w3-round-large w3-padding-large w3-margin-bottom">
+                <p><?= _("Drag and drop or browse for file(s)") ?></p>
+                <input type="file" id="file-input" multiple>
+                <label class="w3-btn" for="file-input"><?= _("Browse") ?></label>
+            </div>
+            <div class="w3-animate-opacity" id="submit-advanced-option" style="display: none">
+                <p>
+                    <label for="submit-name"><?= _("Name:") ?></label>
+                    <input class="w3-input" type="text" id="submit-name" placeholder="<?= _("An optional name for this job") ?>"/>
+                </p>
+                <p>
+                    <label for="submit-task"><?= _("Task:") ?></label>
+                    <input class="w3-input" type="text" id="submit-task" placeholder="<?= _("The task processor to address for this job") ?>"/>
+                </p>
+            </div>
+            <p>
+                <input class="w3-check show-advanced-options" type="checkbox""/>
+                <label for="submit-advanced"><?= _("Show advanced options") ?></label>
+            </p>
+        </form>
+        <div class="w3-panel w3-indigo">
+            <p>
+                <?= _("Upload files for batch processing.") ?>
+                <?= _("The form will automatic upload the files when dropped in the zone above or accepted in file dialog.") ?>
+                <?= _("Each uploaded file will result in one job being enqueued.") ?>
+            </p>
+        </div>
     </div>
 </div>
 
