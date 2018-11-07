@@ -77,7 +77,7 @@ function enqueue_data(data) {
     if (data.data.length === 0) {
         throw "Input data is empty"
     }
-    
+
     fetch('../ws/json/enqueue', {
         method: 'post',
         body: JSON.stringify(data)
@@ -89,4 +89,16 @@ function enqueue_data(data) {
             }
         })
         .catch(error => show_error_dialog(error))
+}
+
+function show_advanced_options(sender) {
+    const form = sender.parentNode.parentNode;
+    const sect = form.querySelector('#submit-advanced-option');
+
+    if (sender.checked) {
+        sect.style.display = 'block';
+    } else {
+        sect.style.display = 'none';
+
+    }
 }

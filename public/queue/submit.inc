@@ -38,13 +38,19 @@
             <p>
                 <textarea class="w3-input w3-border w3-round" cols="60" rows="5"></textarea>
             </p>
+            <div class="w3-animate-opacity" id="submit-advanced-option" style="display: none">
+                <p>
+                    <label for="submit-name"><?= _("Name:") ?></label>
+                    <input class="w3-input" type="text" id="submit-name" placeholder="<?= _("An optional name for this job") ?>"/>
+                </p>
+                <p>
+                    <label for="submit-task"><?= _("Task:") ?></label>
+                    <input class="w3-input" type="text" id="submit-task" placeholder="<?= _("The task processor to address for this job") ?>"/>
+                </p>
+            </div>
             <p>
-                <label for="submit-name"><?= _("Name:") ?></label>
-                <input class="w3-input" type="text" id="submit-name" placeholder="<?= _("An optional name for this job") ?>"/>
-            </p>
-            <p>
-                <label for="submit-task"><?= _("Task:") ?></label>
-                <input class="w3-input" type="text" id="submit-task" placeholder="<?= _("The task processor to address for this job") ?>"/>
+                <input class="w3-check" type="checkbox" onclick="show_advanced_options(this)"/>
+                <label for="submit-advanced"><?= _("Show advanced options") ?></label>
             </p>
             <p>
                 <a onclick="submit_data(this)" class="w3-btn"><?= _("Submit") ?></a>
