@@ -20,6 +20,7 @@
 
 namespace Batchelor\WebService;
 
+use Batchelor\Web\Upload;
 use Batchelor\WebService\Common\ServiceFrontend;
 use Batchelor\WebService\Handler\JsonServiceHandler;
 
@@ -59,23 +60,46 @@ class JsonServiceFrontend extends ServiceFrontend
 
         private function onRendering()
         {
+                // 
+                // Get method to invoke from request parameters and decode JSON
+                // payload from input stream:
+                // 
                 $func = $this->params->getParam("func");
                 $data = json_decode(file_get_contents("php://input"), true);
 
                 // 
-                // TODO: remove error logging when JSON API is debugged.
+                // The enqueue method accepts form post:
                 // 
-                error_log(print_r([
-                        'func' => $func,
-                        'data' => $data
-                        ], true));
+                if ($func == "enqueue" && $data == false) {
+                        $data = $this->getUpload();
+                }
 
+                // 
+                // Patch for missing data (i.e. version method):
+                // 
                 if (empty($data)) {
                         $data = [];
                 }
 
+                // 
+                // Process service request and return result:
+                // 
                 return (new JsonServiceHandler())
                         ->process($func, $data);
+        }
+
+        /**
+         * Get uploaded file.
+         * @return array
+         */
+        private function getUpload(): array
+        {
+                return [
+                        'data' => (new Upload())->getFilepath(),
+                        'type' => 'file',
+                        'name' => $this->params->getParam('name'),
+                        'task' => $this->params->getParam('task')
+                ];
         }
 
 }
