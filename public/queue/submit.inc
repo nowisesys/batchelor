@@ -45,14 +45,10 @@
     #file-upload-error-message {
         margin-left: 50px;            
     }
-    #progress-bar {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        border: none;
+    .w3-animate-hide {
         visibility: hidden;
-        min-width: 280px;
-        margin-bottom: 10px;
+        opacity: 0;
+        transition: visibility 0s linear 0.33s, opacity 0.33s linear;            
     }
 </style>
 
@@ -60,20 +56,24 @@
     <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('submit-file')"><?= _("File") ?></button>
     <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('submit-data')"><?= _("Data") ?></button>
     <button class="w3-button w3-deep-purple w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="content_replace(event, 'page-content', 'index?sort=state&filter=recent')"><?= _("Queue") ?></button>
-    <h3><?= _("Submit job") ?></h3>
+    <h3>
+        <?= _("Submit job") ?>
+        <span class="w3-hide-small" id="submit-status" style="display: none">(100%)</span>
+    </h3>
 </div>
 
-<div id="error-dialog" class="w3-panel w3-red w3-animate-opacity" 
-     style="display: none; cursor: pointer" onclick="this.style.display = 'none'">
-    <h3><?= _("Oops, something went wrong") ?></h3>
-    <p>Some error message</p>
+<div id="error-dialog" class="w3-modal" style="cursor: pointer" onclick="this.style.display = 'none'">
+    <div class="w3-modal-content w3-red">
+        <div class="w3-container">
+            <h3><?= _("Oops, something went wrong") ?></h3>
+            <p id="error-message">Some error message</p>
+        </div>
+    </div>
 </div>
 
-<progress class="w3-right w3-animate-opacity" id="progress-bar" max="100" value="0"></progress>
-
-<div style="width: 100%; max-width: 800px">
+<div style="width: 100%; max-width: 800px; margin-top: 30px">
     <div id="submit-data" class="submit w3-animate-left" style="display: <?= $type == 'data' ? 'block' : 'none' ?>">
-        <form class="w3-container">
+        <form>
             <p>
                 <textarea class="w3-input w3-border w3-round" cols="60" rows="5"></textarea>
             </p>
@@ -104,7 +104,7 @@
         </div>
     </div>
     <div id="submit-file" class="submit w3-animate-right" style="display: <?= $type == 'file' ? 'block' : 'none' ?>">
-        <form class="w3-container">
+        <form>
             <div id="file-upload-drop-area" class="w3-center w3-white w3-round-large w3-padding-large w3-margin-bottom">
                 <p><?= _("Drag and drop or browse for file(s)") ?></p>
                 <input type="file" id="file-input" multiple>
@@ -132,6 +132,10 @@
                 <?= _("Each uploaded file will result in one job being enqueued.") ?>
             </p>
         </div>
+    </div>
+    <div id="submit-finish" class="w3-panel w3-green w3-animate-opacity w3-animate-left" 
+         style="display: none; cursor: pointer" onclick="this.style.display = 'none'">
+        <p><?= _("All jobs have been enqueued!") ?></p>
     </div>
 </div>
 
