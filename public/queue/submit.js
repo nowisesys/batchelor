@@ -38,7 +38,8 @@ function submit_data(sender) {
     };
 
     for (var i = 0; i < data.length; ++i) {
-        if (data[i].startsWith("http://") || data[i].startsWith("https://")) {
+        if (data[i].startsWith("http://") || data[i].startsWith("https://") ||
+            data[i].startsWith("ftp://") || data[i].startsWith("ftps://")) {
             send.urls.push(data[i]);
         } else {
             send.text.push(data[i]);
