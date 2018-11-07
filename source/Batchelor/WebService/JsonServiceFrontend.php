@@ -62,6 +62,9 @@ class JsonServiceFrontend extends ServiceFrontend
                 $func = $this->params->getParam("func");
                 $data = json_decode(file_get_contents("php://input"), true);
 
+                // 
+                // TODO: remove error logging when JSON API is debugged.
+                // 
                 error_log(print_r([
                         'func' => $func,
                         'data' => $data

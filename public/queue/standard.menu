@@ -3,9 +3,9 @@
 return array(
         'head' => _('Queue'),
         'data' => array(
-                _('Recent')   => '::?sort=state&filter=recent',
-                _('Pending')  => '::?sort=jobid&filter=pending',
-                _('Running')  => '::?sort=jobid&filter=running',
-                _('Finished') => '::?sort=jobid&filter=finished',
+                _('Recent')   => '::index?sort=state&filter=recent',
+                _('Pending')  => '::index?sort=jobid&filter=pending',
+                _('Running')  => '::index?sort=jobid&filter=running',
+                _('Finished') => '::index?sort=jobid&filter=finished',
         )
 );

@@ -50,22 +50,29 @@
 
 <div class="w3-margin-top">
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= $filter ?></button>
+        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= ucfirst($filter) ?></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=pending')" class="w3-bar-item w3-button"><?= _("Pending") ?></a>
-            <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=running')" class="w3-bar-item w3-button"><?= _("Running") ?></a>
-            <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=finished')" class="w3-bar-item w3-button"><?= _("Finished") ?></a>
-            <a onclick="content_replace(event, 'page-content', '?sort=<?= $sort ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sort ?>&filter=pending')" class="w3-bar-item w3-button"><?= _("Pending") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sort ?>&filter=running')" class="w3-bar-item w3-button"><?= _("Running") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sort ?>&filter=finished')" class="w3-bar-item w3-button"><?= _("Finished") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sort ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
         </div>
     </div>
     <div class="w3-dropdown-hover w3-right" style="margin-right: 3px">
-        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= $sort ?></button>
+        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= ucfirst($sort) ?></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a onclick="content_replace(event, 'page-content', '?sort=state&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("State") ?></a>
-            <a onclick="content_replace(event, 'page-content', '?sort=started&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Started") ?></a>
-            <a onclick="content_replace(event, 'page-content', '?sort=name&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Name") ?></a>
-            <a onclick="content_replace(event, 'page-content', '?sort=task&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Task") ?></a>
-            <a onclick="content_replace(event, 'page-content', '?sort=jobid&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Job ID") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=state&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("State") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=started&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Started") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=name&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Name") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=task&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Task") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=jobid&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Job ID") ?></a>
+        </div>
+    </div>
+    <div class="w3-dropdown-hover w3-right" style="margin-right: 3px">
+        <button class="w3-button w3-deep-purple w3-small" style="min-width: 90px"><?= _("Submit") ?></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a onclick="content_replace(event, 'page-content', 'submit?type=data')" class="w3-bar-item w3-button"><?= _("Data") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'submit?type=file')" class="w3-bar-item w3-button"><?= _("File") ?></a>
         </div>
     </div>
     <h3><?= _("Job queue") ?></h3>
@@ -78,9 +85,8 @@
         </div>
 <?php endif; ?>
 
-<div class="w3-panel w3-red w3-animate-opacity" 
-     id="error-dialog" style="display: none; cursor: pointer" 
-     onclick="this.style.display = 'none'">
+<div id="error-dialog" class="w3-panel w3-red w3-animate-opacity" 
+     style="display: none; cursor: pointer" onclick="this.style.display = 'none'">
     <h3><?= _("Oops, something went wrong") ?></h3>
     <p>Some error message</p>
 </div>
@@ -112,37 +118,4 @@
     <?php endforeach; ?>
 </ul>
 
-<script>
-        // 
-        // Display error message in dialog.
-        // 
-        function show_error_dialog(error) {
-            const dialog = document.getElementById('error-dialog');
-            const target = dialog.querySelector("p");
-
-            target.innerHTML = error;
-            dialog.style.display = 'block';
-        }
-
-        // 
-        // Delete queued job and remove from listing. The json contains the
-        // JSON encoded job identity.
-        // 
-        function delete_queued_job(json) {
-            fetch('../ws/json/dequeue', {
-                method: 'post',
-                body: json
-            })
-                .then(response => response.json())
-                .then(response => {
-                    if (response.status === 'success') {
-                        const data = JSON.parse(json);
-                        const item = document.getElementById(data.jobid);
-                        item.parentNode.removeChild(item);
-                    } else {
-                        throw response.message;
-                    }
-                })
-                .catch(error => show_error_dialog(error))
-        }
-</script>
+<script src="common.js"></script>
