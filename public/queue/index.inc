@@ -71,8 +71,8 @@
     <div class="w3-dropdown-hover w3-right" style="margin-right: 3px">
         <button class="w3-button w3-deep-purple w3-small" style="min-width: 90px"><?= _("Submit") ?></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a onclick="content_replace(event, 'page-content', 'submit?type=data')" class="w3-bar-item w3-button"><?= _("Data") ?></a>
-            <a onclick="content_replace(event, 'page-content', 'submit?type=file')" class="w3-bar-item w3-button"><?= _("File") ?></a>
+            <a href="submit?type=data" class="w3-bar-item w3-button"><?= _("Data") ?></a>
+            <a href="submit?type=file" class="w3-bar-item w3-button"><?= _("File") ?></a>
         </div>
     </div>
     <h3><?= _("Job queue") ?></h3>
