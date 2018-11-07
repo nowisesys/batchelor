@@ -76,7 +76,7 @@ class JobIdentity
                         throw new InvalidArgumentException("The result key is missing in job identity");
                 }
 
-                return new JobIdentity($data['jobid'], $data['reult']);
+                return new JobIdentity($data['jobid'], $data['result']);
         }
 
 }
