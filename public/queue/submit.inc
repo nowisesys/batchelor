@@ -20,8 +20,8 @@
 ?>
 
 <div class="w3-margin-top">
-    <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('file')"><?= _("File") ?></button>
-    <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('data')"><?= _("Data") ?></button>
+    <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('submit-file')"><?= _("File") ?></button>
+    <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('submit-data')"><?= _("Data") ?></button>
     <button class="w3-button w3-deep-purple w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="content_replace(event, 'page-content', 'index?sort=state&filter=recent')"><?= _("Queue") ?></button>
     <h3><?= _("Submit job") ?></h3>
 </div>
