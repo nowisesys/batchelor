@@ -58,6 +58,22 @@ function delete_queued_job(json) {
 }
 
 // 
+// Delete listed jobs.
+// 
+function delete_listed_jobs(message) {
+    if (!confirm(message)) {
+        return false;
+    }
+
+    document.querySelectorAll(".job-item").forEach(function (elem) {
+        delete_queued_job(JSON.stringify({
+            jobid: elem.id,
+            result: ''
+        }));
+    });
+}
+
+// 
 // Display current tab.
 // 
 function display_tab(id) {

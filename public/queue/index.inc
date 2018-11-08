@@ -78,13 +78,6 @@
     <h3><?= _("Job queue") ?></h3>
 </div>
 
-<?php if (count($queued) == 0): ?>
-        <div class="w3-panel w3-blue-gray w3-animate-opacity">
-            <h3><?= _("Nothing to display") ?></h3>
-            <p><?= _("Current filter options did not select any jobs for display when query the batch queue.") ?></p>
-        </div>
-<?php endif; ?>
-
 <div id="error-dialog" class="w3-panel w3-red w3-animate-opacity" 
      style="display: none; cursor: pointer" onclick="this.style.display = 'none'">
     <h3><?= _("Oops, something went wrong") ?></h3>
@@ -117,5 +110,16 @@
             </div>
     <?php endforeach; ?>
 </ul>
+
+<?php if (count($queued) == 0): ?>
+        <div class="w3-panel w3-blue-gray w3-animate-opacity">
+            <h3><?= _("Nothing to display") ?></h3>
+            <p><?= _("Current filter options did not select any jobs for display when query the batch queue.") ?></p>
+        </div>
+<?php else : ?>
+        <p>
+            <a class="w3-btn" onclick="delete_listed_jobs('<?= _("This will delete all listed jobs. OK to continue?") ?>')"><?= _("Remove all") ?></a>
+        </p>
+<?php endif; ?>
 
 <script src="common.js"></script>
