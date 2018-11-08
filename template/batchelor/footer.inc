@@ -47,8 +47,11 @@
         // Fetch content as text and assign to inner html.
         // 
         function content_replace_text(event, id, source, callback) {
-            event.preventDefault();
-            event.stopPropagation();
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function (x) {
                 if (this.readyState === 4 && this.status === 200) {
@@ -73,8 +76,11 @@
         // Fetch content as DOM document and evaluate all script nodes.
         // 
         function content_replace_html(event, id, source, callback) {
-            event.preventDefault();
-            event.stopPropagation();
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function (x) {
                 if (this.readyState === 4 && this.status === 200) {
@@ -131,6 +137,13 @@
             } else {
                 return content_replace_html(event, id, source, callback)
             }
+        }
+
+        // 
+        // Reload current location.
+        // 
+        function content_reload(event) {
+            content_replace(event, 'page-content', location.href);
         }
 
         function close_overlay() {
@@ -198,6 +211,43 @@
                 xm.style.display = 'none';
                 xo.style.display = 'none';
             }
+        }
+
+        // 
+        // Select work queue.
+        // 
+        function toggle_queue_select() {
+            var x = document.getElementById("queue-box");
+            toggle_panel_display(x);
+        }
+
+        function queue_switch() {
+            queue_select(document.getElementById('queue-name').value);
+        }
+
+        function queue_revert() {
+            queue_select("");
+        }
+
+        function queue_select(name) {
+            var target = '<?= $config->location ?>' + 'ws/json/select';
+
+            fetch(target, {
+                method: 'post',
+                body: JSON.stringify({queue: name})
+            })
+                .then(resp => resp.json())
+                .then(resp => {
+                    if (resp.status === 'failure') {
+                        throw resp.message;
+                    } else {
+                        toggle_queue_select();
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    alert(error);
+                });
         }
 
         // 

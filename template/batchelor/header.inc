@@ -125,6 +125,11 @@ $show = new Runtime($this);
             <a href="<?= $config->location ?>" class="w3-bar-item w3-hover-white"><?= $config->name ?></a>
         </span>
         <span class="w3-right" id="topbar-tools">
+            <?php if ($show->queue) : ?>
+                    <a class="w3-bar-item w3-hover-white" title="<?= _('Switch working queue') ?>" onclick="toggle_queue_select()" href="javascript:void(0)">
+                        <i class="fa fa-history fa-lg"></i>
+                    </a>
+            <?php endif; ?>
             <?php if ($show->edit) : ?>
                     <a class="w3-bar-item w3-hover-white" title="<?= _('Open page editor') ?>" onclick="toggle_edit_open('<?= $config->edit['host'] ?>')" href="javascript:void(0)">
                         <i class="fa fa-pencil-square-o fa-lg"></i>
@@ -157,6 +162,17 @@ $show = new Runtime($this);
         </span>
     </div>
 </div>
+
+<?php if ($show->queue) : ?>
+        <!-- Queue select box -->
+        <div id="queue-box" class="panel w3-row-padding w3-padding-16" style="display: none">
+            <div class="w3-container w3-right-align">
+                <input class="w3-input w3-border" type="text" placeholder="<?= _("Input name of work queue") ?>" id="queue-name">
+                <input class="w3-btn w3-deep-orange w3-large search" type="button" onclick="queue_switch()" value="<?= _('Switch') ?>">
+                <input class="w3-btn w3-dark-gray w3-large search" type="button" onclick="queue_revert()" value="<?= _('Revert') ?>">
+            </div>
+        </div>
+<?php endif; ?>
 
 <?php if ($show->auth) : ?>
         <!-- Logon status box -->

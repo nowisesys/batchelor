@@ -141,7 +141,8 @@ return array(
 //                'auth'      => false,    // Enable authentication box.
 //                'search'    => false,    // Enable Google search box.
 //                'translate' => false,    // Enable Google translate box.
-//                'edit'      => false     // Enable online page/site editor.
+//                'edit'      => false,    // Enable online page/site editor.
+                  'queue'     => true      // Enable queue switcher.
 //        ),
 //        /**
 //         * Locale support (gettext). Comment to disable locale support.

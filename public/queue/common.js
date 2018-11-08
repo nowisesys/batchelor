@@ -42,6 +42,7 @@ function show_error_dialog(error) {
 function delete_queued_job(json) {
     fetch('../ws/json/dequeue', {
         method: 'post',
+        credentials: 'same-origin',
         body: json
     })
         .then(response => response.json())

@@ -268,6 +268,7 @@
 
         fetch('../ws/json/enqueue', {
             method: 'post',
+            credentials: 'same-origin',
             body: JSON.stringify(data)
         })
             .then((resp) => resp.json())
@@ -304,8 +305,8 @@
 
         fetch(url, {
             method: 'POST',
-            body: formData,
-            credentials: 'same-origin'
+            credentials: 'same-origin',
+            body: formData
         })
             .then((resp) => resp.json())
             .then((resp) => {
