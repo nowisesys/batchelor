@@ -68,10 +68,11 @@ class CookieStorage implements StorageService
          * Clear cookie.
          * 
          * @param string $name The cookie name.
+         * @param string $path The path on the server (defaults to '/' meaning whole domain).
          */
-        public function delete(string $name)
+        public function delete(string $name, string $path = "/")
         {
-                if (!setcookie($name, "", time() - 3600)) {
+                if (!setcookie($name, "", time() - 3600, $path)) {
                         throw new RuntimeException("Failed clear $name session cookie");
                 }
         }
@@ -84,10 +85,11 @@ class CookieStorage implements StorageService
          * @param string $name The cookie name.
          * @param string $value The cookie value.
          * @param int $lifetime The cookie lifetime.
+         * @param string $path The path on the server (defaults to '/' meaning whole domain).
          */
-        public function save(string $name, string $value, int $lifetime = 0)
+        public function save(string $name, string $value, int $lifetime = 0, string $path = "/")
         {
-                if (!setcookie($name, $value, $lifetime)) {
+                if (!setcookie($name, $value, $lifetime, $path)) {
                         throw new RuntimeException("Failed set $name session cookie");
                 }
         }
