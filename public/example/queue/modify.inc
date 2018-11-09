@@ -5,6 +5,11 @@ use Batchelor\System\Service\Hostid;
 use Batchelor\WebService\Types\JobData;
 
 // 
+// Insert task processor to supoort example.
+// 
+include("setup.inc");
+
+// 
 // Test add, remove and check job.
 // 
 
