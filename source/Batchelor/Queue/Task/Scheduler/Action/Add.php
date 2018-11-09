@@ -21,6 +21,7 @@
 namespace Batchelor\Queue\Task\Scheduler\Action;
 
 use Batchelor\Queue\Task\Scheduler;
+use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobData;
 use RuntimeException;
 
@@ -32,7 +33,7 @@ use RuntimeException;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class Add
+class Add extends Component
 {
 
         /**
@@ -52,6 +53,10 @@ class Add
 
         public function execute(string $job, JobData $data)
         {
+                if (!$this->processor->hasProcesor($data->task)) {
+                        throw new RuntimeException("The task processor $data->task is missing");
+                }
+
                 // TODO: Add sub task to job.
                 throw new RuntimeException("Adding sub task is not yet implemented");
         }

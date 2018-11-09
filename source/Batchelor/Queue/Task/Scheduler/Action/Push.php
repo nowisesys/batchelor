@@ -23,18 +23,20 @@ namespace Batchelor\Queue\Task\Scheduler\Action;
 use Batchelor\Queue\Task\Runtime;
 use Batchelor\Queue\Task\Scheduler;
 use Batchelor\Queue\Task\Scheduler\State;
+use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\JobSubmit;
 use Batchelor\WebService\Types\QueuedJob;
+use RuntimeException;
 
 /**
  * Push job to scheduler.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class Push
+class Push extends Component
 {
 
         /**
@@ -54,6 +56,10 @@ class Push
 
         public function execute(string $hostid, JobData $data): QueuedJob
         {
+                if (!$this->processor->hasProcesor($data->task)) {
+                        throw new RuntimeException("The task processor $data->task is missing");
+                }
+                
                 $scheduler = $this->_scheduler;
 
                 $state = new State($hostid, $data->task, $data->name);
