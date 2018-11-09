@@ -52,10 +52,18 @@
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= ucfirst($filter) ?></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=none')" class="w3-bar-item w3-button"><?= _("Show all") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=completed')" class="w3-bar-item w3-button"><?= _("Completed") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
+            <hr class="menu-separator" style="margin: 8px 16px">
             <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=pending')" class="w3-bar-item w3-button"><?= _("Pending") ?></a>
             <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=running')" class="w3-bar-item w3-button"><?= _("Running") ?></a>
             <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=finished')" class="w3-bar-item w3-button"><?= _("Finished") ?></a>
-            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
+            <hr class="menu-separator" style="margin: 8px 16px">
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=success')" class="w3-bar-item w3-button"><?= _("Success") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=warning')" class="w3-bar-item w3-button"><?= _("Warning") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=error')" class="w3-bar-item w3-button"><?= _("Error") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=crashed')" class="w3-bar-item w3-button"><?= _("Crashed") ?></a>
         </div>
     </div>
     <div class="w3-dropdown-hover w3-right" style="margin-right: 3px">
