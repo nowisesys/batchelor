@@ -97,6 +97,7 @@
                         for (var i = 0; i < insert.length; ++i) {
                             var child = insert[i].cloneNode(true);
                             var attrs = child.attributes;
+
                             if (child.nodeName !== "SCRIPT") {
                                 shadow.appendChild(child);
                             } else if (attrs['onajax'] && attrs['onajax'].value === "add") {
@@ -113,7 +114,20 @@
                         }
 
                         for (var i = 0; i < script.length; ++i) {
-                            eval(script[i].innerHTML);
+                            var child = script[i];
+                            var attrs = child.attributes;
+
+                            // 
+                            // Handle extern or inline javascript:
+                            // 
+                            if (attrs.src) {
+                                var linked = document.createElement('script');
+                                linked.setAttribute("type", "text/javascript");
+                                linked.setAttribute("src", child.src);
+                                document.body.appendChild(linked);
+                            } else {
+                                eval(script[i].innerHTML);
+                            }
                         }
 
                     } catch (err) {
@@ -121,10 +135,12 @@
                     }
                 }
             };
+            
             xhr.open("GET", source, true);
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             xhr.responseType = 'document';
             xhr.send();
+            
             close_overlay();
             return false;
         }
