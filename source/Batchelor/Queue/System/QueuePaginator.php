@@ -21,6 +21,7 @@
 namespace Batchelor\Queue\System;
 
 use Batchelor\Queue\Task\Scheduler\StateQueue;
+use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\QueueFilterResult;
 use Batchelor\WebService\Types\QueueSortResult;
 use RuntimeException;
@@ -99,6 +100,37 @@ class QueuePaginator
         }
 
         /**
+         * Check if filter mathes job state.
+         * 
+         * For pending, running and finished filter we are making a fuzzy match 
+         * on job phase. Recent jobs are checked for good status. For all other 
+         * filters the match is exact.
+         * 
+         * @param QueueFilterResult $filter The queue filter.
+         * @param JobState $state The job state.
+         * @return bool True if state is matched.
+         */
+        private function isMatched(QueueFilterResult $filter, JobState $state): bool
+        {
+                switch ($filter->getValue()) {
+                        case QueueFilterResult::NONE:           // Include all
+                                return true;
+                        case QueueFilterResult::PENDING:
+                                return $state->isPending();
+                        case QueueFilterResult::RUNNING:
+                                return $state->isStarted();
+                        case QueueFilterResult::FINISHED:
+                                return $state->isFinished();
+                        case QueueFilterResult::RECENT:
+                                return $state->isGood();
+                        case QueueFilterResult::COMPLETED:
+                                return $state->isCompleted();
+                        default:
+                                return $state->getValue() == $filter->getValue();
+                }
+        }
+
+        /**
          * Get filtered queue.
          * 
          * @param QueueFilterResult $filter The queue filter.
@@ -109,12 +141,7 @@ class QueuePaginator
                 $queued = [];
 
                 foreach ($this->_queue as $jobid => $state) {
-                        if ($filter->getValue() == QueueFilterResult::NONE) {
-                                $queued[] = $state->getQueuedJob($jobid);
-                        } elseif ($filter->getValue() == QueueFilterResult::RECENT &&
-                            $state->status->state->isGood()) {
-                                $queued[] = $state->getQueuedJob($jobid);
-                        } elseif ($filter->getValue() == $state->status->state->getValue()) {
+                        if ($this->isMatched($filter, $state->status->state)) {
                                 $queued[] = $state->getQueuedJob($jobid);
                         }
                 }

@@ -103,6 +103,15 @@ class JobState extends QueueFilterResult
         }
 
         /**
+         * Check if job is completed (successful or with warnings).
+         * @return bool
+         */
+        public function isCompleted(): bool
+        {
+                return $this->value == self::SUCCESS || $this->value == self::WARNING;
+        }
+
+        /**
          * Check if job phase is pending.
          * @return bool
          */

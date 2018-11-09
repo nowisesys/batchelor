@@ -41,9 +41,13 @@ class QueueFilterResult extends EnumType
          */
         const RUNNING = 'running';
         /**
-         * Finished successful without warnings or errors.
+         * Job has finished (includes all states).
          */
         const FINISHED = 'finished';
+        /**
+         * Finished successful.
+         */
+        const SUCCESS = 'success';
         /**
          * Finished with warnings.
          */
@@ -57,21 +61,13 @@ class QueueFilterResult extends EnumType
          */
         const CRASHED = 'crashed';
         /**
+         * Finished with success or warnings.
+         */
+        const COMPLETED = 'completed';
+        /**
          * Include recently finished or ongoing jobs.
          */
         const RECENT = 'recent';
-        /**
-         * Alias for NONE.
-         */
-        const ALL = 'none';
-        /**
-         * Alias for FINISHED.
-         */
-        const SUCCESS = 'finished';
-        /**
-         * Alias for PENDING.
-         */
-        const WAITING = 'pending';
         /**
          * Job is suspended.
          */
@@ -84,6 +80,14 @@ class QueueFilterResult extends EnumType
          * Waiting for sub job to complete.
          */
         const CONTINUED = 'continued';
+        /**
+         * Alias for NONE.
+         */
+        const ALL = 'none';
+        /**
+         * Alias for PENDING.
+         */
+        const WAITING = 'pending';
 
         /**
          * Constructor.
