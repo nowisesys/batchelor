@@ -52,14 +52,14 @@
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= ucfirst($filter) ?></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sort ?>&filter=pending')" class="w3-bar-item w3-button"><?= _("Pending") ?></a>
-            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sort ?>&filter=running')" class="w3-bar-item w3-button"><?= _("Running") ?></a>
-            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sort ?>&filter=finished')" class="w3-bar-item w3-button"><?= _("Finished") ?></a>
-            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sort ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=pending')" class="w3-bar-item w3-button"><?= _("Pending") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=running')" class="w3-bar-item w3-button"><?= _("Running") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=finished')" class="w3-bar-item w3-button"><?= _("Finished") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
         </div>
     </div>
     <div class="w3-dropdown-hover w3-right" style="margin-right: 3px">
-        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= ucfirst($sort) ?></button>
+        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= ucfirst($sorter) ?></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
             <a onclick="content_replace(event, 'page-content', 'index?sort=state&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("State") ?></a>
             <a onclick="content_replace(event, 'page-content', 'index?sort=started&filter=<?= $filter ?>')" class="w3-bar-item w3-button"><?= _("Started") ?></a>
@@ -104,7 +104,7 @@
                     <!-- standard system buttons -->
                     <span class="job-std-buttons w3-right">
                         <a class="w3-btn" onclick=delete_queued_job('<?= json_encode($job->identity) ?>')><?= $job->status->state->getRemove() ?></a>
-                        <a class="w3-btn" onclick="content_replace(event, 'page-content', '')">Press</a>
+                        <a class="w3-btn" onclick="content_replace(event, 'page-content', 'details?<?= http_build_query($job->identity) ?>')"><?= _("Details") ?></a>
                     </span>
                 </div>
             </div>
@@ -122,4 +122,4 @@
         </p>
 <?php endif; ?>
 
-<script src="common.js"></script>
+<script src="common.js" onajax="run"></script>

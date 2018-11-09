@@ -19,8 +19,6 @@
  */
 
 use Batchelor\Render\Queue;
-use Batchelor\WebService\Types\QueueFilterResult;
-use Batchelor\WebService\Types\QueueSortResult;
 use UUP\Site\Page\Web\StandardPage;
 
 /**
@@ -39,9 +37,7 @@ class IndexPage extends StandardPage
         public function printContent()
         {
                 (new Queue("index.inc"))
-                    ->render(
-                        $this->params->getParam("sort", QueueSortResult::JOBID), $this->params->getParam("filter", QueueFilterResult::ALL)
-                );
+                    ->listJobs($this->params);
         }
 
 }

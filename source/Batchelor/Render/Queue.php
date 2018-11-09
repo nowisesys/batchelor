@@ -21,8 +21,10 @@
 namespace Batchelor\Render;
 
 use Batchelor\System\Component;
+use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\QueueFilterResult;
 use Batchelor\WebService\Types\QueueSortResult;
+use UUP\Site\Request\Params;
 
 /**
  * The queue render component.
@@ -50,12 +52,33 @@ class Queue extends Component
         /**
          * Render queue.
          * 
-         * @param string $sort The queue sort options.
-         * @param string $filter The queue filter options.
+         * @param Params $params The request parameters.
          */
-        public function render(string $sort, string $filter)
+        public function listJobs(Params $params)
         {
-                $queued = $this->getJobs($sort, $filter);
+                $filter = $params->getParam("filter", QueueFilterResult::ALL);
+                $sorter = $params->getParam("sort", QueueSortResult::JOBID);
+                $queued = $this->getJobs($sorter, $filter);
+
+                include($this->_template);
+        }
+
+        /**
+         * Render job details.
+         * 
+         * @param Params $params The request parameters.
+         */
+        public function showDetails(Params $params)
+        {
+                $identity = JobIdentity::create([
+                            'jobid'  => $params->getParam("jobid"),
+                            'result' => $params->getParam("result")
+                ]);
+
+                $hostid = $this->hostid->getValue();
+                $status = $this->queue->getStatus($hostid, $identity);
+                $files = $this->queue->getReader($hostid)->getFiles($identity);
+
                 include($this->_template);
         }
 
