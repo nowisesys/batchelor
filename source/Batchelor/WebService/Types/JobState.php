@@ -20,9 +20,15 @@
 
 namespace Batchelor\WebService\Types;
 
+use RuntimeException;
+
 /**
  * Job state enum.
  *
+ * An job goes thru three main phases: pending, started or completed. For
+ * details about the possible states in each phase, see getPhase(). The only
+ * one-to-one mapping is the pending state.
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
 class JobState extends QueueFilterResult
@@ -93,6 +99,64 @@ class JobState extends QueueFilterResult
                                 return false;
                         default:
                                 return true;
+                }
+        }
+
+        /**
+         * Check if job phase is pending.
+         * @return bool
+         */
+        public function isPending(): bool
+        {
+                return $this->getPhase() == self::PENDING();
+        }
+
+        /**
+         * Check if job phase is started.
+         * @return bool
+         */
+        public function isStarted(): bool
+        {
+                return $this->getPhase() == self::RUNNING();
+        }
+
+        /**
+         * Check if job phase is finished.
+         * @return bool
+         */
+        public function isFinished(): bool
+        {
+                return $this->getPhase() == self::FINISHED();
+        }
+
+        /**
+         * Get main phase.
+         * 
+         * Returns either one of the three main state (pending, running or
+         * finished) depending on current job state.
+         * 
+         * @return self
+         * @throws RuntimeException
+         */
+        public function getPhase(): self
+        {
+                switch ($this->value) {
+                        case self::PENDING:
+                        case self::WAITING:
+                                return self::PENDING();
+                        case self::RUNNING:
+                        case self::CONTINUED:
+                        case self::RESUMED:
+                        case self::SUSPEND:
+                                return self::RUNNING();
+                        case self::FINISHED:
+                        case self::CRASHED:
+                        case self::ERROR:
+                        case self::SUCCESS:
+                        case self::WARNING:
+                                return self::FINISHED();
+                        default:
+                                throw new RuntimeException("Unhandled phase $this->value for job state");
                 }
         }
 
