@@ -19,39 +19,6 @@
 
 ?>
 
-<style>
-    #file-input {
-        display: none;
-    }
-    #file-upload-drop-area {
-        border: 2px dashed #cccccc;
-    }
-    #file-upload-date,
-    #file-upload-term {
-        border-bottom: 0;
-    }
-    #file-upload-term {
-        border-bottom: 1px solid white;
-    }
-    #file-upload-status {
-        display: none;
-    }
-    .file-upload-status-head {
-        color: gray;
-        font-size: 1.2em;
-        margin-left: 10px;
-    }
-    #file-upload-warning-files,
-    #file-upload-error-message {
-        margin-left: 50px;            
-    }
-    .w3-animate-hide {
-        visibility: hidden;
-        opacity: 0;
-        transition: visibility 0s linear 0.33s, opacity 0.33s linear;            
-    }
-</style>
-
 <div class="w3-margin-top">
     <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('submit-file')"><?= _("File") ?></button>
     <button class="w3-button w3-deep-orange w3-small w3-right" style="min-width: 90px; margin-right: 3px" onclick="display_tab('submit-data')"><?= _("Data") ?></button>
@@ -61,6 +28,8 @@
         <span class="w3-hide-small" id="submit-status" style="display: none">(100%)</span>
     </h3>
 </div>
+
+<link rel="stylesheet" type="text/css" href="submit.css"/>
 
 <div id="error-dialog" class="w3-modal" style="cursor: pointer" onclick="this.style.display = 'none'">
     <div class="w3-modal-content w3-red">
@@ -140,4 +109,4 @@
 </div>
 
 <script src="common.js"></script>
-<script src="submit.js"></script>
+<script src="submit.js" onajax="run"></script>

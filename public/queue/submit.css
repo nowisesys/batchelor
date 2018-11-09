@@ -1,0 +1,53 @@
+/*
+Copyright (C) 2018 Anders Lövgren (Nowise Systems)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
+/* 
+    Created on : 2018-nov-09, 10:43:18
+    Author     : Anders Lövgren (Nowise Systems)
+*/
+
+#file-input {
+    display: none;
+}
+#file-upload-drop-area {
+    border: 2px dashed #cccccc;
+}
+#file-upload-date,
+#file-upload-term {
+    border-bottom: 0;
+}
+#file-upload-term {
+    border-bottom: 1px solid white;
+}
+#file-upload-status {
+    display: none;
+}
+.file-upload-status-head {
+    color: gray;
+    font-size: 1.2em;
+    margin-left: 10px;
+}
+#file-upload-warning-files,
+#file-upload-error-message {
+    margin-left: 50px;            
+}
+.w3-animate-hide {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.33s, opacity 0.33s linear;            
+}
