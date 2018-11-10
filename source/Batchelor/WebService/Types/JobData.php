@@ -88,16 +88,16 @@ class JobData
          */
         public static function create(array $data): JobData
         {
-                if (!isset($data['data'])) {
+                if (empty($data['data'])) {
                         throw new InvalidArgumentException("The data key is missing in job data");
                 }
-                if (!isset($data['type'])) {
+                if (empty($data['type'])) {
                         throw new InvalidArgumentException("The type key is missing in job data");
                 }
-                if (!isset($data['task'])) {
+                if (empty($data['task'])) {
                         $data['task'] = 'default';
                 }
-                if (!isset($data['name'])) {
+                if (empty($data['name'])) {
                         $data['name'] = null;
                 }
 

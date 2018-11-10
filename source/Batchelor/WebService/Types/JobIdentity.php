@@ -69,10 +69,10 @@ class JobIdentity
          */
         public static function create(array $data): JobIdentity
         {
-                if (!isset($data['jobid'])) {
+                if (empty($data['jobid'])) {
                         throw new InvalidArgumentException("The jobid key is missing in job identity");
                 }
-                if (!isset($data['result'])) {
+                if (empty($data['result'])) {
                         throw new InvalidArgumentException("The result key is missing in job identity");
                 }
 
