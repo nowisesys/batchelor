@@ -28,6 +28,7 @@ use Batchelor\WebService\Types\JobStatus;
 use Batchelor\WebService\Types\QueuedJob;
 use Batchelor\WebService\Types\QueueFilterResult;
 use Batchelor\WebService\Types\QueueSortResult;
+use RuntimeException;
 
 /**
  * Common web service backend.
@@ -83,6 +84,9 @@ class ServiceBackend extends Component
          */
         public function enqueue(JobData $indata)
         {
+                if (!$this->processor->hasProcesor($indata->task)) {
+                        throw new RuntimeException("The task processor $indata->task is missing");
+                }
                 return $this->queue->addJob(
                         $this->hostid->getValue(), $indata
                 );

@@ -5,11 +5,6 @@ use Batchelor\System\Service\Hostid;
 use Batchelor\WebService\Types\JobData;
 
 // 
-// Insert task processor to supoort example.
-// 
-include("setup.inc");
-
-// 
 // Insert some jobs:
 // 
 $queue = new SystemQueue();
