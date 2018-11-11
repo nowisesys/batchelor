@@ -44,7 +44,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Batchelor\\": "source"
+            "Batchelor\\": "source",
+            "Application\\": "source"
         }
     },
     "bin": [
