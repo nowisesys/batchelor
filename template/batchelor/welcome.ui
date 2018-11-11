@@ -15,7 +15,7 @@ $output = new format($this);
         <title><?= $output->title() ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="<?= $config->css('w3.css') ?>">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
         <link rel="stylesheet" href="<?= $config->css('fonts/lato.css') ?>">
         <link rel="stylesheet" href="<?= $config->css('fonts/montserrat.css') ?>">
         <?php $output->headers(); ?>
@@ -67,11 +67,11 @@ $output = new format($this);
         <!-- Footer -->
         <footer class="no-print w3-container w3-padding-64 w3-center w3-opacity">  
             <div class="w3-xlarge w3-padding-32">
-                <a href="<?= sprintf('https://www.facebook.com/sharer/sharer.php?u=%s', $config->request) ?>" class="w3-hover-text-indigo"><i class="fa fa-facebook-official"></i></a>
-                <a href="<?= sprintf('https://twitter.com/home?status=%s', $config->request) ?>" class="w3-hover-text-light-blue"><i class="fa fa-twitter"></i></a>
-                <a href="<?= sprintf('https://www.linkedin.com/shareArticle?mini=true&url=%s&title=%s', $config->request, urlencode($output->title())) ?>" class="w3-hover-text-indigo"><i class="fa fa-linkedin"></i></a>
-                <a href="<?= sprintf('https://pinterest.com/pin/create/button/?url=%s&media=&description=%s', $config->request, urlencode($output->title())) ?>" class="w3-hover-text-red"><i class="fa fa-pinterest-p"></i></a>
-                <a href="<?= sprintf('https://plus.google.com/share?url=%s', $config->request) ?>" class="w3-hover-text-light-green"><i class="fa fa-google-plus"></i></a>
+                <a href="<?= sprintf('https://www.facebook.com/sharer/sharer.php?u=%s', $config->request) ?>" class="w3-hover-text-indigo"><i class="fab fa-facebook-square"></i></a>
+                <a href="<?= sprintf('https://twitter.com/home?status=%s', $config->request) ?>" class="w3-hover-text-light-blue"><i class="fab fa-twitter"></i></a>
+                <a href="<?= sprintf('https://www.linkedin.com/shareArticle?mini=true&url=%s&title=%s', $config->request, urlencode($output->title())) ?>" class="w3-hover-text-indigo"><i class="fab fa-linkedin-in"></i></a>
+                <a href="<?= sprintf('https://pinterest.com/pin/create/button/?url=%s&media=&description=%s', $config->request, urlencode($output->title())) ?>" class="w3-hover-text-red"><i class="fab fa-pinterest-p"></i></a>
+                <a href="<?= sprintf('https://plus.google.com/share?url=%s', $config->request) ?>" class="w3-hover-text-light-green"><i class="fab fa-google-plus-g"></i></a>
             </div>
             <div class="w3-blue-grey w3-large w3-padding-32">
                 <?php $output->footer() ?>                
