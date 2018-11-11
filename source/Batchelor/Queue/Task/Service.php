@@ -44,6 +44,15 @@ class Service
         private $_processors = [];
 
         /**
+         * Constructor.
+         * @param array $processors The array of processors.
+         */
+        public function __construct(array $processors = [])
+        {
+                $this->_processors = $processors;
+        }
+
+        /**
          * Register task processor.
          * 
          * The name is some symbolic name for identifying the task runner. If

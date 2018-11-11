@@ -1,5 +1,7 @@
 <?php
 
+use Application\ReverseTextTask;
+use Batchelor\Queue\Task\Service as TaskService;
 use Batchelor\System\Service;
 
 // 
@@ -60,7 +62,12 @@ return [
         'cache'       => new Service(Service\Cache::class),
         // 
         // The task processor service provides the repository of task runners 
-        // used by the consumer of scheduled jobs (processor).
+        // used by the consumer of scheduled jobs (processor). Clear the list
+        // and replace with real tasks defining your application.
         // 
-        'processor'   => new Service(Service\Processor::class)
+        'processor'   => function() {
+                return new TaskService([
+                        'default' => new ReverseTextTask()
+                ]);
+        }
 ];
