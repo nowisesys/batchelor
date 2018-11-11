@@ -52,9 +52,9 @@
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px"><?= ucfirst($filter) ?></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=none')" class="w3-bar-item w3-button"><?= _("Show all") ?></a>
-            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=completed')" class="w3-bar-item w3-button"><?= _("Completed") ?></a>
             <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=recent')" class="w3-bar-item w3-button"><?= _("Recent") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=completed')" class="w3-bar-item w3-button"><?= _("Completed") ?></a>
+            <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=none')" class="w3-bar-item w3-button"><?= _("Show all") ?></a>
             <hr class="menu-separator" style="margin: 8px 16px">
             <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=pending')" class="w3-bar-item w3-button"><?= _("Pending") ?></a>
             <a onclick="content_replace(event, 'page-content', 'index?sort=<?= $sorter ?>&filter=running')" class="w3-bar-item w3-button"><?= _("Running") ?></a>
