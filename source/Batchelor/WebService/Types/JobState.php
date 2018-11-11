@@ -57,12 +57,12 @@ class JobState extends QueueFilterResult
                         case self::CRASHED:
                         case self::ERROR:
                                 return "red";
-                        case self::FINISHED:
+                        case self::SUCCESS:
                                 return "green";
                         case self::PENDING:
                                 return "light-grey";
                         case self::RUNNING:
-                                return "green";
+                                return "yellow";
                 }
         }
 
@@ -108,7 +108,13 @@ class JobState extends QueueFilterResult
          */
         public function isCompleted(): bool
         {
-                return $this->value == self::SUCCESS || $this->value == self::WARNING;
+                switch ($this->value) {
+                        case self::SUCCESS:
+                        case self::WARNING:
+                                return true;
+                        default:
+                                return false;
+                }
         }
 
         /**
@@ -121,7 +127,7 @@ class JobState extends QueueFilterResult
         }
 
         /**
-         * Check if job phase is started.
+         * Check if job phase is running.
          * @return bool
          */
         public function isStarted(): bool

@@ -119,8 +119,6 @@ class QueuePaginator
                                 return $state->isPending();
                         case QueueFilterResult::RUNNING:
                                 return $state->isStarted();
-                        case QueueFilterResult::FINISHED:
-                                return $state->isFinished();
                         case QueueFilterResult::RECENT:
                                 return $state->isGood();
                         case QueueFilterResult::COMPLETED:
