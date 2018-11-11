@@ -21,7 +21,7 @@ $output = new format($this);
         <?php $output->headers(); ?>
     </head>
 
-    <body>
+    <body class="w3-white">
         <style>
             .header-container {
                 background-image: url('<?= $config->img("pexels-photo-1020315.jpeg") ?>');
