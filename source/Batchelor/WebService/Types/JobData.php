@@ -20,6 +20,7 @@
 
 namespace Batchelor\WebService\Types;
 
+use Batchelor\Storage\File;
 use Batchelor\Web\Download;
 use InvalidArgumentException;
 use RuntimeException;
@@ -69,9 +70,11 @@ class JobData
 
         /**
          * Constructor.
+         * 
          * @param string $data The job data (plain data or an URL).
          * @param string $type The data type (either "data" or "url").
-         * @param string $task The task processor (i.e. "default").
+         * @param string $task The optional task processor (i.e. "default").
+         * @param string $name The optional task name.
          */
         public function __construct(string $data, string $type, string $task = 'default', string $name = null)
         {
@@ -150,6 +153,30 @@ class JobData
 
                 $this->data = $path;
                 $this->type = 'file';
+        }
+
+        /**
+         * Check if job data is an file.
+         * @return bool
+         */
+        public function isFile(): bool
+        {
+                return $this->type == 'file';
+        }
+
+        /**
+         * Get file object.
+         * 
+         * Obtain a file object for this job data. Will throw an type error 
+         * exception unless job data is an file.
+         * 
+         * @return File
+         */
+        public function getFile(): File
+        {
+                if ($this->type == 'file') {
+                        return new File($this->data);
+                }
         }
 
 }
