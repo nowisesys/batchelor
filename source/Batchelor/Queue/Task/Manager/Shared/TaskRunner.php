@@ -61,6 +61,10 @@ class TaskRunner extends Component
                         $task->initialize();
                         $task->execute($runtime->getWorkDirectory(), $runtime->getResultDirectory(), $runtime->getCallback());
                         $task->finished();
+
+                        $runtime->getWorkDirectory()
+                            ->getFile("indata.ser")
+                            ->putContent(serialize($runtime->data));
                 } catch (Throwable $exception) {
                         $runtime->getCallback()->setStatus(JobState::CRASHED());
                         $logs->logException($exception);
