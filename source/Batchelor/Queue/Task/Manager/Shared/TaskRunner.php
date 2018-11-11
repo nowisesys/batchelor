@@ -47,6 +47,7 @@ class TaskRunner extends Component
         {
                 $task = $this->getTask($runtime->data->task);
                 $logs = $this->getLogger($runtime);
+                $info = $runtime->getCallback()->getLogger();
 
                 register_shutdown_function(function() use($logs) {
                         $logs->stop();
@@ -56,10 +57,19 @@ class TaskRunner extends Component
                 try {
                         $logs->start();
 
+                        $info->info("Preparing runtime data");
                         $task->prepare($runtime->getWorkDirectory(), $runtime->data);
+
+                        $info->info("Validating runtime data");
                         $task->validate($runtime->data);
+
+                        $info->info("Initialize task %s for execute", [$runtime->data->task]);
                         $task->initialize();
+
+                        $info->info("Execute task for job %s", [$runtime->data->name]);
                         $task->execute($runtime->getWorkDirectory(), $runtime->getResultDirectory(), $runtime->getCallback());
+
+                        $info->info("Finished running task");
                         $task->finished();
 
                         $runtime->getWorkDirectory()
