@@ -115,15 +115,17 @@ class QueuePaginator
                 switch ($filter->getValue()) {
                         case QueueFilterResult::NONE:           // Include all
                                 return true;
-                        case QueueFilterResult::PENDING:
+                        case QueueFilterResult::PENDING:        // The pending phase
                                 return $state->isPending();
-                        case QueueFilterResult::RUNNING:
+                        case QueueFilterResult::RUNNING:        // The running phase
                                 return $state->isStarted();
-                        case QueueFilterResult::RECENT:
+                        case QueueFilterResult::FINISHED:       // The finished phase
+                                return $state->isFinished();
+                        case QueueFilterResult::RECENT:         // most recent jobs
                                 return $state->isGood();
-                        case QueueFilterResult::COMPLETED:
+                        case QueueFilterResult::COMPLETED:      // finished with success or warning
                                 return $state->isCompleted();
-                        default:
+                        default:                                // filter on exact match
                                 return $state->getValue() == $filter->getValue();
                 }
         }
