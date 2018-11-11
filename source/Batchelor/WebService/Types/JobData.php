@@ -20,7 +20,9 @@
 
 namespace Batchelor\WebService\Types;
 
+use Batchelor\Web\Download;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * The job data (indata) class.
@@ -102,6 +104,52 @@ class JobData
                 }
 
                 return new JobData($data['data'], $data['type'], $data['task'], $data['name']);
+        }
+
+        /**
+         * Save/move job data.
+         * 
+         * If type is data, then save content to path. If type is file, then move
+         * file to path. If type is url, then download the content. Pass chunked
+         * equals true as second argement when dealing with downlad of big source 
+         * files.
+         * 
+         * If successful, the type and data in this object is updated to reflect 
+         * the passed target path. 
+         *
+         * @param string $path The target file.
+         * @param bool $chunked Use chunked download.
+         */
+        public function setTarget(string $path, bool $chunked = false)
+        {
+                switch ($this->type) {
+                        case 'data':
+                                if (!file_put_contents($path, $this->data)) {
+                                        throw new RuntimeException("Failed put content to $path");
+                                }
+                                break;
+                        case 'file':
+                                if (!rename($this->data, $path)) {
+                                        throw new RuntimeException("Failed rename file to $path");
+                                }
+                                break;
+                        case 'url':
+                                if (isset($chunked)) {
+                                        (new Download($this->data))->setContent($path);
+                                } elseif (ini_get("allow_url_fopen") != 1) {
+                                        throw new RuntimeException("The allow_url_fopen is not enabled");
+                                } elseif (!($buff = file_get_contents($this->data))) {
+                                        throw new RuntimeException("Failed get content from $path");
+                                } elseif (!file_put_contents($path, $buff)) {
+                                        throw new RuntimeException("Failed put content to $path");
+                                }
+                                break;
+                        default:
+                                throw new InvalidArgumentException("Invalid job data type $this->type");
+                }
+
+                $this->data = $path;
+                $this->type = 'file';
         }
 
 }
