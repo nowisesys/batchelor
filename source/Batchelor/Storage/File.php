@@ -31,6 +31,10 @@ use SplFileInfo;
 class File extends SplFileInfo
 {
 
+        /**
+         * Constructor.
+         * @param string $filename The filename.
+         */
         public function __construct(string $filename)
         {
                 parent::__construct($filename);
