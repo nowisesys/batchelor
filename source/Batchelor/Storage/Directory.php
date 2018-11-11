@@ -209,7 +209,7 @@ class Directory implements IteratorAggregate
                         return new File($filename);
                 }
         }
-        
+
         public function getPerms(): int
         {
                 return $this->_finfo->getPerms();
@@ -408,7 +408,7 @@ class Directory implements IteratorAggregate
          * @param bool $dirs Include directories in listing.
          * @return string[] The list of files.
          */
-        public function read($files = true, $dirs = true)
+        public function read(bool $files = true, bool $dirs = true)
         {
                 $options = Scanner::SKIP_DOTS;
 
@@ -433,14 +433,45 @@ class Directory implements IteratorAggregate
          * @param int $format The filename format (one of Scanner::FILENAME_XXX).
          * @return string[] The list of files.
          */
-        public function scan($options = Scanner::SKIP_DOTS, $format = Scanner::FILENAME_ANCHORED)
+        public function scan(int $options = Scanner::SKIP_DOTS, int $format = Scanner::FILENAME_ANCHORED)
+        {
+                return $this->getScanner($options, $format)
+                        ->getFiles();
+        }
+
+        /**
+         * Get directory scanner.
+         * 
+         * @param int $options Skip files options (zero or more Scanner::SKIP_XXX constants).
+         * @param int $format The filename format (one of Scanner::FILENAME_XXX).
+         * @return Scanner 
+         */
+        public function getScanner(int $options = Scanner::SKIP_DOTS, int $format = Scanner::FILENAME_ANCHORED): Scanner
         {
                 $scanner = new Scanner($this->getPathname());
                 $scanner->setRecursive();
                 $scanner->setOptions($options);
                 $scanner->setFormat($format);
 
-                return $scanner->getFiles();
+                return $scanner;
+        }
+
+        /**
+         * Get directory files.
+         * @return array
+         */
+        public function getFiles(bool $recursive = true): array
+        {
+                $result = [];
+
+                $scanner = $this->getScanner();
+                $scanner->setRecursive($recursive);
+
+                foreach ($scanner as $file) {
+                        $result[] = new File($file);
+                }
+
+                return $result;
         }
 
 }
