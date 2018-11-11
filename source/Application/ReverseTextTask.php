@@ -40,7 +40,7 @@ class ReverseTextTask extends Adapter
                 $text = $workdir->getFile("input.txt")->getContent();
 
                 $file->putContent(strrev($text));
-                $interact->setStatus(JobState::FINISHED());
+                $interact->setStatus(JobState::SUCCESS());
         }
 
         public function validate(JobData $data)
