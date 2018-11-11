@@ -58,7 +58,7 @@
                     try {
                         document.getElementById(id).innerHTML = this.responseText;
                         if (callback !== undefined) {
-                            callback();
+                            callback(id, source);
                         }
                     } catch (err) {
                         console.log(err);
@@ -110,7 +110,7 @@
 
                         target.parentNode.replaceChild(shadow, target);
                         if (callback !== undefined) {
-                            callback();
+                            callback(id, source);
                         }
 
                         for (var i = 0; i < script.length; ++i) {
