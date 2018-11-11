@@ -35,8 +35,8 @@ use Batchelor\WebService\Types\JobData;
  * The methods will be called in this order:
  * 
  * <ol>
- * <li>validate()   - Validate input data for this task.</li>
  * <li>prepare()    - Prepare data for execution.</li>
+ * <li>validate()   - Validate input data for this task.</li>
  * <li>initialize() - Initilize task before execute.</li>
  * <li>execute()    - Called to process input data.</li>
  * <li>finished()   - Cleanup after execution.</li>
@@ -61,19 +61,19 @@ interface Task
 {
 
         /**
-         * Check input data.
-         * 
-         * @param JobData $data The job data to process.
-         */
-        function validate(JobData $data);
-
-        /**
          * Prepare for execution.
          * 
          * @param Directory $workdir The work directory.
          * @param JobData $data The job data to process.
          */
         function prepare(Directory $workdir, JobData $data);
+
+        /**
+         * Check input data.
+         * 
+         * @param JobData $data The job data to process.
+         */
+        function validate(JobData $data);
 
         /**
          * The task initialize method.

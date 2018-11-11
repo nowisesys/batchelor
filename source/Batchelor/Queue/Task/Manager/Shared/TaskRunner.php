@@ -56,8 +56,8 @@ class TaskRunner extends Component
                 try {
                         $logs->start();
 
-                        $task->validate($runtime->data);
                         $task->prepare($runtime->getWorkDirectory(), $runtime->data);
+                        $task->validate($runtime->data);
                         $task->initialize();
                         $task->execute($runtime->getWorkDirectory(), $runtime->getResultDirectory(), $runtime->getCallback());
                         $task->finished();
