@@ -305,4 +305,30 @@ class Download
                 }
         }
 
+        /**
+         * Download content to path.
+         * 
+         * The source file (current URL) is downloaded in chunks. Set size prior
+         * to calling this method to override default chunk size. Currently, 4MB
+         * is used as chunk size.
+         * 
+         * @param string $path The target file.
+         */
+        public function setContent(string $path)
+        {
+                $this->getStream();
+
+                if (!($output = fopen($path, "w"))) {
+                        throw new RuntimeException("Failed open target file $path for write");
+                }
+
+                while (($buff = $this->getChunk())) {
+                        fwrite($output, $buff);
+                }
+
+                if (!fclose($output)) {
+                        throw new RuntimeException("Failed close write stream");
+                }
+        }
+
 }
