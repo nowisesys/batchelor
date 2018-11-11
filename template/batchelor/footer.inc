@@ -149,13 +149,13 @@
         // Replace i.e. HTML content. The id is the target element and source
         // is the URL to laod. The callback is optional. 
         // 
-        // The history is modified by this call if replacestate() is available, 
+        // The history is modified by this call if pushState() is available, 
         // unless callback is defined. Pass false as callback to disable modfy
         // of history.
         // 
         function content_replace(event, id, source, callback) {
-            if (history.replaceState !== undefined && callback === undefined) {
-                history.replaceState({}, "", source);
+            if (history.pushState !== undefined && callback === undefined) {
+                history.pushState({}, "", source);
             }
 
             if (typeof content_replace_extern === 'function') {
@@ -464,6 +464,15 @@
                 sm.style.top = "auto"; // restore default pos
             }
         });
+
+        // 
+        // Called on history navigation. The href is the page to load.
+        // 
+        window.onpopstate = function (event) {
+            if (document.location) {
+                content_insert(event, document.location.href);
+            }
+        };
 
 </script>
 
