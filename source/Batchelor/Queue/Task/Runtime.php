@@ -179,4 +179,22 @@ class Runtime
                 ]);
         }
 
+        /**
+         * Get object clone.
+         * 
+         * Clone this object and assign optional job data. The existing logger 
+         * is replaced with new memory logger.
+         * 
+         * @param JobData $data The job data.
+         * @return Runtime
+         */
+        public function getClone(JobData $data = null): Runtime
+        {
+                $runtime = clone $this;
+                $runtime->data = $data;
+                $runtime->setLogger($runtime->useLogger());
+
+                return $runtime;
+        }
+
 }

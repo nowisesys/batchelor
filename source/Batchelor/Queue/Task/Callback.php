@@ -139,12 +139,10 @@ class Callback implements Interaction
          */
         public function runTask(JobData $data)
         {
-                $runtime = clone $this->_runtime;
-                $runtime->data = $data;
-                $runtime->setLogger($runtime->useLogger());
-
-                $runner = new TaskRunner();
-                $runner->runTask($runtime);
+                (new TaskRunner())
+                    ->runTask(
+                        $this->_runtime->getClone($data)
+                );
         }
 
 }
