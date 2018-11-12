@@ -474,4 +474,18 @@ class Directory implements IteratorAggregate
                 return $result;
         }
 
+        /**
+         * Get archive of this directory.
+         */
+        public function getArchive(): Archive
+        {
+                $zipfile = sprintf("%s.zip", $this->getPathname());
+
+                $archive = new Archive($zipfile);
+                $archive->addDirectory($this);
+                $archive->close();
+
+                return $archive;
+        }
+
 }

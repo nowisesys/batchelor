@@ -87,13 +87,9 @@ class SystemDirectory extends Component implements WorkDirectory
                 $target = $source->getFile($file);
 
                 if ($target->isDir()) {
-                        $zipfile = sprintf("%s.zip", $target->getPathname());
-
-                        $archive = new Archive($zipfile);
-                        $archive->addDirectory($source->open($file));
-                        $archive->close();
-
-                        $file = $zipfile;
+                        $file = $target->getDirectory()
+                            ->getArchive()
+                            ->getFilename();
                 }
 
                 if ($return) {
