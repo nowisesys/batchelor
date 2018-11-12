@@ -20,6 +20,9 @@ $output = new format($this);
         <link rel="stylesheet" href="<?= $config->css('fonts/lato.css') ?>">
         <link rel="stylesheet" href="<?= $config->css('fonts/montserrat.css') ?>">
         <?php $output->headers(); ?>
+        <?php if ($config->polyfill): ?>
+                <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+        <?php endif; ?>
     </head>
 
     <body class="w3-white">
