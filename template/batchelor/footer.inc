@@ -269,7 +269,7 @@
         }
 
         function queue_select(name) {
-            var target = '<?= $config->location ?>' + 'ws/json/select';
+            var target = '<?= $config->location ?>' + 'api/json/select';
 
             fetch(target, {
                 method: 'post',

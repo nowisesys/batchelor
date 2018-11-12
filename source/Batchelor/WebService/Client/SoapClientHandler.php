@@ -34,7 +34,7 @@ class SoapClientHandler
          * The base URL.
          * @var string 
          */
-        private $_base = "http://localhost/batchelor/ws/soap/";
+        private $_base = "http://localhost/batchelor/api/soap/";
         /**
          * The  WSDL address.
          * @var string 

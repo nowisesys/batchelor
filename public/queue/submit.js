@@ -266,7 +266,7 @@
             throw "Input data is empty";
         }
 
-        fetch('../ws/json/enqueue', {
+        fetch('../api/json/enqueue', {
             method: 'post',
             credentials: 'same-origin',
             body: JSON.stringify(data)
@@ -285,7 +285,7 @@
     }
 
     function enqueue_file(file) {
-        let url = "../ws/json/enqueue";
+        let url = "../api/json/enqueue";
         let formData = new FormData();
 
         const form = document.getElementById('submit-file').querySelector("form");

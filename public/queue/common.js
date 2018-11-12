@@ -40,7 +40,7 @@ function show_error_dialog(error) {
 // JSON encoded job identity.
 // 
 function delete_queued_job(json) {
-    fetch('../ws/json/dequeue', {
+    fetch('../api/json/dequeue', {
         method: 'post',
         credentials: 'same-origin',
         body: json

@@ -41,14 +41,14 @@ abstract class BaseCommand extends Command
         {
                 parent::configure();
 
-                $this->addOption("base", null, InputOption::VALUE_OPTIONAL, "The base URL to web services", "http://localhost/batchelor/ws");
+                $this->addOption("base", null, InputOption::VALUE_OPTIONAL, "The base URL to web services", "http://localhost/batchelor/api");
                 $this->addOption("func", null, InputOption::VALUE_REQUIRED, "Execute the named function (see --func=list)");
                 $this->addOption("file", null, InputOption::VALUE_REQUIRED, "Use file when posting data (see --post=file)");
                 $this->addOption("params", null, InputOption::VALUE_REQUIRED, "JSON-encoded function parameters (e.g. {\"result\":1234.\"jobid\":99})");
                 $this->addOption("trace", null, InputOption::VALUE_NONE, "Enable client request tracing");
                 $this->addOption("decode", null, InputOption::VALUE_OPTIONAL, "Decode response as array");
 
-                $this->addusage("--func=<method> --base=http://localhost/batchelor2/ws/soap");
+                $this->addusage("--func=<method> --base=http://localhost/batchelor2/api/soap");
         }
 
         protected function initialize(InputInterface $input, OutputInterface $output)

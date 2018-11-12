@@ -34,7 +34,7 @@ class JsonClientHandler
          * The base URL.
          * @var string 
          */
-        private $_base = "http://localhost/batchelor/ws/json/";
+        private $_base = "http://localhost/batchelor/api/json/";
         /**
          * The cURL client.
          * @var resource 

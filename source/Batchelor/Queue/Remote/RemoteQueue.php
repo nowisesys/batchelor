@@ -51,7 +51,7 @@ class RemoteQueue implements WorkQueue
         public function __construct(array $data)
         {
                 $this->_client = new JsonClientHandler();
-                $this->_client->setBase(sprintf("%s/ws/json", $data['url']));
+                $this->_client->setBase(sprintf("%s/api/json", $data['url']));
         }
 
         /**

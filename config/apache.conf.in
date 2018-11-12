@@ -21,7 +21,7 @@ RewriteCond %{REQUEST_URI} ^/(theme|assets)
 RewriteRule "(.*)" - [L]
 
 # The JSON API service:
-RewriteCond %{REQUEST_URI} ^/ws/json/
+RewriteCond %{REQUEST_URI} ^/api/json/
 RewriteRule "(.*)/([^/]+)/?" /dispatch.php?uri=$1/index&func=$2 [QSA,NE,L]
 
 # Handle index page request:
