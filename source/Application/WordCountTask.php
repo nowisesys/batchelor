@@ -25,13 +25,14 @@ use Batchelor\Queue\Task\Interaction;
 use Batchelor\Storage\Directory;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
+use InvalidArgumentException;
 
 /**
- * Example task reversing text in indata.
+ * Example task counting words in indata.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class ReverseTextTask extends Adapter
+class WordCountTask extends Adapter
 {
 
         public function execute(Directory $workdir, Directory $result, Interaction $interact)
@@ -39,39 +40,20 @@ class ReverseTextTask extends Adapter
                 // 
                 // Send an greeting. This message should end up in the task
                 // specific log file.
-                //                 
-                $interact->getLogger()->info("Hello world from reverse text");
+                // 
+                $interact->getLogger()->info("Hello world from word counter");
 
                 // 
                 // Create output file in results directory. Pick up the input
                 // prepared input data:
-                //                 
-                $file = $result->getFile("output-reverse.txt");
+                // 
+                $file = $result->getFile("output-wordcount.txt");
                 $text = $workdir->getFile("input.txt")->getContent();
 
                 // 
-                // Write task result:
+                // Write to result file that is automatic created on write.
                 // 
-                $file->putContent(strrev($text));
-
-                // 
-                // Run a sub task. Calling runTask() will run the wordcount task 
-                // processor using file as input data. Opposite to calling newTask(),
-                // this will not schedule a new job, instead the wordcount task is
-                // run in the same thread as current task.
-                // 
-                $data = new JobData($file->getPathname(), 'file', 'wordcount');
-                $interact->runTask($data);
-
-                // 
-                // This is our main task, so we should set job status when this 
-                // task has finished. Notice that calling die(), exit or throwing
-                // exceptions are supervised.
-                // 
-                // Throwing an exception in this or a child task should be trapped
-                // and set job status to error state.
-                // 
-                $interact->setStatus(JobState::SUCCESS());
+                $file->putContent(str_word_count($text));
         }
 
         public function validate(JobData $data)
@@ -84,7 +66,13 @@ class ReverseTextTask extends Adapter
         public function prepare(Directory $workdir, JobData $data)
         {
                 // 
-                // Prepare task input data.
+                // The utility method setTarget() will relocate job data into
+                // work directory (i.e. move uploaded file or download URL). Its
+                // usage is optional.
+                // 
+                // Calling getFile() creates an file object relative to the
+                // working directory that is actually not created until it's
+                // written. Here we use it just to make a file path.
                 // 
                 $file = $workdir->getFile("input.txt");
                 $data->setTarget($file->getPathname(), true);
