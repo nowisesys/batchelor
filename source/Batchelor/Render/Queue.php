@@ -20,6 +20,7 @@
 
 namespace Batchelor\Render;
 
+use Batchelor\Queue\WorkDirectory;
 use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\QueueFilterResult;
@@ -44,14 +45,13 @@ class Queue extends Component
          * Constructor.
          * @param string $template The render template.
          */
-        public function __construct(string $template)
+        public function __construct(string $template = null)
         {
                 $this->_template = $template;
         }
 
         /**
          * Render queue.
-         * 
          * @param Params $params The request parameters.
          */
         public function listJobs(Params $params)
@@ -64,22 +64,52 @@ class Queue extends Component
         }
 
         /**
-         * Render job details.
-         * 
+         * Render details view.
          * @param Params $params The request parameters.
          */
         public function showDetails(Params $params)
         {
-                $identity = JobIdentity::create([
+                $ident = JobIdentity::create([
                             'jobid'  => $params->getParam("jobid"),
                             'result' => $params->getParam("result")
                 ]);
 
                 $hostid = $this->hostid->getValue();
-                $status = $this->queue->getStatus($hostid, $identity);
-                $files = $this->queue->getReader($hostid)->getFiles($identity);
+                $status = $this->queue->getStatus($hostid, $ident);
+                $files = $this->queue->getReader($hostid)->getFiles($ident);
 
                 include($this->_template);
+        }
+
+        /**
+         * Render file preview.
+         * @param Params $params The request parameters.
+         */
+        public function showPreview(Params $params)
+        {
+                $ident = JobIdentity::create([
+                            'jobid'  => $params->getParam("jobid"),
+                            'result' => $params->getParam("result")
+                ]);
+
+                $hostid = $this->hostid->getValue();
+                $reader = $this->queue->getReader($hostid);
+
+                include($this->_template);
+        }
+
+        /**
+         * Get work directory reader.
+         * 
+         * @param Params $params The request parameters.
+         * @return WorkDirectory 
+         */
+        public function getReader(): WorkDirectory
+        {
+                $hostid = $this->hostid->getValue();
+                $reader = $this->queue->getReader($hostid);
+
+                return $reader;
         }
 
         /**
