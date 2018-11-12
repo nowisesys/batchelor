@@ -23,6 +23,7 @@ namespace Batchelor\Queue\System;
 use Batchelor\Queue\Task\Scheduler;
 use Batchelor\Queue\Task\Scheduler\StateQueue;
 use Batchelor\Queue\WorkDirectory;
+use Batchelor\Storage\Archive;
 use Batchelor\Storage\Directory;
 use Batchelor\System\Component;
 use Batchelor\WebService\Types\File;
@@ -82,12 +83,27 @@ class SystemDirectory extends Component implements WorkDirectory
          */
         public function getContent(JobIdentity $job, string $file, bool $return = true)
         {
+                $source = $this->getWorkDirectory($job->result);
+                $target = $source->getFile($file);
+
+                if ($target->isDir()) {
+                        $zipfile = $target->getParent()
+                            ->getFile(sprintf("%s.zip", $file))
+                            ->getPathname();
+
+                        $archive = new Archive($zipfile);
+                        $archive->addDirectory($source->open($file));
+                        $archive->close();
+
+                        $file = $zipfile;
+                }
+
                 if ($return) {
-                        return $this->getWorkDirectory($job->result)
+                        return $source
                                 ->getFile($file)
                                 ->getContent();
                 } else {
-                        return $this->getWorkDirectory($job->result)
+                        return $source
                                 ->getFile($file)
                                 ->sendFile();
                 }
