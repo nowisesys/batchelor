@@ -47,7 +47,7 @@ class TaskRunner extends Component
         {
                 $task = $this->getTask($runtime->data->task);
                 $logs = $this->getLogger($runtime);
-                $info = $runtime->getCallback()->getLogger();
+                $info = $runtime->getLogger();
 
                 register_shutdown_function(function() use($logs) {
                         $logs->stop();
@@ -95,7 +95,7 @@ class TaskRunner extends Component
         private function getLogger(Runtime $runtime): TaskLogger
         {
                 $logs = new TaskLogger();
-                $logs->setLogger($runtime->getCallback()->getLogger());
+                $logs->setLogger($runtime->getLogger());
                 $logs->setLogfile($runtime->getLogfile());
 
                 return $logs;

@@ -20,14 +20,13 @@
 
 namespace Batchelor\Queue\Task;
 
-use Batchelor\Logging\Format\DateTime;
 use Batchelor\Logging\Logger;
-use Batchelor\Logging\Target\Memory;
 use Batchelor\Queue\Task\Execute\Capture;
 use Batchelor\Queue\Task\Execute\Process;
 use Batchelor\Queue\Task\Execute\Selectable;
 use Batchelor\Queue\Task\Execute\Spawner;
 use Batchelor\Queue\Task\Execute\Status;
+use Batchelor\Queue\Task\Manager\Shared\TaskRunner;
 use Batchelor\Web\Download;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
@@ -40,11 +39,6 @@ use Batchelor\WebService\Types\JobState;
 class Callback implements Interaction
 {
 
-        /**
-         * The message logger.
-         * @var Logger 
-         */
-        private $_logger;
         /**
          * The scheduler object.
          * @var Scheduler 
@@ -62,7 +56,6 @@ class Callback implements Interaction
          */
         public function __construct(Runtime $runtime)
         {
-                $this->_logger = $this->useLogger();
                 $this->_scheduler = new Scheduler();
                 $this->_runtime = $runtime;
         }
@@ -88,7 +81,7 @@ class Callback implements Interaction
          */
         public function getLogger(): Logger
         {
-                return $this->_logger;
+                return $this->_runtime->getLogger();
         }
 
         /**
@@ -96,19 +89,7 @@ class Callback implements Interaction
          */
         public function setLogger(Logger $logger)
         {
-                $this->_logger = $logger;
-        }
-
-        /**
-         * Create message logger.
-         * @return Memory
-         */
-        private function useLogger()
-        {
-                return new Memory([
-                        'expand'   => "@datetime@: @message@ (@priority@)",
-                        'datetime' => DateTime::FORMAT_HUMAN
-                ]);
+                $this->_runtime->setLogger($logger);
         }
 
         /**
@@ -116,7 +97,9 @@ class Callback implements Interaction
          */
         public function runCommand(string $cmd, array $env = null, string $cwd = null): Status
         {
-                return Capture::create($this->_logger, $cmd, $env, $cwd)->execute();
+                return Capture::create(
+                        $this->_runtime->getLogger(), $cmd, $env, $cwd
+                    )->execute();
         }
 
         /**
@@ -149,6 +132,19 @@ class Callback implements Interaction
         protected function onTaskPush(JobData $data)
         {
                 $this->_scheduler->pushJob($this->_runtime->hostid, $data);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function runTask(JobData $data)
+        {
+                $runtime = clone $this->_runtime;
+                $runtime->data = $data;
+                $runtime->setLogger($runtime->useLogger());
+
+                $runner = new TaskRunner();
+                $runner->runTask($runtime);
         }
 
 }

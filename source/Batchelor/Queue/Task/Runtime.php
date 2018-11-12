@@ -20,6 +20,9 @@
 
 namespace Batchelor\Queue\Task;
 
+use Batchelor\Logging\Format\DateTime;
+use Batchelor\Logging\Logger;
+use Batchelor\Logging\Target\Memory;
 use Batchelor\Queue\System\SystemDirectory;
 use Batchelor\Storage\Directory;
 use Batchelor\Storage\File;
@@ -34,6 +37,11 @@ use RuntimeException;
 class Runtime
 {
 
+        /**
+         * The message logger.
+         * @var Logger 
+         */
+        private $_logger;
         /**
          * The job ID.
          * @var string 
@@ -75,6 +83,8 @@ class Runtime
                 $this->data = $data;
                 $this->hostid = $hostid;
                 $this->result = $result;
+
+                $this->_logger = $this->useLogger();
         }
 
         /**
@@ -132,16 +142,41 @@ class Runtime
          */
         public function getCallback(): Callback
         {
-                return $this->_callback;
+                return new Callback($this);
         }
 
         /**
-         * Set callback for task interaction.
-         * @param Callback $callback The callback object.
+         * Get message logger.
+         * @return Logger The message logger.
          */
-        public function setCallback(Callback $callback)
+        public function getLogger(): Logger
         {
-                $this->_callback = $callback;
+                return $this->_logger;
+        }
+
+        /**
+         * Set message logger.
+         * 
+         * Call this method to replace the default in memory logger with for 
+         * example a file logger or syslog.
+         * 
+         * @param Logger $logger The message logger.
+         */
+        public function setLogger(Logger $logger)
+        {
+                $this->_logger = $logger;
+        }
+
+        /**
+         * Create message logger.
+         * @return Memory
+         */
+        public function useLogger()
+        {
+                return new Memory([
+                        'expand'   => "@datetime@: @message@ (@priority@)",
+                        'datetime' => DateTime::FORMAT_HUMAN
+                ]);
         }
 
 }

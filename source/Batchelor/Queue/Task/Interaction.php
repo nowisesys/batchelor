@@ -114,6 +114,17 @@ interface Interaction
         function newTask(JobData $data);
 
         /**
+         * Run child task.
+         * 
+         * The task is run as a child task of current task. No job is added in 
+         * the scheduler. Current task has to wait for child task to complete
+         * before continue.
+         * 
+         * @param JobData $data The job data.
+         */
+        function runTask(JobData $data);
+
+        /**
          * Get downloader for URL.
          * @param string $url The target url.
          */

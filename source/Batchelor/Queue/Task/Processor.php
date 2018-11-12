@@ -232,7 +232,6 @@ class Processor extends Component implements Daemonized
         {
                 if (($runtime = $scheduler->popJob())) {
                         $logger->info("Running job %s", [$runtime->job]);
-                        $runtime->setCallback(new Callback($runtime));
                         $manager->addJob($runtime);
                 }
         }
