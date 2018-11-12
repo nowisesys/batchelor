@@ -1,0 +1,15 @@
+<?php
+
+return array(
+        'head' => _('Tasks'),
+        'data' => array(
+                'Process'  => 'process',
+                'Command'  => 'command',
+                'Worker'   => 'worker',
+                'Monitor'  => 'monitor',
+                'Capture'  => 'capture',
+                false,
+                'Expect'   => 'expect',
+                'Interact' => 'interact'
+        )
+);

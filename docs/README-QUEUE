@@ -1,0 +1,70 @@
+
+    ************************************
+        README FOR WORK QUEUES
+    ************************************
+
+
+Work queues are configured in config/defaults.app and can be a mixture of local
+and remote queues. The queue service is divided in two pieces (maper and queues),
+each can be configured individual.
+
+** LOCAL QUEUE:
+
+    The minimal configuration is an empty array, boolean true or simple comment 
+    the queue setting away:
+
+        'queue'   => []     // Use local queue
+        'queue'   => true   // Use local queue
+
+    This will create a local only queue. For many applications this is all that
+    is needed.
+
+** MAPPER:
+
+    The mapper component resolves hostid to remote queues. A local queue might 
+    also be mapped, but when using remote queues its best to not define an local
+    queue.
+
+    The resolve data is saved to cache and you can use the mapper options to 
+    control how cache data is stored:
+
+        'cache'   => [
+                'mapper' => [
+                        'type'    => 'redis',
+                        'options' => [
+                                'lifetime' => 0
+                        ]
+                ],
+               ...
+        ]
+
+    In this configuration we are using Redis as cache backend (hopefully setup
+    in database mode to preserve data between restarts). The default mapper is
+    using file cache as backend storing data under cache/queue inside the data
+    directory.
+
+** REMOTE:
+
+    Use the queues option to configure remote queues. 
+
+        'queue'   => [
+               ...
+                'host1' => [
+                        'type'   => 'remote',
+                        'url'    => 'http://server1.example.com/batchelor',
+                        'weight' => 25
+                ],
+                'host2' => [
+                        'type'   => 'remote',
+                        'url'    => 'http://server1.example.com/batchelor',
+                        'weight' => 40
+                ],
+               ...
+        ]
+
+    The weight is used to make one remote server more likely to be selected as
+    the work queue. The URL is the top directory where batchelor is setup. The
+    protocol used for communication is automatic selected.
+
+
+// Anders Lövgren, 2018-09-17

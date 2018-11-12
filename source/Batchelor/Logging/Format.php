@@ -1,0 +1,63 @@
+<?php
+
+/*
+ * Copyright (C) 2018 Anders Lövgren (Nowise Systems)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+namespace Batchelor\Logging;
+
+use Batchelor\Logging\Format\DateTime;
+
+/**
+ * The message formatter.
+ * 
+ * Defines the interface for message formating. The array passed to getMessage() 
+ * has this format:
+ * 
+ * <code>
+ * $input = [
+ *      'stamp'    => 1536684825,
+ *      'ident'    => 'batchelor',
+ *      'pid'      => 4736,
+ *      'priority' => 6,
+ *      'message'  => 'hello world!'
+ * ];
+ * </code>
+ * 
+ * @author Anders Lövgren (Nowise Systems)
+ */
+interface Format
+{
+
+        /**
+         * Get formatted message.
+         * @param array $input The message options.
+         */
+        function getMessage(array $input): string;
+
+        /**
+         * Set datetime formatter.
+         * @param DateTime $format The datetime formatter.
+         */
+        function setDateTime(DateTime $format);
+
+        /**
+         * Get datetime formatter.
+         * @return DateTime
+         */
+        function getDateTime(): DateTime;
+}

@@ -1,0 +1,110 @@
+
+    ************************************
+        README FOR SCHEDULER
+    ************************************
+
+
+This is somewhat technical document that describes the architecture of the job
+scheduler responsible for queue jobs, running them and report results (the current
+state) on client request.
+
+** WARNING:
+
+    This document contains draft for upcoming features. Running sub tasks is not
+    yet implemented by calling addJob() from a task. It's already possible to run
+    sub task, but it has to be handled manual from a task: 
+
+        Inside the task execute() method, create new sub task and exeute them by 
+        calling their lifetime methods().
+
+    The idea of spawning sub tasks might require some effort to maintain the 
+    relation with the parent job.
+
+** STATE QUEUES:
+
+    Each job is in one of three states: pending, running or finished. Along with 
+    these three state queue theres also user defined queues. All jobs belongs at 
+    any time to one of the state queues and one user queue. 
+
+    It's the schedulers responsibility to maintain and coordinate transitions between 
+    state queues and keeping the job state in sync. When executing sub tasks, these
+    do not show up as jobs in the user queue, but are visible during their lifetime
+    in the pending, running and finished queue.
+
+** TASK MANAGER:
+
+    The actual execution of jobs are delegated to the task manager (threaded or 
+    preforked) that consumes jobs from the schedulers pending queue and executes 
+    them. The executed task gets a callback object that can be used to interact
+    with the schedulers (report state and start sub jobs).
+
+** JOBS:
+
+    A job is something put on the schedulers pending queue to run a task. Each task 
+    that is executed is excpected to process input data and report back the state,
+    hopefully successful.
+
+** TASK GROUPS:
+
+    The motivations for task groups is primarly to support running parallell jobs, 
+    but also to support chaning task in a pipeline. While adding support for task
+    groups theres also arise a need to synchronize jobs.
+
+    o) SINGLE:
+
+    In its simplest form, a job consists of just a single task that when finished
+    transition to job state from running to finished. 
+
+        job:task (type1) -> finished
+
+    o) PARALLELL:
+
+    A executing task might need to split indata into smaller chunks that is run
+    in parallell, were the task spawning the sub tasks wait for all of them to
+    complete or one of them to fail.
+
+        job:task (type1)
+            +-- task1 (type2)
+            +-- task2 (type2)
+           ...
+            +-- taskN (type2)
+
+    The job task (top level) is typical chosing to wait for sub tasks to complete
+    before continue in which case the job state is set to waiting. Waiting is 
+    optional and not required. The scheduler will in non-waiting mode make its best 
+    to properly report state back if a sub task fails.
+
+    o) PIPELINE:
+
+    In pipeline mode, the task is adding another task to execute. This mode is
+    useful when each task is feeding input thru an extern program that produce
+    output to be input for another task running a second program.
+
+        job:task (type1)
+            +-- task1 (type2)
+                    +-- task2 (type3)
+                            +-- task3 (type4) -> finished
+
+    Whether the job task (top level) or the last task (task3) is setting the
+    finished status is up to the application to decide.
+
+    o) MIXING:
+
+    It's of course possible to mix parallell and pipeline mode to build complex
+    trees of sub tasks executing. For example transcoding video might be split
+    into smaller sub tasks that is then assembled together:
+
+        job:task (transcode)
+            +-- encode (run parallell tasks)
+                   +-- encoder
+                   +-- encoder
+           ...
+            +-- assemble (wait for encode)
+
+** WORK DIRECTORY:
+
+    The job task and sub tasks is all executing in the same work directory so
+    they have access to each others data.
+
+
+// Anders Lövgren, 2018-10-28

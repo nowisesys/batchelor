@@ -1,0 +1,21 @@
+<?php
+
+return array(
+        'head' => _('Cache'),
+        'data' => array(
+                'File'      => 'file',
+                'Memory'    => 'memory',
+                'APCu'      => 'apcu',
+                'XCache'    => 'xcache',
+                'Memcached' => 'memcached',
+                'Redis'     => 'redis',
+                false,
+                'ShmOp'     => 'shmop',
+                'Stacked'   => 'stacked',
+                'Detected'  => 'detect',
+                false,
+                'Generator' => 'generator',
+                'Frontend'  => 'frontend',
+                'Service'   => 'service'
+        )
+);

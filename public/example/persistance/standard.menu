@@ -1,0 +1,11 @@
+<?php
+
+return array(
+        'head' => _('Persistance'),
+        'data' => array(
+                'Cookie Class'    => 'cookie',
+                'Cookie Storage'  => 'cookie-storage',
+                'Session Class'   => 'session',
+                'Session Storage' => 'session-storage'
+        )
+);

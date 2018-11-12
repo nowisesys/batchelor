@@ -1,0 +1,15 @@
+<?php
+
+return array(
+        'head' => _('Examples'),
+        'data' => array(
+                'Service'     => 'service',
+                'Persistance' => 'persistance',
+                'Storage'     => 'storage',
+                'Cache'       => 'cache',
+                'Logging'     => 'logging',
+                'Tasks'       => 'task',
+                'Queue'       => 'queue',
+                'Reflection'  => 'reflection'
+        )
+);

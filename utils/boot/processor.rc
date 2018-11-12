@@ -1,0 +1,38 @@
+#!/bin/sh
+# Start/stop/restart batchelor-processor (the scheduled job processor):
+
+options="--user=batchelor --group=batchelor --pidfile=/var/run/batchelor.pid"
+
+# Start batchelor-processor:
+batchelor-processor_start() {
+  if [ -x /usr/local/bin/batchelor-processor ]; then
+    echo "Starting batchelor-processor:  /usr/local/bin/batchelor-processor"
+    /usr/local/bin/batchelor-processor $options
+  fi
+}
+
+# Stop batchelor-processor:
+batchelor-processor_stop() {
+  killall batchelor-processor
+}
+
+# Restart batchelor-processor:
+batchelor-processor_restart() {
+  batchelor-processor_stop
+  sleep 1
+  batchelor-processor_start
+}
+
+case "$1" in
+'start')
+  batchelor-processor_start
+  ;;
+'stop')
+  batchelor-processor_stop
+  ;;
+'restart')
+  batchelor-processor_restart
+  ;;
+*)
+  echo "usage rc.batchelor-processor: start|stop|restart"
+esac

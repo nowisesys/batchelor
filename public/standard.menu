@@ -1,0 +1,14 @@
+<?php
+
+use UUP\Site\Page\Web\Component\Link;
+
+return array(
+        'head' => _('Batchelor'),
+        'data' => array(
+                _('Queue')  => 'queue/?sort=state&filter=recent',
+                _('Submit') => 'queue/submit',
+                Link::SEPARATOR,
+                _('Help')   => 'help',
+                _('About')  => 'about',
+        )
+);

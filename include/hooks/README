@@ -1,5 +1,0 @@
-Examples of how to use the user defined hook functions defined in
-include/hooks.inc to customize how batchelor works. Most installations 
-should at least define pre_enqueue_hook() to do indata validation.
-
-// Anders L, 2009-03-17

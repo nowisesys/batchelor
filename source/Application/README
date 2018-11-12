@@ -1,0 +1,21 @@
+Example tasks for debugging purpose. Please replace these with your own that you 
+register with processor service in config/services.
+
+These examples might seem tedious because they are using the OOP interface for
+directory/file operations and running task. Feel free to use standard PHP functions
+instead.
+
+The job directory is organized as:
+
+    jobdir/
+      +-- result        // save results here
+      +-- task1         // the work directory for task1
+      +-- task2         // the work directory for task2
+     ...
+      +-- taskN         // the work directory for taskN
+
+If same task is run multiple times in same executed job instance (same enqeueued
+job), make sure to create sub directories under the work directory or use some
+naming convention i.e. for task log files.
+
+// Anders Lövgren, 2018-11-12

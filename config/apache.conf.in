@@ -1,0 +1,34 @@
+# 
+# Support for page routing. 
+# 
+# Include in virtual host or configuration file for a web application. The same 
+# file can be included in multiple locations. For development or testing it's 
+# easier to use the htaccess-file found in the public directory.
+# 
+# Author: Anders Lövgren
+# Date:   2017-09-09
+# 
+
+# Allow access from localhost and private network:
+Require local
+Require ip 192.168.
+
+# Enable URL rewrite:
+RewriteEngine on
+
+# Exclude static content:
+RewriteCond %{REQUEST_URI} ^/(theme|assets)
+RewriteRule "(.*)" - [L]
+
+# The JSON API service:
+RewriteCond %{REQUEST_URI} ^/api/json/
+RewriteRule "(.*)/([^/]+)/?" /dispatch.php?uri=$1/index&func=$2 [QSA,NE,L]
+
+# Handle index page request:
+RewriteCond %{REQUEST_FILENAME} ^.*/$
+RewriteRule "^(.*)$" /dispatch.php?uri=$1index [QSA,L]
+
+# Route all page request to dispatcher:
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule "^(.*)$" /dispatch.php?uri=$1 [QSA,L]

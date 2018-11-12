@@ -1,0 +1,14 @@
+<?php
+
+return array(
+        'head' => _('Queue'),
+        'data' => array(
+                'Add job'     => 'add',
+                'Remove job'  => 'remove',
+                'Show status' => 'status',
+                'Insert jobs' => 'insert',
+                'List jobs'   => 'list',
+                'Get jobs'    => 'jobs',
+                'List files'  => 'files'
+        )
+);

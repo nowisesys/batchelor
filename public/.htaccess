@@ -1,0 +1,24 @@
+#
+# Configured for batchelor installed under location /batchelor2. Change the 
+# location to match your setup.
+# 
+
+# Enable URL rewrite:
+RewriteEngine on
+
+# Exclude static content:
+RewriteCond %{REQUEST_URI} ^/batchelor2/(theme|assets)
+RewriteRule "(.*)" - [L]
+
+# The JSON API service:
+RewriteCond %{REQUEST_URI} ^/batchelor2/api/json/
+RewriteRule "(.*)/([^/]+)/?" /batchelor2/dispatch.php?uri=$1/index&func=$2 [QSA,NE,L]
+
+# Handle index page request:
+RewriteCond %{REQUEST_FILENAME} ^.*/$
+RewriteRule "^(.*)$" /batchelor2/dispatch.php?uri=$1index [QSA,L]
+
+# Route all page request to dispatcher:
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule "^(.*)$" /batchelor2/dispatch.php?uri=$1 [QSA,L]

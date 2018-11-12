@@ -1,4 +1,6 @@
-* Publish XML schema for the REST service:
-  define("WS_REST_SCHEMA_URL", "http://it.bmc.uu.se/batchelor/rest/200801");
+* Rename web service directory ws -> api
 
-* Check the meaning of $status = true in ws/xmlrpc.
+* Callback::setLogger(): Needs to work with non-memory logger.
+
+* Add user service (logger on user) by injecting object into services from 
+  controllers (public service and page controllers).

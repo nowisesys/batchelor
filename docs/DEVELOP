@@ -1,0 +1,62 @@
+
+    ************************************
+        DEVELOPER NOTES
+    ************************************
+
+** COMPOSER:
+
+   The composer-dev.json can be used for development of required packages used 
+   by this web application. It creates symbolic links under vendor linking the 
+   checked out trunks.
+
+        bash batchelor2 $ COMPOSER=composer-dev.json composer update
+        Loading composer repositories with package information
+        Updating dependencies (including require-dev)
+        Package operations: 2 installs, 0 updates, 0 removals
+          - Installing bmc/uup-site (1.0.22): Symlinking from ../uup-site
+          - Installing bmc/uup-soap (1.1.5): Symlinking from ../uup-soap
+        bmc/uup-site suggests installing bmc/uup-html (>=1.0.5)
+        Generating autoload files
+
+   The uup-soap package used should now be from SVN trunk instead of using the
+   composer package:
+   
+        bash batchelor2 $ svn info vendor/bmc/uup-soap | grep ^URL
+        URL: svn://svn.unix.qnet/uup-soap/trunk
+
+** SYNCHRONIZE:
+
+    Queue data and counters are protected by synchronize objects because multiple 
+    processes/threads might try to read/write the same queue at same time. The
+    sync extension is used for this:
+
+        http://php.net/manual/en/class.syncreaderwriter.php
+
+    Write locks has exclusive rights meaning that all other read/write locks will 
+    blocked until the lock is released. A write lock will also block while there 
+    are read locks acquired.
+
+    Notice that aquire the same lock twice from same thread will probably render 
+    the lock unusable for all time until cleanup. The calling thread will in this 
+    case block infinite.
+
+    The usage pattern should be along these lines to ensure locks are released 
+    even if exceptions are thrown:
+
+        function insert($data) 
+        {
+                $sync = new SyncReaderWriter("mylock");
+
+                try {
+                        $sync->writelock();
+                        return $cache->insert($data);   // Might throw exception
+                } finally {
+                        $sync->writeunlock();           // Allways executed
+                }
+        }
+
+    All synchronizer objects should be created with auto unlock (second argument 
+    for constructor) to ensure acquired locks are release if the script termnates
+    by i.e. calling exit().
+
+// Anders Lövgren, 2018-08-09

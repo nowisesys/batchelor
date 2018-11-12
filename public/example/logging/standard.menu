@@ -1,0 +1,21 @@
+<?php
+
+return array(
+        'head' => _('Logging'),
+        'data' => array(
+                'Simple'      => 'simple',
+                'Memory'      => 'memory',
+                'Syslog'      => 'syslog',
+                'Stream'      => 'stream',
+                'File'        => 'file',
+                'Request'     => 'request',
+                'Multiplexer' => 'multiplexer',
+                'Priority'    => 'priority',
+                'Files'       => 'files',
+                false,
+                'Buffer'      => 'buffer',
+                'Threshold'   => 'threshold',
+                false,
+                'Service'     => 'service'
+        )
+);
