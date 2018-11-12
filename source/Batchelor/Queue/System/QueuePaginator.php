@@ -170,6 +170,12 @@ class QueuePaginator
                                 }
                         case QueueSortResult::NAME:
                                 if (!usort($queued, static function($a, $b) {
+                                            if (!isset($a->submit->name)) {
+                                                    return 1;
+                                            }
+                                            if (!isset($b->submit->name)) {
+                                                    return -1;
+                                            }
                                             return strcmp($a->submit->name, $b->submit->name);
                                     })) {
                                         throw new RuntimeException("Failed sort state queue result");
@@ -178,7 +184,13 @@ class QueuePaginator
                                 }
                         case QueueSortResult::STARTED:
                                 if (!usort($queued, static function($a, $b) {
-                                            return strcmp($a->identity->jobid, $b->identity->jobid);
+                                            if (!isset($a->status->started)) {
+                                                    return 1;
+                                            }
+                                            if (!isset($b->status->started)) {
+                                                    return -1;
+                                            }
+                                            return strtotime($a->status->started->date) < strtotime($b->status->started->date);
                                     })) {
                                         throw new RuntimeException("Failed sort state queue result");
                                 } else {
