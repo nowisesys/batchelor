@@ -217,4 +217,64 @@ class File extends SplFileInfo
                 }
         }
 
+        /**
+         * Get source code language.
+         * 
+         * Detect coding language from file extension. Returns empty for plain
+         * text files and file extension for unmapped alternatives.
+         * 
+         * @return string 
+         */
+        public function getLanguage(): string
+        {
+                switch ($this->getExtension()) {
+                        case 'html':
+                                return "html";
+                        case 'css':
+                                return "css";
+                        case 'js':
+                                return "javascript";
+                        case 'php':
+                        case 'inc':
+                                return "php";
+                        case 'c++':
+                        case 'cpp':
+                        case 'cxx':
+                        case 'h++':
+                        case 'hpp':
+                        case 'hxx':
+                                return "c++";
+                        case 'c':
+                        case 'C':
+                        case 'h':
+                                return "c";
+                        case 'cs':
+                                return "cs";
+                        case 'py':
+                                return "python";
+                        case 'pl':
+                                return "perl";
+                        case 'bash':
+                        case 'sh':
+                                return "bash";
+                        case 'csh':
+                                return "bash";
+                        case 'tcsh':
+                                return "bash";
+                        case 'diff':
+                        case 'patch':
+                                return "diff";
+                        case 'cron':
+                                return "bash";
+                        case 'txt':
+                        case 'text':
+                                return "text";
+                        case 'ascii':
+                        case 'asciidoc':
+                                return "asciidoc";
+                        default:
+                                return $this->getExtension();
+                }
+        }
+
 }
