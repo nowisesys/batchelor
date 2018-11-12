@@ -23,6 +23,7 @@ namespace Batchelor\Console\Scheduler;
 use Batchelor\Logging\Target\File as FileLogger;
 use Batchelor\Queue\Task\Processor;
 use Batchelor\System\Process\Runner;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -100,6 +101,10 @@ class ProcessorCommand extends Command
                 }
                 if ($input->getOption("quiet") || $output->isQuiet()) {
                         $daemon->getLogger()->setThreshold(LOG_NOTICE);
+                }
+
+                if (!cli_set_process_title("batchelor: scheduled job processor")) {
+                        throw new RuntimeException("Failed set process title");
                 }
 
                 $daemon->execute();
