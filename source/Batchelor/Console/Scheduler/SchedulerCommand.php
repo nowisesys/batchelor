@@ -50,6 +50,7 @@ class SchedulerCommand extends Command
                 $this->addOption("running", "R", InputOption::VALUE_NONE, "List running jobs");
                 $this->addOption("finished", "F", InputOption::VALUE_NONE, "List finished jobs");
                 $this->addOption("all", "A", InputOption::VALUE_NONE, "List all jobs (pending, running and finished)");
+                $this->addOption("queue", "Q", InputOption::VALUE_REQUIRED, "Limit listing to given queue");
 
                 $this->addOption("add", "a", InputOption::VALUE_REQUIRED, "Add job to scheduler");
                 $this->addOption("remove", "r", InputOption::VALUE_REQUIRED, "Delete job to scheduler");
@@ -58,7 +59,7 @@ class SchedulerCommand extends Command
                 $this->addOption("task", "T", InputOption::VALUE_REQUIRED, "Use task as job processor");
                 $this->addOption("name", "N", InputOption::VALUE_REQUIRED, "Use optional name for job");
 
-                $this->addusage("--list [--pending] [--running] [--finished] [-v]");
+                $this->addusage("--list [--pending] [--running] [--finished] [--queue=id] [-v]");
                 $this->addusage("--add=data [--task=name] [--name=str]|--remove=jobid|--show=jobid");
                 $this->addusage("--example={add|remove|show}");
         }
@@ -94,7 +95,7 @@ class SchedulerCommand extends Command
                 $scheduler = new Scheduler();
                 $summary = $scheduler->getSummary();
 
-                $output->writeln("Summary");
+                $output->writeln("Summary (all queues)");
                 $output->writeln("-----------------------------");
                 $output->writeln(sprintf("\tTimezone: %s", $summary->timezone));
                 $output->writeln(sprintf("\t Pending: %s", $summary->pending));
@@ -105,6 +106,11 @@ class SchedulerCommand extends Command
                         $input->setOption("pending", true);
                         $input->setOption("running", true);
                         $input->setOption("finished", true);
+                }
+
+                if ($input->getOption("queue")) {
+                        $this->listQueue($output, $scheduler->getQueue($input->getOption("queue")));
+                        return;
                 }
 
                 if ($input->getOption("pending") || $output->isVerbose()) {
