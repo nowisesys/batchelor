@@ -57,11 +57,16 @@ class TaskRunner extends Component
                 try {
                         $logs->start();
 
-                        $workerdir = $runtime->getWorkDirectory()->create($runtime->data->task);
-                        $resultdir = $runtime->getResultDirectory();
+                        $workdir = $runtime
+                            ->getWorkDirectory()
+                            ->create($runtime->data->task);
 
+                        $results = $runtime
+                            ->getResultDirectory()
+                            ->create();
+                        
                         $info->info("Preparing runtime data");
-                        $task->prepare($workerdir, $runtime->data);
+                        $task->prepare($workdir, $runtime->data);
 
                         $info->info("Validating runtime data");
                         $task->validate($runtime->data);
@@ -70,12 +75,12 @@ class TaskRunner extends Component
                         $task->initialize();
 
                         $info->info("Execute task for job %s", [$runtime->data->name]);
-                        $task->execute($workerdir, $resultdir, $runtime->getCallback());
+                        $task->execute($workdir, $results, $runtime->getCallback());
 
                         $info->info("Finished running task");
                         $task->finished();
 
-                        $workerdir
+                        $workdir
                             ->getFile("indata.ser")
                             ->putContent(serialize($runtime->data));
                 } catch (Throwable $exception) {
@@ -95,6 +100,7 @@ class TaskRunner extends Component
         private function getLogger(Runtime $runtime): TaskLogger
         {
                 $logs = new TaskLogger();
+
                 $logs->setLogger($runtime->getLogger());
                 $logs->setLogfile($runtime->getLogfile());
 

@@ -45,7 +45,7 @@ class ReverseTextTask extends Adapter
                 // 
                 // Create output file in results directory. Pick up the input
                 // prepared input data:
-                //                 
+                // 
                 $file = $result->getFile("output-reverse.txt");
                 $text = $workdir->getFile("input.txt")->getContent();
 
@@ -60,7 +60,10 @@ class ReverseTextTask extends Adapter
                 // this will not schedule a new job, instead the wordcount task is
                 // run in the same thread as current task.
                 // 
-                $data = new JobData($file->getPathname(), 'file', 'wordcount');
+                // We're using pipe to signal that file should be symlinked instead 
+                // of moved if setTarget() is called.
+                // 
+                $data = new JobData($file->getPathname(), 'pipe', 'wordcount');
                 $interact->runTask($data);
 
                 // 

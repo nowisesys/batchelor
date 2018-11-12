@@ -29,7 +29,8 @@ use RuntimeException;
  * The job data (indata) class.
  * 
  * Represent data used as input for an scheduled job. The job data can be plain 
- * data, an file already on server or an download URL. 
+ * data, an file already on server or an download URL. The pipe is a special case
+ * for pipeline output from one task as input to another.
  * 
  * The data is procesed by the task manager. It's the responsibility of the task 
  * to download from an URL and authenticate if required for access. Logon context
@@ -53,7 +54,7 @@ class JobData
          */
         public $data;
         /**
-         * The data type (either "data", "file" or "url").
+         * The data type (either "data", "file", "pipe" or "url").
          * @var string 
          */
         public $type;
@@ -71,8 +72,8 @@ class JobData
         /**
          * Constructor.
          * 
-         * @param string $data The job data (plain data or an URL).
-         * @param string $type The data type (either "data" or "url").
+         * @param string $data The job data (plain data, file path or an URL).
+         * @param string $type The data type (either "data", "file" "pipe" or "url").
          * @param string $task The optional task processor (i.e. "default").
          * @param string $name The optional task name.
          */
@@ -113,9 +114,9 @@ class JobData
          * Save/move job data.
          * 
          * If type is data, then save content to path. If type is file, then move
-         * file to path. If type is url, then download the content. Pass chunked
-         * equals true as second argement when dealing with downlad of big source 
-         * files.
+         * file to path. If type is pipe, then symlink file as path. If type is 
+         * url, then download the content. Pass chunked as true in second argument 
+         * when dealing with downlad of big source files.
          * 
          * If successful, the type and data in this object is updated to reflect 
          * the passed target path. 
@@ -134,6 +135,11 @@ class JobData
                         case 'file':
                                 if (!rename($this->data, $path)) {
                                         throw new RuntimeException("Failed rename file to $path");
+                                }
+                                break;
+                        case 'pipe':
+                                if (!symlink($this->data, $path)) {
+                                        throw new RuntimeException("Failed symlink file as $path");
                                 }
                                 break;
                         case 'url':
