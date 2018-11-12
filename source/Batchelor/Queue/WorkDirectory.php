@@ -20,6 +20,7 @@
 
 namespace Batchelor\Queue;
 
+use Batchelor\WebService\Types\File;
 use Batchelor\WebService\Types\JobIdentity;
 
 /**
@@ -39,7 +40,7 @@ interface WorkDirectory
         /**
          * Get job files.
          * @param JobIdentity $job The job identity.
-         * @return string[]
+         * @return File[]
          */
         function getFiles(JobIdentity $job);
 
@@ -47,7 +48,9 @@ interface WorkDirectory
          * Get file content.
          * 
          * Read single file from the job identified by the job argument. Returns 
-         * file content as string or send content to stdout.
+         * file content as string or send content to stdout along with suitable
+         * HTTP headers for tigger file download. The return value is null when
+         * sending file.
          * 
          * @param JobIdentity $job The job identity.
          * @param string $file The file to read.

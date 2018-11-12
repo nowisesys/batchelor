@@ -22,6 +22,7 @@ namespace Batchelor\WebService\Common;
 
 use Batchelor\Queue\WorkDirectory;
 use Batchelor\System\Component;
+use Batchelor\WebService\Types\File;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
@@ -183,7 +184,7 @@ class ServiceBackend extends Component
          * with the job identity object.
          * 
          * @param JobIdentity $job The job identity.
-         * @return string[]
+         * @return File[]
          */
         public function readdir(JobIdentity $job)
         {

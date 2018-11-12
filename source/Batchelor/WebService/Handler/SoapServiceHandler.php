@@ -21,6 +21,7 @@
 namespace Batchelor\WebService\Handler;
 
 use Batchelor\WebService\Common\ServiceBackend;
+use Batchelor\WebService\Types\File;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobIdentity;
 use Batchelor\WebService\Types\JobStatus;
@@ -47,6 +48,21 @@ use UUP\WebService\Soap\SoapHandler;
  * 
  * <code>
  * // 
+ * // Queued jobs can be listed by calling queue(). Jobs are enqueue (scheduled 
+ * // for later execution) by calling enqueue:
+ * // 
+ * $queued = $proxy->enqueue($job);
+ * 
+ * // 
+ * // The queued job returned contains the identity that can be used i.e. when
+ * // removing a job:
+ * // 
+ * $proxy->dequeue($queued->identity);
+ * 
+ * </code>
+ * 
+ * <code>
+ * // 
  * // The three methods opendid(), readdir() and fopen() can be used to create
  * // explorer-like interfaces. This code can be used to download all files in
  * // from a job queue:
@@ -56,7 +72,6 @@ use UUP\WebService\Soap\SoapHandler;
  *              $this->save($filename, $proxy->fopen($identity, $filename));
  *      }
  * }
- * $proxy->enqueue($job);
  * </code>
  *
  * @since 2.0.x Clients based on 1.0 API need to update.
@@ -178,7 +193,7 @@ class SoapServiceHandler implements SoapHandler
          * with the job identity object.
          * 
          * @param JobIdentity $job The job identity.
-         * @return string[]
+         * @return File[]
          */
         public function readdir(JobIdentity $job)
         {

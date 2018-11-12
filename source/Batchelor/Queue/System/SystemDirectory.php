@@ -25,6 +25,7 @@ use Batchelor\Queue\Task\Scheduler\StateQueue;
 use Batchelor\Queue\WorkDirectory;
 use Batchelor\Storage\Directory;
 use Batchelor\System\Component;
+use Batchelor\WebService\Types\File;
 use Batchelor\WebService\Types\JobIdentity;
 
 /**
@@ -79,7 +80,7 @@ class SystemDirectory extends Component implements WorkDirectory
         /**
          * {@inheritdoc}
          */
-        public function getContent(JobIdentity $job, string $file, bool $return = true): string
+        public function getContent(JobIdentity $job, string $file, bool $return = true)
         {
                 if ($return) {
                         return $this->getWorkDirectory($job->result)
@@ -95,10 +96,17 @@ class SystemDirectory extends Component implements WorkDirectory
         /**
          * {@inheritdoc}
          */
-        public function getFiles(JobIdentity $job)
+        public function getFiles(JobIdentity $job, array $result = [])
         {
-                return $this->getWorkDirectory($job->result)
-                        ->scan();
+                $workdir = $this->getWorkDirectory($job->result);
+
+                foreach ($workdir->scan() as $filename) {
+                        $result[] = File::create(
+                                $filename, $workdir->getFile($filename)
+                        );
+                }
+
+                return $result;
         }
 
         /**
@@ -106,13 +114,13 @@ class SystemDirectory extends Component implements WorkDirectory
          */
         public function getJobs()
         {
-                $identities = [];
+                $result = [];
 
                 foreach ($this->getQueue() as $jobid => $state) {
-                        $identities[] = new JobIdentity($jobid, $state->result);
+                        $result[] = new JobIdentity($jobid, $state->result);
                 }
 
-                return $identities;
+                return $result;
         }
 
         /**
