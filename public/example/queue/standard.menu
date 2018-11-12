@@ -9,5 +9,6 @@ return array(
                 'Insert jobs' => 'insert',
                 'List jobs'   => 'list',
                 'Get jobs'    => 'jobs',
+                'List files'  => 'files'
         )
 );
