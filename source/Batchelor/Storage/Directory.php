@@ -488,4 +488,46 @@ class Directory implements IteratorAggregate
                 return $archive;
         }
 
+        /**
+         * Copy file from source to target.
+         * 
+         * @param string $source The source file.
+         * @param string $target The target file.
+         * @param bool $overwrite Overwrite existing file.
+         * @throws RuntimeException
+         */
+        public function copy(string $source, string $target, bool $overwrite = true)
+        {
+                $source = $this->getFile($source);
+                $target = $this->getFile($target);
+
+                if ($target->isFile() && $overwrite == false) {
+                        throw new RuntimeException("The target file exists");
+                }
+                if (!copy($source->getPathname(), $target->getPathname())) {
+                        throw new RuntimeException("Failed copy file");
+                }
+        }
+
+        /**
+         * Move file from source to target.
+         * 
+         * @param string $source The source file.
+         * @param string $target The target file.
+         * @param bool $overwrite Overwrite existing file.
+         * @throws RuntimeException
+         */
+        public function rename(string $source, string $target, bool $overwrite = true)
+        {
+                $source = $this->getFile($source);
+                $target = $this->getFile($target);
+
+                if ($target->isFile() && $overwrite == false) {
+                        throw new RuntimeException("The target file exists");
+                }
+                if (!rename($source->getPathname(), $target->getPathname())) {
+                        throw new RuntimeException("Failed rename file");
+                }
+        }
+
 }

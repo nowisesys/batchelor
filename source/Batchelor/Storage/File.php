@@ -231,4 +231,50 @@ class File extends SplFileInfo
                 return (new Source($this))->getLanguage();
         }
 
+        /**
+         * Copy this file to target.
+         * 
+         * @param string $target The target file.
+         * @param bool $overwrite Overwrite existing file.
+         * @return File The target file.
+         * @throws RuntimeException
+         */
+        public function copy(string $target, bool $overwrite = true): File
+        {
+                $source = $this;
+                $target = $this->getFile($target);
+
+                if ($target->isFile() && $overwrite == false) {
+                        throw new RuntimeException("The target file exists");
+                }
+                if (!copy($source->getPathname(), $target->getPathname())) {
+                        throw new RuntimeException("Failed copy file");
+                }
+
+                return $target;
+        }
+
+        /**
+         * Move this file to target (rename).
+         * 
+         * @param string $target The target file.
+         * @param bool $overwrite Overwrite existing file.
+         * @return File The target file.
+         * @throws RuntimeException
+         */
+        public function rename(string $target, bool $overwrite = true): File
+        {
+                $source = $this;
+                $target = $this->getFile($target);
+
+                if ($target->isFile() && $overwrite == false) {
+                        throw new RuntimeException("The target file exists");
+                }
+                if (!rename($source->getPathname(), $target->getPathname())) {
+                        throw new RuntimeException("Failed rename file");
+                }
+
+                return $target;
+        }
+
 }
