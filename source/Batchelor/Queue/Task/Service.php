@@ -103,4 +103,25 @@ class Service
                 return $this->_processors[$name];
         }
 
+        /**
+         * Add an task alias.
+         * 
+         * Provides support for having multiple names for same task. Useful for 
+         * creating an default alias for an existing task processor.
+         * 
+         * <code>
+         * // 
+         * // The chemgps task is our default task:
+         * // 
+         * $service->addAlias('chemgps', 'default');
+         * </code>
+         * 
+         * @param string $target The target task.
+         * @param string $alias The alias name.
+         */
+        public function addAlias(string $target, string $alias)
+        {
+                $this->_processors[$alias] = $this->_processors[$target];
+        }
+
 }
