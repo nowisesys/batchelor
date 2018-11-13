@@ -76,7 +76,7 @@ abstract class Adapter extends Component implements Task
          */
         public function prepare(Directory $workdir, JobData $data)
         {
-                $data->setTarget($workdir->getFile("indata")->getPathname());
+                $data->setTarget($workdir->getFile("indata")->getPathname(), true);
         }
 
         /**
