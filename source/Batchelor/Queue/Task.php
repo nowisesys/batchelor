@@ -20,8 +20,10 @@
 
 namespace Batchelor\Queue;
 
+use Batchelor\Logging\Logger;
 use Batchelor\Queue\Task\Adapter;
 use Batchelor\Queue\Task\Interaction;
+use Batchelor\Queue\Task\Runtime;
 use Batchelor\Storage\Directory;
 use Batchelor\WebService\Types\JobData;
 
@@ -59,6 +61,22 @@ use Batchelor\WebService\Types\JobData;
  */
 interface Task
 {
+
+        /**
+         * Run this task.
+         * 
+         * The main method called by task runner. You should only override this 
+         * method in special cases where you need finer control of how the task
+         * is executed. 
+         * 
+         * Calling this method should run the other methods in sequence. The 
+         * task adapter class implement this method. 
+         * 
+         * @param Runtime $runtime The task runtime.
+         * @param Logger $logger The message logger.
+         * @see Adapter
+         */
+        function run(Runtime $runtime, Logger $logger);
 
         /**
          * Prepare for execution.

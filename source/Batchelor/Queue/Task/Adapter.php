@@ -20,10 +20,12 @@
 
 namespace Batchelor\Queue\Task;
 
+use Batchelor\Logging\Logger;
 use Batchelor\Queue\Task;
 use Batchelor\Storage\Directory;
 use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobData;
+use RuntimeException;
 
 /**
  * The task adapter class.
@@ -37,15 +39,50 @@ abstract class Adapter extends Component implements Task
 {
 
         /**
-         * The job data.
-         * @var JobData 
+         * {@inheritdoc}
          */
-        protected $_data;
+        public function run(Runtime $runtime, Logger $info)
+        {
+                $workdir = $runtime
+                    ->getWorkDirectory()
+                    ->create($runtime->data->task);
+
+                $results = $runtime
+                    ->getResultDirectory()
+                    ->create();
+
+                $info->info("Preparing runtime data");
+                $this->prepare($workdir, $runtime->data);
+
+                $info->info("Validating runtime data");
+                $this->validate($runtime->data);
+
+                $info->info("Initialize task %s for execute", [$runtime->data->task]);
+                $this->initialize();
+
+                $info->info("Execute task for job %s", [$runtime->data->name]);
+                $this->execute($workdir, $results, $runtime->getCallback());
+
+                $info->info("Finished running task");
+                $this->finished();
+
+                $workdir
+                    ->getFile("indata.ser")
+                    ->putContent(serialize($runtime->data));
+        }
 
         /**
          * {@inheritdoc}
          */
-        public function finished()
+        public function prepare(Directory $workdir, JobData $data)
+        {
+                $data->setTarget($workdir->getFile("indata")->getPathname());
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function validate(JobData $data)
         {
                 // Ignore
         }
@@ -61,9 +98,17 @@ abstract class Adapter extends Component implements Task
         /**
          * {@inheritdoc}
          */
-        public function prepare(Directory $workdir, JobData $data)
+        public function execute(Directory $workdir, Directory $result, Interaction $interact)
         {
-                $this->_data = $data;
+                throw new RuntimeException("The method execute() need to be implemented");
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function finished()
+        {
+                // Ignore
         }
 
 }

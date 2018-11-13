@@ -56,33 +56,7 @@ class TaskRunner extends Component
 
                 try {
                         $logs->start();
-
-                        $workdir = $runtime
-                            ->getWorkDirectory()
-                            ->create($runtime->data->task);
-
-                        $results = $runtime
-                            ->getResultDirectory()
-                            ->create();
-                        
-                        $info->info("Preparing runtime data");
-                        $task->prepare($workdir, $runtime->data);
-
-                        $info->info("Validating runtime data");
-                        $task->validate($runtime->data);
-
-                        $info->info("Initialize task %s for execute", [$runtime->data->task]);
-                        $task->initialize();
-
-                        $info->info("Execute task for job %s", [$runtime->data->name]);
-                        $task->execute($workdir, $results, $runtime->getCallback());
-
-                        $info->info("Finished running task");
-                        $task->finished();
-
-                        $workdir
-                            ->getFile("indata.ser")
-                            ->putContent(serialize($runtime->data));
+                        $task->run($runtime, $info);
                 } catch (Throwable $exception) {
                         $runtime->getCallback()->setStatus(JobState::CRASHED());
                         $logs->logException($exception);
