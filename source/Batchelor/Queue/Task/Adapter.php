@@ -85,6 +85,9 @@ abstract class Adapter extends Component implements Task
          */
         public function validate(JobData $data)
         {
+                if (!$data->getFile()->isFile()) {
+                        throw new InvalidArgumentException("Input file is missing");
+                }
                 if (filesize($data->data) == 0) {
                         throw new InvalidArgumentException("Input data is empty");
                 }
