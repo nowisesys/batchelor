@@ -25,6 +25,7 @@ use Batchelor\Queue\Task;
 use Batchelor\Storage\Directory;
 use Batchelor\System\Component;
 use Batchelor\WebService\Types\JobData;
+use InvalidArgumentException;
 use RuntimeException;
 
 /**
