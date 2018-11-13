@@ -1,6 +1,11 @@
 Example tasks for debugging purpose. Please replace these with your own that you 
 register with processor service in config/services.
 
+Please take some time to review these classes:
+
+    o) Batchelor\Queue\Task\Adapter
+    o) Batchelor\WebService\Types\JobData
+
 These examples might seem tedious because they are using the OOP interface for
 directory/file operations and running task. Feel free to use standard PHP functions
 instead.

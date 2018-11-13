@@ -47,7 +47,7 @@ class ReverseTextTask extends Adapter
                 // prepared input data:
                 // 
                 $file = $result->getFile("output-reverse.txt");
-                $text = $workdir->getFile("input.txt")->getContent();
+                $text = $workdir->getFile("indata")->getContent();
 
                 // 
                 // Write task result:
@@ -75,22 +75,6 @@ class ReverseTextTask extends Adapter
                 // and set job status to error state.
                 // 
                 $interact->setStatus(JobState::SUCCESS());
-        }
-
-        public function validate(JobData $data)
-        {
-                if (filesize($data->data) == 0) {
-                        throw new InvalidArgumentException("Input data is empty");
-                }
-        }
-
-        public function prepare(Directory $workdir, JobData $data)
-        {
-                // 
-                // Prepare task input data.
-                // 
-                $file = $workdir->getFile("input.txt");
-                $data->setTarget($file->getPathname(), true);
         }
 
 }

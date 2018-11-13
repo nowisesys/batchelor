@@ -24,7 +24,6 @@ use Batchelor\Queue\Task\Adapter;
 use Batchelor\Queue\Task\Interaction;
 use Batchelor\Storage\Directory;
 use Batchelor\WebService\Types\JobData;
-use Batchelor\WebService\Types\JobState;
 use InvalidArgumentException;
 
 /**
@@ -48,34 +47,12 @@ class WordCountTask extends Adapter
                 // prepared input data:
                 // 
                 $file = $result->getFile("output-wordcount.txt");
-                $text = $workdir->getFile("input.txt")->getContent();
+                $text = $workdir->getFile("indata")->getContent();
 
                 // 
                 // Write to result file that is automatic created on write.
                 // 
                 $file->putContent(str_word_count($text));
-        }
-
-        public function validate(JobData $data)
-        {
-                if (filesize($data->data) == 0) {
-                        throw new InvalidArgumentException("Input data is empty");
-                }
-        }
-
-        public function prepare(Directory $workdir, JobData $data)
-        {
-                // 
-                // The utility method setTarget() will relocate job data into
-                // work directory (i.e. move uploaded file or download URL). Its
-                // usage is optional.
-                // 
-                // Calling getFile() creates an file object relative to the
-                // working directory that is actually not created until it's
-                // written. Here we use it just to make a file path.
-                // 
-                $file = $workdir->getFile("input.txt");
-                $data->setTarget($file->getPathname(), true);
         }
 
 }
