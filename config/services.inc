@@ -1,7 +1,7 @@
 <?php
 
-use Application\ReverseTextTask;
-use Application\WordCountTask;
+use Application\Task\ReverseText;
+use Application\Task\WordCounter;
 use Batchelor\Queue\Task\Service as TaskService;
 use Batchelor\System\Service;
 
@@ -68,8 +68,8 @@ return [
         // 
         'processor'   => function() {
                 return new TaskService([
-                        'default'   => new ReverseTextTask(),
-                        'wordcount' => new WordCountTask()
+                        'default'   => new ReverseText(),
+                        'wordcount' => new WordCounter()
                 ]);
         }
 ];

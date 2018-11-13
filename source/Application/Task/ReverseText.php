@@ -18,9 +18,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Application;
+namespace Application\Task;
 
-use Batchelor\Queue\Task\Adapter;
+use Batchelor\Queue\Task\Adapter as TaskAdapter;
 use Batchelor\Queue\Task\Interaction;
 use Batchelor\Storage\Directory;
 use Batchelor\WebService\Types\JobData;
@@ -31,7 +31,7 @@ use Batchelor\WebService\Types\JobState;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class ReverseTextTask extends Adapter
+class ReverseText extends TaskAdapter
 {
 
         public function execute(Directory $workdir, Directory $result, Interaction $interact)
