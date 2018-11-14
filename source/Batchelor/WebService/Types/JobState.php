@@ -57,6 +57,8 @@ class JobState extends QueueFilterResult
                         case self::CRASHED:
                         case self::ERROR:
                                 return "red";
+                        case self::WARNING:
+                                return "orange";
                         case self::SUCCESS:
                                 return "green";
                         case self::PENDING:
