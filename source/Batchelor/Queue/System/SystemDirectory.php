@@ -23,7 +23,6 @@ namespace Batchelor\Queue\System;
 use Batchelor\Queue\Task\Scheduler;
 use Batchelor\Queue\Task\Scheduler\StateQueue;
 use Batchelor\Queue\WorkDirectory;
-use Batchelor\Storage\Archive;
 use Batchelor\Storage\Directory;
 use Batchelor\System\Component;
 use Batchelor\WebService\Types\File;

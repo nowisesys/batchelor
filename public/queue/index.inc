@@ -94,7 +94,7 @@
 
 <ul class="w3-ul w3-animate-right">
     <?php foreach ($queued as $job) : ?>
-            <div class="w3-panel w3-padding w3-card w3-round job-item" id="<?= $job->identity->jobid ?>">
+            <div class="w3-panel w3-padding w3-card w3-round job-item" id="<?= $job->identity->jobid ?>" data-root="<?= $job->identity->result ?>">
                 <div class="job-header">
                     <span class="job-date"><?= strftime("%x %X", strtotime($job->status->queued->date)) ?></span>
                     <span class="job-state w3-right w3-button w3-small w3-<?= $job->status->state->getColor() ?>" style="min-width: 80px"><?= $job->status->state->getValue() ?></span>

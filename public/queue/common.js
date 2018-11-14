@@ -69,7 +69,7 @@ function delete_listed_jobs(message) {
     document.querySelectorAll(".job-item").forEach(function (elem) {
         delete_queued_job(JSON.stringify({
             jobid: elem.id,
-            result: ''
+            result: elem.dataset.root
         }));
     });
 }
