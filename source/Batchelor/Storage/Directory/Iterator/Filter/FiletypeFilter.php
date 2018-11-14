@@ -89,6 +89,9 @@ class FiletypeFilter extends FilterIterator
                 if (($filter & Scanner::SKIP_EMPTY) && $fileinfo->getSize() == 0) {
                         return false;
                 }
+                if (($filter & Scanner::SKIP_THIS) && empty($filename)) {
+                        return false;
+                }
 
                 return true;
         }

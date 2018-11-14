@@ -62,6 +62,10 @@ class Scanner implements IteratorAggregate
          */
         const SKIP_EMPTY = 32;
         /**
+         * Skip this directory.
+         */
+        const SKIP_THIS = 64;
+        /**
          * Get filenames relative current directory.
          */
         const FILENAME_RELATIVE = 1;
