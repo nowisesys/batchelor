@@ -23,6 +23,7 @@ namespace Application\Task;
 use Batchelor\Queue\Task\Adapter as TaskAdapter;
 use Batchelor\Queue\Task\Interaction;
 use Batchelor\Storage\Directory;
+use Batchelor\WebService\Types\JobState;
 
 /**
  * Example task counting words in indata.
@@ -51,6 +52,12 @@ class WordCounter extends TaskAdapter
                 // Write to result file that is automatic created on write.
                 // 
                 $file->putContent(str_word_count($text));
+
+                // 
+                // Will set success state if this is out main task (this task is 
+                // not running as a sub task).
+                // 
+                $interact->setStatus(JobState::SUCCESS());
         }
 
 }

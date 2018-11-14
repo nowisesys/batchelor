@@ -23,40 +23,40 @@ namespace Application\Task;
 use Batchelor\Queue\Task\Adapter as TaskAdapter;
 use Batchelor\Queue\Task\Interaction;
 use Batchelor\Storage\Directory;
+use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
 
 /**
- * Example task reversing text in indata.
+ * The combined task.
+ * 
+ * This demonstrate running a combined set of sub task. Same principle can be
+ * applied for running sub tasks from a sub task. Keep in mind that each task
+ * is run in their own work directory.
+ * 
+ * Calling runTask() will run a child task of this task. This is different from
+ * newTask() that will push the task onto the scheduler. The pipe argument causes
+ * the data to be linked as input data for a sub task.
+ * 
+ * <code>
+ *      tasks (scheduler)
+ *        +-- combined (this task)
+ *              +-- reverse (sub task of this task)
+ *              +-- counter (sub task of this task)
+ * </code>
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class ReverseText extends TaskAdapter
+class CombineTask extends TaskAdapter
 {
 
         public function execute(Directory $workdir, Directory $result, Interaction $interact)
         {
-                // 
-                // Send an greeting. This message should end up in the task
-                // specific log file.
-                //                 
-                $interact->getLogger()->info("Hello world from reverse text");
+                $indata = $workdir->getFile("indata")->getPathname();
+                $interact->runTask(new JobData($indata, "pipe", "reverse"));
 
-                // 
-                // Create output file in results directory. Pick up the input
-                // prepared input data:
-                // 
-                $file = $result->getFile("output-reverse.txt");
-                $text = $workdir->getFile("indata")->getContent();
+                $indata = $result->getFile("output-reverse.txt")->getPathname();
+                $interact->runTask(new JobData($indata, "pipe", "counter"));
 
-                // 
-                // Write task result:
-                // 
-                $file->putContent(strrev($text));
-
-                // 
-                // Will set success state if this is out main task (this task is 
-                // not running as a sub task).
-                // 
                 $interact->setStatus(JobState::SUCCESS());
         }
 

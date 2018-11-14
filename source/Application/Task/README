@@ -23,4 +23,14 @@ If same task is run multiple times in same executed job instance (same enqeueued
 job), make sure to create sub directories under the work directory or use some
 naming convention i.e. for task log files.
 
+** Job state:
+    
+Settting state will set job state if severity is higher than warning (i.e. error 
+and up). Settting success or warning only has effect when issued from the main 
+task.
+
+Notice that calling die(), exit or throwing exceptions are supervised. An 
+exception throwed in a child task should be trapped and set job status to critical 
+state.
+
 // Anders Lövgren, 2018-11-12

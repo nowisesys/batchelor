@@ -1,5 +1,6 @@
 <?php
 
+use Application\Task\CombineTask;
 use Application\Task\ReverseText;
 use Application\Task\WordCounter;
 use Batchelor\Queue\Task\Service as TaskService;
@@ -67,9 +68,12 @@ return [
         // and replace with real tasks defining your application.
         // 
         'processor'   => function() {
-                return new TaskService([
-                        'default'   => new ReverseText(),
-                        'wordcount' => new WordCounter()
+                $service = new TaskService([
+                        'combine' => new CombineTask(),
+                        'reverse' => new ReverseText(),
+                        'counter' => new WordCounter()
                 ]);
+                $service->addAlias('combine', 'default');
+                return $service;
         }
 ];
