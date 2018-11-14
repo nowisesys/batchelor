@@ -46,7 +46,7 @@ class Runtime
          * The job ID.
          * @var string 
          */
-        public $job;
+        public $job = 0;
         /**
          * The process ID (PID/TID).
          * @var int 
@@ -67,6 +67,11 @@ class Runtime
          * @var string 
          */
         public $result;
+        /**
+         * This runtime has been cloned.
+         * @var bool 
+         */
+        public $cloned = false;
 
         /**
          * Constructor.
@@ -78,7 +83,6 @@ class Runtime
          */
         public function __construct(string $job, Jobdata $data, string $hostid, string $result)
         {
-                $this->pid = 0;
                 $this->job = $job;
                 $this->data = $data;
                 $this->hostid = $hostid;
@@ -192,6 +196,7 @@ class Runtime
         {
                 $runtime = clone $this;
                 $runtime->data = $data;
+                $runtime->cloned = true;
                 $runtime->setLogger($runtime->useLogger());
 
                 return $runtime;

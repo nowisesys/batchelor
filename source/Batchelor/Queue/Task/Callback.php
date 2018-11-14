@@ -123,7 +123,11 @@ class Callback implements Interaction
          */
         protected function onStatusChanged(JobState $state)
         {
-                $this->_scheduler->setFinished($this->_runtime->job, $state);
+                if ($this->_runtime->cloned == false) {
+                        $this->_scheduler->setFinished($this->_runtime->job, $state);
+                } elseif ($state->isGood() == false) {
+                        $this->_scheduler->setFinished($this->_runtime->job, $state);
+                }
         }
 
         /**
