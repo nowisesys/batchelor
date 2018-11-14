@@ -50,11 +50,16 @@ class Transition
                 $scheduler = $this->_scheduler;
 
                 $queue = $scheduler->getQueue($queue1);
+
+                if (!$queue->hasState($job)) {
+                        return;         // Transition already done (abort)
+                }
+
                 $state = $queue->getState($job);
                 $queue->removeState($job);
 
                 $transform($state);
-                
+
                 $queue = $scheduler->getQueue($state->hostid);
                 $queue->setState($job, $state);
 
