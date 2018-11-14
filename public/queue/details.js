@@ -28,11 +28,6 @@ function toggle_section_display(id) {
     }
 }
 
-function file_download(event, params) {
-    const source = 'download?' + params;
-    window.location.href = source;          // Ugly hack ;-)
-}
-
 function file_preview(event, params) {
     const source = 'preview?' + params;
     const target = 'file-preview';

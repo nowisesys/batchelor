@@ -83,3 +83,8 @@ function display_tab(id) {
     });
     document.getElementById(id).style.display = 'block';
 }
+
+function file_download(event, params) {
+    const source = 'download?' + params;
+    window.location.href = source;          // Ugly hack ;-)
+}

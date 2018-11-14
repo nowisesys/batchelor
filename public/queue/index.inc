@@ -112,6 +112,7 @@
                     <!-- standard system buttons -->
                     <span class="job-std-buttons w3-right">
                         <a class="w3-btn" onclick=delete_queued_job('<?= json_encode($job->identity) ?>')><?= $job->status->state->getRemove() ?></a>
+                        <a class="w3-btn" onclick="file_download(event, '<?= http_build_query($job->identity) ?>&name=result')"><?= _("Result") ?></a>
                         <a class="w3-btn" onclick="content_replace(event, 'page-content', 'details?<?= http_build_query($job->identity) ?>')"><?= _("Details") ?></a>
                     </span>
                 </div>
