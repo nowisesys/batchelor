@@ -85,7 +85,10 @@ class Archive
          */
         public function addDirectory(Directory $directory)
         {
-                foreach ($directory->scan(Scanner::SKIP_DOTS | Scanner::SKIP_DIRS) as $filename) {
+                foreach ($directory->scan(
+                    Scanner::SKIP_DOTS | Scanner::SKIP_DIRS |
+                    Scanner::SKIP_THIS | Scanner::SKIP_LINKS
+                ) as $filename) {
                         $file = $directory->getFile($filename);
                         $this->_archive->addFile($file->getRealPath(), $filename);
                 }
