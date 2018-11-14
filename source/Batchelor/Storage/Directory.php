@@ -203,6 +203,8 @@ class Directory implements IteratorAggregate
         {
                 if (!isset($filename)) {
                         throw new InvalidArgumentException("Missing filename");
+                } elseif (empty($filename)) {
+                        return new File($this->getPathname());
                 } elseif ($filename[0] != '/') {
                         return new File($this->getSubPath($filename));
                 } else {
