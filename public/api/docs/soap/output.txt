@@ -1,0 +1,155 @@
+// 
+// Output from running client2.java
+// 
+
+2.0
+Task: default (Job 2)
+    Queued: 2018-11-14 13:05:20.082591[Europe/Stockholm]
+    State: crashed
+Task: default (Job 2)
+    Queued: 2018-11-14 13:03:14.603137[Europe/Stockholm]
+    State: crashed
+Task: default (Job 2)
+    Queued: 2018-11-14 12:59:25.445768[Europe/Stockholm]
+    State: success
+Task: default (Job 1)
+    Queued: 2018-11-14 12:43:35.872742[Europe/Stockholm]
+    State: success
+Task: combine (Job 1)
+    Queued: 2018-11-14 12:43:31.570800[Europe/Stockholm]
+    State: success
+Task: counter (Job 1)
+    Queued: 2018-11-14 12:43:21.680216[Europe/Stockholm]
+    State: success
+Task: reverse (Job 1)
+    Queued: 2018-11-14 12:43:14.889783[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-14 12:42:39.094768[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-13 15:17:57.405853[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-13 14:20:56.596166[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-13 14:12:17.418711[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-13 13:53:55.711338[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-13 13:53:44.000291[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-13 13:27:56.922119[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 23:23:57.940439[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 22:42:41.063935[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 22:41:17.191883[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 22:38:22.182282[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 22:37:47.730190[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 22:33:58.207424[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 22:31:20.429665[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 22:28:33.505546[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 12:20:30.910760[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 11:14:52.667610[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 11:11:03.416615[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 11:07:05.714379[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 11:01:28.273871[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 10:52:14.209220[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 10:49:46.650762[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 10:47:46.066651[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 10:36:58.096243[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 10:28:29.037752[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 07:15:50.755046[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 07:13:00.481163[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 07:01:43.303346[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 06:16:35.683592[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 06:15:13.846011[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 06:14:27.770965[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 06:10:55.240913[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 06:05:20.815884[Europe/Stockholm]
+    State: crashed
+Task: default ()
+    Queued: 2018-11-12 05:55:08.519191[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 05:34:02.150304[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-12 05:31:08.662169[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-11 11:56:58.054060[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-11 11:51:52.889213[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-11 11:43:53.679984[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-11 03:52:35.646164[Europe/Stockholm]
+    State: success
+Task: default ()
+    Queued: 2018-11-15 15:57:07.686520[Europe/Stockholm]
+    State: pending
+Task: default ()
+    Queued: 2018-11-15 15:56:00.294915[Europe/Stockholm]
+    State: pending
+Task: default ()
+    Queued: 2018-11-15 16:12:39.264869[Europe/Stockholm]
+    State: pending

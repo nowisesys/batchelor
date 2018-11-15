@@ -1,0 +1,13 @@
+<?php
+
+use UUP\Site\Page\Web\Component\Link;
+
+return array(
+        'head' => _('Web service'),
+        'data' => array(
+                _('SOAP')   => 'soap',
+                _('JSON')   => 'json',
+                Link::SEPARATOR,
+                _('Select') => 'select'
+        )
+);
