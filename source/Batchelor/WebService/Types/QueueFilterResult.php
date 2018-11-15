@@ -98,4 +98,19 @@ class QueueFilterResult extends EnumType
                 parent::__construct($value, __CLASS__);
         }
 
+        /**
+         * Create queue filter result object.
+         * 
+         * @param array $data The enum data.
+         * @return QueueFilterResult
+         */
+        public static function create(array $data): self
+        {
+                if (empty($data) || !isset($data['filter'])) {
+                        $data['filter'] = self::NONE;
+                }
+
+                return new self($data['filter']);
+        }
+
 }

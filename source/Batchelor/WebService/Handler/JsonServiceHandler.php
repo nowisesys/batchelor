@@ -73,8 +73,7 @@ class JsonServiceHandler
         private function queue(array $data)
         {
                 return (new ServiceBackend())
-                        ->queue(
-                            new QueueSortResult($data['sort']), new QueueFilterResult($data['filter'])
+                        ->queue(QueueSortResult::create($data), QueueFilterResult::create($data)
                 );
         }
 

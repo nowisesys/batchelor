@@ -66,4 +66,19 @@ class QueueSortResult extends EnumType
                 parent::__construct($value, __CLASS__);
         }
 
+        /**
+         * Create queue sort result object.
+         * 
+         * @param array $data The enum data.
+         * @return QueueSortResult
+         */
+        public static function create(array $data): self
+        {
+                if (empty($data) || !isset($data['sort'])) {
+                        $data['sort'] = self::NONE;
+                }
+
+                return new self($data['sort']);
+        }
+
 }
