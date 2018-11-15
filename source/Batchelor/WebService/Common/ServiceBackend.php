@@ -160,7 +160,7 @@ class ServiceBackend extends Component
                 );
 
                 foreach ($queued as $job) {
-                        if ($job->status->stamp > $stamp) {
+                        if ($job->status->queued->getTimestamp() > $stamp) {
                                 $result[] = $job;
                         }
                 }
