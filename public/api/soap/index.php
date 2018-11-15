@@ -26,7 +26,7 @@ class IndexPage extends SoapServiceFrontend
         public function __construct($config = null)
         {
                 parent::__construct($config);
-                parent::setLocation($this->config->getUrl("api/soap", true));
+                parent::setLocation($this->config->getUrl("api/soap/", true));
         }
 
 }
