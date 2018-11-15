@@ -1,0 +1,8 @@
+<?php
+
+return array(
+        'head' => _('SOAP API'),
+        'data' => array(
+                _('Client')   => 'client',
+        )
+);
