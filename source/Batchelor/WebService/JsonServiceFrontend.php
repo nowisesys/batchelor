@@ -41,23 +41,66 @@ class JsonServiceFrontend extends ServiceFrontend
                 header('Content-Type: application/json');
         }
 
+        /**
+         * Get JSON encode options.
+         * @return int
+         */
+        private function getOptions(): int
+        {
+                $options = 0;
+
+                if ($this->params->getParam("pretty") == 1) {
+                        $options |= JSON_PRETTY_PRINT;
+                }
+                if ($this->params->getParam("escape") == 0) {
+                        $options |= JSON_UNESCAPED_SLASHES;
+                }
+                if ($this->params->getParam("unicode") == 0) {
+                        $options |= JSON_UNESCAPED_UNICODE;
+                }
+                if ($this->params->getParam("numeric") == 1) {
+                        $options |= JSON_NUMERIC_CHECK;
+                }
+                if ($this->params->getParam("fraction") == 1) {
+                        $options |= JSON_PRESERVE_ZERO_FRACTION;
+                }
+
+                return $options;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function onException($exception)
         {
                 echo json_encode(array(
                         'status'  => 'failure',
                         'message' => $exception->getMessage(),
                         'code'    => $exception->getCode()
-                ));
+                    ), $this->getOptions()
+                );
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function render()
         {
                 echo json_encode(array(
                         'status' => 'success',
                         'result' => $this->onRendering()
-                ));
+                    ), $this->getOptions()
+                );
         }
 
+        /**
+         * Process service request.
+         * 
+         * Decodes input data and invoke the JSON service handler. Returns the
+         * raw response from the service handler.
+         * 
+         * @return array
+         */
         private function onRendering()
         {
                 // 
