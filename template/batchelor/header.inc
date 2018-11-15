@@ -96,6 +96,9 @@ $show = new Runtime($this);
     }
 </style>
 
+<!-- Custom CSS for code markup -->
+<link rel="stylesheet" href="<?= $this->config->url("assets/css/markup.css") ?>"> 
+
 <?php if (!$session->authenticated()) : ?>
         <style>
             a[auth="true"],a[auth="1"],a[auth="yes"],
