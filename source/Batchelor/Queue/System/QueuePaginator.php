@@ -160,6 +160,8 @@ class QueuePaginator
         private function getSorted(QueueSortResult $sort, array &$queued): array
         {
                 switch ($sort->getValue()) {
+                        case QueueSortResult::NONE:
+                                return $queued;         // Nothing to do
                         case QueueSortResult::JOBID:
                                 if (!usort($queued, static function($a, $b) {
                                             return strcmp($a->identity->jobid, $b->identity->jobid);
