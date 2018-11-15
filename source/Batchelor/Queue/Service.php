@@ -87,8 +87,15 @@ class Service extends Component implements WorkQueue
         /**
          * {@inheritdoc}
          */
-        public function listJobs(string $hostid, QueueSortResult $sort = QueueSortResult::STARTED, QueueFilterResult $filter = QueueFilterResult::NONE)
+        public function listJobs(string $hostid, QueueSortResult $sort = null, QueueFilterResult $filter = null)
         {
+                if (!isset($sort)) {
+                        $sort = QueueSortResult::NONE();
+                }
+                if (!isset($filter)) {
+                        $filter = QueueFilterResult::NONE();
+                }
+                
                 return $this->getQueue($hostid)
                         ->listJobs($hostid, $sort, $filter);
         }
