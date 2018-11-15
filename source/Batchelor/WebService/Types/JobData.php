@@ -92,7 +92,7 @@ class JobData
          * @return JobData
          * @throws InvalidArgumentException
          */
-        public static function create(array $data): JobData
+        public static function create(array $data): self
         {
                 if (empty($data['data'])) {
                         throw new InvalidArgumentException("The data key is missing in job data");
@@ -107,7 +107,7 @@ class JobData
                         $data['name'] = null;
                 }
 
-                return new JobData($data['data'], $data['type'], $data['task'], $data['name']);
+                return new self($data['data'], $data['type'], $data['task'], $data['name']);
         }
 
         /**

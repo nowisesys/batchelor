@@ -67,7 +67,7 @@ class JobIdentity
          * @return JobIdentity
          * @throws InvalidArgumentException
          */
-        public static function create(array $data): JobIdentity
+        public static function create(array $data): self
         {
                 if (empty($data['jobid'])) {
                         throw new InvalidArgumentException("The jobid key is missing in job identity");
@@ -76,7 +76,7 @@ class JobIdentity
                         throw new InvalidArgumentException("The result key is missing in job identity");
                 }
 
-                return new JobIdentity($data['jobid'], $data['result']);
+                return new self($data['jobid'], $data['result']);
         }
 
 }

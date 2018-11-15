@@ -85,9 +85,9 @@ class File
          * @param StorageFile $file The storage file.
          * @return File 
          */
-        public static function create(string $name, StorageFile $file): File
+        public static function create(string $name, StorageFile $file): self
         {
-                return new File($name, $file->getSize(), $file->getMimeType(), $file->getType(), $file->getLanguage());
+                return new self($name, $file->getSize(), $file->getMimeType(), $file->getType(), $file->getLanguage());
         }
 
 }
