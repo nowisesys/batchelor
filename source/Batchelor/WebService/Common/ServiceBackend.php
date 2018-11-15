@@ -85,6 +85,9 @@ class ServiceBackend extends Component
          */
         public function enqueue(JobData $indata)
         {
+                if (empty($indata->task)) {
+                        $indata->task = "default";
+                }
                 if (!$this->processor->hasProcesor($indata->task)) {
                         throw new RuntimeException("The task processor $indata->task is missing");
                 }
