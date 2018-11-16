@@ -77,7 +77,7 @@
 </p>
 
 <?php
-UUP\Web\Component\Script\CodeBox::outputFile($this->params->getParam("file"), false, [
+UUP\Web\Component\Script\CodeBox::outputFile($this->params->getParam("file", "client1.java"), false, [
         "client1.java", "client2.java", "output.txt"
 ])
 
@@ -86,8 +86,7 @@ UUP\Web\Component\Script\CodeBox::outputFile($this->params->getParam("file"), fa
 <p>
     Output from running client2.java should look something like this:
 </p>
-<div class="w3-code">
-    <pre>
+<pre class="w3-code">
     2.0
 Task: default (Job 2)
     Queued: 2018-11-14 13:05:20.082591[Europe/Stockholm]
@@ -105,5 +104,4 @@ Task: default (Job 1)
 Task: default ()
     Queued: 2018-11-15 16:12:39.264869[Europe/Stockholm]
     State: pending
-    </pre>
-</div>
+</pre>
