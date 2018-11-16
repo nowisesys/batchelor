@@ -60,6 +60,9 @@ class JsonServiceHandler
 
         private function fopen(array $data)
         {
+                if (!isset($data['send'])) {
+                        $data['send'] = true;
+                }
                 return (new ServiceBackend())
                         ->fopen(JobIdentity::create($data['job']), $data['file'], $data['send']);
         }

@@ -54,8 +54,8 @@ interface WorkDirectory
          * 
          * @param JobIdentity $job The job identity.
          * @param string $file The file to read.
-         * @param bool $return Return file content.
+         * @param bool $send Send file content.
          * @return string The file content.
          */
-        function getContent(JobIdentity $job, string $file, bool $return = true);
+        function getContent(JobIdentity $job, string $file, bool $send = false);
 }

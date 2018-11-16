@@ -80,7 +80,7 @@ class SystemDirectory extends Component implements WorkDirectory
         /**
          * {@inheritdoc}
          */
-        public function getContent(JobIdentity $job, string $file, bool $return = true)
+        public function getContent(JobIdentity $job, string $file, bool $send = false)
         {
                 $source = $this->getWorkDirectory($job->result);
                 $target = $source->getFile($file);
@@ -91,7 +91,7 @@ class SystemDirectory extends Component implements WorkDirectory
                             ->getFilename();
                 }
 
-                if ($return) {
+                if ($send == false) {
                         return $source
                                 ->getFile($file)
                                 ->getContent();

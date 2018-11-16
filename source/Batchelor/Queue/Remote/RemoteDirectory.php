@@ -50,13 +50,13 @@ class RemoteDirectory implements WorkDirectory
         /**
          * {@inheritdoc}
          */
-        public function getContent(JobIdentity $job, string $file, bool $return = true)
+        public function getContent(JobIdentity $job, string $file, bool $send = false)
         {
                 return $this->_client
                         ->callMethod("fopen", [
                                 'job'  => $job,
                                 'file' => $file,
-                                'send' => $return
+                                'send' => $send
                 ]);
         }
 
