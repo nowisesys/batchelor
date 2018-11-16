@@ -22,4 +22,4 @@ use UUP\Web\Component\Script\CodeBox;
 ?>
 
 <h3><?= _("Preview") ?></h3>
-<?php CodeBox::outputText($params->getParam("lang"), $reader->getContent($ident, $params->getParam("name"), true)) ?>
+<?php CodeBox::outputText($params->getParam("lang"), $reader->getContent($ident, $params->getParam("name"), false)) ?>

@@ -45,7 +45,7 @@ class DownloadPage extends StandardService
                             'jobid'  => $params->getParam("jobid"),
                             'result' => $params->getParam("result")
                 ]);
-                $reader->getContent($ident, $params->getParam("name"), false);
+                $reader->getContent($ident, $params->getParam("name"), true);
         }
 
 }
