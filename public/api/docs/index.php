@@ -22,7 +22,7 @@
 
 <h3>Web services</h3>
 <p>
-    Job queue management is implemented using SOAP and JSON API providing methods for:
+    Job queue management API is implemented using SOAP and JSON providing methods for:
 </p>
 <ul>
     <li>Running jobs: enqueue, dequeue, suspend, resume</li>
@@ -36,4 +36,10 @@
     co-workers) the select method has been added for easy switch between active
     queues.
 </p>
-<a class="w3-btn w3-deep-orange" href="select" style="min-width: 90px">Select</a>
+<a class="w3-btn w3-green" href="select" style="min-width: 90px">Select</a>
+<p>
+    Result from listing the queue can be sorted and filtered. PHP don't support
+    native enums, so these are described here for all API types.
+</p>
+<a class="w3-btn w3-deep-purple" href="sort" style="min-width: 90px">Sort</a>
+<a class="w3-btn w3-deep-purple" href="filter" style="min-width: 90px">Filter</a>

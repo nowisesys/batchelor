@@ -1,0 +1,6 @@
+This documentation can be extended with application specific documents (PHP files
+or plain HTML) by placing files in various places. Search this directory and sub 
+directories for files containing calls to inline(...).
+
+For example, by placing an file named enqueue.inc in the json directory, it will
+be included when rendering the json/running view.

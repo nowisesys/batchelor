@@ -3,6 +3,8 @@
 return array(
         'head' => _('SOAP API'),
         'data' => array(
-                _('Client')   => 'client',
+                _('Running jobs')    => 'running',
+                _('Monitor jobs')    => 'monitor',
+                _('Reading results') => 'reading',
         )
 );

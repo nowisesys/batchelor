@@ -1,0 +1,11 @@
+<?php
+
+return array(
+        'head' => _('Running jobs'),
+        'data' => array(
+                _('Submit jobs')  => '#enqueue',
+                _('Remove job ')  => '#dequeue',
+                _('Pause job')    => '#suspend',
+                _('Continue job') => '#resume'
+        )
+);

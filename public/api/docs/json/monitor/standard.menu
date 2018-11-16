@@ -1,0 +1,10 @@
+<?php
+
+return array(
+        'head' => _('Monitor jobs'),
+        'data' => array(
+                _('List queue') => '#queue',
+                _('Watch jobs') => '#watch',
+                _('Stat job')   => '#stat'
+        )
+);

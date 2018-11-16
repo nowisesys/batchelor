@@ -1,0 +1,10 @@
+<?php
+
+return array(
+        'head' => _('Reading results'),
+        'data' => array(
+                _('List directories') => '#opendir',
+                _('List files')       => '#readdir',
+                _('Get contents')     => '#fopen'
+        )
+);
