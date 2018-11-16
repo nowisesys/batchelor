@@ -202,7 +202,8 @@ class ServiceBackend extends Component
          * Read file content.
          * 
          * Opens the given file from the job directory associated with the job 
-         * identity object and return its content.
+         * identity object and return its content. The returned string (the file
+         * content) will be base64 encoded.
          * 
          * @param JobIdentity $job The job identity.
          * @param string $file The filename.
@@ -211,8 +212,9 @@ class ServiceBackend extends Component
          */
         public function fopen(JobIdentity $job, string $file, bool $send = false): string
         {
-                return $this->getDirectory()
-                        ->getContent($job, $file, $send);
+                return base64_encode($this->getDirectory()
+                        ->getContent($job, $file, $send)
+                );
         }
 
         /**
