@@ -146,10 +146,15 @@ class File extends SplFileInfo
          * ]);
          * </code>
          * 
+         * This method is called from API for sending files and will terminate
+         * the script on return to suppress output of response data. Use the third
+         * argument to disable this default behavior.
+         * 
          * @param bool $standard Send standard headers.
          * @param array $headers Optional HTTP headers.
+         * @param bool $exit Exit on return.
          */
-        public function sendFile($standard = true, $headers = [])
+        public function sendFile($standard = true, $headers = [], bool $exit = true)
         {
                 if ($standard) {
                         $stdhead = $this->getDownloadHeaders();
@@ -161,6 +166,12 @@ class File extends SplFileInfo
                 }
 
                 readfile($this->getRealPath());
+
+                if (!$exit) {
+                        return;
+                } else {
+                        exit(0);
+                }
         }
 
         /**
