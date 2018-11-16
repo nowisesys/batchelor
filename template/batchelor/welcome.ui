@@ -51,10 +51,15 @@ $output = new format($this);
         </nav>
 
         <!-- Page header -->
-        <header class="header-container w3-container w3-center w3-padding-64 w3-text-white">
-            <h1 class="w3-margin w3-jumbo w3-animate-opacity">Batchelor</h1>
-            <p class="w3-xlarge">batch job queue manager</p>
-            <button class="no-print w3-btn w3-padding-16 w3-large w3-margin-top w3-animate-zoom">Get Started</button>
+        <header class="header-container w3-container w3-center w3-padding-16 w3-text-white">
+            <div class="w3-btn-bar">
+                <a href="api/docs" class="no-print w3-btn w3-right">API</a>
+            </div>
+            <div class="w3-padding-64">
+                <h1 class="w3-margin w3-jumbo w3-animate-opacity">Batchelor</h1>
+                <p class="w3-xlarge">batch job queue manager</p>
+                <button class="no-print w3-btn w3-padding-16 w3-large w3-margin-top w3-animate-zoom">Get Started</button>
+            </div>
         </header>
 
         <div id="page-content" class='w3-container w3-padding-32 w3-margin-left'>
