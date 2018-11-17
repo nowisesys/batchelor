@@ -24,6 +24,8 @@ use Batchelor\Logging\Logger;
 use Batchelor\Logging\Target\Adapter;
 use Batchelor\Logging\Target\File;
 use Batchelor\Logging\Writer;
+use Batchelor\System\Service\Storage;
+use Batchelor\System\Services;
 
 /**
  * The message priority file logger.
@@ -71,17 +73,41 @@ class Priority extends Adapter implements Logger
         /**
          * Constructor.
          * 
-         * @param string $path The target directory.
+         * @param string $path The target directory (relative or absolute).
          * @param string $ident The string ident is added to each message.
          * @param string $extension The file extension.
          * @param int $options The logging options (bitmask of zero or more LOG_XXX contants).
          */
         public function __construct(string $path, string $ident = "", string $extension = "log", int $options = LOG_CONS | LOG_PID)
         {
-                $this->_path = $path;
+                $this->_path = $this->getPathname($path);
                 $this->_ident = $ident;
                 $this->_extension = $extension;
                 $this->_options = $options;
+        }
+
+        /**
+         * Get target path.
+         * 
+         * Relative pathes will be created inside the data directory, otherwise
+         * globally in the filesystem. The path is always created.
+         * 
+         * @param string $path The directory path.
+         * @return string
+         */
+        private function getPathname($path): string
+        {
+                return $this->getDataStorage()
+                        ->useDirectory($path)
+                        ->getPathname();
+        }
+
+        /**
+         * @return Storage
+         */
+        private function getDataStorage(): Storage
+        {
+                return Services::getInstance()->getService("data");
         }
 
         /**
