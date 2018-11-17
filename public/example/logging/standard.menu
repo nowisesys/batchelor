@@ -5,6 +5,7 @@ return array(
         'data' => array(
                 'Simple'      => 'simple',
                 'Memory'      => 'memory',
+                'Callback'    => 'callback',
                 'Syslog'      => 'syslog',
                 'Stream'      => 'stream',
                 'File'        => 'file',
