@@ -43,6 +43,11 @@ class Callback extends Adapter implements Logger
 {
 
         /**
+         * The logger identity.
+         * @var string 
+         */
+        private $_ident;
+        /**
          * The message callback.
          * @var callback 
          */
@@ -59,8 +64,10 @@ class Callback extends Adapter implements Logger
          * @param callable $callback The message callback.
          * @param bool $decorate Use current formatter object.
          */
-        public function __construct(callable $callback, bool $decorate = false)
+        public function __construct(callable $callback, bool $decorate = false, string $ident = "")
         {
+                $this->_ident = $ident;
+
                 $this->_callback = $callback;
                 $this->_decorate = $decorate;
 
