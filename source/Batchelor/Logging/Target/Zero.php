@@ -35,7 +35,7 @@ class Zero extends Adapter implements Logger
         /**
          * {@inheritdoc}
          */
-        public function doLogging(int $priority, string $message, array $args = array()): bool
+        protected function doLogging(int $priority, string $message, array $args = array()): bool
         {
                 return true;    // Nothing logged here
         }

@@ -92,7 +92,7 @@ class File extends Adapter implements Logger
         /**
          * @return Storage
          */
-        private function getDataStorage()
+        private function getDataStorage(): Storage
         {
                 return Services::getInstance()->getService("data");
         }
@@ -118,7 +118,7 @@ class File extends Adapter implements Logger
         /**
          * {@inheritdoc}
          */
-        public function doLogging(int $priority, string $message, array $args = []): bool
+        protected function doLogging(int $priority, string $message, array $args = []): bool
         {
                 if (($result = $this->getFormatted(
                     $priority, vsprintf($message, $args)
