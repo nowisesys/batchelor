@@ -20,8 +20,6 @@
 
 namespace Batchelor\Queue\Task;
 
-use Batchelor\System\Component;
-
 /**
  * The job owner.
  *
@@ -59,8 +57,13 @@ class Owner
         {
                 $this->hostid = $hostid;
 
-                $this->addr = filter_input(INPUT_SERVER, "REMOTE_ADDR");
-                $this->host = gethostbyaddr($this->addr);
+                if (PHP_SAPI != 'cli') {
+                        $this->addr = filter_input(INPUT_SERVER, "REMOTE_ADDR");
+                        $this->host = gethostbyaddr($this->addr);
+                } else {
+                        $this->addr = "127.0.0.1";
+                        $this->host = "localhost";
+                }
         }
 
 }
