@@ -87,7 +87,7 @@ class Monitor
         private function loop(array $streams)
         {
                 while ($this->select($streams)) {
-                        
+                        usleep(50000);
                 }
         }
 
