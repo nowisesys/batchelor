@@ -53,7 +53,7 @@ class Remove
                 $this->validate($job);
                 $runtime = $scheduler->getRuntime($job);
 
-                $queue = $scheduler->getQueue($runtime->hostid);
+                $queue = $scheduler->getQueue($runtime->owner->hostid);
                 $state = $queue->getState($job);
                 $queue->removeState($job);
                 

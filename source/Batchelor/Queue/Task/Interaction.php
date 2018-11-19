@@ -129,4 +129,11 @@ interface Interaction
          * @param string $url The target url.
          */
         function getDownloader(string $url): Download;
+        
+        /**
+         * Get job owner.
+         * 
+         * @return Owner
+         */
+        public function getOwner(): Owner;
 }

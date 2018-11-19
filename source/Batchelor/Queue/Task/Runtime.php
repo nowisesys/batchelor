@@ -58,11 +58,6 @@ class Runtime
          */
         public $data;
         /**
-         * The host ID.
-         * @var string 
-         */
-        public $hostid;
-        /**
          * The root directory.
          * @var string 
          */
@@ -72,6 +67,11 @@ class Runtime
          * @var bool 
          */
         public $cloned = false;
+        /**
+         * The job owner.
+         * @var Owner 
+         */
+        public $owner;
 
         /**
          * Constructor.
@@ -85,8 +85,9 @@ class Runtime
         {
                 $this->job = $job;
                 $this->data = $data;
-                $this->hostid = $hostid;
                 $this->result = $result;
+
+                $this->owner = new Owner($hostid);
 
                 $this->_logger = $this->useLogger();
         }
@@ -114,7 +115,7 @@ class Runtime
          */
         public function getWorkDirectory(): Directory
         {
-                return (new SystemDirectory($this->hostid))
+                return (new SystemDirectory($this->owner->hostid))
                         ->getWorkDirectory($this->result);
         }
 
@@ -124,7 +125,7 @@ class Runtime
          */
         public function getResultDirectory(): Directory
         {
-                return (new SystemDirectory($this->hostid))
+                return (new SystemDirectory($this->owner->hostid))
                         ->getResultDirectory($this->result);
         }
 

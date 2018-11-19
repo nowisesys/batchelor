@@ -52,7 +52,10 @@ class CombineTask extends TaskAdapter
         public function execute(Directory $workdir, Directory $result, Interaction $interact)
         {
                 $logger = $interact->getLogger();
-                
+
+                $owner = $interact->getOwner();
+                $logger->debug("Running job submitted from %s (%s) [user: %s]", [$owner->host, $owner->addr, $owner->user]);
+
                 $logger->debug("Running reverse task as child task");
                 $indata = $workdir->getFile("indata")->getPathname();
                 $interact->runTask(new JobData($indata, "pipe", "reverse"));

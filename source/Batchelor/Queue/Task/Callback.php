@@ -149,4 +149,12 @@ class Callback implements Interaction
                 );
         }
 
+        /**
+         * {@inheritdoc}
+         */
+        public function getOwner(): Owner
+        {
+                return $this->_runtime->owner;
+        }
+
 }
