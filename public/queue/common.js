@@ -100,3 +100,12 @@ function file_download(event, params) {
     const source = 'download?' + params;
     window.location.href = source;          // Ugly hack ;-)
 }
+
+function show_next_sibling(sender) {
+    var target = sender.nextSibling.nextSibling;
+
+    if (target.offsetParent === null) {
+        target.classList.remove('w3-hide-small');
+        target.classList.add("w3-animate-right");
+    }
+}

@@ -124,26 +124,28 @@ function getClasses(JobState $state): array
     <?php foreach ($queued as $job) : ?>
             <?php $classes = getClasses($job->status->state); ?>
             <div class="w3-panel w3-padding w3-card w3-round job-item" id="<?= $job->identity->jobid ?>" data-root="<?= $job->identity->result ?>">
-                <div class="job-header">
+                <div class="job-header" onclick="show_next_sibling(this)">
                     <span class="job-date"><?= strftime("%x %X", strtotime($job->status->queued->date)) ?></span>
                     <span class="job-state w3-right w3-button w3-small w3-<?= $job->status->state->getColor() ?>" style="min-width: 80px"><?= $job->status->state->getValue() ?></span>
                     <span class="job-task w3-right w3-button w3-small w3-light-gray" style="min-width: 80px"><?= $job->submit->task ?></span>
                 </div>
-                <br>
-                <div class="job-ident">
-                    <span class="job-name"><?= $job->submit->name ?></span>
-                </div>
-                <br>
-                <div class="job-buttons">
-                    <!-- application specific buttons -->
-                    <span class="job-app-buttons">
-                    </span>
-                    <!-- standard system buttons -->
-                    <span class="job-std-buttons w3-right">
-                        <a class="w3-btn <?= $classes['common'] ?> <?= $classes['delete'] ?>" onclick=delete_queued_job('<?= json_encode($job->identity) ?>')><?= $job->status->state->getRemove() ?></a>
-                        <a class="w3-btn <?= $classes['common'] ?> <?= $classes['result'] ?>" onclick="file_download(event, '<?= http_build_query($job->identity) ?>&name=result')"><?= _("Result") ?></a>
-                        <a class="w3-btn <?= $classes['common'] ?> <?= $classes['detail'] ?>" onclick="content_replace(event, 'page-content', 'details?<?= http_build_query($job->identity) ?>')"><?= _("Details") ?></a>
-                    </span>
+                <div class="w3-hide-small">
+                    <br>
+                    <div class="job-ident">
+                        <span class="job-name"><?= $job->submit->name ?></span>
+                    </div>
+                    <br>
+                    <div class="job-buttons">
+                        <!-- application specific buttons -->
+                        <span class="job-app-buttons">
+                        </span>
+                        <!-- standard system buttons -->
+                        <span class="job-std-buttons w3-right">
+                            <a class="w3-btn <?= $classes['common'] ?> <?= $classes['delete'] ?>" onclick=delete_queued_job('<?= json_encode($job->identity) ?>')><?= $job->status->state->getRemove() ?></a>
+                            <a class="w3-btn <?= $classes['common'] ?> <?= $classes['result'] ?>" onclick="file_download(event, '<?= http_build_query($job->identity) ?>&name=result')"><?= _("Result") ?></a>
+                            <a class="w3-btn <?= $classes['common'] ?> <?= $classes['detail'] ?>" onclick="content_replace(event, 'page-content', 'details?<?= http_build_query($job->identity) ?>')"><?= _("Details") ?></a>
+                        </span>
+                    </div>
                 </div>
             </div>
     <?php endforeach; ?>
