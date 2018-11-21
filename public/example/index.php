@@ -1,8 +1,8 @@
 <?php
 
-use Batchelor\Web\ExamplePageIndex;
+use Batchelor\Controller\Example\ExampleIndex;
 
-class IndexPage extends ExamplePageIndex
+class IndexPage extends ExampleIndex
 {
 
         public function __construct()
@@ -15,4 +15,5 @@ class IndexPage extends ExamplePageIndex
                 include("index.inc");
                 parent::printContent();
         }
+
 }

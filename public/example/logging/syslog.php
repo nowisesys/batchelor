@@ -1,6 +1,6 @@
 <?php
 
-use Batchelor\Web\ExamplePage;
+use Batchelor\Controller\Example\ExamplePage;
 
 class SyslogPage extends ExamplePage
 {

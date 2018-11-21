@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-namespace Batchelor\Web;
+namespace Batchelor\Controller\Example;
 
 use UUP\Site\Page\Web\StandardPage;
 
@@ -27,8 +27,13 @@ use UUP\Site\Page\Web\StandardPage;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class ExamplePageIndex extends StandardPage
+class ExampleIndex extends StandardPage
 {
+        
+//        public function __construct()
+//        {
+//                parent::__construct($title, $template, $config);
+//        }
 
         public function printContent()
         {
