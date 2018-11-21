@@ -35,11 +35,13 @@ class ReverseText extends TaskAdapter
 
         public function execute(Directory $workdir, Directory $result, Interaction $interact)
         {
+                $logger = $interact->getLogger();
+                
                 // 
                 // Send an greeting. This message should end up in the task
                 // specific log file.
                 //                 
-                $interact->getLogger()->info("Hello world from reverse text");
+                $logger->info("Hello world from reverse text");
 
                 // 
                 // Create output file in results directory. Pick up the input
