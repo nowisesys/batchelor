@@ -1,7 +1,7 @@
 <?php
 
+use Batchelor\Controller\Standard\StandardWebPage;
 use Batchelor\Render\Queue;
-use UUP\Site\Page\Web\StandardPage;
 
 /*
  * Copyright (C) 2018 Anders Lövgren (Nowise Systems)
@@ -21,7 +21,7 @@ use UUP\Site\Page\Web\StandardPage;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class DetailsPage extends StandardPage
+class DetailsPage extends StandardWebPage
 {
 
         public function __construct()

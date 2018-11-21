@@ -18,15 +18,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+use Batchelor\Controller\Standard\StandardWebPage;
 use Batchelor\Render\Queue;
-use UUP\Site\Page\Web\StandardPage;
 
 /**
  * The queue page.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class IndexPage extends StandardPage
+class IndexPage extends StandardWebPage
 {
 
         public function __construct()

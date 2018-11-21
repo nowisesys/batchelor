@@ -18,15 +18,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+use Batchelor\Controller\Standard\StandardWebPage;
 use Batchelor\Render\Queue;
-use UUP\Site\Page\Web\StandardPage;
 
 /**
  * The file viewer.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class PreviewPage extends StandardPage
+class PreviewPage extends StandardWebPage
 {
 
         public function __construct()

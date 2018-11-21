@@ -18,14 +18,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-use UUP\Site\Page\Web\StandardPage;
+use Batchelor\Controller\Standard\StandardWebPage;
 
 /**
  * The job submit page.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class SubmitPage extends StandardPage
+class SubmitPage extends StandardWebPage
 {
 
         public function __construct()
