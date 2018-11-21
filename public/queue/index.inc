@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+use Batchelor\WebService\Types\JobState;
+
 // 
 // The queued variable is provided by controller/component and contains the 
 // array of queued jobs to render by this template. Modify this script to suite
@@ -45,6 +47,32 @@
 // Cross origin is not supported, modify content_replace() in your theme to add
 // support. Use page-content as target ID to replace main content.
 // 
+
+function getClasses(JobState $state): array
+{
+        if ($state->isPending()) {
+                return [
+                        'common' => "w3-white w3-round w3-border w3-border-teal",
+                        'delete' => "",
+                        'result' => "w3-disabled",
+                        'detail' => ""
+                ];
+        } elseif ($state->isCompleted()) {
+                return [
+                        'common' => "w3-white w3-round w3-border w3-border-teal",
+                        'delete' => "",
+                        'result' => "",
+                        'detail' => ""
+                ];
+        } else {
+                return [
+                        'common' => "w3-white w3-round w3-border w3-border-deep-orange",
+                        'delete' => "",
+                        'result' => "w3-disabled",
+                        'detail' => ""
+                ];
+        }
+}
 
 ?>
 
@@ -94,22 +122,7 @@
 
 <ul class="w3-ul w3-animate-right">
     <?php foreach ($queued as $job) : ?>
-            <?php
-            if ($job->status->state->isGood()) {
-                    $classes = [
-                            'delete' => "",
-                            'result' => "",
-                            'detail' => ""
-                    ];
-            } else {
-                    $classes = [
-                            'delete' => "",
-                            'result' => "w3-disabled",
-                            'detail' => ""
-                    ];
-            }
-
-            ?>
+            <?php $classes = getClasses($job->status->state); ?>
             <div class="w3-panel w3-padding w3-card w3-round job-item" id="<?= $job->identity->jobid ?>" data-root="<?= $job->identity->result ?>">
                 <div class="job-header">
                     <span class="job-date"><?= strftime("%x %X", strtotime($job->status->queued->date)) ?></span>
@@ -127,9 +140,9 @@
                     </span>
                     <!-- standard system buttons -->
                     <span class="job-std-buttons w3-right">
-                        <a class="w3-btn <?= $classes['delete'] ?>" onclick=delete_queued_job('<?= json_encode($job->identity) ?>')><?= $job->status->state->getRemove() ?></a>
-                        <a class="w3-btn <?= $classes['result'] ?>" onclick="file_download(event, '<?= http_build_query($job->identity) ?>&name=result')"><?= _("Result") ?></a>
-                        <a class="w3-btn <?= $classes['detail'] ?>" onclick="content_replace(event, 'page-content', 'details?<?= http_build_query($job->identity) ?>')"><?= _("Details") ?></a>
+                        <a class="w3-btn <?= $classes['common'] ?> <?= $classes['delete'] ?>" onclick=delete_queued_job('<?= json_encode($job->identity) ?>')><?= $job->status->state->getRemove() ?></a>
+                        <a class="w3-btn <?= $classes['common'] ?> <?= $classes['result'] ?>" onclick="file_download(event, '<?= http_build_query($job->identity) ?>&name=result')"><?= _("Result") ?></a>
+                        <a class="w3-btn <?= $classes['common'] ?> <?= $classes['detail'] ?>" onclick="content_replace(event, 'page-content', 'details?<?= http_build_query($job->identity) ?>')"><?= _("Details") ?></a>
                     </span>
                 </div>
             </div>
