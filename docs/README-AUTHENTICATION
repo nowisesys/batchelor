@@ -1,0 +1,88 @@
+
+    ************************************
+        README FOR AUTHENTICATION
+    ************************************
+
+Authentication can be enabled to provide protection for your application. Logon
+is disabled by default, but can be enabled with some simple steps.
+
+** SITE CONFIG:
+
+    Open config/defaults.site and enable the authentication section. You need to
+    tweak the locations (logon/logoff) to match your installation:
+
+        'auth'      => array(
+                'start'  => '/',                      // Start page after successful logon
+                'logon'  => '/logon',                 // The logon page
+                'logoff' => '/logoff',                // The logoff page
+                'config' => __DIR__ . '/auth.inc',    // Config file for authenticators
+                'sso'    => true                      // Enable SSO login
+        ),
+
+    This enables on-demand authentication forcing users to authenticate whenever
+    required. If you like to show the logon icon, then it has to be enabled in the
+    toolbox:
+
+        'tools' => array(
+            ...
+                  'auth'      => true,    // Enable authentication box.
+        ),
+
+** INSTALL FILES:
+
+    Use the uup-site.sh script for installing the auth directory (containing
+    support files) into the public directory. If batchelor was deployed using
+    composer, then simply run this command:
+
+        bash$> ./vendor/bin/uup-site.sh --location /batchelor2 --auth
+
+    You should now have the required support file installed under your public
+    directory:
+
+        public/auth/
+        ├── logoff
+        │   ├── authent.phtml
+        │   ├── completed.phtml
+        │   ├── destroy.phtml
+        │   └── index.php
+        └── logon
+            ├── form.phtml
+            ├── index.php
+            ├── normal.phtml
+            ├── secure.phtml
+            └── select.phtml
+
+
+** AUTHENTICATORS:
+
+    Which authenticators and access restrictions to use is configured inside the
+    config/auth.inc file. This file returns an array that configures a stack of
+    objects for authentication and authorization.
+
+    Typical you like to enable one or more authenticators in the auth sub chain
+    and perhaps enable some access restriction. The latter can i.e. be used to
+    only allow access from specific domains.
+
+** FURTHER READING:
+
+    The autentication framework is handled by external packages: uup-auth and
+    uup-site. Both of them are installed as dependencies of batchelor when 
+    running composer update, see the vendors directory.
+
+** AUTHENTICATION:
+
+    Derive your controllers from the SecurePage or SecureService classes from 
+    uup-site to enforce authentication. 
+
+    Batchelor provides and uses controller base classes that injects the security 
+    context that can be retrieved from the security service. These controller are
+    not enforcing authentication.
+
+** AUTHORIZATION:
+
+    The core batchelor don't use authorization. For those requiring it, the access 
+    control list (ACL) framework in system security access could be used.
+    
+    See source/Batchelor/System/Security/Access.php for details.
+
+// Anders Lövgren, 2018-11-21
