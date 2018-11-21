@@ -20,8 +20,8 @@
 
 namespace Batchelor\WebService;
 
+use Batchelor\Controller\Standard\StandardJsonService;
 use Batchelor\Web\Upload;
-use Batchelor\WebService\Common\ServiceFrontend;
 use Batchelor\WebService\Handler\JsonServiceHandler;
 
 /**
@@ -29,69 +29,8 @@ use Batchelor\WebService\Handler\JsonServiceHandler;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class JsonServiceFrontend extends ServiceFrontend
+class JsonServiceFrontend extends StandardJsonService
 {
-
-        /**
-         * Constructor.
-         */
-        public function __construct()
-        {
-                parent::__construct();
-                header('Content-Type: application/json');
-        }
-
-        /**
-         * Get JSON encode options.
-         * @return int
-         */
-        private function getOptions(): int
-        {
-                $options = 0;
-
-                if ($this->params->getParam("pretty") == 1) {
-                        $options |= JSON_PRETTY_PRINT;
-                }
-                if ($this->params->getParam("escape") == 0) {
-                        $options |= JSON_UNESCAPED_SLASHES;
-                }
-                if ($this->params->getParam("unicode") == 0) {
-                        $options |= JSON_UNESCAPED_UNICODE;
-                }
-                if ($this->params->getParam("numeric") == 1) {
-                        $options |= JSON_NUMERIC_CHECK;
-                }
-                if ($this->params->getParam("fraction") == 1) {
-                        $options |= JSON_PRESERVE_ZERO_FRACTION;
-                }
-
-                return $options;
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function onException($exception)
-        {
-                echo json_encode(array(
-                        'status'  => 'failure',
-                        'message' => $exception->getMessage(),
-                        'code'    => $exception->getCode()
-                    ), $this->getOptions()
-                );
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function render()
-        {
-                echo json_encode(array(
-                        'status' => 'success',
-                        'result' => $this->onRendering()
-                    ), $this->getOptions()
-                );
-        }
 
         /**
          * Process service request.
@@ -101,27 +40,19 @@ class JsonServiceFrontend extends ServiceFrontend
          * 
          * @return array
          */
-        private function onRendering()
+        protected function onRendering()
         {
                 // 
-                // Get method to invoke from request parameters and decode JSON
-                // payload from input stream:
+                // Get method to invoke decoded JSON payload:
                 // 
                 $func = $this->params->getParam("func");
-                $data = json_decode(file_get_contents("php://input"), true);
+                $data = $this->getInput();
 
                 // 
                 // The enqueue method accepts form post:
                 // 
                 if ($func == "enqueue" && $data == false) {
                         $data = $this->getUpload();
-                }
-
-                // 
-                // Patch for missing data (i.e. version method):
-                // 
-                if (empty($data)) {
-                        $data = [];
                 }
 
                 // 
