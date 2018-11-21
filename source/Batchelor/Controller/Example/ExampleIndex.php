@@ -29,11 +29,15 @@ use UUP\Site\Page\Web\StandardPage;
  */
 class ExampleIndex extends StandardPage
 {
-        
-//        public function __construct()
-//        {
-//                parent::__construct($title, $template, $config);
-//        }
+
+        public function __construct(string $title)
+        {
+                parent::__construct($title);
+
+                if ($this->config->auth) {
+                        $this->authorize();
+                }
+        }
 
         public function printContent()
         {

@@ -56,6 +56,10 @@ class ExamplePage extends StandardPage
         {
                 parent::__construct($title);
 
+                if ($this->config->auth) {
+                        $this->authorize();
+                }
+
                 $this->_filename = $filename;
                 $this->_template = sprintf("%s/content/example.inc", $this->config->template);
                 $this->_callback = $callback;
@@ -68,9 +72,9 @@ class ExamplePage extends StandardPage
 
                 $timer = new Timer();
                 $timer->start();
-                
+
                 require($this->_template);
-                
+
                 $timer->stop();
                 printf("Example finished in %f sec\n", $timer->elapsed());
         }
