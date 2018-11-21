@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Batchelor\Web\Web\Request;
+namespace Batchelor\Web\Request;
 
 /**
  * The JSON input data.
@@ -55,9 +55,11 @@ trait JsonInput
          */
         private function setInput()
         {
-                $this->_input = json_decode(
+                if (!($this->_input = json_decode(
                     file_get_contents("php://input"), true
-                );
+                    ))) {
+                        $this->_input = [];
+                }
         }
 
 }

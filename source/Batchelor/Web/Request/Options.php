@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Batchelor\Web\Web\Request;
+namespace Batchelor\Web\Request;
 
 /**
  * Property bag for request options.
