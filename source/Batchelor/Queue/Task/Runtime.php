@@ -28,13 +28,14 @@ use Batchelor\Storage\Directory;
 use Batchelor\Storage\File;
 use Batchelor\WebService\Types\JobData;
 use RuntimeException;
+use Serializable;
 
 /**
  * The runtime data.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class Runtime
+class Runtime implements Serializable
 {
 
         /**
@@ -201,6 +202,28 @@ class Runtime
                 $runtime->setLogger($runtime->useLogger());
 
                 return $runtime;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function serialize(): string
+        {
+                return serialize([
+                        $this->data,
+                        $this->job,
+                        $this->owner,
+                        $this->result
+                ]);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function unserialize($serialized)
+        {
+                list($this->data, $this->job, $this->owner, $this->result) = unserialize($serialized);
+                $this->_logger = $this->useLogger();
         }
 
 }
