@@ -75,10 +75,39 @@ return [
         // // single local work queue, but it's possible to setup a distribued 
         // // solution by defining one or more remote queues.
         // // 
-        //'queue'   => [
+        // 'queue'   => [
         //        'local' => [
         //                'type'   => 'system',
         //                'weight' => 50
         //        ]
-        //]
+        // ],
+        // // 
+        // // Access control list (ACL) for application.
+        // // 
+        // 'access'   => [
+        //        'manager' => [
+        //                'action' => '*',
+        //                'users'  => 'root'
+        //        ],
+        //        'writer'  => [
+        //                'action' => ['create', 'read', 'update'],
+        //                'users'  => ['user1', 'user2']
+        //        ],
+        //        'reader'  => [
+        //                'action' => 'read',
+        //                'users'  => '*'
+        //        ]
+        // ],
+        // 
+        // The domains setting provides default domain and mapping of user
+        // realm (domain suffix of user principal name) against human friendly
+        // names.
+        // 
+        'domains'  => [
+                'default' => 'qnet',
+                'mapping' => [
+                        'domain1.com' => 'The first organization',
+                        'domain2.com' => 'The second organization'
+                ]
+        ]
 ];
