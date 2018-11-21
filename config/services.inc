@@ -63,6 +63,10 @@ return [
         // 
         'cache'       => new Service(Service\Cache::class),
         // 
+        // The security context service.
+        // 
+        'security'    => new Service(Service\Security::class),
+        // 
         // The task processor service provides the repository of task runners 
         // used by the consumer of scheduled jobs (processor). Clear the list
         // and replace with real tasks defining your application.

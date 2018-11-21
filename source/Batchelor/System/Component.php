@@ -27,6 +27,7 @@ use Batchelor\System\Service\Logging;
 use Batchelor\System\Service\Persistance;
 use Batchelor\System\Service\Processor;
 use Batchelor\System\Service\Queue;
+use Batchelor\System\Service\Security;
 use Batchelor\System\Service\Storage;
 
 /**
@@ -62,6 +63,7 @@ use Batchelor\System\Service\Storage;
  * @property-read Cache $cache The cache service.
  * @property-read Logging $logger The logging service.
  * @property-read Queue $queue The queue service.
+ * @property-read Security $security The security context service.
  * @property-read Processor $processor The task processor service.
  * 
  * @author Anders Lövgren (Nowise Systems)
