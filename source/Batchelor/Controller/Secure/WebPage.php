@@ -29,7 +29,7 @@ use UUP\Site\Page\Web\Security\SecurePage;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class SecureWebPage extends SecurePage
+abstract class WebPage extends SecurePage
 {
 
         use SecurityProvider;

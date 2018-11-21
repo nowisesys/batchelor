@@ -20,7 +20,7 @@
 
 namespace Batchelor\WebService;
 
-use Batchelor\Controller\Standard\StandardJsonService;
+use Batchelor\Controller\Standard\JsonService;
 use Batchelor\Web\Upload;
 use Batchelor\WebService\Handler\JsonServiceHandler;
 
@@ -29,7 +29,7 @@ use Batchelor\WebService\Handler\JsonServiceHandler;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class JsonServiceFrontend extends StandardJsonService
+class JsonServiceFrontend extends JsonService
 {
 
         /**

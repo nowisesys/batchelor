@@ -20,7 +20,7 @@
 
 namespace Batchelor\WebService;
 
-use Batchelor\Controller\Standard\StandardWebService;
+use Batchelor\Controller\Standard\WebService;
 use Batchelor\WebService\Handler\SoapServiceHandler;
 use UUP\WebService\Soap\SoapService;
 
@@ -29,7 +29,7 @@ use UUP\WebService\Soap\SoapService;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class SoapServiceFrontend extends StandardWebService
+class SoapServiceFrontend extends WebService
 {
 
         /**

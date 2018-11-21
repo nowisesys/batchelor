@@ -49,7 +49,7 @@ use UUP\Site\Request\Params;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class SecureWebService extends SecureService
+abstract class WebService extends SecureService
 {
 
         use SecurityProvider;

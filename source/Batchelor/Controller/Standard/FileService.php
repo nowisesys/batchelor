@@ -20,36 +20,46 @@
 
 namespace Batchelor\Controller\Standard;
 
-use Batchelor\System\Security\Provider as SecurityProvider;
-use Batchelor\Web\Request\Options as RequestOptions;
-use UUP\Site\Page\Service\StandardService;
+use Batchelor\Web\Request\JsonInput;
 
 /**
- * The standard web service controller.
+ * File download service.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class StandardWebService extends StandardService
+abstract class FileService extends WebService
 {
 
-        use SecurityProvider;
-        use RequestOptions;
+        use JsonInput;
 
         /**
-         * {@inheritdoc}
+         * Constructor.
          */
         public function __construct()
         {
+                $this->setInput();
                 parent::__construct();
-                $this->setSecurity();
+        }
+
+        public function render()
+        {
+                $this->onRendering();
+        }
+
+        public function onException($exception)
+        {
+                if ($exception->getCode() != 0 &&
+                    $exception->getCode() != 503) {
+                        http_response_code($exception->getCode());
+                } else {
+                        http_response_code(503);
+                        echo $exception->getMessage();
+                }
         }
 
         /**
-         * {@inheritdoc}
+         * Process service request.
+         * @return array
          */
-        public function onException($exception)
-        {
-                error_log(print_r($exception, true));
-        }
-
+        abstract protected function onRendering();
 }

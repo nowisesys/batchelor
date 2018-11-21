@@ -1,6 +1,6 @@
 <?php
 
-use Batchelor\Controller\Standard\StandardWebPage;
+use Batchelor\Controller\Standard\WebPage;
 use Batchelor\Render\Queue;
 
 /*
@@ -21,7 +21,7 @@ use Batchelor\Render\Queue;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class DetailsPage extends StandardWebPage
+class DetailsPage extends WebPage
 {
 
         public function __construct()
