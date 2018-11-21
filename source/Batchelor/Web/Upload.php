@@ -121,7 +121,7 @@ class Upload
          */
         private function setFilepath(string $from, string $path)
         {
-                if (!rename($from, $path)) {
+                if (!move_uploaded_file($from, $path)) {
                         throw new RuntimeException("Failed rename uploaded file");
                 } else {
                         $this->_data['path'] = $path;
