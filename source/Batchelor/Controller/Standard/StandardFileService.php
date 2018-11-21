@@ -27,7 +27,7 @@ use Batchelor\Web\Request\JsonInput;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-abstract class SecureFileService extends StandardWebService
+abstract class StandardFileService extends StandardWebService
 {
 
         use JsonInput;
