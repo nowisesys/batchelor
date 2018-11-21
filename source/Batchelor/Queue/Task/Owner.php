@@ -20,6 +20,10 @@
 
 namespace Batchelor\Queue\Task;
 
+use Batchelor\System\Security\User;
+use Batchelor\System\Service\Security;
+use Batchelor\System\Services;
+
 /**
  * The job owner.
  *
@@ -56,6 +60,7 @@ class Owner
         public function __construct(string $hostid)
         {
                 $this->hostid = $hostid;
+                $this->user = $this->getPrincipal();
 
                 if (PHP_SAPI != 'cli') {
                         $this->addr = filter_input(INPUT_SERVER, "REMOTE_ADDR");
@@ -63,6 +68,40 @@ class Owner
                 } else {
                         $this->addr = "127.0.0.1";
                         $this->host = "localhost";
+                }
+        }
+
+        /**
+         * Get security service.
+         * @return Security
+         */
+        private function getSecurity(): Security
+        {
+                return Services::getInstance()
+                        ->getService("security");
+        }
+
+        /**
+         * Get user object.
+         * @return User
+         */
+        private function getUser(): User
+        {
+                return $this->getSecurity()->getUser();
+        }
+
+        /**
+         * Get user principal name.
+         * @return string
+         */
+        private function getPrincipal(): string
+        {
+                if (!($user = $this->getUser())) {
+                        return "";
+                } elseif ($user->isAuthenticated()) {
+                        return $user->getPrincipal()->getPrincipalName();
+                } else {
+                        return "";
                 }
         }
 
