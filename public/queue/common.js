@@ -19,6 +19,18 @@
 /* global Element */
 
 // 
+// Display content in modal dialog.
+// 
+function show_modal_dialog(event, url) {
+    const dialog = document.getElementById('modal-dialog');
+    const target = dialog.querySelector("#modal-content");
+
+    content_replace(event, 'modal-content', url, false);
+
+    dialog.style.display = 'block';
+}
+
+// 
 // Display error message in dialog.
 // 
 function show_error_dialog(error) {
