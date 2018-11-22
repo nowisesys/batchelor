@@ -20,7 +20,9 @@
 
 namespace Batchelor\Queue\Task\Manager\Prefork;
 
-use Batchelor\System\Component;
+use Batchelor\Cache\Service;
+use Batchelor\Cache\Storage;
+use RuntimeException;
 use SyncReaderWriter;
 
 /**
@@ -51,7 +53,7 @@ class Scratch
                         throw new RuntimeException("The sync extension is not loaded");
                 }
                 
-                $this->_cache = new \Batchelor\Cache\Service();
+                $this->_cache = new Service();
         }
 
         /**
