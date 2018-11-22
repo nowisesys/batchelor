@@ -208,12 +208,11 @@ class Scheduler extends Component
                 if (!isset($options['options'])) {
                         $options['options'] = [];
                 }
-                if (!isset($options['options']['lifetime'])) {
-                        $options['options']['lifetime'] = 0;
+
+                foreach (['persist' => true, 'lifetime' => 0] as $name => $value) {
+                        $options['options'][$name] = $value;
                 }
-                if ($options['options']['lifetime'] != 0) {
-                        $options['options']['lifetime'] = 0;
-                }
+
                 if ($options['type'] == 'file') {
                         $options['options']['path'] = 'cache/schedule';
                 }
@@ -229,12 +228,7 @@ class Scheduler extends Component
         {
                 if (($config = $this->getService("app"))) {
                         if (!isset($config->cache->schedule)) {
-                                return [
-                                        'type'    => 'detect',
-                                        'options' => [
-                                                'exclude' => ['apcu', 'xcache']
-                                        ]
-                                ];
+                                return ['type' => 'detect'];
                         } elseif (is_string($config->cache->schedule)) {
                                 return ['type' => $this->app->cache->schedule];
                         } else {
