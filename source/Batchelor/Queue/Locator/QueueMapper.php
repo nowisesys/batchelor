@@ -24,7 +24,16 @@ use Batchelor\Cache\Frontend;
 
 /**
  * The queue name mapper.
- *
+ * 
+ * This class handles the hostid -> server config mapping. In the simpliest case 
+ * there's only one queue (the local). 
+ * 
+ * In essential, this class answers the single question: Should this client be 
+ * using the local queue or one of the remote queues?
+ * 
+ * The answer (from cache if exist) is a string containing either "local" or the
+ * name of the remote queue config (i.e. "remote3").
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
 class QueueMapper extends Frontend
