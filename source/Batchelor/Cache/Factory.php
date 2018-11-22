@@ -59,6 +59,12 @@ class Factory
          */
         public static function getFirst(array $options = [], array $exclude = []): Backend
         {
+                if (isset($options['persist']) && $options['persist']) {
+                        $exclude = array_unique(array_merge($exclude, [
+                                "apcu", "xcache", "memory", "memcached", "shmop"
+                        ]));
+                }
+
                 $detected = self::getAvailable($exclude);
                 $instance = self::getBackend($detected[0], $options);
 
