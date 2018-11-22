@@ -125,6 +125,17 @@ class Locator extends Component
         }
 
         /**
+         * Is this hostid on local or an remote queue?
+         * 
+         * @param string $hostid The hostid string.
+         * @return bool
+         */
+        public function isOnLocal(string $hostid): bool
+        {
+                return $this->_mapper->read($hostid) == "local";
+        }
+
+        /**
          * Get service configuration.
          * @return array 
          */
