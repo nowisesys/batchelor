@@ -261,7 +261,7 @@ class StateQueue implements Inspector, IteratorAggregate
          */
         private function getCacheKey(): string
         {
-                return sprintf("scheduler-%s-queue", $this->_ident);
+                return sprintf("%s-queue", $this->_ident);
         }
 
         /**
@@ -299,7 +299,7 @@ class StateQueue implements Inspector, IteratorAggregate
         public function getSyncLock(string $name = "lock"): SyncReaderWriter
         {
                 return new SyncReaderWriter(
-                    sprintf("scheduler-%s-queue-%s", $this->_ident, $name)
+                    sprintf("%s-queue-%s", $this->_ident, $name)
                 );
         }
 

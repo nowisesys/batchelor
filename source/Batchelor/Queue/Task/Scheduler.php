@@ -20,6 +20,7 @@
 
 namespace Batchelor\Queue\Task;
 
+use Batchelor\Cache\Config;
 use Batchelor\Cache\Factory;
 use Batchelor\Cache\Storage;
 use Batchelor\Queue\Task\Scheduler\Action\Add as AddAction;
@@ -32,7 +33,6 @@ use Batchelor\Queue\Task\Scheduler\State;
 use Batchelor\Queue\Task\Scheduler\StateQueue;
 use Batchelor\Queue\Task\Scheduler\Summary;
 use Batchelor\System\Component;
-use Batchelor\System\Service\Config;
 use Batchelor\WebService\Types\JobData;
 use Batchelor\WebService\Types\JobState;
 use Batchelor\WebService\Types\QueuedJob;
@@ -119,7 +119,7 @@ class Scheduler extends Component
          */
         public function hasJob(string $job): bool
         {
-                $ckey = sprintf("scheduler-%s-runtime", $job);
+                $ckey = sprintf("%s-runtime", $job);
                 return $this->_cache->exists($ckey);
         }
 
@@ -154,7 +154,7 @@ class Scheduler extends Component
         {
                 (new RemoveAction($this))->execute($job);
 
-                $ckey = sprintf("scheduler-%s-runtime", $job);
+                $ckey = sprintf("%s-runtime", $job);
                 $this->_cache->delete($ckey);
         }
 
@@ -181,7 +181,7 @@ class Scheduler extends Component
          */
         public function getRuntime(string $job): Runtime
         {
-                $ckey = sprintf("scheduler-%s-runtime", $job);
+                $ckey = sprintf("%s-runtime", $job);
                 return $this->_cache->read($ckey);
         }
 
@@ -193,7 +193,7 @@ class Scheduler extends Component
          */
         public function setRuntime(string $job, Runtime $runtime)
         {
-                $ckey = sprintf("scheduler-%s-runtime", $job);
+                $ckey = sprintf("%s-runtime", $job);
                 $this->_cache->save($ckey, $runtime);
         }
 
@@ -204,37 +204,16 @@ class Scheduler extends Component
         private function getCache(): Storage
         {
                 $options = $this->getConfig();
-
-                if (!isset($options['options'])) {
-                        $options['options'] = [];
-                }
-
-                foreach (['persist' => true, 'lifetime' => 0] as $name => $value) {
-                        $options['options'][$name] = $value;
-                }
-
-                if ($options['type'] == 'file') {
-                        $options['options']['path'] = 'cache/schedule';
-                }
-
                 return Factory::getBackend($options['type'], $options['options']);
         }
 
         /**
-         * Get service configuration.
-         * @return array 
+         * Get cache config.
+         * @return array
          */
         private function getConfig(): array
         {
-                if (($config = $this->getService("app"))) {
-                        if (!isset($config->cache->schedule)) {
-                                return ['type' => 'detect'];
-                        } elseif (is_string($config->cache->schedule)) {
-                                return ['type' => $this->app->cache->schedule];
-                        } else {
-                                return Config::toArray($config->cache->schedule);
-                        }
-                }
+                return (new Config('schedule', 'persist'))->getOptions();
         }
 
         /**

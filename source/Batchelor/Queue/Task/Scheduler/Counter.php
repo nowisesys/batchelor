@@ -165,7 +165,7 @@ class Counter
          */
         private function getCacheKey(): string
         {
-                return sprintf("scheduler-%s-count", $this->_ident);
+                return sprintf("%s-count", $this->_ident);
         }
 
         /**
@@ -182,7 +182,7 @@ class Counter
         public function getSyncLock(string $name = "lock"): SyncReaderWriter
         {
                 return new SyncReaderWriter(
-                    sprintf("scheduler-%s-count-%s", $this->_ident, $name)
+                    sprintf("%s-count-%s", $this->_ident, $name)
                 );
         }
 
