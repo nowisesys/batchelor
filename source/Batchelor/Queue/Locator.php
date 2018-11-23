@@ -70,7 +70,7 @@ class Locator extends Component
          */
         public function __construct(array $options)
         {
-                $this->_mapper = new QueueMapper($this->getConfig());
+                $this->_mapper = new QueueMapper();
                 $this->_queues = new QueueInitiator($options);
         }
 
@@ -133,23 +133,6 @@ class Locator extends Component
         public function isOnLocal(string $hostid): bool
         {
                 return $this->_mapper->read($hostid) == "local";
-        }
-
-        /**
-         * Get service configuration.
-         * @return array 
-         */
-        private function getConfig(): array
-        {
-                if (($config = $this->getService("app"))) {
-                        if (!isset($config->cache->mapper)) {
-                                return ['type' => 'detect'];
-                        } elseif (is_string($config->cache->mapper)) {
-                                return ['type' => $config->cache->mapper];
-                        } else {
-                                return Config::toArray($config->cache->mapper);
-                        }
-                }
         }
 
 }

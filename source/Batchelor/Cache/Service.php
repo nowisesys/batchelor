@@ -23,7 +23,6 @@ namespace Batchelor\Cache;
 use Batchelor\Cache\Frontend;
 use Batchelor\Cache\Storage;
 use Batchelor\System\Component;
-use Batchelor\System\Service\Config;
 
 /**
  * The system cache service.
@@ -123,15 +122,7 @@ class Service extends Component implements Storage
          */
         private function getConfig(): array
         {
-                if (($config = $this->getService("app"))) {
-                        if (!isset($config->cache->system)) {
-                                return ['type' => 'detect'];
-                        } elseif (is_string($config->cache->system)) {
-                                return ['type' => $this->app->cache->system];
-                        } else {
-                                return Config::toArray($config->cache->system);
-                        }
-                }
+                return (new Config('system', 'detect'))->getOptions();
         }
 
 }

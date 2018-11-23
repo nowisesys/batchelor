@@ -20,10 +20,11 @@
 
 namespace Batchelor\Queue\Locator;
 
+use Batchelor\Cache\Config;
 use Batchelor\Cache\Frontend;
 
 /**
- * The queue name mapper.
+ * The queue server mapper.
  * 
  * This class handles the hostid -> server config mapping. In the simpliest case 
  * there's only one queue (the local). 
@@ -41,24 +42,20 @@ class QueueMapper extends Frontend
 
         /**
          * Constructor.
-         * @param array $options The mapper options.
          */
-        public function __construct(array $options = [])
+        public function __construct()
         {
-                if (!isset($options['options'])) {
-                        $options['options'] = [];
-                }
-                if (!isset($options['options']['lifetime'])) {
-                        $options['options']['lifetime'] = 0;
-                }
-                if ($options['options']['lifetime'] != 0) {
-                        $options['options']['lifetime'] = 0;
-                }
-                if ($options['type'] == 'file') {
-                        $options['options']['path'] = 'cache/mapper';
-                }
-
+                $options = $this->getConfig();
                 parent::__construct($options['type'], $options['options']);
+        }
+
+        /**
+         * Get cache config.
+         * @return array
+         */
+        private function getConfig(): array
+        {
+                return (new Config('mapper', 'persist'))->getOptions();
         }
 
 }
