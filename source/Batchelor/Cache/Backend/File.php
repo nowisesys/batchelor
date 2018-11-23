@@ -213,7 +213,18 @@ class File extends Base implements Backend
          */
         public function getCacheKey(string $key): string
         {
-                return sprintf("%s%s", trim(parent::getCacheKey($key), "-"), $this->getOption('suffix', '.ser'));
+                return sprintf("%s%s", $this->getPrefixed($key), $this->getOption('suffix', '.ser'));
+        }
+
+        /**
+         * Get prefixed cache key.
+         * 
+         * @param string $key The key name.
+         * @return string 
+         */
+        private function getPrefixed(string $key): string
+        {
+                return trim(parent::getCacheKey($key), "-");
         }
 
 }
