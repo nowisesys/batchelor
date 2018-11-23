@@ -42,7 +42,8 @@ return [
         //        'system'   => 'detect', // Generic system cache.
         //        'queue'    => 'detect', // Jobs queue cache.
         //        'schedule' => 'detect', // Scheduled task cache.
-        //        'mapper'   => 'detect'  // The hostid to queue map cache.
+        //        'mapper'   => 'detect', // The hostid to queue map cache.
+        //        'resolver' => 'detect'  // The hostid <-> ipaddr resolver.
         // ],
         // // 
         // // The logger options. Target root directory for relative pathes are the

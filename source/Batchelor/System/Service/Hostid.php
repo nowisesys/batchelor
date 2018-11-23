@@ -20,6 +20,7 @@
 
 namespace Batchelor\System\Service;
 
+use Batchelor\Queue\Locator\QueueResolver;
 use Batchelor\System\Component;
 
 /**
@@ -200,6 +201,7 @@ class Hostid extends Component
                 } else {
                         $this->setPersisted($value);
                         $this->setValue($value);
+                        $this->addMapping($value);
                 }
         }
 
@@ -218,6 +220,15 @@ class Hostid extends Component
         private function clearPersisted()
         {
                 $this->persistance->delete('hostid');
+        }
+
+        /**
+         * Add hostid <-> address mapping.
+         * @param string $value The hostid value.
+         */
+        private function addMapping(string $value)
+        {
+                (new QueueResolver())->addMapping($value);
         }
 
 }
