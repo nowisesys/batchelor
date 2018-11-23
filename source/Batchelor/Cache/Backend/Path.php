@@ -62,11 +62,11 @@ class Path extends File
                 parent::__construct($options);
 
                 $this->_extractor = function($key) {
-                        return substr_replace(
-                            $key, "/", strpos(
-                                $key, "-"
-                            ), 1
-                        );
+                        if (($pos = strpos($key, "-")) == false) {
+                                return $key;
+                        } else {
+                                return substr_replace($key, "/", $pos, 1);
+                        }
                 };
         }
 
