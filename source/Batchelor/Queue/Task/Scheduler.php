@@ -119,7 +119,7 @@ class Scheduler extends Component
          */
         public function hasJob(string $job): bool
         {
-                $ckey = sprintf("%s-runtime", $job);
+                $ckey = sprintf("runtime-%s", $job);
                 return $this->_cache->exists($ckey);
         }
 
@@ -154,7 +154,7 @@ class Scheduler extends Component
         {
                 (new RemoveAction($this))->execute($job);
 
-                $ckey = sprintf("%s-runtime", $job);
+                $ckey = sprintf("runtime-%s", $job);
                 $this->_cache->delete($ckey);
         }
 
@@ -181,7 +181,7 @@ class Scheduler extends Component
          */
         public function getRuntime(string $job): Runtime
         {
-                $ckey = sprintf("%s-runtime", $job);
+                $ckey = sprintf("runtime-%s", $job);
                 return $this->_cache->read($ckey);
         }
 
@@ -193,7 +193,7 @@ class Scheduler extends Component
          */
         public function setRuntime(string $job, Runtime $runtime)
         {
-                $ckey = sprintf("%s-runtime", $job);
+                $ckey = sprintf("runtime-%s", $job);
                 $this->_cache->save($ckey, $runtime);
         }
 
