@@ -64,7 +64,7 @@ class Config
                         $config['options'] = array_merge($config['options'], $options);
                 }
 
-                if ($config['type'] == 'file') {
+                if ($config['type'] == 'file' || $config['type'] == 'path') {
                         $config['options']['path'] = "cache/$name";
                         $config['options']['prefix'] = "";
                 }

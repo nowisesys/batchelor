@@ -4,6 +4,7 @@ return array(
         'head' => _('Cache'),
         'data' => array(
                 'File'      => 'file',
+                'Path'      => 'path',
                 'Memory'    => 'memory',
                 'APCu'      => 'apcu',
                 'XCache'    => 'xcache',

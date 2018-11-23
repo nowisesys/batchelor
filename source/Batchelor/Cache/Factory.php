@@ -29,6 +29,7 @@ use Batchelor\Cache\Backend\Extension\Stacked;
 use Batchelor\Cache\Backend\File;
 use Batchelor\Cache\Backend\Memcached;
 use Batchelor\Cache\Backend\Memory;
+use Batchelor\Cache\Backend\Path;
 use Batchelor\Cache\Backend\Redis;
 use Batchelor\Cache\Backend\XCache;
 use Batchelor\Cache\Formatter\JsonSerialize;
@@ -176,6 +177,8 @@ class Factory
                                 return new APCu($options);
                         case 'file':
                                 return new File($options);
+                        case 'path':
+                                return new Path($options);
                         case 'memory':
                                 return new Memory($options);
                         case 'memcached':

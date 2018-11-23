@@ -37,7 +37,8 @@ application config file (i.e. queue or mapper).
 
     Valid options for cache backend (type) are: 
 
-        o) file      - Use file system.
+        o) file      - Use file system (single directory).
+        o) path      - Use file system (creates directory tree).
         o) memory    - Use RAM memory.
         o) shmop     - Use shared memory.
         o) xcache    - Use the xcache extension.
@@ -229,6 +230,9 @@ application config file (i.e. queue or mapper).
     The stacked cache is suitable for implementing an "eventual in sync" cache. For
     most installations its sufficient with i.e. using redis. If running on a single
     server, use apcu or redis as backend.
+
+    For large installations (many jobs) where persistance between reboots are
+    important, use redis or path as cache backend.
 
 ** SYSTEM SERVICE:
 
