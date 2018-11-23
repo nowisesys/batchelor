@@ -100,8 +100,12 @@ class Config
                 if (!$config->cache) {
                         return ['type' => $type];
                 }
-                if (!$config->cache->offsetExists($name)) {
+
+                if (!$config->cache->offsetExists($name) &&
+                    !$config->cache->offsetExists("@all")) {
                         return ['type' => $type];
+                } else {
+                        $name = $this->getSection($config, $name);
                 }
 
                 if (!($entry = $config->cache->offsetGet($name))) {
@@ -112,6 +116,23 @@ class Config
                         return ['type' => $entry];
                 } else {
                         return Config::toArray($entry);
+                }
+        }
+
+        /**
+         * Get config section to use.
+         * 
+         * @param ApplicationConfig $config The application config.
+         * @param string $name The cache sub system name.
+         * @return string
+         */
+        private function getSection(ApplicationConfig $config, string $name): string
+        {
+                if ($config->cache->offsetExists($name)) {
+                        return $name;
+                }
+                if ($config->cache->offsetExists("@all")) {
+                        return "@all";
                 }
         }
 

@@ -198,6 +198,32 @@ application config file (i.e. queue or mapper).
     expires. The memory backend is an exception to this because its cache entries
     are all expired when the script terminates.
 
+** CONFIG ALL:
+
+    To simplify config, its also possible to use the "@all" key. Use this to 
+    apply same settings to all cache sub systems:
+
+        'cache' => [
+            '@all' => (string|array)
+                ...
+        ]
+
+    For example, this will configure all to use file cache:
+
+        'cache' => [
+            '@all' => 'file'
+        ]
+
+    To define more options, pass an array instead of string:
+
+        'cache' => [
+            '@all' => [
+                'type' => 'file',
+                    ...     // options for file cache backend
+            ]
+        ]
+
+
 ** RECOMMENDATIONS:
 
     The stacked cache is suitable for implementing an "eventual in sync" cache. For
