@@ -4,9 +4,14 @@
     ************************************
 
 
-Cache is configured in config/defaults.app. By default the cache is using files, 
-but can be configured to use i.e. apcu. The example below is using the system 
-cache, but the same pattern applies to all other cache targets as declare in the
+Cache is configured in config/defaults.app. By default the cache is dynamic
+configured to use detect for system cache and persist for all others. This will
+use fastest available cache for system, while for others exclude those cache 
+types that are not persistable.
+
+The cache type can be pin-pointed for each cache sub system, i.e. use apcu for
+qeuue mapper if persistance is not important. The example below is using the system 
+cache, but the same pattern applies to all other cache targets as declare in the 
 application config file (i.e. queue or mapper).
 
 ** GENERAL PATTERN:
