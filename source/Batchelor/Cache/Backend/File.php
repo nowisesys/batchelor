@@ -117,6 +117,10 @@ class File extends Base implements Backend
         {
                 $cache = $this->getDirectory();
 
+                if (strstr($name, "/")) {
+                        $cache->create($cache->getFile($name)->getDirname());
+                }
+
                 if (!($file = $cache->getFile($name))) {
                         return false;
                 } elseif ($mode == 'save') {
