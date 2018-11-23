@@ -22,6 +22,7 @@ namespace Batchelor\Cache;
 
 use Batchelor\Cache\Backend\APCu;
 use Batchelor\Cache\Backend\Extension\Detected;
+use Batchelor\Cache\Backend\Extension\Persisting;
 use Batchelor\Cache\Backend\Extension\ShmOp;
 use Batchelor\Cache\Backend\Extension\Stacked;
 use Batchelor\Cache\Backend\File;
@@ -59,12 +60,6 @@ class Factory
          */
         public static function getFirst(array $options = [], array $exclude = []): Backend
         {
-                if (isset($options['persist']) && $options['persist']) {
-                        $exclude = array_unique(array_merge($exclude, [
-                                "apcu", "xcache", "memory", "memcached", "shmop"
-                        ]));
-                }
-
                 $detected = self::getAvailable($exclude);
                 $instance = self::getBackend($detected[0], $options);
 
@@ -194,6 +189,8 @@ class Factory
                                 return new Stacked($options);
                         case 'detect':
                                 return new Detected($options);
+                        case 'persist':
+                                return new Persisting($options);
                         default:
                                 throw new LogicException("Unknown cache backend $type");
                 }
