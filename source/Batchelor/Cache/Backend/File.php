@@ -213,7 +213,7 @@ class File extends Base implements Backend
          */
         public function getCacheKey(string $key): string
         {
-                return sprintf("%s%s", parent::getCacheKey($key), $this->getOption('suffix', '.ser'));
+                return sprintf("%s%s", trim(parent::getCacheKey($key), "-"), $this->getOption('suffix', '.ser'));
         }
 
 }

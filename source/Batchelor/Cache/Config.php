@@ -66,7 +66,7 @@ class Config
 
                 if ($config['type'] == 'file') {
                         $config['options']['path'] = "cache/$name";
-                        $config['options']['prefix'] = "$name";
+                        $config['options']['prefix'] = "";
                 }
 
                 if (!isset($config['options']['prefix'])) {
