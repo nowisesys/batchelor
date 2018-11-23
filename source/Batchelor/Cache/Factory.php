@@ -22,6 +22,7 @@ namespace Batchelor\Cache;
 
 use Batchelor\Cache\Backend\APCu;
 use Batchelor\Cache\Backend\Extension\Detected;
+use Batchelor\Cache\Backend\Extension\Passthru;
 use Batchelor\Cache\Backend\Extension\Persisting;
 use Batchelor\Cache\Backend\Extension\ShmOp;
 use Batchelor\Cache\Backend\Extension\Stacked;
@@ -191,6 +192,8 @@ class Factory
                                 return new Detected($options);
                         case 'persist':
                                 return new Persisting($options);
+                        case 'passthru':
+                                return new Passthru($options);
                         default:
                                 throw new LogicException("Unknown cache backend $type");
                 }
