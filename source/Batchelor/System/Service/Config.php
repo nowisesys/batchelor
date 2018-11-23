@@ -81,7 +81,7 @@ class Config
          * @param string $config The config file.
          * @param array $locations Additional search locations.
          */
-        public function __construct($config = "defaults.app", $locations = [])
+        public function __construct(string $config = "defaults.app", array $locations = [])
         {
                 if (isset($config)) {
                         $this->useConfig($config, $locations);
@@ -135,7 +135,7 @@ class Config
          * 
          * @param bool $enable Set read-only/writable mode.
          */
-        public function setMutable($enable = true)
+        public function setMutable(bool $enable = true)
         {
                 $this->_immutable = ($enable == false);
         }
@@ -153,7 +153,7 @@ class Config
          * Set config data.
          * @param RecursiveArrayObject $config The config data.
          */
-        public function setConfig($config)
+        public function setConfig(RecursiveArrayObject $config)
         {
                 $this->_config = $config;
         }
@@ -182,7 +182,7 @@ class Config
          * @param string $config The config file.
          * @param array $locations Additional search locations.
          */
-        private function useConfig($config, $locations)
+        private function useConfig(string $config, array $locations)
         {
                 if (file_exists($config)) {
                         $this->loadConfig($config);
@@ -195,7 +195,7 @@ class Config
          * Load config from file.
          * @param string $config The config file.
          */
-        private function loadConfig($config)
+        private function loadConfig(string $config)
         {
                 $this->_config = new RecursiveArrayObject(require($config));
                 $this->_filename = realpath($config);
@@ -211,7 +211,7 @@ class Config
          * @param string $config The config file.
          * @param array $locations Additional search locations.
          */
-        private function findConfig($config, $locations)
+        private function findConfig(string $config, array $locations)
         {
                 $locate = new Locate($locations);
                 $locate->addLocation("/etc/batchelor");
