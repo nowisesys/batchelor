@@ -1,6 +1,6 @@
 {
     "name": "bmc/batchelor",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "description": "Batch job queue manager (web interface and services)",
     "type": "project",
     "keywords": ["batchelor", "queue", "task"],
