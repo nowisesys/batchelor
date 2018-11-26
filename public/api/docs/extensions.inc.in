@@ -1,0 +1,23 @@
+<h3>Extensions</h3>
+
+<div class="w3-teal w3-panel">
+    <h4>Molecules database</h4>
+    <p>
+        The molecules API can be used to search for already predicted GPS positions 
+        in the database of collected SMILES strings.
+    </p>
+    <p>
+        <a class="w3-btn w3-white w3-text-teal" href="molecules" style="min-width: 90px">Read more</a>
+    </p>
+</div>
+
+<div class="w3-indigo w3-panel">
+    <h4>Convex sets</h4>
+    <p>
+        The convex set API can be used to check whether a data set is contained in
+        one of the eight dimensional reference spaces.
+    </p>
+    <p>
+        <a class="w3-btn w3-white w3-text-indigo" href="convexity" style="min-width: 90px">Read more</a>
+    </p>
+</div>

@@ -1,6 +1,24 @@
-This documentation can be extended with application specific documents (PHP files
-or plain HTML) by placing files in various places. Search this directory and sub 
-directories for files containing calls to inline(...).
 
-For example, by placing an file named enqueue.inc in the json directory, it will
-be included when rendering the json/running view.
+    **************************************
+        ABOUT THE API DOCS
+    **************************************
+
+** THE QUEUE API
+
+    The queue API is an integral part of batchelor. This API is used for running, 
+    monitor and reading the batch job queue.
+
+    This documentation can be extended with application specific documents (PHP 
+    files or plain HTML) by placing files in various places. Search this directory 
+    and sub directories for files containing calls to inline(...).
+
+    For example, placing a file named enqueue.inc in the json directory will make
+    it included when rendering the json/running view.
+
+** ADDING OTHER API:
+
+    Other custom API can be listed on the index page by placing a file named
+    extensions.inc in this directory. The file extensions.inc.in can be used as
+    boiler plate code for this.
+
+// Anders Lövgren, 2018-11-26

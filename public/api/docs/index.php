@@ -1,6 +1,5 @@
 <?php
-
-/* 
+/*
  * Copyright (C) 2018 Anders Lövgren (Nowise Systems)
  *
  * This program is free software; you can redistribute it and/or
@@ -16,7 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */ 
+ */
+
+include_once("support.inc");
 
 ?>
 
@@ -29,8 +30,8 @@
     <li>Monitor jobs: queue, watch, stat</li>
     <li>Reading results: opendir, readdir, fopen</li>
 </ul>
-<a class="w3-btn w3-deep-orange" href="soap" style="min-width: 90px">SOAP</a>
 <a class="w3-btn w3-deep-orange" href="json" style="min-width: 90px">JSON</a>
+<a class="w3-btn w3-deep-orange" href="soap" style="min-width: 90px">SOAP</a>
 <p>
     As each user can have multiple queues (useful for sharing queues between 
     co-workers) the select method has been added for easy switch between active
@@ -43,3 +44,5 @@
 </p>
 <a class="w3-btn w3-deep-purple" href="sort" style="min-width: 90px">Sort</a>
 <a class="w3-btn w3-deep-purple" href="filter" style="min-width: 90px">Filter</a>
+
+<?php inline("extensions.inc") ?>
