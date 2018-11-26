@@ -153,11 +153,14 @@ class Daemon
          */
         public function setProcessFile(string $path)
         {
-                if (!(new FileSystem)
-                        ->getFile($path)
-                        ->putContent(getmypid())) {
-                        throw new RuntimeException("Failed write PID file");
-                }
+                $this->_daemonizer
+                    ->onCompleted(function($pid) use($path) {
+                            if (!(new FileSystem())
+                                ->getFile($path)
+                                ->putContent($pid)) {
+                                    throw new RuntimeException("Failed write PID file");
+                            }
+                    });
         }
 
 }

@@ -56,6 +56,11 @@ class Daemonizer
          * @var array 
          */
         private $_options = [];
+        /**
+         * The callback function.
+         * @var callback 
+         */
+        private $_callback;
 
         /**
          * Constructor.
@@ -98,6 +103,16 @@ class Daemonizer
         public function setOptions(array $options)
         {
                 $this->_options = $options;
+        }
+
+        /**
+         * On daemonize complete.
+         * 
+         * @param callable $callback The callback.
+         */
+        public function onCompleted(callable $callback)
+        {
+                $this->_callback = $callback;
         }
 
         /**
@@ -154,6 +169,10 @@ class Daemonizer
                 // return 1, but 'ps jax' shows that the forked child has been adopted by
                 // the init process (pid 1).
                 // 
+                
+                if (($callback = $this->_callback)) {
+                        $callback(getmypid());
+                }
         }
 
 }
