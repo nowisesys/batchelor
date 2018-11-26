@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Wrapper around the processor.sh command adding a bridge for processor.sh in the
+# application root. Copy to /usr/local/bin/batchelor-processor or path expected by
+# boot script.
+#
+# Author: Anders Lövgren <andlov@nowise.se>
+# Date:   2018-11-24
+#
+
+# Change these to match your install:
+approot=/var/www/chemgps.bmc.uu.se/apps/batchelor2
+pidfile=/var/run/batchelor.pid
+wwwuser=www-data
+
+# Create PID file:
+touch ${pidfile}
+chown ${wwwuser} ${pidfile}
+
+# Execute scheduled job processor:
+exec ${approot}/utils/processor.sh $* --pidfile $pidfile
