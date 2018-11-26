@@ -1,5 +1,7 @@
 #!/sbin/openrc-run
 #
+# Start/stop script for Gentoo Linux using OpenRC.
+#
 # Author: Anders Lövgren
 # Date:   2018-10-02
 
@@ -10,7 +12,7 @@ depend() {
 
 start() {
         ebegin "Starting batchelor job processor"
-        start-stop-daemon --start --exec php /usr/local/bin/batchelor-processor --pidfile /run/${SVCNAME}.pid --user batchelor --background --make-pidfile > /dev/null
+        start-stop-daemon --start --exec php /usr/local/bin/batchelor-processor --pidfile /run/${SVCNAME}.pid --user apache --background --make-pidfile > /dev/null
         eend $?
 }
  
