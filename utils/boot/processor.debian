@@ -1,0 +1,48 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          processor
+# Required-Start:    $syslog $time $apache2
+# Required-Stop:     $syslog $time $apache2
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Batchelor job processor
+# Description:       Debian init script for batchelor scheduled job queue processor
+### END INIT INFO
+#
+# Author:       Anders Lövgren <andlov@nowise.se>
+#
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin
+DAEMON=/usr/local/bin/batchelor-processor
+PIDFILE=/var/run/batchelor.pid
+OPTIONS="--user=www-data --group=www-data --pidfile=/var/run/batchelor.pid"
+
+test -x $DAEMON || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+  start)
+        log_daemon_msg "Starting batchelor job processor" "batchelor-processor"
+        start_daemon -p $PIDFILE $DAEMON $OPTIONS
+        log_end_msg $?
+    ;;
+  stop)
+        log_daemon_msg "Stopping batchelor job processor" "batchelor-processor"
+        killproc -p $PIDFILE $DAEMON
+        log_end_msg $?
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  status)
+    status_of_proc -p $PIDFILE $DAEMON atd && exit 0 || exit $?
+    ;;
+  *)
+    echo "Usage: /etc/init.d/batchelor-processor {start|stop|restart|force-reload|status}"
+    exit 1
+    ;;
+esac
+
+exit 0
