@@ -33,7 +33,7 @@ use Batchelor\WebService\Types\JobIdentity;
 </div>
 
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/dequeue?pretty=1" -d '{"jobid":"6633e06c-deaf-4222-bbdf-036e4be4f0a0","result":"f52764d624db129b32c21fbca0cb8d6"}'</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/dequeue", true) ?>?pretty=1" -d '{"jobid":"6633e06c-deaf-4222-bbdf-036e4be4f0a0","result":"f52764d624db129b32c21fbca0cb8d6"}'</bash>
     <pre>{
     "status": "success",
     "result": true

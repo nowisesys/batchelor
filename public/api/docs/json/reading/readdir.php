@@ -32,7 +32,7 @@ use Batchelor\WebService\Types\JobIdentity;
 </div>
 
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/readdir?pretty=1" -d '{"jobid":"34f95c954-09ce-46b7-bb59-820386cc9c89","result":"15421967654378"}'</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/readdir", true) ?>?pretty=1" -d '{"jobid":"34f95c954-09ce-46b7-bb59-820386cc9c89","result":"15421967654378"}'</bash>
     <pre>{
     "status": "success",
     "result": [

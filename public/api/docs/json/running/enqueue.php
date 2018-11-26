@@ -33,7 +33,7 @@ use Batchelor\WebService\Types\JobData;
 </div>
 
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/enqueue?pretty=1" -d '{"data":"hello world","type":"data"}'</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/enqueue", true) ?>?pretty=1" -d '{"data":"hello world","type":"data"}'</bash>
     <pre>{
     "status": "success",
     "result": {
@@ -87,7 +87,7 @@ use Batchelor\WebService\Types\JobData;
     Use file as identifier, but if unset it should be auto detected on server side.
 </p>
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/enqueue?pretty=1" -i -F file=@TODO -F task=default -F "name=my task name"</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/enqueue", true) ?>?pretty=1" -i -F file=@indata.txt -F task=default -F "name=my task name"</bash>
     <pre>{
     "status": "success",
     "result": {

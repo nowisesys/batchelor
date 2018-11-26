@@ -32,7 +32,7 @@ use Batchelor\WebService\Types\JobIdentity;
 </div>
 
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/fopen?pretty=1" -d '{"job":{"jobid":"34f95c954-09ce-46b7-bb59-820386cc9c89","result":"15421967654378"},"file":"result/output-normal.txt"}' -i</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/fopen", true) ?>?pretty=1" -d '{"job":{"jobid":"34f95c954-09ce-46b7-bb59-820386cc9c89","result":"15421967654378"},"file":"result/output-normal.txt"}' -i</bash>
     <pre>HTTP/1.1 200 OK
 Date: Fri, 16 Nov 2018 02:17:54 GMT
 Server: Apache
@@ -68,7 +68,7 @@ hello world!!</pre>
     Reading a directory will return the content as a ZIP-file.
 </p>
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/fopen?pretty=1" -d '{"job":{"jobid":"34f95c954-09ce-46b7-bb59-820386cc9c89","result":"15421967654378"},"file":"result"}' -i</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/fopen", true) ?>?pretty=1" -d '{"job":{"jobid":"34f95c954-09ce-46b7-bb59-820386cc9c89","result":"15421967654378"},"file":"result"}' -i</bash>
     <pre>HTTP/1.1 200 OK
 Date: Fri, 16 Nov 2018 02:19:57 GMT
 Server: Apache
@@ -92,7 +92,7 @@ Warning: <FILE>" to save to a file.</pre>
     will be base64 encoded.
 </p>
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/fopen?pretty=1" -d '{"job":{"jobid":"34f95c954-09ce-46b7-bb59-820386cc9c89","result":"15421967654378"},"file":"result/output-normal.txt","send":false}' -i</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/fopen", true) ?>?pretty=1" -d '{"job":{"jobid":"34f95c954-09ce-46b7-bb59-820386cc9c89","result":"15421967654378"},"file":"result/output-normal.txt","send":false}' -i</bash>
     <pre>HTTP/1.1 200 OK
 Date: Fri, 16 Nov 2018 02:37:09 GMT
 Server: Apache

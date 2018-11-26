@@ -33,7 +33,7 @@ include_once("../../support.inc");
 </div>
 
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/watch?pretty=1" -d '{"stamp":1542281262}'</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/watch", true) ?>?pretty=1" -d '{"stamp":1542281262}'</bash>
     <pre>{
     "status": "success",
     "result": [

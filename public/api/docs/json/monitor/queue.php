@@ -32,7 +32,7 @@ include_once("../../support.inc");
 </div>
 
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/queue?pretty=1"</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/queue", true) ?>?pretty=1"</bash>
     <pre>{
     "status": "success",
     "result": [
@@ -95,5 +95,5 @@ include_once("../../support.inc");
     all jobs that finished with either success or warning state):
 </p>
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/queue?pretty=1" -d '{"sort":"started","filter":"completed"}'</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/queue", true) ?>?pretty=1" -d '{"sort":"started","filter":"completed"}'</bash>
 </div>

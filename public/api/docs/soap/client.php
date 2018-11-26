@@ -31,7 +31,7 @@
 </p>
 <div class="w3-code">
     <bash>mkdir classes sources</bash><br>
-    <bash>wsimport -d classes -s sources -p batchelor.soap http://localhost/batchelor2/api/soap/?wsdl=1</bash><br>
+    <bash>wsimport -d classes -s sources -p batchelor.soap <?= $this->config->getUrl("api/soap/", true) ?>?wsdl=1</bash><br>
     <span>parsing WSDL...</span><br>
     <span>Generating code...</span><br>
     <span>Compiling code...</span><br>

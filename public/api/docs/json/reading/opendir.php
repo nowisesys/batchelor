@@ -29,7 +29,7 @@
 </div>
 
 <div class="w3-code">
-    <bash>curl -XPOST "http://localhost/batchelor2/api/json/opendir?pretty=1"</bash>
+    <bash>curl -XPOST "<?= $this->config->getUrl("api/json/opendir", true) ?>?pretty=1"</bash>
     <pre>{
     "status": "success",
     "result": [

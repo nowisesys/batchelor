@@ -47,7 +47,7 @@
 </p>
 
 <div class="w3-code">
-    <bash>curl -XPOST http://localhost/batchelor2/api/json/select -d '{"queue":"myqueue"}'</bash>
+    <bash>curl -XPOST <?= $this->config->getUrl("api/json/select", true) ?> -d '{"queue":"myqueue"}'</bash>
     <div>{"status":"success","result":"e47135de28d5c36dd5ed5a816cf61658"}</div>
 </div>
 
@@ -56,7 +56,7 @@
     directive:
 </p>
 <div class="w3-code">
-    <bash>curl -XPOST http://localhost/batchelor2/api/json/select -d '{"queue":"myqueue"}' -v</bash>
+    <bash>curl -XPOST <?= $this->config->getUrl("api/json/select", true) ?> -d '{"queue":"myqueue"}' -v</bash>
     <div>Set-Cookie: hostid=e47135de28d5c36dd5ed5a816cf61658; path=/</div>
 </div>
 
@@ -71,7 +71,7 @@
     custom HTTP header:
 </p>
 <div class="w3-code">
-    <bash>curl -XPOST http://localhost/batchelor2/api/json/version \<br>
+    <bash>curl -XPOST <?= $this->config->getUrl("api/json/version", true) ?> \<br>
         -H 'X-Batchelor-Hostid: e47135de28d5c36dd5ed5a816cf61658' -v</bash>
     <div>X-Batchelor-Hostid: e47135de28d5c36dd5ed5a816cf61658</div>
 </div>

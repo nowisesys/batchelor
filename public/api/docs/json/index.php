@@ -36,7 +36,7 @@ include_once("../support.inc");
     API from the command line:
 </p>
 <div class="w3-code">
-    <bash>curl -XPOST http://localhost/batchelor2/api/json/queue -d '{"sort":"started","filter":"crashed"}'</bash>
+    <bash>curl -XPOST <?= $this->config->getUrl("api/json/queue", true) ?> -d '{"sort":"started","filter":"crashed"}'</bash>
 </div>
 
 <h4>Response</h4>
@@ -68,7 +68,7 @@ include_once("../support.inc");
     gets encoded:
 </p>
 <div class="w3-code">
-    <bash>curl -XPOST http://localhost/batchelor2/api/json/queue?pretty=1&escape=0&numeric=1&unicode=0&fraction=1 -d '{"sort":"started","filter":"crashed"}'</bash>
+    <bash>curl -XPOST <?= $this->config->getUrl("api/json/queue", true) ?>?pretty=1&escape=0&numeric=1&unicode=0&fraction=1 -d '{"sort":"started","filter":"crashed"}'</bash>
 </div>
 
 <ul>
