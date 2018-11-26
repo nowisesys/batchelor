@@ -82,6 +82,15 @@ return [
         //                'weight' => 50
         //        ]
         // ],
+        // 
+        // Rotate queues when reaching this limit.
+        // 
+        'rotate'  => [
+                'finished' => [
+                        'limit' => 50,
+                        'spare' => 5
+                ]
+        ],
         // // 
         // // Access control list (ACL) for application.
         // // 

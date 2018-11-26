@@ -66,5 +66,45 @@ each can be configured individual.
     the work queue. The URL is the top directory where batchelor is setup. The
     protocol used for communication is automatic selected.
 
+** ROTATING:
+
+    Rotation of queues can be configured to prevent them to grow infinite. This
+    is particular useful for the finished queue containing all completed jobs, but
+    can be configured for all queues.
+
+    The general config is:
+
+        'rotate'  => [
+                'finished' => [
+                        'limit' => 50,      // The maximum number of entries.
+                        'spare' => 5        // The number of free slots.
+                ]
+        ]
+
+    The oldest entries are removed. In the example above, the finished queue will
+    contain 45 entries after rotated. The limit defaults to 50 and spare defaults
+    to limit/2 if not set:
+
+        'rotate'  => [
+                'finished' => true          // Rotate with default values.
+        ]
+
+    The builtin queues are "pending", "running" and "finished". To set limit on
+    user queues, use "@hostid" as key:
+
+        'rotate'  => [
+                'finished' => true          // Rotate with default values.
+                '@hostid'  => [
+                        'limit' => 100      // Max 100 user jobs per queue.
+                ]
+        ]
+
+    Queues without rotations defined in the application config (config/defaults.app)
+    are allowed to grow infinite. If the rotate config key is missing, no rotation
+    at all is applied. 
+
+    By default only the finished queue is rotated with 50 entries as limit and 
+    making 5 spare slots on each rotation.
+    
 
 // Anders Lövgren, 2018-09-17

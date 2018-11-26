@@ -54,6 +54,7 @@ use RuntimeException;
  * @property-read RecursiveArrayObject $contact Contact address settings.
  * @property-read RecursiveArrayObject $cache Cache settings for application.
  * @property-read RecursiveArrayObject $logger Logger settings for application.
+ * @property-read RecursiveArrayObject $rotate The rotate queue settings.
  * 
  * @author Anders Lövgren (Nowise Systems)
  */

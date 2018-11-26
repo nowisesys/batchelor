@@ -28,6 +28,7 @@ use IteratorAggregate;
 use RuntimeException;
 use SyncReaderWriter;
 use Traversable;
+use Batchelor\Queue\Task\Scheduler\Rotate\Single as RotateSingle;
 
 /**
  * The state queue.
@@ -111,6 +112,7 @@ class StateQueue implements Inspector, IteratorAggregate
 
                         $content = $this->getContent();
                         $content[$job] = $state;
+                        $this->setRotated($content);
                         $this->setContent($content);
                 } finally {
                         $qsync->writeunlock();
@@ -132,6 +134,7 @@ class StateQueue implements Inspector, IteratorAggregate
 
                         $content = $this->getContent();
                         $content[$job] = $state;
+                        $this->setRotated($content);
                         $this->setContent($content);
                 } finally {
                         $qsync->writeunlock();
@@ -301,6 +304,20 @@ class StateQueue implements Inspector, IteratorAggregate
                 return new SyncReaderWriter(
                     sprintf("%s-queue-%s", $this->_ident, $name)
                 );
+        }
+
+        /**
+         * Set rotated content,
+         * 
+         * @param array $data The content to rotate.
+         */
+        private function setRotated(array &$data)
+        {
+                $rotate = new RotateSingle($this->_ident);
+
+                if ($rotate->needRotation(count($data))) {
+                        $data = $rotate->getRotated($data);
+                }
         }
 
 }
