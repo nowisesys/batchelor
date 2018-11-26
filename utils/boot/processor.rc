@@ -1,38 +1,47 @@
 #!/bin/sh
-# Start/stop/restart batchelor-processor (the scheduled job processor):
+# 
+# Start/stop/restart batchelor-processor (the scheduled job processor) for 
+# Slackware GNU/Linux
+#
+# Author: Anders Lövgren <andlov@nowise.se>
+# Date:   2018-11-24
+#
 
-options="--user=batchelor --group=batchelor --pidfile=/var/run/batchelor.pid"
+options="--user=apache --group=apache --pidfile=/var/run/batchelor.pid"
 
 # Start batchelor-processor:
-batchelor-processor_start() {
+batchelor_processor_start() {
   if [ -x /usr/local/bin/batchelor-processor ]; then
-    echo "Starting batchelor-processor:  /usr/local/bin/batchelor-processor"
+    echo "Starting batchelor job processor:  /usr/local/bin/batchelor-processor"
     /usr/local/bin/batchelor-processor $options
   fi
 }
 
 # Stop batchelor-processor:
-batchelor-processor_stop() {
-  killall batchelor-processor
+batchelor_processor_stop() {
+  if [ -x /usr/local/bin/batchelor-processor ]; then
+    echo "Stopping batchelor job processor"
+    killall batchelor-processor
+  fi
 }
 
 # Restart batchelor-processor:
-batchelor-processor_restart() {
-  batchelor-processor_stop
+batchelor_processor_restart() {
+  batchelor_processor_stop
   sleep 1
-  batchelor-processor_start
+  batchelor_processor_start
 }
 
 case "$1" in
 'start')
-  batchelor-processor_start
+  batchelor_processor_start
   ;;
 'stop')
-  batchelor-processor_stop
+  batchelor_processor_stop
   ;;
 'restart')
-  batchelor-processor_restart
+  batchelor_processor_restart
   ;;
 *)
-  echo "usage rc.batchelor-processor: start|stop|restart"
+  echo "usage $0: start|stop|restart"
 esac
