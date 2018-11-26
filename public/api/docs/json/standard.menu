@@ -1,7 +1,7 @@
 <?php
 
 return array(
-        'head' => _('SOAP API'),
+        'head' => _('JSON API'),
         'data' => array(
                 _('Running jobs')    => 'running',
                 _('Monitor jobs')    => 'monitor',
