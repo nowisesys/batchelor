@@ -19,35 +19,6 @@
 /* global Element */
 
 // 
-// Display content in modal dialog.
-// 
-function show_modal_dialog(event, url) {
-    const dialog = document.getElementById('modal-dialog');
-    const target = dialog.querySelector("#modal-content");
-
-    content_replace(event, 'modal-content', url, false);
-
-    dialog.style.display = 'block';
-}
-
-// 
-// Display error message in dialog.
-// 
-function show_error_dialog(error) {
-    const dialog = document.getElementById('error-dialog');
-    const target = dialog.querySelector("#error-message");
-
-    if (error instanceof Element) {
-        target.innerHTML = "";
-        target.appendChild(error);
-    } else {
-        target.innerHTML = error;
-    }
-
-    dialog.style.display = 'block';
-}
-
-// 
 // Delete queued job and remove from listing. The json contains the
 // JSON encoded job identity.
 // 

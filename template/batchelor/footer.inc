@@ -43,23 +43,28 @@
 </script>
 
 <script>
+
         // 
-        // Fetch content as text and assign to inner html.
+        // Fetch content as text and assign to inner html. The
+        // target is either an element or string (id).
         // 
-        function content_replace_text(event, id, source, callback) {
+        function content_replace_text(event, target, source, callback) {
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
+            }
+            if (typeof target === "string") {
+                target = document.getElementById(target);
             }
 
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function (x) {
                 if (this.readyState === 4 && this.status === 200) {
                     try {
-                        document.getElementById(id).innerHTML = this.responseText;
+                        target.innerHTML = this.responseText;
                         if (callback !== undefined &&
                             callback !== false) {
-                            callback(id, source);
+                            callback(target, source);
                         }
                     } catch (err) {
                         console.log(err);
@@ -74,19 +79,22 @@
         }
 
         // 
-        // Fetch content as DOM document and evaluate all script nodes.
+        // Fetch content as DOM document and evaluate all script nodes. The
+        // target is either an element or string (id).
         // 
-        function content_replace_html(event, id, source, callback) {
+        function content_replace_html(event, target, source, callback) {
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
+            }
+            if (typeof target === "string") {
+                target = document.getElementById(target);
             }
 
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function (x) {
                 if (this.readyState === 4 && this.status === 200) {
                     try {
-                        var target = document.getElementById(id);
                         var shadow = target.cloneNode();
                         var insert = this.response.getElementsByTagName('body')[0].children;
                         var script = []; // Scripts to eval.
@@ -112,7 +120,7 @@
                         target.parentNode.replaceChild(shadow, target);
                         if (callback !== undefined &&
                             callback !== false) {
-                            callback(id, source);
+                            callback(target, source);
                         }
 
                         for (var i = 0; i < script.length; ++i) {
@@ -148,24 +156,25 @@
         }
 
         // 
-        // Replace i.e. HTML content. The id is the target element and source
-        // is the URL to laod. The callback is optional. 
+        // Replace i.e. HTML content. The target is either an element or string (id)
+        // and source is the URL to load. The callback is optional.
         // 
         // The history is modified by this call if pushState() is available, 
         // unless callback is defined. Pass false as callback to disable modfy
         // of history.
         // 
-        function content_replace(event, id, source, callback) {
+        // 
+        function content_replace(event, target, source, callback) {
             if (history.pushState !== undefined && callback === undefined) {
                 history.pushState({}, "", source);
             }
 
             if (typeof content_replace_extern === 'function') {
-                return content_replace_extern(event, id, source, callback);
+                return content_replace_extern(event, target, source, callback);
             } else if (source.match('/http(s)?:\/\/')) {
-                return content_replace_text(event, id, source, callback);
+                return content_replace_text(event, target, source, callback);
             } else {
-                return content_replace_html(event, id, source, callback)
+                return content_replace_html(event, target, source, callback)
             }
         }
 
@@ -183,6 +192,35 @@
         // 
         function content_insert(event, source, callback) {
             content_replace(event, 'page-content', source, callback);
+        }
+
+        // 
+        // Display content in modal dialog.
+        // 
+        function show_modal_dialog(event, url) {
+            const dialog = document.getElementById('modal-dialog');
+            const target = dialog.querySelector("#modal-content");
+
+            content_replace(event, target, url, false);
+
+            dialog.style.display = 'block';
+        }
+
+        // 
+        // Display error message in dialog.
+        // 
+        function show_error_dialog(error) {
+            const dialog = document.getElementById('error-dialog');
+            const target = dialog.querySelector("#modal-content");
+
+            if (error instanceof Element) {
+                target.innerHTML = "";
+                target.appendChild(error);
+            } else {
+                target.innerHTML = error;
+            }
+
+            dialog.style.display = 'block';
         }
 
         function close_overlay() {

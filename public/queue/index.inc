@@ -114,19 +114,6 @@ function getClasses(JobState $state): array
     <h3><?= _("Job queue") ?></h3>
 </div>
 
-<div id="error-dialog" class="w3-panel w3-red w3-animate-opacity" 
-     style="display: none; cursor: pointer" onclick="this.style.display = 'none'">
-    <h3><?= _("Oops, something went wrong") ?></h3>
-    <p>Some error message</p>
-</div>
-
-<div id="modal-dialog" class="w3-modal w3-animate-zoom">
-    <div class="w3-modal-content">
-        <a class="w3-button w3-hover-red w3-display-topright w3-large" onclick="document.getElementById('modal-dialog').style.display = 'none'">&times;</a>
-        <div id="modal-content" class="w3-panel"></div>
-    </div>
-</div>
-
 <ul class="w3-ul w3-animate-right">
     <?php foreach ($queued as $job) : ?>
             <?php $classes = getClasses($job->status->state); ?>

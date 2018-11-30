@@ -31,15 +31,6 @@
 
 <link rel="stylesheet" type="text/css" href="submit.css"/>
 
-<div id="error-dialog" class="w3-modal" style="cursor: pointer" onclick="this.style.display = 'none'">
-    <div class="w3-modal-content w3-red">
-        <div class="w3-container">
-            <h3><?= _("Oops, something went wrong") ?></h3>
-            <p id="error-message">Some error message</p>
-        </div>
-    </div>
-</div>
-
 <div style="width: 100%; max-width: 800px; margin-top: 30px">
     <div id="submit-data" class="submit w3-animate-left" style="display: <?= $type == 'data' ? 'block' : 'none' ?>">
         <form>

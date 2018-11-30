@@ -65,6 +65,24 @@ $output = new format($this);
             <?php $output->sidebar() ?>
         </nav>
 
+        <!-- Modal dialogs -->
+        <div id="error-dialog" class="w3-modal w3-animate-opacity" style="cursor: pointer" onclick="this.style.display = 'none'">
+            <div class="w3-modal-content w3-red">
+                <div class="w3-container">
+                    <h3><?= _("Oops, something went wrong") ?></h3>
+                    <div id="modal-content" class="w3-panel">Some error message</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-dialog" class="w3-modal w3-animate-zoom">
+            <div class="w3-modal-content">
+                <a class="w3-button w3-hover-red w3-display-topright w3-large" onclick="document.getElementById('modal-dialog').style.display = 'none'">&times;</a>
+                <div id="modal-content" class="w3-panel"></div>
+            </div>
+        </div>
+
+        <!-- Main content -->
         <div class="main-content w3-main">
             <div id="page-content" class="w3-container">
                 <?php $output->content(); ?>                                            
