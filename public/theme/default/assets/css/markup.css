@@ -1,0 +1,134 @@
+/* 
+ * Support for custom tags used together with w3-code div. 
+ * Example (replace bash with i.e. cmd):
+ *
+ * <div class="w3-code">
+ *      <bash>mkdir files</bash><br>
+ *      <bash>cp *.txt files</bash><br>
+ * </div>
+ *
+ * <div class="w3-code bash">
+ *      <span>mkdir files</span><br>
+ *      <span>cp *.txt files</span><br>
+ * </div>
+ *
+ *
+ * Created on : 2018-apr-23, 14:51:35
+ * Author     : Anders Lövgren (Computing Department at BMC, Uppsala University)
+ */
+
+/**
+ * Markup for Bash shell.
+ */
+span.w3-code.bash::before,
+div.w3-code bash::before,
+div.w3-code.bash > *::before {
+    content: "bash$> ";        
+    color: blue;
+}
+
+/**
+ * Markup for enhanced C-shell.
+ */
+span.w3-code.tcsh::before,
+div.w3-code tcsh::before,
+div.w3-code.tcsh > *::before {
+    content: "tcsh % ";        
+    color: blue;
+}
+
+/**
+ * Markup for sudo commands (using bash).
+ */
+span.w3-code.sudo::before,
+div.w3-code sudo::before,
+div.w3-code.sudo > *::before {
+    content: "bash$> ";        
+    color: red;
+}
+
+/**
+ * Markup for root commands (using bash).
+ */
+span.w3-code.root::before,
+div.w3-code root::before,
+div.w3-code.root > *::before {
+    content: "bash # ";        
+    color: darkslateblue;
+}
+
+/**
+ * Markup for MySQL.
+ */
+span.w3-code.mysql::before,
+div.w3-code mysql::before,
+div.w3-code.mysql > *::before {
+    content: "mysql> ";        
+    color: indigo;
+}
+
+/**
+ * Markup for PostgreSQL.
+ */
+span.w3-code.psql::before,
+div.w3-code psql::before,
+div.w3-code.psql > *::before {
+    content: "psql> ";        
+    color: indigo;
+}
+
+/**
+ * Markup for Windows command prompt.
+ */
+span.w3-code.cmd::before,
+div.w3-code cmd::before,
+div.w3-code.cmd > *::before {
+    content: "cmd:\\> "; 
+    color: darkgreen;
+}
+
+/**
+ * Markup for Windows Power Shell.
+ */
+span.w3-code.ps::before,
+div.w3-code ps::before,
+div.w3-code.ps > *::before {
+    content: "PS:\\> "; 
+    color: darkgreen;
+}
+
+/**
+ * Markup for GNU debugger (gdb).
+ */
+span.w3-code.gdb::before,
+div.w3-code gdb::before,
+div.w3-code.gdb > *::before {
+    content: "(gdb) "; 
+    color: deeppink;
+}
+
+/**
+ * Markup for GRUB.
+ */
+span.w3-code.grub::before,
+div.w3-code grub::before,
+div.w3-code.grub > *::before {
+    content: "grub> "; 
+    color: darkorange;
+}
+
+/**
+ * Markup for PXE-boot.
+ */
+span.w3-code.pxe::before,
+div.w3-code pxe::before,
+div.w3-code.pxe > *::before {
+    content: "pxe: "; 
+}
+span.w3-code.pxe
+div.w3-code pxe,
+div.w3-code.pxe {
+    color: #55FF55;
+    background-color: black;    
+    font-family: monospace;
+}
