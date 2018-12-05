@@ -119,6 +119,9 @@ class File extends SplFileInfo
          */
         public function getContent(): string
         {
+                if (!$this->isFile()) {
+                        throw new RuntimeException("The target file don't exist");
+                }
                 return file_get_contents($this->getPathname());
         }
 
@@ -156,6 +159,10 @@ class File extends SplFileInfo
          */
         public function sendFile($standard = true, $headers = [], bool $exit = true)
         {
+                if (!$this->isFile()) {
+                        throw new RuntimeException("The target file don't exist");
+                }
+
                 if ($standard) {
                         $stdhead = $this->getDownloadHeaders();
                         $headers = array_merge($stdhead, $headers);
@@ -255,6 +262,9 @@ class File extends SplFileInfo
                 $source = $this;
                 $target = $this->getFile($target);
 
+                if (!$source->isFile()) {
+                        throw new RuntimeException("The source file don't exist");
+                }
                 if ($target->isFile() && $overwrite == false) {
                         throw new RuntimeException("The target file exists");
                 }
@@ -278,6 +288,9 @@ class File extends SplFileInfo
                 $source = $this;
                 $target = $this->getFile($target);
 
+                if (!$source->isFile()) {
+                        throw new RuntimeException("The source file don't exist");
+                }
                 if ($target->isFile() && $overwrite == false) {
                         throw new RuntimeException("The target file exists");
                 }
