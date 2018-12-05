@@ -111,12 +111,12 @@ $show = new Runtime($this);
         <span class="w3-left">
             <?php if ($show->navmenu) : ?>
                     <a class="w3-bar-item w3-hover-white" onclick="toggle_sidenav_open()" href="javascript:void(0)">
-                        <i class="fa fa-bars fa-lg"></i>
+                        <i class="fas fa-bars fa-lg"></i>
                     </a>
             <?php endif; ?>
             <?php if ($show->home) : ?>
                     <a class="w3-bar-item w3-hover-white" title="<?= _('Home') ?>" href="<?= $config->location ?>">
-                        <i class="fa fa-home fa-lg"></i>
+                        <i class="fas fa-home fa-lg"></i>
                     </a>
             <?php endif; ?>
             <?php $output->topmenu(false) ?>
@@ -127,31 +127,31 @@ $show = new Runtime($this);
         <span class="w3-right" id="topbar-tools">
             <?php if ($show->edit) : ?>
                     <a class="w3-bar-item w3-hover-white" title="<?= _('Open page editor') ?>" onclick="toggle_edit_open('<?= $config->edit['host'] ?>')" href="javascript:void(0)">
-                        <i class="fa fa-pencil-square-o fa-lg"></i>
+                        <i class="fas fa-pen-square fa-lg"></i>
                     </a>
             <?php endif; ?>
             <?php if ($show->translate) : ?>
                     <a class="w3-bar-item w3-hover-white" title="<?= _('Translate this page') ?>" onclick="toggle_translate_open(this)" href="javascript:void(0)">
-                        <i class="fa fa-globe fa-lg"></i>
+                        <i class="fas fa-globe fa-lg"></i>
                     </a>
             <?php endif; ?>
             <?php if ($show->search) : ?>
                     <a class="w3-bar-item w3-hover-white" id="search-button" title="<?= _('Search in content') ?>" onclick="toggle_search_open(this)" href="javascript:void(0)">
-                        <i class="fa fa-search fa-lg"></i>
+                        <i class="fas fa-search fa-lg"></i>
                     </a>
             <?php endif; ?>
             <?php if ($show->auth) : ?>
                     <a class="w3-bar-item w3-hover-white" title="<?= _('Open authentication box') ?>" onclick="toggle_logon_open(this)" href="javascript:void(0)">
                         <?php if ($session->authenticated()) : ?>
-                                <i class="fa fa-lock fa-lg" id="logon-status"></i>
+                                <i class="fas fa-lock fa-lg" id="logon-status"></i>
                         <?php else: ?>
-                                <i class="fa fa-unlock-alt fa-lg" id="logon-status"></i>
+                                <i class="fas fa-unlock fa-lg" id="logon-status"></i>
                         <?php endif; ?>
                     </a>
             <?php endif; ?>
             <?php if ($show->topmenu) : ?>
                     <a class="w3-bar-item w3-hover-white w3-hide-large w3-hide-medium" onclick="toggle_navbar_open()" href="javascript:void(0)">
-                        <i class="fa fa-ellipsis-v fa-lg"></i>
+                        <i class="fas fa-ellipsis-v fa-lg"></i>
                     </a>
             <?php endif; ?>
         </span>

@@ -44,18 +44,26 @@
 
 <script>
         // 
-        // Fetch content as text and assign to inner html.
+        // Fetch content as text and assign to inner html. The
+        // target is either an element or string (id).
         // 
-        function content_replace_text(event, id, source, callback) {
-            event.preventDefault();
-            event.stopPropagation();
+        function content_replace_text(event, target, source, callback) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            if (typeof target === "string") {
+                target = document.getElementById(target);
+            }
+
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function (x) {
                 if (this.readyState === 4 && this.status === 200) {
                     try {
-                        document.getElementById(id).innerHTML = this.responseText;
-                        if (callback !== undefined) {
-                            callback();
+                        target.innerHTML = this.responseText;
+                        if (callback !== undefined &&
+                            callback !== false) {
+                            callback(target, source);
                         }
                     } catch (err) {
                         console.log(err);
@@ -70,16 +78,22 @@
         }
 
         // 
-        // Fetch content as DOM document and evaluate all script nodes.
+        // Fetch content as DOM document and evaluate all script nodes. The
+        // target is either an element or string (id).
         // 
-        function content_replace_html(event, id, source, callback) {
-            event.preventDefault();
-            event.stopPropagation();
+        function content_replace_html(event, target, source, callback) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            if (typeof target === "string") {
+                target = document.getElementById(target);
+            }
+
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function (x) {
                 if (this.readyState === 4 && this.status === 200) {
                     try {
-                        var target = document.getElementById(id);
                         var shadow = target.cloneNode();
                         var insert = this.response.getElementsByTagName('body')[0].children;
                         var script = []; // Scripts to eval.
@@ -91,6 +105,7 @@
                         for (var i = 0; i < insert.length; ++i) {
                             var child = insert[i].cloneNode(true);
                             var attrs = child.attributes;
+
                             if (child.nodeName !== "SCRIPT") {
                                 shadow.appendChild(child);
                             } else if (attrs['onajax'] && attrs['onajax'].value === "add") {
@@ -102,12 +117,26 @@
                         }
 
                         target.parentNode.replaceChild(shadow, target);
-                        if (callback !== undefined) {
-                            callback();
+                        if (callback !== undefined &&
+                            callback !== false) {
+                            callback(target, source);
                         }
 
                         for (var i = 0; i < script.length; ++i) {
-                            eval(script[i].innerHTML);
+                            var child = script[i];
+                            var attrs = child.attributes;
+
+                            // 
+                            // Handle extern or inline javascript:
+                            // 
+                            if (attrs.src) {
+                                var linked = document.createElement('script');
+                                linked.setAttribute("type", "text/javascript");
+                                linked.setAttribute("src", child.src);
+                                document.body.appendChild(linked);
+                            } else {
+                                eval(script[i].innerHTML);
+                            }
                         }
 
                     } catch (err) {
@@ -115,22 +144,82 @@
                     }
                 }
             };
+
             xhr.open("GET", source, true);
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             xhr.responseType = 'document';
             xhr.send();
+
             close_overlay();
             return false;
         }
 
-        function content_replace(event, id, source, callback) {
-            if (typeof content_replace_extern === 'function') {
-                return content_replace_extern(event, id, source, callback);
-            } else if (source.match('/http(s)?:\/\/')) {
-                return content_replace_text(event, id, source, callback);
-            } else {
-                return content_replace_html(event, id, source, callback)
+        // 
+        // Replace i.e. HTML content. The target is either an element or string (id)
+        // and source is the URL to load. The callback is optional.
+        // 
+        // The history is modified by this call if pushState() is available, 
+        // unless callback is defined. Pass false as callback to disable modfy
+        // of history.
+        // 
+        // 
+        function content_replace(event, target, source, callback) {
+            if (history.pushState !== undefined && callback === undefined) {
+                history.pushState({}, "", source);
             }
+
+            if (typeof content_replace_extern === 'function') {
+                return content_replace_extern(event, target, source, callback);
+            } else if (source.match('/http(s)?:\/\/')) {
+                return content_replace_text(event, target, source, callback);
+            } else {
+                return content_replace_html(event, target, source, callback)
+            }
+        }
+
+        // 
+        // Reload current location.
+        // 
+        function content_reload(event) {
+            content_replace(event, 'page-content', location.href);
+        }
+
+        // 
+        // Insert source in main content. Calling this function will replace
+        // the main content with source (URL). The callback is optional. This
+        // is a convenience function for content_replace().
+        // 
+        function content_insert(event, source, callback) {
+            content_replace(event, 'page-content', source, callback);
+        }
+
+        // 
+        // Display content in modal dialog.
+        // 
+        function show_modal_dialog(event, url) {
+            const dialog = document.getElementById('modal-dialog');
+            const target = dialog.querySelector("#modal-content");
+
+            content_replace(event, target, url, false);
+
+            dialog.style.display = 'block';
+        }
+
+        // 
+        // Display error message in dialog.
+        // 
+        function show_error_dialog(error) {
+            const dialog = document.getElementById('error-dialog');
+            const target = dialog.querySelector("#modal-content");
+
+            if (error instanceof Element) {
+                target.innerHTML = "";
+                target.appendChild(error);
+            } else {
+                target.innerHTML = error;
+            }
+
+            dialog.style.display = 'block';
         }
 
         function close_overlay() {
@@ -377,6 +466,15 @@
                 sm.style.top = "auto"; // restore default pos
             }
         });
+
+        // 
+        // Called on history navigation. The href is the page to load.
+        // 
+        window.onpopstate = function (event) {
+            if (document.location) {
+                content_insert(event, document.location.href);
+            }
+        };
 
 </script>
 
