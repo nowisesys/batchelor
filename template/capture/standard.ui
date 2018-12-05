@@ -1,0 +1,7 @@
+<?php
+
+// 
+// Template for capturing HTML without decorations.
+// 
+
+$this->printContent();
