@@ -195,9 +195,25 @@
         }
 
         // 
-        // Display content in modal dialog.
+        // Display content in modal dialog. If attrs is true, then append any
+        // dataset attributes set on event target to url.
         // 
-        function show_modal_dialog(event, url) {
+        function show_modal_dialog(event, url, attrs = true) {
+            if (event.target.classList.contains("action-disabled")) {
+                return false;
+            }
+
+            if (attrs) {
+                let dataset = event.target.dataset;
+                for (let name in dataset) {
+                    if (url.indexOf('?') === -1) {
+                        url += '?' + name + '=' + dataset[name];
+                    } else {
+                        url += '&' + name + '=' + dataset[name];
+                    }
+                }
+            }
+
             const dialog = document.getElementById('modal-dialog');
             const target = dialog.querySelector("#modal-content");
 
