@@ -93,6 +93,11 @@
             </p>
         </div>
     </div>
+    <div class="w3-padding-top" id="submit-job-result" style="display: none">
+        <h4>Submitted jobs</h4>
+        <div id="submit-job-listing"></div>
+        <div id="submit-job-details"></div>
+    </div>
     <div id="submit-finish" class="w3-panel w3-green w3-animate-opacity w3-animate-left" 
          style="display: none; cursor: pointer" onclick="this.style.display = 'none'">
         <p><?= _("All jobs have been enqueued!") ?></p>

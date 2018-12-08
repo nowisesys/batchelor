@@ -30,6 +30,8 @@
     let submitStatus = document.getElementById('submit-status');
     let submitFinish = document.getElementById('submit-finish');
 
+    let responses = [];
+
     // 
     // Toggle display of advanced options:
     // 
@@ -173,19 +175,59 @@
         enqueue_file(file);
     }
 
+    // 
+    // Add response button showing job details.
+    // 
+    function add_submit_response(resp) {
+        const target = document.getElementById('submit-job-listing');
+        const parent = target.parentElement;
+        const button = document.createElement("a");
+        const length = responses.length;
+
+        button.innerHTML = "Job " + length;
+        button.classList.add("w3-btn");
+        button.classList.add("w3-animate-opacity");
+        button.style = "margin-right: 3px; margin-top: 3px; min-width: 80px";
+
+        button.addEventListener('click', function () {
+            content_replace(event, "submit-job-details", 'details?jobid=' + resp.identity.jobid + '&' + 'result=' + resp.identity.result);
+        }, false);
+
+        target.appendChild(button);
+
+        target.style.display = 'block';
+        parent.style.display = 'block';
+    }
+
+    // 
+    // On enqueue job response.
+    // 
+    function on_submit_response(resp) {
+        responses.push(resp);
+        add_submit_response(resp);
+    }
+
+    // 
+    // On enqueue job successful.
+    // 
     function on_submit_success(subj) {
         progress_tick();
         progress_done();
     }
 
+    // 
+    // On enqueue job failed (non-critical).
+    // 
     function on_submit_warning(resp, subj) {
         resp.subj = subj;
         jobsFail.push(resp);
         progress_tick();
         progress_done();
-
     }
 
+    // 
+    // On enqueue job failed (severe error).
+    // 
     function on_submit_error(resp, subj) {
         resp.subj = subj;
         lastError = resp;
@@ -274,6 +316,7 @@
             .then((resp) => resp.json())
             .then((resp) => {
                 if (resp.status === "success") {
+                    on_submit_response(resp.result);
                     on_submit_success();
                 } else {
                     on_submit_warning(resp);
