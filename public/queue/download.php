@@ -1,11 +1,5 @@
 <?php
 
-use Batchelor\Queue\WorkDirectory;
-use Batchelor\Render\Queue;
-use Batchelor\WebService\Types\JobIdentity;
-use UUP\Site\Page\Service\StandardService;
-use UUP\Site\Request\Params;
-
 /*
  * Copyright (C) 2018 Anders Lövgren (Nowise Systems)
  *
@@ -24,15 +18,21 @@ use UUP\Site\Request\Params;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+use Batchelor\Controller\Standard\FileService;
+use Batchelor\Queue\WorkDirectory;
+use Batchelor\Render\Queue;
+use Batchelor\WebService\Types\JobIdentity;
+use UUP\Site\Request\Params;
+
 /**
- * The 
+ * The file download.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class DownloadPage extends StandardService
+class DownloadPage extends FileService
 {
 
-        public function render()
+        protected function onRendering(): array
         {
                 $this->sendFile(
                     (new Queue(null))->getReader(), $this->params
