@@ -104,5 +104,5 @@
     </div>
 </div>
 
-<script src="common.js"></script>
-<script src="submit.js" onajax="run"></script>
+<script src="common.js?v=1.0"></script>
+<script src="submit.js?v=1.0" onajax="run"></script>
