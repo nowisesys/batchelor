@@ -437,8 +437,9 @@ class Directory implements IteratorAggregate
          */
         public function scan(int $options = Scanner::SKIP_DOTS, int $format = Scanner::FILENAME_ANCHORED)
         {
-                return $this->getScanner($options, $format)
-                        ->getFiles();
+                return array_unique(
+                    $this->getScanner($options, $format)
+                        ->getFiles());
         }
 
         /**
