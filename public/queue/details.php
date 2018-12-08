@@ -1,8 +1,5 @@
 <?php
 
-use Batchelor\Controller\Standard\WebPage;
-use Batchelor\Render\Queue;
-
 /*
  * Copyright (C) 2018 Anders Lövgren (Nowise Systems)
  *
@@ -21,6 +18,14 @@ use Batchelor\Render\Queue;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+use Batchelor\Controller\Standard\WebPage;
+use Batchelor\Render\Queue;
+
+/**
+ * The job details.
+ * 
+ * @author Anders Lövgren (Nowise Systems)
+ */
 class DetailsPage extends WebPage
 {
 
