@@ -33,7 +33,7 @@
     select dialog. Type in the prefered queue name and apply by pressing swicth
     button.
 </p>
-<img src="select.png" alt="Showing queue selecting from web interface">
+<img class="w3-image" src="select.png" alt="Showing queue selecting from web interface">
 <p>
     To revert back to default queue, use an empty name or press the revert button.
 </p>
