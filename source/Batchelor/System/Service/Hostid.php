@@ -166,13 +166,13 @@ class Hostid extends Component
                 if (isset($value)) {
                         return $value;
                 } elseif (filter_has_var(INPUT_GET, 'hostid')) {
-                        return filter_input(INPUT_GET, 'hostid');
+                        return filter_input(INPUT_GET, 'hostid', FILTER_SANITIZE_STRING);
                 } elseif (filter_has_var(INPUT_POST, 'hostid')) {
-                        return filter_input(INPUT_POST, 'hostid');
+                        return filter_input(INPUT_POST, 'hostid', FILTER_SANITIZE_STRING);
                 } elseif (filter_has_var(INPUT_SERVER, 'HTTP_X_BATCHELOR_HOSTID')) {
                         return filter_input(INPUT_SERVER, 'HTTP_X_BATCHELOR_HOSTID');
                 } elseif (filter_has_var(INPUT_COOKIE, 'hostid')) {
-                        return filter_input(INPUT_COOKIE, 'hostid');
+                        return filter_input(INPUT_COOKIE, 'hostid', FILTER_SANITIZE_STRING);
                 } else {
                         return $default;
                 }

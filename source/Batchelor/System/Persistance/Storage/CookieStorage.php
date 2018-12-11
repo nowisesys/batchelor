@@ -102,7 +102,7 @@ class CookieStorage implements StorageService
          */
         public function read(string $name): string
         {
-                return filter_input(INPUT_COOKIE, $name);
+                return filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING);
         }
 
         /**
