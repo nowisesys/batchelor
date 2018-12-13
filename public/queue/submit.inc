@@ -56,15 +56,19 @@
             </p>
         </form>
         <div class="w3-panel w3-indigo">
+            <?php if (file_exists('submit-help.inc')): ?>
+                    <p>
+                        <a onclick="toggle_section_display('help-submit-data')" style="cursor: pointer">
+                            <i class="fas fa-info-circle w3-xlarge w3-right w3-margin-left"></i>
+                        </a>
+                    </p>
+            <?php endif; ?>
             <p>
                 <?= _("Use the text area for defining job data input.") ?>
                 <?= _("You can also add URL from where data can be downloaded.") ?>
                 <?= _("One job will be enqueued for each URL.") ?>
             </p>
             <?php if (file_exists('submit-help.inc')): ?>
-                    <p>
-                        <a class="w3-button w3-transparent w3-text-white w3-border w3-border-white w3-hover-white" onclick="toggle_section_display('help-submit-data')">More</a>
-                    </p>
                     <div id="help-submit-data" style="display: none"><?= file_get_contents('submit-help.inc') ?></div>
             <?php endif; ?>
         </div>
@@ -92,15 +96,19 @@
             </p>
         </form>
         <div class="w3-panel w3-indigo">
+            <?php if (file_exists('submit-help.inc')): ?>
+                    <p>
+                        <a onclick="toggle_section_display('help-submit-file')" style="cursor: pointer">
+                            <i class="fas fa-info-circle w3-xlarge w3-right w3-margin-left"></i>
+                        </a>
+                    </p>
+            <?php endif; ?>
             <p>
                 <?= _("Upload files for batch processing.") ?>
                 <?= _("The form will automatic upload the files when dropped in the zone above or accepted in file dialog.") ?>
                 <?= _("Each uploaded file will result in one job being enqueued.") ?>
             </p>
             <?php if (file_exists('submit-help.inc')): ?>
-                    <p>
-                        <a class="w3-button w3-transparent w3-text-white w3-border w3-border-white w3-hover-white" onclick="toggle_section_display('help-submit-file')">More</a>
-                    </p>
                     <div id="help-submit-file" style="display: none"><?= file_get_contents('submit-help.inc') ?></div>
             <?php endif; ?>
         </div>
