@@ -18,16 +18,6 @@
 
 /* global hljs */
 
-function toggle_section_display(id) {
-    const target = document.getElementById(id);
-
-    if (target.style.display === 'none') {
-        target.style.display = 'block';
-    } else {
-        target.style.display = 'none';
-    }
-}
-
 function file_preview(event, params) {
     const source = 'preview?' + params;
     const target = 'file-preview';

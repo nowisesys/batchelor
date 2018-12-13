@@ -130,5 +130,5 @@ function get_params($ident, $file)
 <!-- The file preview -->
 <div id="file-preview"></div>
 
-<script src="common.js?v=1.0" onajax="run"></script>
-<script src="details.js?v=1.0" onajax="run"></script>
+<script src="common.js?v=1.1" onajax="run"></script>
+<script src="details.js?v=1.1" onajax="run"></script>

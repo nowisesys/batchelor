@@ -18,6 +18,16 @@
 
 /* global Element */
 
+function toggle_section_display(id) {
+    const target = document.getElementById(id);
+
+    if (target.style.display === 'none') {
+        target.style.display = 'block';
+    } else {
+        target.style.display = 'none';
+    }
+}
+
 // 
 // Delete queued job and remove from listing. The json contains the
 // JSON encoded job identity.
