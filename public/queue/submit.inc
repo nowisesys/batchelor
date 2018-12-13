@@ -61,6 +61,12 @@
                 <?= _("You can also add URL from where data can be downloaded.") ?>
                 <?= _("One job will be enqueued for each URL.") ?>
             </p>
+            <?php if (file_exists('submit-help.inc')): ?>
+                    <p>
+                        <a class="w3-button w3-transparent w3-text-white w3-border w3-border-white w3-hover-white" onclick="toggle_section_display('help-submit-data')">More</a>
+                    </p>
+                    <div id="help-submit-data" style="display: none"><?= file_get_contents('submit-help.inc') ?></div>
+            <?php endif; ?>
         </div>
     </div>
     <div id="submit-file" class="submit w3-animate-right" style="display: <?= $type == 'file' ? 'block' : 'none' ?>">
@@ -91,6 +97,12 @@
                 <?= _("The form will automatic upload the files when dropped in the zone above or accepted in file dialog.") ?>
                 <?= _("Each uploaded file will result in one job being enqueued.") ?>
             </p>
+            <?php if (file_exists('submit-help.inc')): ?>
+                    <p>
+                        <a class="w3-button w3-transparent w3-text-white w3-border w3-border-white w3-hover-white" onclick="toggle_section_display('help-submit-file')">More</a>
+                    </p>
+                    <div id="help-submit-file" style="display: none"><?= file_get_contents('submit-help.inc') ?></div>
+            <?php endif; ?>
         </div>
     </div>
     <div class="w3-padding-top" id="submit-job-result" style="display: none">
@@ -104,5 +116,5 @@
     </div>
 </div>
 
-<script src="common.js?v=1.0"></script>
+<script src="common.js?v=1.1"></script>
 <script src="submit.js?v=1.0" onajax="run"></script>
