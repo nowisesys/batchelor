@@ -23,6 +23,7 @@ namespace Batchelor\Queue;
 use Batchelor\Logging\Logger;
 use Batchelor\Queue\Task\Adapter;
 use Batchelor\Queue\Task\Interaction;
+use Batchelor\Queue\Task\Owner;
 use Batchelor\Queue\Task\Runtime;
 use Batchelor\Storage\Directory;
 use Batchelor\WebService\Types\JobData;
@@ -90,8 +91,9 @@ interface Task
          * Check input data.
          * 
          * @param JobData $data The job data to process.
+         * @param Owner $owner The owner of submitted data.
          */
-        function validate(JobData $data);
+        function validate(JobData $data, Owner $owner);
 
         /**
          * The task initialize method.

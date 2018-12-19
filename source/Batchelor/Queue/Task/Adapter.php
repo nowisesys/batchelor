@@ -56,7 +56,7 @@ abstract class Adapter extends Component implements Task
                 $this->prepare($workdir, $runtime->data);
 
                 $info->info("Validating runtime data");
-                $this->validate($runtime->data);
+                $this->validate($runtime->data, $runtime->owner);
 
                 $info->info("Initialize task %s for execute", [$runtime->data->task]);
                 $this->initialize();
@@ -83,7 +83,7 @@ abstract class Adapter extends Component implements Task
         /**
          * {@inheritdoc}
          */
-        public function validate(JobData $data)
+        public function validate(JobData $data, Owner $owner)
         {
                 if (!$data->getFile()->isFile()) {
                         throw new InvalidArgumentException("Input file is missing");
