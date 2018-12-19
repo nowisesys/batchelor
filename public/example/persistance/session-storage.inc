@@ -1,5 +1,6 @@
 <?php
 
+use Batchelor\Data\RecursiveArrayObject;
 use Batchelor\System\Persistance\Storage\SessionStorage;
 
 // 

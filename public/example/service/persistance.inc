@@ -5,6 +5,8 @@
 // be used with it are tested more thoroughly in separate examples.
 // 
 
+
+use Batchelor\Data\RecursiveArrayObject;
 use Batchelor\System\Persistance\Storage\SessionStorage;
 use Batchelor\System\Service\Persistance;
 

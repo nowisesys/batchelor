@@ -20,8 +20,8 @@
 
 namespace Batchelor\System\Service;
 
+use Batchelor\Data\RecursiveArrayObject;
 use Batchelor\Storage\Locate;
-use RecursiveArrayObject;
 use RuntimeException;
 
 /**
