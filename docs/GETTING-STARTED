@@ -110,6 +110,36 @@ any real work until task processors defining your business logic has been added.
     the job is assumed to have crashed. Calling die()/exit() or throwing exceptions
     should be trapped and logged by task executor.
 
+** VALIDATION & TRUSTED USERS:
+
+    Override the validate() method to validate input data or apply restrictions on 
+    untrusted users (i.e. not authenticated):
+
+        public function validate(JobData $data, Owner $owner)
+        {
+                parent::validate($data, $owner);
+
+                if (!$owner->isTrusted()) {
+                        // Enforce job restrictions
+                }
+        }
+
+    Which users to considered trsuted can be defined in config/defaults.app by 
+    implementing the trusted callback function:
+
+        'trusted' => static function(Owner $owner) {
+                if (!$owner->user) {
+                        return false;
+                } elseif (preg_match("|192\.168.*|", $owner->addr)) {
+                        return true;
+                } elseif (preg_match("|.*\.example\.com$|", $owner->host)) {
+                        return true;
+                } else {
+                        return false;
+                }
+        }
+
+
 ** REGISTER TASKS:
 
     To make your task available as a processor for incoming jobs it need to be 

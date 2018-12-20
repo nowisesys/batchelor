@@ -1,5 +1,7 @@
 <?php
 
+use Batchelor\Queue\Task\Owner;
+
 // 
 // The TZ environment variable *has* to be set because its inherited by sub
 // processes (like at). It also affects the formatting of timestamps. Either 
@@ -119,5 +121,13 @@ return [
                         'domain1.com' => 'The first organization',
                         'domain2.com' => 'The second organization'
                 ]
-        ]
+        ],
+        // // 
+        // // The trusted is a callable taking a job owner as input, returning true
+        // // if owner is trusted to bypass certain job limits i.e. based on username
+        // // or address. 
+        // // 
+        // 'trusted' => static function(Owner $owner) {
+        //         return $owner->user != "dartwader@deathstar.com";
+        // }
 ];

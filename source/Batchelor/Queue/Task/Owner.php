@@ -21,8 +21,10 @@
 namespace Batchelor\Queue\Task;
 
 use Batchelor\System\Security\User;
+use Batchelor\System\Service\Config;
 use Batchelor\System\Service\Security;
 use Batchelor\System\Services;
+use InvalidArgumentException;
 
 /**
  * The job owner.
@@ -103,6 +105,34 @@ class Owner
                 } else {
                         return "";
                 }
+        }
+
+        /**
+         * Check if job owner is trusted.
+         * @return bool
+         * @throws InvalidArgumentException
+         */
+        public function isTrusted(): bool
+        {
+                if (!($config = $this->getConfig())) {
+                        return false;
+                } elseif (!($trusted = $config->trusted)) {
+                        return false;
+                } elseif (!is_callable($config->trusted)) {
+                        throw new InvalidArgumentException("The trusted is setting is defined, but not a callable");
+                } else {
+                        return $trusted($this);
+                }
+        }
+
+        /**
+         * Get application config.
+         * @return Config
+         */
+        private function getConfig(): Config
+        {
+                return Services::getInstance()
+                        ->getService("app");
         }
 
 }
