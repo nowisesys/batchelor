@@ -125,4 +125,4 @@
 </div>
 
 <script src="common.js?v=1.1"></script>
-<script src="submit.js?v=1.1" onajax="run"></script>
+<script src="submit.js?v=1.2" onajax="run"></script>

@@ -190,7 +190,7 @@
         button.style = "margin-right: 3px; margin-top: 3px; min-width: 80px";
 
         button.addEventListener('click', function () {
-            content_replace(event, "submit-job-details", 'details?jobid=' + resp.identity.jobid + '&' + 'result=' + resp.identity.result + '&embed=1');
+            content_replace(event, "submit-job-details", 'details?jobid=' + resp.identity.jobid + '&' + 'result=' + resp.identity.result + '&embed=1', false);
         }, false);
 
         target.appendChild(button);
