@@ -86,16 +86,20 @@ function get_params($ident, $file)
 </div>
 
 <!-- Information about job and functions below -->
-<?php if (!$embed): ?>
-        <div class="w3-panel w3-blue-gray">
+<div class="w3-panel w3-blue-gray w3-hide-small">
+    <p>
+        <?= implode(". ", $messages) ?>.
+    </p>
+    <?php if ($embed): ?>
             <p>
-                <?= implode(". ", $messages) ?>.
+                <a class="w3-btn w3-white w3-text-dark-gray" href="details?<?= http_build_query($ident) ?>"><?= _("Details") ?></a>
             </p>
+    <?php else: ?>
             <p>
                 <a class="w3-btn w3-white w3-text-dark-gray" onclick="history.back()"><?= _("Return") ?></a>
             </p>
-        </div>
-<?php endif; ?>
+    <?php endif; ?>
+</div>
 
 <!-- Explorer, preview and download buttons -->
 <?php if (count($files)) : ?>
