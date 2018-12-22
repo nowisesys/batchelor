@@ -25,7 +25,7 @@ $logs = array_filter($files, static function ($file) {
         return preg_match('|\.log$|', $file->name);
 });
 $data = array_filter($files, static function($file) {
-        return preg_match('|indata.*|', $file->name);
+        return preg_match('|.*/indata$|', $file->name);
 });
 
 $messages = [];
@@ -106,7 +106,7 @@ function get_params($ident, $file)
         <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px; margin-right: 3px" onclick="toggle_section_display('file-explorer')" ><?= _("Explore") ?></button>
 <?php endif; ?>
 <?php if (count($data)) : ?>
-        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px; margin-right: 3px" onclick="file_download(event, '<?= get_params($ident, 'indata.ser') ?>')"><?= _("Input") ?></button>
+        <button class="w3-button w3-deep-orange w3-small" style="min-width: 90px; margin-right: 3px" onclick="file_download(event, '<?= get_params($ident, current($data)->name) ?>')"><?= _("Input") ?></button>
 <?php endif; ?>
 <?php if (count($logs)): ?>
         <div class="w3-dropdown-hover">
