@@ -88,7 +88,7 @@ class Push
         private function getJobIdentity(Runtime $runtime): JobIdentity
         {
                 return new JobIdentity(
-                    $runtime->job, $runtime->owner->hostid
+                    $runtime->job, $runtime->result
                 );
         }
 
