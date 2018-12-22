@@ -77,6 +77,7 @@ class Queue extends Component
                 $hostid = $this->hostid->getValue();
                 $status = $this->queue->getStatus($hostid, $ident);
                 $files = $this->queue->getReader($hostid)->getFiles($ident);
+                $embed = boolval($params->getParam("embed"));
 
                 include($this->_template);
         }
