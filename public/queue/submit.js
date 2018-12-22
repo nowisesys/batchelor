@@ -354,6 +354,7 @@
             .then((resp) => resp.json())
             .then((resp) => {
                 if (resp.status === "success") {
+                    on_submit_response(resp.result);
                     on_submit_success(file.name);
                 } else {
                     on_submit_warning(resp, file.name);
