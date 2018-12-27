@@ -163,9 +163,9 @@
     // Send each file individual:
     // 
     function handle_files(files) {
-        files = [...files];
+        files = Array.from(files);
         initialize_progress(files.length);
-        (files).forEach(submit_file);
+        files.forEach(submit_file);
     }
 
     // 
