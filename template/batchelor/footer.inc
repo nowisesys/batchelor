@@ -327,6 +327,7 @@
 
             fetch(target, {
                 method: 'post',
+		credentials: 'same-origin',
                 body: JSON.stringify({queue: name})
             })
                 .then(resp => resp.json())
