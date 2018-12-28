@@ -82,15 +82,27 @@ class JobStatus
          */
         public static function create(array $data): self
         {
-                if(!isset($data['queued'])) {
-                        throw new InvalidArgumentException("The queued key is missing in job status");                        
+                if (!isset($data['queued'])) {
+                        throw new InvalidArgumentException("The queued key is missing in job status");
                 }
-                if(!isset($data['state'])) {
-                        throw new InvalidArgumentException("The state key is missing in job status");                        
+                if (!isset($data['state'])) {
+                        throw new InvalidArgumentException("The state key is missing in job status");
                 }
-                return new self(
+
+                $status = new self(
                     new DateTime($data['queued']['date']), new JobState($data['state'])
                 );
+
+                if (isset($data['started'])) {
+                        $status->started = new DateTime($data['started']['date']);
+                        json_encode($status->started);
+                }
+                if (isset($data['finished'])) {
+                        $status->finished = new DateTime($data['finished']['date']);
+                        json_encode($status->finished);
+                }
+
+                return $status;
         }
 
 }
