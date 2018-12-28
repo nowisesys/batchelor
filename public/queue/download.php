@@ -45,7 +45,36 @@ class DownloadPage extends FileService
                             'jobid'  => $params->getParam("jobid"),
                             'result' => $params->getParam("result")
                 ]);
-                $reader->getContent($ident, $params->getParam("name"), true);
+
+                // 
+                // Local files are sent direct, but remote file needs proxying:
+                // 
+                if (($result = $reader->getContent($ident, $params->getParam("name"), true))) {
+                        $this->sendHeaders($params);
+                        $this->sendResult($result);
+                }
+        }
+
+        private function sendHeaders(Params $params)
+        {
+                foreach ($this->getHeaders($params) as $key => $val) {
+                        header("$key: $val");
+                }
+        }
+
+        private function sendResult(string $result)
+        {
+                echo $result;
+                exit(0);
+        }
+
+        private function getHeaders(Params $params): array
+        {
+                return [
+                        'Content-Disposition' => sprintf('attachment; filename="%s"', basename($params->getParam("name"))),
+                        'Content-Type'        => $params->getParam("mime"),
+                        'Content-Length'      => $params->getParam("size")
+                ];
         }
 
 }

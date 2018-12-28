@@ -59,8 +59,10 @@ class RemoteQueue implements WorkQueue
          */
         public function addJob(string $hostid, JobData $indata): QueuedJob
         {
-                return $this->_client
-                        ->callMethod("enqueue", $indata);
+                return QueuedJob::create(
+                        $this->_client
+                            ->callMethod("enqueue", (array) $indata)
+                );
         }
 
         /**
@@ -76,8 +78,10 @@ class RemoteQueue implements WorkQueue
          */
         public function getStatus(string $hostid, JobIdentity $job): JobStatus
         {
-                return $this->_client
-                        ->callMethod("stat", $job);
+                return JobStatus::create(
+                        $this->_client
+                            ->callMethod("stat", (array) $job)
+                );
         }
 
         /**
@@ -85,11 +89,18 @@ class RemoteQueue implements WorkQueue
          */
         public function listJobs(string $hostid, QueueSortResult $sort = QueueSortResult::STARTED, QueueFilterResult $filter = QueueFilterResult::NONE)
         {
-                return $this->_client
-                        ->callMethod("queue", [
-                                'sort'   => $sort,
-                                'filter' => $filter
+                $result = [];
+                $queued = $this->_client
+                    ->callMethod("queue", [
+                        'sort'   => $sort,
+                        'filter' => $filter
                 ]);
+
+                foreach ($queued as $job) {
+                        $result[] = QueuedJob::create($job);
+                }
+
+                return $result;
         }
 
         /**
@@ -98,7 +109,7 @@ class RemoteQueue implements WorkQueue
         public function removeJob(string $hostid, JobIdentity $job): bool
         {
                 return $this->_client
-                        ->callMethod("dequeue", $job);
+                        ->callMethod("dequeue", (array) $job);
         }
 
         /**
@@ -107,7 +118,7 @@ class RemoteQueue implements WorkQueue
         public function resumeJob(string $hostid, JobIdentity $job): bool
         {
                 return $this->_client
-                        ->callMethod("resume", $job);
+                        ->callMethod("resume", (array) $job);
         }
 
         /**
@@ -116,7 +127,7 @@ class RemoteQueue implements WorkQueue
         public function suspendJob(string $hostid, JobIdentity $job): bool
         {
                 return $this->_client
-                        ->callMethod("suspend", $job);
+                        ->callMethod("suspend", (array) $job);
         }
 
         /**

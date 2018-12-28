@@ -54,6 +54,10 @@ class JsonCommand extends BaseCommand
                         $client->setTracing();
                 }
 
+                if (empty($func)) {
+                        return;
+                }
+
                 if ($data) {
                         $response = $client->callMethod($func, json_decode($data, true));
                 } else {

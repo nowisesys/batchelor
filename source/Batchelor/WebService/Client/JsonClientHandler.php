@@ -66,7 +66,9 @@ class JsonClientHandler
          */
         public function __destruct()
         {
-                curl_close($this->_client);
+                if (is_resource($this->_client)) {
+                        curl_close($this->_client);
+                }
         }
 
         /**
@@ -110,7 +112,7 @@ class JsonClientHandler
          * @param array $params Optional method parameters.
          * @return array
          */
-        public function callMethod($func, $params = [])
+        public function callMethod(string $func, array $params = [])
         {
                 $client = $this->getClient();
                 $this->_tracing = [];
@@ -136,7 +138,13 @@ class JsonClientHandler
                         ];
                 }
 
-                return $result;
+                if (!($result = json_decode($result, true))) {
+                        throw new RuntimeException("Failed decode JSON response");
+                } elseif ($result['status'] == "success") {
+                        return $result['result'];
+                } else {
+                        throw new RuntimeException($result['message']);
+                }
         }
 
         /**

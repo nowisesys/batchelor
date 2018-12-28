@@ -135,7 +135,7 @@ abstract class BaseCommand extends Command
                 $output->write($text);
         }
 
-        protected function showResult(array $result, OutputInterface $output, string $decode = null)
+        protected function showResult($result, OutputInterface $output, string $decode = null)
         {
                 if ($decode == "color") {
                         $this->showTrace($result, $output);

@@ -22,6 +22,7 @@ namespace Batchelor\Queue\Remote;
 
 use Batchelor\Queue\WorkDirectory;
 use Batchelor\WebService\Client\JsonClientHandler;
+use Batchelor\WebService\Types\File;
 use Batchelor\WebService\Types\JobIdentity;
 
 /**
@@ -52,21 +53,29 @@ class RemoteDirectory implements WorkDirectory
          */
         public function getContent(JobIdentity $job, string $file, bool $send = false)
         {
-                return $this->_client
+                return base64_decode(
+                    $this->_client
                         ->callMethod("fopen", [
                                 'job'  => $job,
                                 'file' => $file,
-                                'send' => $send
-                ]);
+                                'send' => false         // Always return content
+                        ])
+                );
         }
 
         /**
          * {@inheritdoc}
          */
-        public function getFiles(JobIdentity $job)
+        public function getFiles(JobIdentity $job, array $result = [])
         {
-                return $this->_client
-                        ->callMethod("readdir", $job);
+                $remote = $this->_client
+                    ->callMethod("readdir", (array) $job);
+
+                foreach ($remote as $file) {
+                        $result[] = new File(...array_values($file));
+                }
+
+                return $result;
         }
 
         /**
