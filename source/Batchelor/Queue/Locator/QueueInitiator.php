@@ -82,8 +82,10 @@ class QueueInitiator
          */
         public function useQueue(string $name): WorkQueue
         {
-                if (!($data = $this->getQueue($name))) {
-                        return false;
+                if (!$this->hasQueue($name)) {
+                        throw new InvalidArgumentException("Unknown queue name $name");
+                } elseif (!($data = $this->getQueue($name))) {
+                        throw new InvalidArgumentException("Failed get config for queue $name");
                 } elseif ($data['type'] == 'system') {
                         return new SystemQueue($data);
                 } elseif ($data['type'] == 'remote') {
