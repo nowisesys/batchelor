@@ -49,7 +49,7 @@ class SoapCommand extends BaseCommand
                 parent::execute($input, $output);
 
                 $client = new SoapClientHandler();
-                $client->setBase($input->getOption('base'));
+                $client->setBase(sprintf("%s/soap", $input->getOption('base')));
 
                 $func = $input->getOption('func');
                 $data = $input->getOption('params');

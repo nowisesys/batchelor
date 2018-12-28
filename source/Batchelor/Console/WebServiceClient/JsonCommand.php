@@ -45,7 +45,7 @@ class JsonCommand extends BaseCommand
                 parent::execute($input, $output);
 
                 $client = new JsonClientHandler();
-                $client->setBase($input->getOption('base'));
+                $client->setBase(sprintf("%s/json", $input->getOption('base')));
 
                 $func = $input->getOption('func');
                 $data = $input->getOption('params');
@@ -65,7 +65,7 @@ class JsonCommand extends BaseCommand
                 }
 
                 if ($response) {
-                        $this->showResult(json_decode($response, true), $output, $input->getOption("decode"));
+                        $this->showResult($response, $output, $input->getOption("decode"));
                 }
         }
 

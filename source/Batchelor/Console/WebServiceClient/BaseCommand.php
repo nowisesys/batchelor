@@ -48,7 +48,7 @@ abstract class BaseCommand extends Command
                 $this->addOption("trace", null, InputOption::VALUE_NONE, "Enable client request tracing");
                 $this->addOption("decode", null, InputOption::VALUE_OPTIONAL, "Decode response as array");
 
-                $this->addusage("--func=<method> --base=http://localhost/batchelor2/api/soap");
+                $this->addusage("--func=<method> --base=http://localhost/batchelor2/api");
         }
 
         protected function initialize(InputInterface $input, OutputInterface $output)
