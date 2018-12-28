@@ -20,6 +20,8 @@
 
 namespace Batchelor\WebService\Types;
 
+use InvalidArgumentException;
+
 /**
  * Gecos for submitted job.
  *
@@ -48,6 +50,25 @@ class JobSubmit
         {
                 $this->task = $task;
                 $this->name = $name;
+        }
+
+        /**
+         * Create job submit object.
+         * 
+         * @param array $data The job submit input.
+         * @return JobSubmit
+         * @throws InvalidArgumentException
+         */
+        public static function create(array $data): self
+        {
+                if (!array_key_exists('task', $data)) {
+                        throw new InvalidArgumentException("The task key is missing in job submit");
+                }
+                if (!array_key_exists('name', $data)) {
+                        throw new InvalidArgumentException("The name key is missing in job submit");
+                }
+
+                return new self($data['task'], $data['name']);
         }
 
 }

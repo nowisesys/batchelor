@@ -20,6 +20,8 @@
 
 namespace Batchelor\WebService\Types;
 
+use InvalidArgumentException;
+
 /**
  * The queued job.
  *
@@ -54,6 +56,30 @@ class QueuedJob
                 $this->identity = $identity;
                 $this->status = $status;
                 $this->submit = $submit;
+        }
+
+        /**
+         * Create queued job object.
+         * 
+         * @param array $data The queued job input.
+         * @return QueuedJob
+         * @throws InvalidArgumentException
+         */
+        public static function create(array $data): self
+        {
+                if (empty($data['identity'])) {
+                        throw new InvalidArgumentException("The identity key is missing in queued job");
+                }
+                if (empty($data['status'])) {
+                        throw new InvalidArgumentException("The status key is missing in queued job");
+                }
+                if (empty($data['submit'])) {
+                        throw new InvalidArgumentException("The submit key is missing in queued job");
+                }
+
+                return new self(
+                    JobIdentity::create($data['identity']), JobStatus::create($data['status']), JobSubmit::create($data['submit'])
+                );
         }
 
 }

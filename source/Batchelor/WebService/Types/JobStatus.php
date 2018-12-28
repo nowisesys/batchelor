@@ -21,6 +21,7 @@
 namespace Batchelor\WebService\Types;
 
 use DateTime;
+use InvalidArgumentException;
 
 /**
  * The job status class.
@@ -64,8 +65,32 @@ class JobStatus
          */
         public function __construct(DateTime $queued, JobState $state)
         {
+                if (!isset($queued->date)) {
+                        json_encode($queued);   // Ugly cludge for serialization
+                }
+
                 $this->queued = $queued;
                 $this->state = $state;
+        }
+
+        /**
+         * Create job status object.
+         * 
+         * @param array $data The job status input.
+         * @return JobStatus
+         * @throws InvalidArgumentException
+         */
+        public static function create(array $data): self
+        {
+                if(!isset($data['queued'])) {
+                        throw new InvalidArgumentException("The queued key is missing in job status");                        
+                }
+                if(!isset($data['state'])) {
+                        throw new InvalidArgumentException("The state key is missing in job status");                        
+                }
+                return new self(
+                    new DateTime($data['queued']['date']), new JobState($data['state'])
+                );
         }
 
 }
