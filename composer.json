@@ -1,10 +1,11 @@
 {
-    "name": "bmc/batchelor",
-    "version": "2.3.1",
+    "name": "nowise/batchelor",
+    "version": "2.3.2",
     "description": "Batch job queue manager (web interface and services)",
     "type": "project",
-    "keywords": ["batchelor", "queue", "task"],
+    "keywords": ["batchelor", "queue", "task", "schedule"],
     "license": "GPL-2.0-only",
+    "homepage": "https://nowise.se/oss/batchelor",
     "authors": [
         {
             "name": "Anders Lövgren",
@@ -15,29 +16,11 @@
             "email": "andlov@nowise.se"
         }
     ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/php/uup-site/"
-        },
-        {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/php/uup-soap/"
-        },
-        {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/php/uup-auth/"
-        },
-        {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/php/uup-web-component/"
-        }
-    ],
     "require": {
-        "bmc/uup-site": "^1.0",
-        "bmc/uup-soap": "^1.2",
-        "bmc/uup-auth": "^2.3",
-        "bmc/uup-web-component": "^2.0",
+        "nowise/uup-site": "^1.0",
+        "nowise/uup-soap": "^1.2",
+        "nowise/uup-auth": "^2.3",
+        "nowise/uup-web-component": "^2.0",
         "symfony/console": "^4.1",
         "krakjoe/pthreads-polyfill": "^1.1"
     },

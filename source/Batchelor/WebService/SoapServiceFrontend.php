@@ -54,7 +54,7 @@ class SoapServiceFrontend extends WebService
         {
                 $service = new SoapService(SoapServiceHandler::class);
                 $service->setLocation($this->_location);
-                $service->setNamespace("http://it.bmc.uu.se/schemas/batchelor/soap?ver=2.0");
+                $service->setNamespace("https://nowise.se/schemas/batchelor/soap?ver=2.0");
                 
                 $service->useRequest();
                 $service->useWrapper();

@@ -26,7 +26,7 @@
     that needs to start jobs that will run for a long period of time, perhaps hours 
     or weeks.
 </p>
-<a class="w3-btn w3-blue" href="http://it.bmc.uu.se/andlov/proj/sci/batchelor/" style="min-width: 90px">Project</a>
+<a class="w3-btn w3-blue" href="https://nowise.se/oss/batchelor/" style="min-width: 90px">Project</a>
 
 <p>
     Batchelor provides job queue management, web services (SOAP/JSON) and responsive 

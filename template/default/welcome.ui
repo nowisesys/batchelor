@@ -121,7 +121,7 @@ $output = new format($this);
             </div>
             <p>Powered by 
                 <a href="http://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a> and
-                <a href="http://it.bmc.uu.se/andlov/php/proj/bmc/uup-site/" target="_blank">uup-site</a>
+                <a href="https://nowise.se/oss/uup-site/" target="_blank">uup-site</a>
             </p>
         </footer>
 

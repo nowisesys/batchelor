@@ -18,19 +18,7 @@ to use if wanted.
 
 	bash$> cd /var/www/apps
 	bash$> mkdir batchelor2
-	bash$> composer init
-
-    Add the following repository to composer.json:
-
-	"repositories": [
-        {
-            "type": "composer",
-            "url": "https://it.bmc.uu.se/andlov/proj/sci/batchelor/"
-        }
-        ],
-        "require": {
-            "bmc/batchelor": ">=2.0.0"
-        }
+	bash$> composer require nowise/batchelor
 
     Run composer update to install batchelor and its dependencies:
 
