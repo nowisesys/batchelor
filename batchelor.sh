@@ -152,8 +152,8 @@ function version()
 }
 
 # Relocate srcdir when running in bootstrap mode:
-if [ -d vendor/bmc/batchelor ]; then
-    srcdir="$(pwd)/vendor/bmc/batchelor"
+if [ -d vendor/nowise/batchelor ]; then
+    srcdir="$(pwd)/vendor/nowise/batchelor"
 fi
 
 while [ -n "$1" ]; do
