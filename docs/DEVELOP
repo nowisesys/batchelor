@@ -13,15 +13,15 @@
         Loading composer repositories with package information
         Updating dependencies (including require-dev)
         Package operations: 2 installs, 0 updates, 0 removals
-          - Installing bmc/uup-site (1.0.22): Symlinking from ../uup-site
-          - Installing bmc/uup-soap (1.1.5): Symlinking from ../uup-soap
-        bmc/uup-site suggests installing bmc/uup-html (>=1.0.5)
+          - Installing nowise/uup-site (1.0.22): Symlinking from ../uup-site
+          - Installing nowise/uup-soap (1.1.5): Symlinking from ../uup-soap
+        nowise/uup-site suggests installing nowise/uup-html (>=1.0.5)
         Generating autoload files
 
    The uup-soap package used should now be from SVN trunk instead of using the
    composer package:
    
-        bash batchelor2 $ svn info vendor/bmc/uup-soap | grep ^URL
+        bash batchelor2 $ svn info vendor/nowise/uup-soap | grep ^URL
         URL: svn://svn.unix.qnet/uup-soap/trunk
 
 ** SYNCHRONIZE:

@@ -7,17 +7,17 @@
  * 
  *   1. Copy this file to auth.inc to make it config protected.
  *   2. Enable authentication in defaults.site.
- *   3. Install bmc/uup-auth using composer (run composer require bmc/uup-auth).
+ *   3. Install nowise/uup-auth using composer (run composer require nowise/uup-auth).
  *   4. Edit the array below to setup authenticators and restrictors.
  * 
  * The default configuration has prepared an authentication stack for you, use
  * it as an inspiration. Some authenticators requires external extensions (like PAM).
  * 
  * Implementors are encourage to use forms instead of Basic HTTP Auth as frontend
- * for gathering users password. Future releases of bmc/uup-site might include this 
+ * for gathering users password. Future releases of nowise/uup-site might include this 
  * in the default theme.
  * 
- * More examples is bundled with bmc/uup-auth. Remember to add use statements for 
+ * More examples is bundled with nowise/uup-auth. Remember to add use statements for 
  * the auto-loader when changing the list.
  */
 use UUP\Authentication\Authenticator\Authenticator;

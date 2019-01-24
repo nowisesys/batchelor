@@ -35,7 +35,7 @@
  * 3. By UUP_SITE_DEFAULTS environment variable.
  * 4. Looking in pre-defined location relative virtual host root:
  *    a) config
- *    b) vendor/bmc/uup-site/config
+ *    b) vendor/nowise/uup-site/config
  * 
  * The detected settings for a complete unconfigured site are:
  * 
@@ -44,7 +44,7 @@
  *         [theme]    => default
  *         [root]     => /var/www/localhost
  *         [docs]     => /var/www/localhost/htdocs
- *         [template] => /var/www/localhost/vendor/bmc/uup-site/template
+ *         [template] => /var/www/localhost/vendor/nowise/uup-site/template
  *         [location] => /
  *         [css]      => /css/default
  *         [js]       => /js/default
