@@ -1,0 +1,11 @@
+This directory will contain cache, jobs and logs (created on demand). Make
+sure to make directory writable by the web server user:
+
+	bash$> sudo chown -R apache:apache .
+
+Use ACL instead to grant write permission:
+
+	bash$> sudo setfacl -d -m u:apache:rwx .
+	bash$> sudo setfacl -m u:apache:rwx .
+
+// Anders Lövgren, 2019-01-24
