@@ -16,6 +16,24 @@
             "email": "andlov@nowise.se"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../uup-auth/"
+        },
+        {
+            "type": "path",
+            "url": "../uup-site"
+        },
+        {
+            "type": "path",
+            "url": "../uup-soap"
+        },
+        {
+            "type": "path",
+            "url": "../uup-web-component/"
+        }
+    ],
     "require": {
         "nowise/uup-site": "@dev",
         "nowise/uup-soap": "@dev",
