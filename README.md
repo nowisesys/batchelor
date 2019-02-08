@@ -41,6 +41,21 @@ composer require nowise/batchelor
 ./vendor/bin/batchelor.sh --location /myapp --setup
 ```
 
+Start to scheduled job processor to execute submitted jobs. During setup or 
+development of your own task its recommended to run in the foreground with
+debug enabled:
+
+```bash
+./utils/processor.sh -dk
+```
+
+Directory utils/boot contains script for starting the batch job processor
+at boot time. The scheduler can be monitored using:
+
+```bash
+./utils/scheduler.sh -lA
+```
+
 ### FURTHER EXAMPLES
 
 The system [ChemGPS-NP Web](https://chemgps.bmc.uu.se/) was built on top of
