@@ -136,14 +136,14 @@ return array(
 //        /**
 //         * The toolbox plugins to expose. Themes can choose whether to show them or not.
 //         */
-//        'tools' => array(
+          'tools' => array(
 //                'home'      => false,    // Enable home navigation icon.
 //                'auth'      => false,    // Enable authentication box.
 //                'search'    => false,    // Enable Google search box.
 //                'translate' => false,    // Enable Google translate box.
 //                'edit'      => false,    // Enable online page/site editor.
                   'queue'     => true      // Enable queue switcher.
-//        ),
+          ),
 //        /**
 //         * Locale support (gettext). Comment to disable locale support.
 //         */
