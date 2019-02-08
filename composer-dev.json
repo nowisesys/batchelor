@@ -1,6 +1,6 @@
 {
     "name": "nowise/batchelor",
-    "version": "2.3.5",
+    "version": "2.3.6",
     "description": "Batch job queue manager (web interface and services)",
     "type": "project",
     "keywords": ["batchelor", "queue", "task", "schedule"],
