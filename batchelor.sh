@@ -49,6 +49,7 @@ function setup_docs()
 
 function setup_data()
 {
+    cp -a $srcdir/admin .
     cp -a $srcdir/data .
     echo "(i) Directory data has been setup (please chmod to web server user)."
 }
