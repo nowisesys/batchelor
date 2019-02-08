@@ -110,7 +110,7 @@ function relocate()
     local file=$1
 
     sed -i -e s%'/../../vendor/'%'/../vendor/'%1 \
-           -e s%"/batchelor2"%"${location}"%g $file
+           -e s%"/batchelor2/"%"${location}"%g $file
 }
 
 function usage()

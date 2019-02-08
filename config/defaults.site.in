@@ -81,7 +81,7 @@ return array(
 //        /**
 //         * The site URI (must start with '/').
 //         */
-          'location' => '/batchelor2',
+          'location' => '/batchelor2/',
 //        /**
 //         * The fortune cookie (use string for static message).
 //         */
