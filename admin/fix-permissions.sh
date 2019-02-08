@@ -13,3 +13,5 @@ topdir=$(dirname $tssdir)
 find $topdir/data -type d | xargs setfacl -d -m u:$user:rwx
 find $topdir/data -type d | xargs setfacl -m u:$user:rwx
 find $topdir/data -type f | xargs setfacl -m u:$user:rw
+
+chown -R $user $topdir/data
