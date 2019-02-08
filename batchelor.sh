@@ -5,6 +5,8 @@
 # Author: Anders Lövgren
 # Date:   2018-10-18
 
+#set -x
+
 # This script name and version:
 prog=$(basename $0)
 vers="1.0"
@@ -24,9 +26,12 @@ function setup_public()
 function setup_config()
 {
     cp -a $srcdir/config .
-    for file in defaults.site; do 
-        if [ -e config/defaults.site ]; then
-            relocate config/defaults.site
+    for file in defaults.site defaults.app; do 
+        if ! [ -e config/$file ]; then
+            cp config/$file.in config/$file
+        fi
+        if [ -e config/$file ]; then
+            relocate config/$file
         fi
     done
     echo "(i) Directory config has been setup (please modify the defaults.* files)."
@@ -70,8 +75,6 @@ function setup_dispatcher()
         rm -f public/$file
         cp -a $srcdir/public/$file public/$file 
         relocate public/$file
-#        sed -i -e s%'/../../vendor/'%'/../vendor/'%1 \
-#               -e s%"/batchelor2"%"${location}"%g public/$file
         echo "(i) File public/$file has been installed (please modify if needed)."
     done
 }
@@ -144,7 +147,7 @@ function usage()
     echo "  1. The --location or --verbose options must be used before any other option."
     echo "  2. The --setup option implies --public --config --utils --data --source --template."
     echo 
-    echo "Copyright (C) 2018 Nowise Systems and Uppsala University (Anders Lövgren, BMC-IT)"
+    echo "Copyright (C) 2018-2019 Nowise Systems and Uppsala University (Anders Lövgren, BMC-IT)"
 }
 
 function version()
