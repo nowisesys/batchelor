@@ -36,9 +36,17 @@ return [
                 'mail' => 'batchelor@localhost',
                 'page' => 'http://batchelor.example.com/contact.html'
         ],
+        // 
+        // The cache options (see docs/README-CACHE). 
+        // 
+        // The default option is to use path as cache backend (always work, even 
+        // though not the most performant):
+        // 
+        'cache'   => [
+                '@all' => 'path'
+        ],
         // // 
-        // // The cache options (see docs/README-CACHE). By default all caches
-        // // are configured to detect cache backend. 
+        // // Use automatic cache backend detection:
         // // 
         // 'cache'   => [
         //        'system'   => 'detect', // Generic system cache.
@@ -47,6 +55,7 @@ return [
         //        'mapper'   => 'detect', // The hostid to queue map cache.
         //        'resolver' => 'detect'  // The hostid <-> ipaddr resolver.
         // ],
+        // 
         // // 
         // // The logger options. Target root directory for relative pathes are the
         // // data directory. 
