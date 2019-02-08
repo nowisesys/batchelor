@@ -41,20 +41,24 @@ composer require nowise/batchelor
 ./vendor/bin/batchelor.sh --location /myapp --setup
 ```
 
-Start to scheduled job processor to execute submitted jobs. During setup or 
+Start the scheduled job processor to execute submitted jobs. During setup or 
 development of your own task its recommended to run in the foreground with
 debug enabled:
 
 ```bash
-./utils/processor.sh -dk
+sudo -u apache ./utils/processor.sh -dk
 ```
 
-Directory utils/boot contains script for starting the batch job processor
-at boot time. The scheduler can be monitored using:
+Directory utils/boot contains script for starting the batch job processor at 
+boot time. The scheduler can be monitored using:
 
 ```bash
-./utils/scheduler.sh -lA
+sudo -u apache ./utils/scheduler.sh -lA
 ```
+
+Remember to run these tools as the web server user or file permission errors
+will occure. If seeing errors, try admin/fix-permissions.sh first to correct 
+wrong permissions on the data directory content.
 
 ### FURTHER EXAMPLES
 
