@@ -37,6 +37,7 @@ how to configure batchelor to power your applications.
 It's easiest is to use composer to initialize your project using batchelor:
 
 ```bash
+composer init
 composer require nowise/batchelor
 ./vendor/bin/batchelor.sh --location /myapp --setup
 ```
