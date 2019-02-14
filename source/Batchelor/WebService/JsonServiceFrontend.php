@@ -49,6 +49,14 @@ class JsonServiceFrontend extends JsonService
                 $data = $this->getInput();
 
                 // 
+                // Handle method name inside payload:
+                // 
+                if (isset($data['method'])) {
+                        $func = $data['method'];
+                        unset($data['method']);
+                }
+
+                // 
                 // The enqueue method accepts form post:
                 // 
                 if ($func == "enqueue" && $data == false) {
