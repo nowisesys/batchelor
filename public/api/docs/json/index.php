@@ -39,6 +39,15 @@ include_once("../support.inc");
     <bash>curl -XPOST <?= $this->config->getUrl("api/json/queue", true) ?> -d '{"sort":"started","filter":"crashed"}'</bash>
 </div>
 
+<h4>Target method</h4>
+<p>
+    The method name either be encoded in the URL (see previous example) or 
+    inside the JSON payload:
+</p>
+<div class="w3-code">
+    <bash>curl -XPOST <?= $this->config->getUrl("api/json/index", true) ?> -d '{"method":"queue","sort":"started","filter":"crashed"}'</bash>
+</div>
+
 <h4>Response</h4>
 <p>
     All responses (except from fopen()) is JSON encoded and contains at least the
